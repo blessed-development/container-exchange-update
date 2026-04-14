@@ -45,7 +45,7 @@ export default function TrustSection() {
           >
             <div className="relative rounded-sm overflow-hidden mb-8">
               <img
-                src="/__generating__/img_4d6320bdb83e.png"
+                src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/3ef30518d_generated_9c5f1d0a.png"
                 alt="Container terminal aerial view"
                 className="w-full h-64 object-cover"
               />

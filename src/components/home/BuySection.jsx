@@ -28,7 +28,7 @@ export default function BuySection() {
           <div className="bg-card border border-border p-8 rounded-sm hover:border-primary/30 transition-all duration-300">
             <div className="relative aspect-[16/9] mb-6 overflow-hidden rounded-sm bg-muted">
               <img
-                src="/__generating__/img_dbe0dcae643a.png"
+                src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/2350032b9_generated_79e70e6c.png"
                 alt="Buy shipping containers"
                 className="w-full h-full object-cover"
               />

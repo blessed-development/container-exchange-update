@@ -9,7 +9,7 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="/__generating__/img_669c970b25cb.png"
+          src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/599ab2c88_generated_4431dbea.png"
           alt="Industrial shipping container close-up"
           className="w-full h-full object-cover opacity-30"
         />
