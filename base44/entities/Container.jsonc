@@ -1,0 +1,137 @@
+{
+  "name": "Container",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Product display name"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "10",
+        "20",
+        "40"
+      ],
+      "description": "Container length in feet"
+    },
+    "height": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "high_cube"
+      ],
+      "description": "Standard 8'6\" or High Cube 9'6\""
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "new",
+        "used",
+        "refurbished"
+      ],
+      "description": "Container condition"
+    },
+    "grade": {
+      "type": "string",
+      "enum": [
+        "AS_IS",
+        "WWT",
+        "CW",
+        "IICL"
+      ],
+      "description": "Container grade classification"
+    },
+    "base_price": {
+      "type": "number",
+      "description": "Base container price in USD"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed product description"
+    },
+    "short_description": {
+      "type": "string",
+      "description": "Brief summary for cards"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Primary product image"
+    },
+    "gallery_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Additional product images"
+    },
+    "specs": {
+      "type": "object",
+      "properties": {
+        "external_length": {
+          "type": "string"
+        },
+        "external_width": {
+          "type": "string"
+        },
+        "external_height": {
+          "type": "string"
+        },
+        "internal_length": {
+          "type": "string"
+        },
+        "internal_width": {
+          "type": "string"
+        },
+        "internal_height": {
+          "type": "string"
+        },
+        "door_width": {
+          "type": "string"
+        },
+        "door_height": {
+          "type": "string"
+        },
+        "tare_weight": {
+          "type": "string"
+        },
+        "max_payload": {
+          "type": "string"
+        },
+        "cubic_capacity": {
+          "type": "string"
+        },
+        "floor_type": {
+          "type": "string"
+        }
+      }
+    },
+    "door_type": {
+      "type": "string",
+      "default": "Double Doors at 1 End"
+    },
+    "is_bestseller": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_available": {
+      "type": "boolean",
+      "default": true
+    },
+    "rating": {
+      "type": "number",
+      "default": 4.9
+    },
+    "review_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "size",
+    "condition",
+    "grade",
+    "base_price"
+  ]
+}

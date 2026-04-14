@@ -1,0 +1,60 @@
+{
+  "name": "Quote",
+  "type": "object",
+  "properties": {
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string",
+      "format": "email"
+    },
+    "customer_phone": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "container_id": {
+      "type": "string"
+    },
+    "container_name": {
+      "type": "string"
+    },
+    "container_price": {
+      "type": "number"
+    },
+    "delivery_fee": {
+      "type": "number"
+    },
+    "total_price": {
+      "type": "number"
+    },
+    "delivery_method": {
+      "type": "string",
+      "enum": [
+        "delivery",
+        "pickup"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "contacted",
+        "quoted",
+        "sold",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "customer_name",
+    "customer_email",
+    "zip_code"
+  ]
+}

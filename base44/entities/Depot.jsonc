@@ -1,0 +1,37 @@
+{
+  "name": "Depot",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "description": "City name"
+    },
+    "state": {
+      "type": "string",
+      "description": "State abbreviation"
+    },
+    "zip_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "ZIP codes this depot serves"
+    },
+    "zip_prefix": {
+      "type": "string",
+      "description": "First 3 digits of ZIP codes served"
+    },
+    "delivery_fee": {
+      "type": "number",
+      "description": "Base delivery fee from this depot"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "city",
+    "state"
+  ]
+}
