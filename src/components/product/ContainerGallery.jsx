@@ -16,7 +16,7 @@ export default function ContainerGallery({ images }) {
   return (
     <div>
       {/* Main Image */}
-      <div className="relative aspect-[4/3] bg-muted rounded-sm overflow-hidden mb-3">
+      <div className="relative aspect-[4/3] bg-muted rounded-2xl overflow-hidden mb-3 shadow-xl">
         <img
           src={allImages[activeIndex]}
           alt="Container"
@@ -47,7 +47,7 @@ export default function ContainerGallery({ images }) {
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
-              className={`w-16 h-16 rounded-sm overflow-hidden border-2 transition-all ${
+              className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
                 i === activeIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
               }`}
             >

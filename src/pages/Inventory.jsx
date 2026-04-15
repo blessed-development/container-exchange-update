@@ -67,25 +67,28 @@ export default function Inventory() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-accent text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
-            SHIPPING CONTAINERS{' '}
-            <span className="text-primary">FOR SALE</span>
+      <div className="bg-accent text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent to-accent/90" />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">BROWSE INVENTORY</span>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            Shipping Containers{' '}
+            <span className="text-primary">For Sale</span>
           </h1>
           {locationInfo && (
-            <p className="text-white/50 mt-2 font-mono text-sm">
-              Showing inventory near <span className="text-primary">{locationInfo.city}</span>
+            <p className="text-white/50 mt-3 text-base">
+              Showing inventory near <span className="text-primary font-semibold">{locationInfo.city}</span>
             </p>
           )}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="flex gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24 bg-card border border-border rounded-sm p-6">
+            <div className="sticky top-24 bg-card border border-border rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
@@ -174,7 +177,7 @@ export default function Inventory() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 border border-dashed border-border rounded-sm">
+              <div className="text-center py-20 border border-dashed border-border rounded-2xl">
                 <p className="text-muted-foreground mb-2">No containers match your filters.</p>
                 <button onClick={clearFilters} className="text-primary text-sm hover:underline">
                   Clear all filters

@@ -53,8 +53,8 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-background">
       {/* Breadcrumb */}
-      <div className="bg-muted/50 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+      <div className="bg-muted/30 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-primary transition-colors">Home</Link>
             <ChevronRight className="w-3 h-3" />
@@ -65,44 +65,44 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Left - Gallery */}
           <div>
             <ContainerGallery images={allImages} />
             
             {/* Description */}
-            <div className="mt-8">
-              <h2 className="text-2xl font-black text-foreground mb-4">{container.name}</h2>
+            <div className="mt-10">
+              <h2 className="text-3xl font-black text-foreground mb-5 leading-tight">{container.name}</h2>
               
-              <div className="flex flex-wrap items-center gap-3 mb-6">
-                <Badge className="bg-primary/10 text-primary font-mono">
-                  {container.size}FT
+              <div className="flex flex-wrap items-center gap-2 mb-6">
+                <Badge className="bg-primary/10 text-primary font-mono rounded-full px-3">
+                  {container.size}ft
                 </Badge>
-                <Badge variant="outline" className="font-mono">
-                  {container.condition?.toUpperCase()}
+                <Badge variant="outline" className="font-mono rounded-full px-3">
+                  {container.condition?.charAt(0).toUpperCase() + container.condition?.slice(1)}
                 </Badge>
                 {container.height === 'high_cube' && (
-                  <Badge variant="outline" className="font-mono text-primary border-primary">
-                    HIGH CUBE
+                  <Badge variant="outline" className="font-mono text-primary border-primary rounded-full px-3">
+                    High Cube
                   </Badge>
                 )}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5 ml-1">
                   <Star className="w-4 h-4 fill-primary text-primary" />
-                  <span className="text-sm font-medium">{container.rating}</span>
+                  <span className="text-sm font-semibold">{container.rating}</span>
                   <span className="text-xs text-muted-foreground">({container.review_count} reviews)</span>
                 </div>
               </div>
 
               {/* Grade Info */}
-              <div className="bg-muted/50 border border-border rounded-sm p-4 mb-6">
-                <p className="text-xs font-mono text-muted-foreground tracking-widest mb-1">GRADE</p>
-                <p className="font-semibold text-sm mb-1">{gradeInfo.label}</p>
-                <p className="text-sm text-muted-foreground">{gradeInfo.desc}</p>
+              <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
+                <p className="text-xs font-mono text-primary tracking-widest mb-2">GRADE CLASSIFICATION</p>
+                <p className="font-bold text-base mb-1">{gradeInfo.label}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{gradeInfo.desc}</p>
               </div>
 
               {container.description && (
-                <p className="text-muted-foreground leading-relaxed mb-8">
+                <p className="text-muted-foreground leading-relaxed text-base mb-10">
                   {container.description}
                 </p>
               )}
@@ -118,11 +118,13 @@ export default function ProductDetail() {
               <ShippingCalculator container={container} initialZip={zipCode} />
               
               {/* Call Banner */}
-              <div className="mt-4 bg-accent text-white rounded-sm p-4 flex items-center gap-3">
-                <Phone className="w-5 h-5 text-primary" />
+              <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">
+                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <Phone className="w-5 h-5 text-primary" />
+                </div>
                 <div>
-                  <p className="text-xs text-white/50 font-mono">CALL FOR BEST PRICING</p>
-                  <a href="tel:+18005551234" className="font-mono font-bold text-primary hover:underline">
+                  <p className="text-xs text-white/50 font-mono mb-0.5">CALL FOR BEST PRICING</p>
+                  <a href="tel:+18005551234" className="font-mono font-bold text-primary hover:underline text-lg">
                     (800) 555-1234
                   </a>
                 </div>

@@ -49,48 +49,49 @@ export default function TestimonialsSection() {
   const reviews = testimonials?.length > 0 ? testimonials : FALLBACK_REVIEWS;
 
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <section className="py-28 bg-accent text-white relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.06] blur-[80px] pointer-events-none" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <span className="text-xs font-mono text-primary tracking-widest">TRUST</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight mt-3">
-            VERIFIED{' '}
-            <span className="text-primary">CUSTOMER REVIEWS</span>
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">TRUST</span>
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            Verified{' '}
+            <span className="text-primary">Customer Reviews</span>
           </h2>
-          <div className="flex items-center justify-center gap-2 mt-4">
+          <div className="flex items-center justify-center gap-3 mt-5">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-5 h-5 fill-primary text-primary" />
               ))}
             </div>
-            <span className="font-mono font-bold text-lg">4.9</span>
-            <span className="text-muted-foreground text-sm">based on 200+ reviews</span>
+            <span className="font-black text-xl text-white">4.9</span>
+            <span className="text-white/40 text-sm">based on 200+ reviews</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {reviews.slice(0, 4).map((review, i) => (
             <motion.div
               key={review.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border p-6 rounded-sm"
+              className="bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm p-6 rounded-2xl hover:bg-white/[0.07] hover:border-primary/20 transition-all duration-300 hover:-translate-y-1"
             >
-              <Quote className="w-6 h-6 text-primary/20 mb-4" />
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-4">
+              <Quote className="w-7 h-7 text-primary/30 mb-4" />
+              <p className="text-sm text-white/60 leading-relaxed mb-5 line-clamp-4">
                 "{review.text}"
               </p>
-              <div className="flex items-center gap-1 mb-3">
+              <div className="flex items-center gap-1 mb-4">
                 {[...Array(review.rating)].map((_, j) => (
-                  <Star key={j} className="w-3 h-3 fill-primary text-primary" />
+                  <Star key={j} className="w-3.5 h-3.5 fill-primary text-primary" />
                 ))}
               </div>
-              <div className="border-t border-border pt-3">
-                <p className="font-semibold text-sm">{review.author_name}</p>
-                <p className="text-xs text-muted-foreground font-mono">
-                  {review.location} {review.container_type ? `• ${review.container_type}` : ''}
+              <div className="border-t border-white/[0.08] pt-4">
+                <p className="font-bold text-sm text-white">{review.author_name}</p>
+                <p className="text-xs text-white/35 mt-0.5">
+                  {review.location} {review.container_type ? `· ${review.container_type}` : ''}
                 </p>
               </div>
             </motion.div>

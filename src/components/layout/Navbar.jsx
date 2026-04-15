@@ -14,44 +14,44 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-accent/95 backdrop-blur-md border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-accent/80 backdrop-blur-xl border-b border-white/[0.06] shadow-2xl shadow-black/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[68px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-              <span className="text-primary-foreground font-mono font-bold text-sm">CX</span>
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow">
+              <span className="text-primary-foreground font-mono font-black text-sm">CX</span>
             </div>
             <div className="hidden sm:block">
-              <span className="text-white font-bold text-lg tracking-tight">CONTAINERS</span>
-              <span className="text-primary font-bold text-lg tracking-tight ml-1">EXCHANGE</span>
+              <span className="text-white font-black text-lg tracking-tight leading-none">CONTAINERS</span>
+              <span className="text-primary font-black text-lg tracking-tight leading-none ml-1.5">EXCHANGE</span>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                  location.pathname === link.path ? 'text-primary' : 'text-white/70'
+                className={`px-4 py-2 rounded-lg text-sm font-medium tracking-wide transition-all hover:bg-white/[0.08] hover:text-white ${
+                  location.pathname === link.path ? 'text-white bg-white/[0.08]' : 'text-white/60'
                 }`}
               >
-                {link.label.toUpperCase()}
+                {link.label}
               </Link>
             ))}
           </div>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <a href="tel:+18005551234" className="flex items-center gap-2 text-white/70 hover:text-primary transition-colors">
+          <div className="hidden md:flex items-center gap-3">
+            <a href="tel:+18005551234" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm">
               <Phone className="w-4 h-4" />
-              <span className="font-mono text-sm">(800) 555-1234</span>
+              <span className="font-mono">(800) 555-1234</span>
             </a>
             <Link to="/inventory">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold tracking-wide text-sm">
-                GET PRICING
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-0.5 text-sm px-5">
+                Get Pricing
               </Button>
             </Link>
           </div>
@@ -59,36 +59,38 @@ export default function Navbar() {
           {/* Mobile toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/[0.08] transition-all"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-accent border-t border-white/5">
-          <div className="px-4 py-4 space-y-3">
+        <div className="md:hidden bg-accent/95 backdrop-blur-xl border-t border-white/[0.06]">
+          <div className="px-4 py-5 space-y-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className="block text-white/70 hover:text-primary font-medium text-sm tracking-wide py-2"
+                className="block text-white/70 hover:text-white hover:bg-white/[0.08] font-medium text-sm py-3 px-3 rounded-lg transition-all"
               >
-                {link.label.toUpperCase()}
+                {link.label}
               </Link>
             ))}
-            <a href="tel:+18005551234" className="flex items-center gap-2 text-primary font-mono text-sm py-2">
-              <Phone className="w-4 h-4" />
-              (800) 555-1234
-            </a>
-            <Link to="/inventory" onClick={() => setIsOpen(false)}>
-              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-                GET PRICING
-              </Button>
-            </Link>
+            <div className="pt-3 border-t border-white/[0.06] mt-3 space-y-3">
+              <a href="tel:+18005551234" className="flex items-center gap-2 text-primary font-mono text-sm px-3 py-2">
+                <Phone className="w-4 h-4" />
+                (800) 555-1234
+              </a>
+              <Link to="/inventory" onClick={() => setIsOpen(false)}>
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg h-12">
+                  Get Pricing
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}

@@ -77,7 +77,7 @@ export default function ContainerSpecs({ container }) {
   ];
 
   return (
-    <div className="border border-border rounded-sm">
+    <div className="border border-border rounded-2xl overflow-hidden">
       <div className="p-4 bg-muted/30 border-b border-border">
         <h3 className="text-xs font-mono font-semibold tracking-widest text-muted-foreground">
           TECHNICAL SPECIFICATIONS

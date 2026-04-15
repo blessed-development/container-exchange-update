@@ -37,50 +37,51 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-accent text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-xs font-mono text-primary tracking-widest">GET IN TOUCH</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mt-3">
-            REQUEST A{' '}
-            <span className="text-primary">QUOTE</span>
+      <div className="bg-accent text-white py-20 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">GET IN TOUCH</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+            Request a{' '}
+            <span className="text-primary">Quote</span>
           </h1>
-          <p className="text-white/50 mt-4 max-w-lg mx-auto">
+          <p className="text-white/50 mt-5 max-w-lg mx-auto text-lg">
             Tell us what you need and we'll get back to you with the best pricing and delivery options for your location.
           </p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
-              <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-4">CONTACT US</h3>
+              <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
               <div className="space-y-4">
-                <a href="tel:+18005551234" className="flex items-center gap-3 text-foreground hover:text-primary transition-colors">
-                  <div className="w-10 h-10 border border-border rounded-sm flex items-center justify-center">
-                    <Phone className="w-4 h-4" />
+                <a href="tel:+18005551234" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Phone className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="font-mono font-semibold text-sm">(800) 555-1234</p>
                     <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
                   </div>
                 </a>
-                <a href="mailto:info@containersexchange.com" className="flex items-center gap-3 text-foreground hover:text-primary transition-colors">
-                  <div className="w-10 h-10 border border-border rounded-sm flex items-center justify-center">
-                    <Mail className="w-4 h-4" />
+                <a href="mailto:info@containersexchange.com" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Mail className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">info@containersexchange.com</p>
+                    <p className="text-sm font-semibold">info@containersexchange.com</p>
                     <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                   </div>
                 </a>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 border border-border rounded-sm flex items-center justify-center">
-                    <MapPin className="w-4 h-4" />
+                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">60+ Depot Locations</p>
+                    <p className="text-sm font-semibold">60+ Depot Locations</p>
                     <p className="text-xs text-muted-foreground">Nationwide USA Coverage</p>
                   </div>
                 </div>
@@ -94,19 +95,21 @@ export default function Contact() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center py-20 border border-border rounded-sm bg-card"
+                className="text-center py-20 border border-border rounded-2xl bg-card shadow-lg"
               >
-                <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Quote Request Submitted</h3>
-                <p className="text-muted-foreground mb-6">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <CheckCircle2 className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Quote Request Submitted!</h3>
+                <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
                   Our team will review your request and contact you within 24 hours with pricing details.
                 </p>
-                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '' }); }} variant="outline">
+                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
                   Submit Another Request
                 </Button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-card border border-border rounded-sm p-6 sm:p-8 space-y-6">
+              <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
@@ -196,7 +199,7 @@ export default function Contact() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider"
+                  className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
