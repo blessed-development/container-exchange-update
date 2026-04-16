@@ -1,16 +1,16 @@
 import React from 'react';
 import HeroSection from '@/components/home/HeroSection';
-import BuySection from '@/components/home/BuySection';
+import RentRTOSection from '@/components/home/RentRTOSection';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
 import HowItWorks from '@/components/home/HowItWorks';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
 import TrustSection from '@/components/home/TrustSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
 
 export default function Home() {
   return (
     <div>
       <HeroSection />
-      <BuySection />
+      <RentRTOSection />
       <FeaturedProducts />
       <HowItWorks />
       <TrustSection />

@@ -72,7 +72,11 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: 'Buy Containers', path: '/inventory' },
+                { label: 'Rent a Container', path: '/contact' },
+                { label: 'Rent-to-Own', path: '/contact' },
                 { label: 'How It Works', path: '/#how-it-works' },
+                { label: 'About Us', path: '/about' },
+                { label: 'FAQ', path: '/faq' },
                 { label: 'Get a Quote', path: '/contact' },
               ].map((link) => (
                 <li key={link.path}>

@@ -25,19 +25,19 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.45 }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
     >
       <Link to={`/product/${container.id}${zipCode ? `?zip=${zipCode}` : ''}`}>
-        <div className="group bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-2xl overflow-hidden">
-          {/* Image */}
-          <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <div className="group bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 rounded-2xl overflow-hidden flex flex-col">
+          {/* Rectangular Image — 16:9 */}
+          <div className="relative aspect-video overflow-hidden bg-muted flex-shrink-0">
             <img
               src={container.image_url}
               alt={container.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-107"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             {/* Badges */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+            <div className="absolute top-3 left-3 flex gap-1.5">
               {container.is_bestseller && (
                 <Badge className="bg-primary text-primary-foreground font-mono text-xs tracking-wider rounded-full shadow-lg shadow-primary/30">
                   BESTSELLER
@@ -48,7 +48,7 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
               </Badge>
             </div>
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-accent/80 via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+            <div className="absolute inset-0 bg-gradient-to-t from-accent/80 via-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-5">
               <span className="text-white font-semibold text-sm flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
                 VIEW DETAILS <ArrowRight className="w-4 h-4" />
               </span>
@@ -56,50 +56,48 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
           </div>
 
           {/* Info */}
-          <div className="p-5">
+          <div className="p-5 flex flex-col flex-1">
             {/* Tags row */}
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-2.5">
               <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{gradeLabel}</span>
               <span className="text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{container.size}ft</span>
               {container.height === 'high_cube' && (
-                <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-full">HC</span>
+                <span className="text-xs font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-full">HIGH CUBE</span>
               )}
             </div>
 
             {/* Name */}
-            <h3 className="font-bold text-foreground text-base leading-tight mb-3 group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-foreground text-base leading-tight mb-2 group-hover:text-primary transition-colors">
               {container.name}
             </h3>
 
             {/* Short desc */}
             {container.short_description && (
-              <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">{container.short_description}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2 flex-1">{container.short_description}</p>
             )}
 
-            {/* Rating */}
-            <div className="flex items-center gap-1.5 mb-4">
-              <Star className="w-3.5 h-3.5 fill-primary text-primary" />
-              <span className="text-sm font-semibold">{container.rating}</span>
-              <span className="text-xs text-muted-foreground">({container.review_count} reviews)</span>
-            </div>
-
-            {/* Price */}
-            <div className="flex items-center justify-between border-t border-border pt-4">
+            {/* Price + CTA */}
+            <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
               <div>
                 <span className="text-xs text-muted-foreground">Starts at</span>
-                <p className="text-2xl font-black text-primary font-mono">
+                <p className="text-xl font-black text-primary font-mono">
                   ${container.base_price?.toLocaleString()}
                 </p>
               </div>
-              {container.is_available ? (
-                <span className="text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-950/30 px-3 py-1.5 rounded-full">
-                  In Stock
+              <div className="flex items-center gap-2">
+                {container.is_available ? (
+                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+                    In Stock
+                  </span>
+                ) : (
+                  <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+                    Limited
+                  </span>
+                )}
+                <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  Get Quote
                 </span>
-              ) : (
-                <span className="text-xs font-semibold text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
-                  Limited
-                </span>
-              )}
+              </div>
             </div>
           </div>
         </div>
