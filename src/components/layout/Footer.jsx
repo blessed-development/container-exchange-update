@@ -71,9 +71,7 @@ export default function Footer() {
             <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">NAVIGATE</h4>
             <ul className="space-y-3">
               {[
-                { label: 'Buy Containers', path: '/inventory' },
-                { label: 'Rent a Container', path: '/contact' },
-                { label: 'Rent-to-Own', path: '/contact' },
+                { label: 'Shop Containers', path: '/inventory' },
                 { label: 'How It Works', path: '/#how-it-works' },
                 { label: 'About Us', path: '/about' },
                 { label: 'FAQ', path: '/faq' },

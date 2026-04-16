@@ -35,7 +35,7 @@ export default function HowItWorks() {
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">THE PROCESS</span>
           <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
             Three Steps to{' '}
-            <span className="text-primary">Deployment</span>
+            <span className="text-primary">Buy Your Container</span>
           </h2>
         </div>
 

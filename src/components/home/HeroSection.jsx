@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
-import { Shield, Truck, Clock } from 'lucide-react';
+import { Shield, Truck, Clock, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 export default function HeroSection() {
@@ -48,6 +50,15 @@ export default function HeroSection() {
             {/* ZIP Search */}
             <ZipCodeSearch variant="hero" className="w-full" />
 
+            {/* CTA Button */}
+            <div className="mt-6">
+              <Link to="/inventory">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-base h-14 px-8 rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all">
+                  View All Containers for Sale <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+            </div>
+
             {/* Value Props */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -56,8 +67,8 @@ export default function HeroSection() {
               className="flex flex-wrap gap-6 mt-10"
             >
               {[
-                { icon: Shield, label: 'Lowest Price Guarantee' },
-                { icon: Truck, label: 'Free Delivery Accessories' },
+                { icon: Shield, label: 'Best Price Guarantee' },
+                { icon: Truck, label: 'Nationwide Delivery' },
                 { icon: Clock, label: '3–7 Day Delivery' },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-2.5 text-white/40">
