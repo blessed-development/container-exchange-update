@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import ContainerCard from '@/components/shared/ContainerCard';
+import FeaturedCard from '@/components/home/FeaturedCard';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function FeaturedProducts() {
   const { data: containers, isLoading } = useQuery({
     queryKey: ['featured-containers'],
-    queryFn: () => base44.entities.Container.filter({ is_available: true }, '-created_date', 6),
+    queryFn: () => base44.entities.Container.filter({ is_available: true }, '-created_date', 3),
     initialData: [],
   });
 
@@ -37,9 +37,9 @@ export default function FeaturedProducts() {
 
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(3)].map((_, i) => (
               <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden">
-                <Skeleton className="aspect-[4/3]" />
+                <Skeleton className="aspect-video" />
                 <div className="p-5 space-y-3">
                   <Skeleton className="h-3 w-24 rounded-full" />
                   <Skeleton className="h-5 w-full rounded-lg" />
@@ -51,8 +51,8 @@ export default function FeaturedProducts() {
           </div>
         ) : containers.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {containers.map((container, i) => (
-              <ContainerCard key={container.id} container={container} index={i} />
+            {containers.slice(0, 3).map((container, i) => (
+              <FeaturedCard key={container.id} container={container} index={i} />
             ))}
           </div>
         ) : (
