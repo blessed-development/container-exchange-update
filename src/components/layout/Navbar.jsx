@@ -4,7 +4,7 @@ import { Menu, X, Phone, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const NAV_LINKS = [
-  { label: 'Shop Containers', path: '/inventory' },
+  { label: 'Buy Containers', path: '/inventory' },
   { label: 'How It Works', path: '/#how-it-works' },
   { label: 'About', path: '/about' },
   { label: 'FAQ', path: '/faq' },
