@@ -6,7 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AppLayout from '@/components/layout/AppLayout';
-import Home from '@/pages/Home';
+import Home from '@/pages/Home.jsx';
 import Inventory from '@/pages/Inventory';
 import ProductDetail from '@/pages/ProductDetail';
 import Contact from '@/pages/Contact';
