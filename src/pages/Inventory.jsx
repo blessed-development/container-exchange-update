@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import ContainerCard from '@/components/shared/ContainerCard';
+import InventoryListCard from '@/components/inventory/InventoryListCard';
 import FilterSidebar from '@/components/inventory/FilterSidebar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -166,12 +166,11 @@ export default function Inventory() {
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : filteredContainers.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="flex flex-col gap-5">
                 {filteredContainers.map((container, i) => (
-                  <ContainerCard
+                  <InventoryListCard
                     key={container.id}
                     container={container}
-                    zipCode={zipCode}
                     index={i}
                   />
                 ))}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Star, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import ImageSlider from '@/components/shared/ImageSlider';
 
 const PRODUCTS = [
   {
@@ -17,7 +18,12 @@ const PRODUCTS = [
     doorType: 'Double door at one end',
     grade: 'IICL',
     sku: 'N20SDV1DDIICLFONVAB',
-    image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
+      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
+      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80',
+    ],
   },
   {
     id: 'used-40ft-hc',
@@ -31,7 +37,12 @@ const PRODUCTS = [
     doorType: 'Double Doors at 1 End',
     grade: 'Wind & Water Tight',
     sku: 'U40HCDV1DDWWTFONVAB',
-    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
+      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
+      'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&q=80',
+      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+    ],
   },
   {
     id: 'used-20ft-cw',
@@ -45,7 +56,11 @@ const PRODUCTS = [
     doorType: 'Double Doors at 1 End',
     grade: 'Cargo Worthy',
     sku: 'U20SDV1DDCWFONVAB',
-    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+    images: [
+      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80',
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
+    ],
   },
 ];
 
@@ -83,48 +98,31 @@ function ProductCard({ product, index }) {
       transition={{ delay: index * 0.08, duration: 0.4 }}
       className="bg-card border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row"
     >
-      {/* LEFT — Image (35-40% width) */}
-      <div className="sm:w-[38%] flex-shrink-0 bg-muted overflow-hidden min-h-[220px]">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover"
-          style={{ minHeight: '220px' }}
-        />
+      {/* LEFT — Image Slider (38% width) */}
+      <div className="sm:w-[38%] flex-shrink-0 relative bg-muted overflow-hidden" style={{ minHeight: '240px' }}>
+        <ImageSlider images={product.images} className="absolute inset-0" />
       </div>
 
-      {/* RIGHT — Text content (60-65% width) */}
+      {/* RIGHT — Text content */}
       <div className="flex-1 p-6 flex flex-col justify-between">
         <div>
-          {/* Title */}
-          <h3 className="font-bold text-foreground text-base leading-snug mb-1">
-            {product.name}
-          </h3>
-
-          {/* ID line */}
+          <h3 className="font-bold text-foreground text-base leading-snug mb-1">{product.name}</h3>
           <p className="text-xs text-muted-foreground font-mono mb-0.5">{product.idLine}</p>
-
-          {/* Weight line */}
           <p className="text-xs text-muted-foreground mb-3">{product.weightLine}</p>
 
-          {/* Star rating */}
+          {/* Stars */}
           <div className="flex items-center gap-1.5 mb-3">
             <span className="text-sm font-bold text-foreground">{product.rating.toFixed(1)}</span>
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 ${i < stars ? 'fill-yellow-400 text-yellow-400' : 'fill-muted text-muted-foreground'}`}
-                />
+                <Star key={i} className={`w-4 h-4 ${i < stars ? 'fill-yellow-400 text-yellow-400' : 'fill-muted text-muted-foreground'}`} />
               ))}
             </div>
             <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
           </div>
 
-          {/* Price */}
           <p className="text-3xl font-black text-foreground mb-4">{product.price}</p>
 
-          {/* Details */}
           <div className="space-y-1 mb-5 text-sm">
             {[
               ['Condition', product.condition],
@@ -143,17 +141,12 @@ function ProductCard({ product, index }) {
         {/* Buttons */}
         <div className="flex gap-3">
           <Link to="/inventory" className="flex-1">
-            <Button
-              variant="outline"
-              className="w-full rounded-xl h-11 font-semibold border-2 hover:border-primary hover:text-primary transition-all"
-            >
+            <Button variant="outline" className="w-full rounded-xl h-11 font-semibold border-2 hover:border-primary hover:text-primary transition-all">
               Quick View
             </Button>
           </Link>
           <a href="tel:+18889779085" className="flex-1">
-            <Button
-              className="w-full rounded-xl h-11 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 gap-2 transition-all"
-            >
+            <Button className="w-full rounded-xl h-11 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 gap-2">
               <Phone className="w-4 h-4" />
               (888) 977-9085
             </Button>
