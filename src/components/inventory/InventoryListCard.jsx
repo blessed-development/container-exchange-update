@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Star, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
 
 const GRADE_LABELS = {
@@ -13,6 +14,7 @@ const GRADE_LABELS = {
 
 export default function InventoryListCard({ container, index }) {
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
   const stars = Math.round(container.rating || 5);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
 
@@ -22,7 +24,8 @@ export default function InventoryListCard({ container, index }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05, duration: 0.35 }}
-        className="bg-card border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row"
+        onClick={() => navigate(`/product/${container.id}`)}
+        className="bg-card border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row cursor-pointer"
       >
         {/* LEFT — Single image */}
         <div className="sm:w-[35%] flex-shrink-0 bg-muted overflow-hidden" style={{ minHeight: '220px' }}>
@@ -93,7 +96,7 @@ export default function InventoryListCard({ container, index }) {
           <div>
             <Button
               variant="outline"
-              onClick={() => setShowModal(true)}
+              onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
               className="rounded-xl h-10 font-semibold border-2 hover:border-primary hover:text-primary transition-all gap-2"
             >
               <Eye className="w-4 h-4" />
