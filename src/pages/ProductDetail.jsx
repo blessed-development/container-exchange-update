@@ -4,7 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ContainerGallery from '@/components/product/ContainerGallery';
 import ShippingCalculator from '@/components/product/ShippingCalculator';
-import ContainerSpecs from '@/components/product/ContainerSpecs';
+import ContainerConfigurator from '@/components/product/ContainerConfigurator';
+import ProductFAQ from '@/components/product/ProductFAQ';
+import RelatedProducts from '@/components/product/RelatedProducts';
 import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2, Phone } from 'lucide-react';
 
@@ -107,8 +109,8 @@ export default function ProductDetail() {
                 </p>
               )}
 
-              {/* Specs */}
-              <ContainerSpecs container={container} />
+              {/* FAQ */}
+              <ProductFAQ />
             </div>
           </div>
 
@@ -116,6 +118,7 @@ export default function ProductDetail() {
           <div>
             <div className="lg:sticky lg:top-24">
               <ShippingCalculator container={container} initialZip={zipCode} />
+              <ContainerConfigurator />
               
               {/* Call Banner */}
               <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">
@@ -124,14 +127,19 @@ export default function ProductDetail() {
                 </div>
                 <div>
                   <p className="text-xs text-white/50 font-mono mb-0.5">CALL FOR BEST PRICING</p>
-                  <a href="tel:+18005551234" className="font-mono font-bold text-primary hover:underline text-lg">
-                    (800) 555-1234
+                  <a href="tel:+18889779085" className="font-mono font-bold text-primary hover:underline text-lg">
+                    (888) 977-9085
                   </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Related Products */}
+      <div className="border-t border-border">
+        <RelatedProducts zipCode={zipCode} />
       </div>
     </div>
   );
