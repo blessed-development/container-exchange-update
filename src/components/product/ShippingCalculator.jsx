@@ -6,7 +6,7 @@ import { MapPin, Truck, Building2, Loader2 } from 'lucide-react';
 import { isValidZipCode, calculateDeliveryFee } from '@/lib/zipUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ShippingCalculator({ container, initialZip = '' }) {
+export default function ShippingCalculator({ container, initialZip = '', overridePrice }) {
   const [zip, setZip] = useState(initialZip);
   const [deliveryMethod, setDeliveryMethod] = useState('delivery');
   const [deliveryInfo, setDeliveryInfo] = useState(null);
@@ -35,7 +35,7 @@ export default function ShippingCalculator({ container, initialZip = '' }) {
     calculateShipping(zip);
   };
 
-  const containerPrice = container?.base_price || 0;
+  const containerPrice = overridePrice ?? container?.base_price ?? 0;
   const deliveryFee = deliveryMethod === 'delivery' ? (deliveryInfo?.fee || 0) : 0;
   const totalPrice = containerPrice + deliveryFee;
 
