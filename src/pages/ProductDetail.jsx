@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import ContainerGallery from '@/components/product/ContainerGallery';
 import ShippingCalculator from '@/components/product/ShippingCalculator';
-import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import SizeSelector, { SIZE_OPTIONS } from '@/components/product/SizeSelector';
@@ -121,8 +120,7 @@ export default function ProductDetail() {
           <div>
             <div className="lg:sticky lg:top-24">
               <SizeSelector selected={selectedSize} onChange={setSelectedSize} />
-              <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} />
-              <ContainerConfigurator />
+              <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} selectedSizeName={selectedSizeOption.label} />
               
               {/* Call Banner */}
               <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">

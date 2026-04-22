@@ -1,19 +1,21 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export const SIZE_OPTIONS = [
   {
-    label: '20 ft Standard',
+    label: '20\' Standard',
+    dims: "20' × 8' × 8'6\"",
     price: 2500,
-    image: 'https://media.base44.com/images/public/69dd889386a20317a3b688c3/d90ecf78e_box.jpeg',
+    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
   },
   {
-    label: '40 ft Standard',
+    label: '40\' Standard',
+    dims: "40' × 8' × 8'6\"",
     price: 3350,
     image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=80',
   },
   {
-    label: '40 ft High Cube',
+    label: '40\' High Cube',
+    dims: "40' × 8' × 9'6\"",
     price: 3350,
     image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80',
   },
@@ -21,28 +23,27 @@ export const SIZE_OPTIONS = [
 
 export default function SizeSelector({ selected, onChange }) {
   return (
-    <div className="grid grid-cols-3 gap-2 mb-4">
+    <div className="grid grid-cols-3 border border-border rounded-xl overflow-hidden mb-2.5 bg-card">
       {SIZE_OPTIONS.map((opt, i) => {
         const isSelected = selected === i;
         return (
-          <motion.button
+          <button
             key={i}
             onClick={() => onChange(i)}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            className={`rounded-xl border-2 p-3 text-center transition-all duration-200 shadow-sm ${
+            className={`flex flex-col items-center gap-0.5 py-3 px-2 border-r border-border last:border-r-0 transition-colors ${
               isSelected
-                ? 'border-primary bg-primary/10 shadow-primary/20 shadow-md'
-                : 'border-border bg-card hover:border-primary/40'
+                ? 'bg-primary text-white'
+                : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
             }`}
           >
-            <p className={`font-bold text-sm leading-tight mb-1 ${isSelected ? 'text-primary' : 'text-foreground'}`}>
-              {opt.label}
-            </p>
-            <p className={`font-mono text-xs font-semibold ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
-              ${opt.price.toLocaleString()}.00
-            </p>
-          </motion.button>
+            <span className={`text-[9px] font-bold tracking-widest uppercase ${isSelected ? 'text-white/70' : 'text-muted-foreground/60'}`}>
+              Buy
+            </span>
+            <span className="text-[13px] font-bold leading-tight">{opt.label}</span>
+            <span className={`font-mono text-[9px] ${isSelected ? 'text-white/75' : 'text-muted-foreground/55'}`}>
+              {opt.dims}
+            </span>
+          </button>
         );
       })}
     </div>
