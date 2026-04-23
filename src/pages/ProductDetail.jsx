@@ -6,7 +6,6 @@ import ContainerGallery from '@/components/product/ContainerGallery';
 import ShippingCalculator from '@/components/product/ShippingCalculator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
-import SizeSelector, { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2, Phone } from 'lucide-react';
 
@@ -21,8 +20,6 @@ export default function ProductDetail() {
   const { id } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
   const zipCode = urlParams.get('zip') || '';
-  const [selectedSize, setSelectedSize] = useState(0);
-
   const { data: container, isLoading } = useQuery({
     queryKey: ['container', id],
     queryFn: () => base44.entities.Container.filter({ id }),
@@ -51,8 +48,7 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-  const selectedSizeOption = SIZE_OPTIONS[selectedSize];
-  const allImages = [selectedSizeOption.image, ...(container.gallery_urls || []).filter(Boolean)];
+  const allImages = [container.image_url, ...(container.gallery_urls || [])].filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,8 +115,7 @@ export default function ProductDetail() {
           {/* Right - Calculator (Sticky) */}
           <div>
             <div className="lg:sticky lg:top-24">
-              <SizeSelector selected={selectedSize} onChange={setSelectedSize} />
-              <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} selectedSizeName={selectedSizeOption.label} />
+              <ShippingCalculator container={container} initialZip={zipCode} />
               
               {/* Call Banner */}
               <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">
