@@ -8,7 +8,7 @@ import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import SizeSelector, { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronRight, Loader2, Phone } from 'lucide-react';
+import { Star, ChevronRight, Loader2 } from 'lucide-react';
 
 const GRADE_INFO = {
   'AS_IS': { label: 'As-Is', desc: 'Container may have cosmetic and structural issues. Sold as-is with no guarantees.' },
@@ -116,25 +116,10 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* Right - Calculator (Sticky) */}
-          <div>
-            <div className="lg:sticky lg:top-24">
-              <SizeSelector selected={selectedSize} onChange={setSelectedSize} />
-              <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} selectedSizeName={selectedSizeOption.label} />
-              
-              {/* Call Banner */}
-              <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">
-                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-white/50 font-mono mb-0.5">CALL FOR BEST PRICING</p>
-                  <a href="tel:+18889779085" className="font-mono font-bold text-primary hover:underline text-lg">
-                    (888) 977-9085
-                  </a>
-                </div>
-              </div>
-            </div>
+          {/* Right - Purchase Panel (Sticky) */}
+          <div className="lg:sticky lg:top-24 self-start">
+            <SizeSelector selected={selectedSize} onChange={setSelectedSize} />
+            <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} selectedSizeName={selectedSizeOption.label} />
           </div>
         </div>
       </div>

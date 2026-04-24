@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { MapPin, Truck, Building2, Loader2, Info, ShoppingCart } from 'lucide-react';
-import { isValidZipCode, calculateDeliveryFee, getLocationFromZip } from '@/lib/zipUtils';
+import { MapPin, Truck, Building2, Loader2, ShoppingCart, Phone, ChevronDown, Check } from 'lucide-react';
+import { isValidZipCode, calculateDeliveryFee } from '@/lib/zipUtils';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const CONDITION_OPTIONS = [
-  {
-    key: 'used',
-    label: 'Used',
-    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&q=80',
-  },
-  {
-    key: 'new',
-    label: 'New',
-    image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=400&q=80',
-  },
-];
+import { Link } from 'react-router-dom';
 
 const GRADE_OPTIONS = [
   { key: 'AS_IS', label: 'AS IS', adjust: -100 },
   { key: 'WWT', label: 'Wind & Water Tight', adjust: 200 },
-  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 400 },
+  { key: 'CW', label: 'Cargo Worthy', adjust: 400 },
   { key: 'IICL', label: 'IICL', adjust: 0 },
 ];
 
@@ -64,236 +52,219 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
   const totalPrice = (containerPrice + deliveryFee) * qty;
 
   const locationLabel = deliveryInfo
-    ? `${deliveryInfo.city}`
-    : (zip && isValidZipCode(zip) ? zip : 'Enter ZIP to calculate');
+    ? deliveryInfo.city
+    : (zip && isValidZipCode(zip) ? zip : 'Set delivery location');
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+      {/* ── HEADER ── */}
+      <div className="px-6 pt-6 pb-5 border-b border-border">
+        <h2 className="text-xl font-bold text-foreground tracking-tight">Buy Container</h2>
+        <p className="text-sm text-muted-foreground mt-1">Select your configuration below</p>
+      </div>
 
-      {/* ZIP BAR */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <button
-          onClick={() => setZipOpen(o => !o)}
-          className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/40 transition-colors"
-        >
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-            <span>Delivering to</span>
-            <span className="font-mono text-foreground font-medium">{locationLabel}</span>
+      <div className="px-6 py-5 flex flex-col gap-6">
+
+        {/* ── CONDITION ── */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Condition</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            {[
+              { key: 'new', label: 'New', sub: 'One-trip / unused' },
+              { key: 'used', label: 'Used', sub: 'Wind & water tight' },
+            ].map((opt) => {
+              const isSelected = condition === opt.key;
+              return (
+                <button
+                  key={opt.key}
+                  onClick={() => setCondition(opt.key)}
+                  className={`flex flex-col items-start gap-0.5 px-4 py-3.5 rounded-xl border-2 transition-all duration-200 text-left ${
+                    isSelected
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/40 hover:bg-muted/20'
+                  }`}
+                >
+                  <span className={`text-sm font-semibold ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                    {opt.label}
+                  </span>
+                  <span className="text-xs text-muted-foreground">{opt.sub}</span>
+                </button>
+              );
+            })}
           </div>
-          <span className="text-xs font-bold text-primary">
-            {zipOpen ? 'Close' : 'Change'}
-          </span>
-        </button>
-        <AnimatePresence initial={false}>
-          {zipOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden border-t border-border"
-            >
-              <form onSubmit={handleZipSubmit} className="flex gap-2 p-3">
-                <Input
-                  type="text"
-                  inputMode="numeric"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
-                  placeholder="Enter ZIP code"
-                  className="flex-1 font-mono h-10"
-                />
-                <Button type="submit" className="bg-primary hover:bg-primary/90 h-10 px-4 text-xs font-bold">
-                  {isCalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'APPLY'}
-                </Button>
-              </form>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+        </div>
 
-      {/* PRICE HERO */}
-      <div className="border border-border rounded-xl bg-card px-5 py-4 flex items-center justify-between">
-        <span className="font-mono text-3xl font-bold text-primary tracking-tight">
-          ${containerPrice.toLocaleString()}.00
-        </span>
-        <span className="text-xs font-bold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20 rounded-full px-4 py-1.5">
-          Buy Now
-        </span>
-      </div>
+        {/* ── GRADE ── */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Grade</p>
+          <div className="grid grid-cols-2 gap-2">
+            {GRADE_OPTIONS.map((opt) => {
+              const isSelected = grade === opt.key;
+              return (
+                <button
+                  key={opt.key}
+                  onClick={() => setGrade(opt.key)}
+                  className={`flex items-center justify-between px-3.5 py-3 rounded-xl border-2 transition-all duration-200 text-left ${
+                    isSelected
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/40 hover:bg-muted/20'
+                  }`}
+                >
+                  <span className={`text-xs font-semibold leading-tight ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                    {opt.label}
+                  </span>
+                  {isSelected && <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" strokeWidth={3} />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-      {/* CONDITION */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
-          <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Condition</span>
-          <span className="text-xs font-semibold text-foreground/70">
-            {CONDITION_OPTIONS.find(c => c.key === condition)?.label} {selectedSizeName}
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-2.5 p-3">
-          {CONDITION_OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              onClick={() => setCondition(opt.key)}
-              className={`flex items-center gap-3 p-2.5 rounded-lg border-2 transition-all text-left ${
-                condition === opt.key
-                  ? 'border-green-500 bg-green-500/10'
-                  : 'border-border bg-muted/30 hover:border-border/80'
-              }`}
-            >
-              <img
-                src={opt.image}
-                alt={opt.label}
-                className="w-14 h-11 object-cover rounded-md flex-shrink-0 bg-muted"
-              />
-              <div>
-                <p className="text-xs font-bold text-foreground">{opt.label} {selectedSizeName}</p>
-                <p className="text-sm font-bold font-mono text-foreground mt-0.5">
-                  ${(basePrice + gradeAdjust).toLocaleString()}.00
-                </p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* ── DELIVERY ── */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Delivery Method</p>
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            {[
+              { key: 'delivery', label: 'Home Delivery', icon: Truck },
+              { key: 'pickup', label: 'Self Pickup', icon: Building2 },
+            ].map(({ key, label, icon: Icon }) => {
+              const isSelected = deliveryMethod === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setDeliveryMethod(key)}
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                    isSelected
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-border text-muted-foreground hover:border-primary/40 hover:text-foreground'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </button>
+              );
+            })}
+          </div>
 
-      {/* GRADE */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
-          <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Grade</span>
-          <span className="text-xs font-semibold text-foreground/70">
-            {GRADE_OPTIONS.find(g => g.key === grade)?.label}
-          </span>
-        </div>
-        <div className="grid grid-cols-4 gap-1.5 p-3">
-          {GRADE_OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              onClick={() => setGrade(opt.key)}
-              className={`py-2.5 px-1 rounded-lg border-2 text-center transition-all ${
-                grade === opt.key
-                  ? 'border-green-500 bg-green-500/10 text-foreground'
-                  : 'border-border bg-muted/30 text-muted-foreground hover:border-border/80 hover:text-foreground'
-              }`}
-            >
-              <span className="text-[10px] font-bold leading-tight block">{opt.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* SELECTION TYPE */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <div className="px-4 py-2.5 border-b border-border">
-          <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Selection Type</span>
-        </div>
-        <div className="p-3">
-          <button className="w-full flex items-center gap-3 p-3 rounded-lg border-2 border-green-500 bg-green-500/10 text-sm font-semibold text-foreground transition-all">
-            <span className="text-base">✅</span>
-            First off the Stack (FO)
+          {/* ZIP */}
+          <button
+            onClick={() => setZipOpen(o => !o)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-muted/40 hover:bg-muted/60 border border-border transition-colors"
+          >
+            <div className="flex items-center gap-2.5 text-sm">
+              <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
+              <span className="text-muted-foreground">Delivering to</span>
+              <span className="font-medium text-foreground">{locationLabel}</span>
+            </div>
+            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${zipOpen ? 'rotate-180' : ''}`} />
           </button>
-        </div>
-      </div>
 
-      {/* DELIVERY METHOD */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <div className="px-4 py-2.5 border-b border-border">
-          <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Delivery Method</span>
+          <AnimatePresence initial={false}>
+            {zipOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <form onSubmit={handleZipSubmit} className="flex gap-2 pt-2.5">
+                  <Input
+                    type="text"
+                    inputMode="numeric"
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                    placeholder="Enter ZIP code"
+                    className="flex-1 h-10 text-sm"
+                    autoFocus
+                  />
+                  <Button type="submit" size="sm" className="h-10 px-5 bg-primary hover:bg-primary/90 text-sm font-semibold">
+                    {isCalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Apply'}
+                  </Button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-        <div className="grid grid-cols-2 gap-2 p-3">
-          {[
-            { key: 'delivery', label: 'Delivery', icon: Truck },
-            { key: 'pickup', label: 'Customer Pickup', icon: Building2 },
-          ].map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => setDeliveryMethod(key)}
-              className={`flex items-center justify-center gap-2 py-2.5 rounded-lg border-2 text-xs font-bold transition-all ${
-                deliveryMethod === key
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-border bg-muted/30 text-muted-foreground hover:border-border/80'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
 
-      {/* CHECKOUT */}
-      <div className="border border-border rounded-xl bg-card overflow-hidden">
-        <div className="p-4 flex flex-col gap-3">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Info className="w-3.5 h-3.5 flex-shrink-0" />
-            Sales tax calculated at checkout
+        {/* ── PRICE BREAKDOWN ── */}
+        <div className="rounded-xl bg-muted/40 border border-border p-4 flex flex-col gap-2.5">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-muted-foreground">Container price</span>
+            <span className="font-medium text-foreground">${containerPrice.toLocaleString()}</span>
           </div>
-          <hr className="border-border" />
-
-          {/* Price breakdown */}
-          {deliveryInfo && (
-            <div className="space-y-1.5 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Container</span>
-                <span className="font-mono font-semibold">${containerPrice.toLocaleString()}</span>
-              </div>
-              {deliveryMethod === 'delivery' && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Delivery to {deliveryInfo.city}</span>
-                  <span className="font-mono font-semibold">${deliveryFee.toLocaleString()}</span>
-                </div>
-              )}
-              {deliveryMethod === 'pickup' && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Pickup</span>
-                  <span className="font-mono font-semibold text-green-600">FREE</span>
-                </div>
-              )}
+          {deliveryInfo && deliveryMethod === 'delivery' && (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Delivery to {deliveryInfo.city}</span>
+              <span className="font-medium text-foreground">${deliveryFee.toLocaleString()}</span>
             </div>
           )}
-
-          <div className="flex items-baseline justify-between">
-            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Total</span>
-            <span className="font-mono text-2xl font-bold text-primary tracking-tight">
-              ${totalPrice.toLocaleString()}.00
-            </span>
+          {deliveryMethod === 'pickup' && (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Self pickup</span>
+              <span className="font-medium text-green-600">Free</span>
+            </div>
+          )}
+          {qty > 1 && (
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">Quantity</span>
+              <span className="font-medium text-foreground">× {qty}</span>
+            </div>
+          )}
+          <div className="border-t border-border pt-2.5 flex justify-between items-baseline">
+            <span className="text-sm font-semibold text-foreground">Total</span>
+            <span className="text-2xl font-bold text-primary tracking-tight">${totalPrice.toLocaleString()}</span>
           </div>
+          <p className="text-xs text-muted-foreground">Sales tax calculated at checkout</p>
+        </div>
 
-          <div className="grid grid-cols-[96px_1fr] gap-2">
-            {/* Quantity */}
-            <div className="flex items-center border border-border rounded-lg overflow-hidden bg-muted/30">
+        {/* ── QUANTITY + CTA ── */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground w-16 flex-shrink-0">Quantity</span>
+            <div className="flex items-center border border-border rounded-xl overflow-hidden bg-card h-10">
               <button
                 onClick={() => setQty(q => Math.max(1, q - 1))}
-                className="w-8 h-full flex items-center justify-center text-lg text-muted-foreground hover:bg-border hover:text-foreground transition-colors"
+                className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors font-medium text-lg"
               >
                 −
               </button>
-              <span className="flex-1 text-center font-mono text-sm font-medium text-foreground">
-                {qty}
-              </span>
+              <span className="w-8 text-center text-sm font-semibold text-foreground select-none">{qty}</span>
               <button
                 onClick={() => setQty(q => q + 1)}
-                className="w-8 h-full flex items-center justify-center text-lg text-muted-foreground hover:bg-border hover:text-foreground transition-colors"
+                className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors font-medium text-lg"
               >
                 +
               </button>
             </div>
-
-            {/* Add to Cart */}
-            <Button className="h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wide gap-2">
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
-            </Button>
           </div>
 
-          {deliveryInfo?.estimatedDays && deliveryMethod === 'delivery' && (
-            <p className="text-xs text-muted-foreground font-mono text-center">
-              Est. delivery: {deliveryInfo.estimatedDays} business days
-            </p>
-          )}
-        </div>
-      </div>
+          <Button className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base font-semibold rounded-xl shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 gap-2.5">
+            <ShoppingCart className="w-5 h-5" />
+            Add to Cart
+          </Button>
 
+          <Link to="/contact">
+            <Button variant="outline" className="w-full h-11 rounded-xl border-2 font-semibold text-sm hover:border-primary hover:text-primary transition-all duration-200">
+              Request a Quote
+            </Button>
+          </Link>
+        </div>
+
+        {/* ── CALL STRIP ── */}
+        <div className="flex items-center gap-3 pt-1">
+          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <Phone className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Have questions? Call us</p>
+            <a href="tel:+18889779085" className="text-sm font-bold text-foreground hover:text-primary transition-colors">
+              (888) 977-9085
+            </a>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
