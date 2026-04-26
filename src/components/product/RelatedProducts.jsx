@@ -31,6 +31,15 @@ const RELATED = [
     price: '$1,550.00',
     image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&q=80',
   },
+  {
+    id: 'new-40ft-hc',
+    title: 'New 40 ft High Cube Container',
+    subtitle: 'High Cube 9 ft 6 in | One-Trip New...',
+    locationLabel: 'IICL New One-Trip Conex Box',
+    defaultCity: 'Miami, FL',
+    price: '$5,400.00',
+    image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&q=80',
+  },
 ];
 
 export default function RelatedProducts({ zipCode }) {
@@ -40,7 +49,7 @@ export default function RelatedProducts({ zipCode }) {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
       <h2 className="text-2xl font-black text-foreground mb-8">Related Products</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {RELATED.map((product) => (
           <div
             key={product.id}
