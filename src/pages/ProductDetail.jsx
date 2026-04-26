@@ -108,14 +108,6 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* Live price display */}
-              <div className="mb-6">
-                <p className="text-4xl font-black text-primary tabular-nums">
-                  ${activePrice.toLocaleString()}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">{selectedSize.dims}</p>
-              </div>
-
               {/* Grade Info */}
               <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
                 <p className="text-xs font-mono text-primary tracking-widest mb-2">GRADE CLASSIFICATION</p>
