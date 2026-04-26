@@ -5,13 +5,7 @@ import { MapPin, Truck, Building2, Loader2, ShoppingCart, Phone, ChevronDown, Ch
 import { isValidZipCode, calculateDeliveryFee } from '@/lib/zipUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-
-const GRADE_OPTIONS = [
-  { key: 'AS_IS',  label: 'As-Is',            sub: 'Save $100',    adjust: -100 },
-  { key: 'WWT',    label: 'Wind & Water Tight', sub: '+$200',       adjust:  200 },
-  { key: 'CW',     label: 'Cargo Worthy',       sub: '+$400',       adjust:  400 },
-  { key: 'IICL',   label: 'IICL',               sub: 'Top grade',   adjust:    0 },
-];
+import { SIZE_OPTIONS } from './SizeSelector';
 
 function SectionLabel({ children }) {
   return (
@@ -25,14 +19,20 @@ function Divider() {
   return <div className="h-px bg-border w-full" />;
 }
 
-export default function ShippingCalculator({ container, initialZip = '', overridePrice, selectedSizeName }) {
+export default function ShippingCalculator({
+  container,
+  initialZip = '',
+  // These are now controlled from the parent (ProductDetail)
+  selectedSizeIndex,
+  onSizeChange,
+  condition,
+  onConditionChange,
+}) {
   const [zip, setZip] = useState(initialZip);
   const [zipOpen, setZipOpen] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState('delivery');
   const [deliveryInfo, setDeliveryInfo] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [condition, setCondition] = useState('new');
-  const [grade, setGrade] = useState('IICL');
   const [qty, setQty] = useState(1);
 
   useEffect(() => {
@@ -52,13 +52,12 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
 
   const handleZipSubmit = (e) => { e.preventDefault(); runCalculate(zip); };
 
-  const gradeAdjust    = GRADE_OPTIONS.find(g => g.key === grade)?.adjust ?? 0;
-  const basePrice      = overridePrice ?? container?.base_price ?? 0;
-  const containerPrice = basePrice + gradeAdjust;
-  const deliveryFee    = deliveryMethod === 'delivery' ? (deliveryInfo?.fee || 0) : 0;
-  const totalPrice     = (containerPrice + deliveryFee) * qty;
+  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
+  const basePrice  = condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+  const deliveryFee = deliveryMethod === 'delivery' ? (deliveryInfo?.fee || 0) : 0;
+  const totalPrice  = (basePrice + deliveryFee) * qty;
 
-  const locationLabel  = deliveryInfo
+  const locationLabel = deliveryInfo
     ? deliveryInfo.city
     : (zip && isValidZipCode(zip) ? zip : 'Set delivery location');
 
@@ -79,7 +78,7 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
           <div className="text-right flex-shrink-0">
             <p className="text-[11px] text-muted-foreground leading-none mb-1">From</p>
             <p className="text-2xl font-bold text-primary tabular-nums leading-none">
-              ${containerPrice.toLocaleString()}
+              ${basePrice.toLocaleString()}
             </p>
           </div>
         </div>
@@ -87,19 +86,64 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
 
       <div className="px-6 py-6 flex flex-col gap-7">
 
+        {/* ── SIZE ── */}
+        <div>
+          <SectionLabel>Container Size</SectionLabel>
+          <div className="flex flex-col gap-2">
+            {SIZE_OPTIONS.map((opt, i) => {
+              const active = selectedSizeIndex === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => onSizeChange(i)}
+                  className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl border transition-all duration-200 text-left group ${
+                    active
+                      ? 'border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20'
+                      : 'border-border bg-transparent hover:border-border/80 hover:bg-muted/20'
+                  }`}
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                      active ? 'border-primary bg-primary' : 'border-muted-foreground/40 group-hover:border-muted-foreground/70'
+                    }`}>
+                      {active && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
+                    </div>
+                    <div>
+                      <p className={`text-[13px] font-semibold leading-none mb-1 transition-colors ${active ? 'text-primary' : 'text-foreground'}`}>
+                        {opt.label}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground leading-none">{opt.dims}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-[12px] font-semibold tabular-nums leading-none mb-0.5 transition-colors ${active ? 'text-primary' : 'text-foreground/80'}`}>
+                      Used ${opt.usedPrice.toLocaleString()}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground tabular-nums leading-none">
+                      New ${opt.newPrice.toLocaleString()}
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <Divider />
+
         {/* ── CONDITION ── */}
         <div>
           <SectionLabel>Condition</SectionLabel>
           <div className="grid grid-cols-2 gap-2">
             {[
-              { key: 'new',  label: 'New',  sub: 'One-trip / unused' },
-              { key: 'used', label: 'Used', sub: 'Wind & water tight' },
+              { key: 'used', label: 'Used Container', sub: 'Wind & water tight' },
+              { key: 'new',  label: 'New Container',  sub: 'One-trip / unused' },
             ].map((opt) => {
               const active = condition === opt.key;
               return (
                 <button
                   key={opt.key}
-                  onClick={() => setCondition(opt.key)}
+                  onClick={() => onConditionChange(opt.key)}
                   className={`flex flex-col items-start px-4 py-3.5 rounded-xl border transition-all duration-200 text-left ${
                     active
                       ? 'border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20'
@@ -118,48 +162,15 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
 
         <Divider />
 
-        {/* ── GRADE ── */}
-        <div>
-          <SectionLabel>Grade</SectionLabel>
-          <div className="grid grid-cols-2 gap-2">
-            {GRADE_OPTIONS.map((opt) => {
-              const active = grade === opt.key;
-              return (
-                <button
-                  key={opt.key}
-                  onClick={() => setGrade(opt.key)}
-                  className={`flex items-start justify-between px-4 py-3.5 rounded-xl border transition-all duration-200 text-left ${
-                    active
-                      ? 'border-primary/60 bg-primary/[0.06] ring-1 ring-primary/20'
-                      : 'border-border hover:border-border/80 hover:bg-muted/20'
-                  }`}
-                >
-                  <div>
-                    <span className={`block text-[13px] font-semibold leading-none mb-1.5 ${active ? 'text-primary' : 'text-foreground'}`}>
-                      {opt.label}
-                    </span>
-                    <span className="block text-[11px] text-muted-foreground leading-none">{opt.sub}</span>
-                  </div>
-                  {active && (
-                    <Check className="w-3.5 h-3.5 text-primary flex-shrink-0 mt-0.5" strokeWidth={3} />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <Divider />
-
         {/* ── DELIVERY ── */}
         <div>
           <SectionLabel>Delivery</SectionLabel>
 
           <div className="grid grid-cols-2 gap-2 mb-3">
             {[
-              { key: 'delivery', label: 'Home Delivery', icon: Truck },
-              { key: 'pickup',   label: 'Self Pickup',   icon: Building2 },
-            ].map(({ key, label, icon: Icon }) => {
+              { key: 'delivery', label: 'Home Delivery', Icon: Truck },
+              { key: 'pickup',   label: 'Self Pickup',   Icon: Building2 },
+            ].map(({ key, label, Icon }) => {
               const active = deliveryMethod === key;
               return (
                 <button
@@ -225,8 +236,8 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
         <div className="rounded-xl bg-muted/30 border border-border/60 overflow-hidden">
           <div className="px-5 py-4 flex flex-col gap-3">
             <div className="flex justify-between items-center">
-              <span className="text-[13px] text-muted-foreground">Container</span>
-              <span className="text-[13px] font-medium text-foreground tabular-nums">${containerPrice.toLocaleString()}</span>
+              <span className="text-[13px] text-muted-foreground">{sizeOption.label} · {condition === 'new' ? 'New' : 'Used'}</span>
+              <span className="text-[13px] font-medium text-foreground tabular-nums">${basePrice.toLocaleString()}</span>
             </div>
             {deliveryInfo && deliveryMethod === 'delivery' && (
               <div className="flex justify-between items-center">
@@ -266,18 +277,12 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
               <button
                 onClick={() => setQty(q => Math.max(1, q - 1))}
                 className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors text-xl font-light"
-              >
-                −
-              </button>
-              <span className="flex-1 text-center text-[13px] font-semibold text-foreground select-none tabular-nums">
-                {qty}
-              </span>
+              >−</button>
+              <span className="flex-1 text-center text-[13px] font-semibold text-foreground select-none tabular-nums">{qty}</span>
               <button
                 onClick={() => setQty(q => q + 1)}
                 className="w-10 h-full flex items-center justify-center text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors text-xl font-light"
-              >
-                +
-              </button>
+              >+</button>
             </div>
           </div>
 
@@ -287,10 +292,7 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
           </Button>
 
           <Link to="/contact">
-            <Button
-              variant="outline"
-              className="w-full h-11 rounded-xl border border-border font-semibold text-[13px] text-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200"
-            >
+            <Button variant="outline" className="w-full h-11 rounded-xl border border-border font-semibold text-[13px] text-foreground hover:border-primary hover:text-primary hover:bg-primary/5 transition-all duration-200">
               Request a Quote
             </Button>
           </Link>
@@ -298,7 +300,7 @@ export default function ShippingCalculator({ container, initialZip = '', overrid
 
         {/* ── CALL STRIP ── */}
         <div className="flex items-center gap-3.5 pt-1 pb-1">
-          <div className="w-10 h-10 rounded-xl bg-primary/8 border border-primary/15 flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/15 flex items-center justify-center flex-shrink-0">
             <Phone className="w-4 h-4 text-primary" />
           </div>
           <div>
