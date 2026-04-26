@@ -6,22 +6,25 @@ import ContainerGallery from '@/components/product/ContainerGallery';
 import ShippingCalculator from '@/components/product/ShippingCalculator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
-import SizeSelector, { SIZE_OPTIONS } from '@/components/product/SizeSelector';
+import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronRight, Loader2, Phone } from 'lucide-react';
+import { Star, ChevronRight, Loader2 } from 'lucide-react';
 
 const GRADE_INFO = {
   'AS_IS': { label: 'As-Is', desc: 'Container may have cosmetic and structural issues. Sold as-is with no guarantees.' },
-  'WWT': { label: 'Wind & Water Tight', desc: 'Guaranteed not to leak. May have dings, dents, and surface rust. Doors in working order.' },
-  'CW': { label: 'Cargo Worthy', desc: 'Certified for international shipping. Structurally sound and watertight. Inspected by certified surveyor.' },
-  'IICL': { label: 'IICL Certified', desc: 'Meets the highest international standards. Minimal wear, premium condition.' },
+  'WWT':   { label: 'Wind & Water Tight', desc: 'Guaranteed not to leak. May have dings, dents, and surface rust. Doors in working order.' },
+  'CW':    { label: 'Cargo Worthy', desc: 'Certified for international shipping. Structurally sound and watertight. Inspected by certified surveyor.' },
+  'IICL':  { label: 'IICL Certified', desc: 'Meets the highest international standards. Minimal wear, premium condition.' },
 };
 
 export default function ProductDetail() {
   const { id } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
   const zipCode = urlParams.get('zip') || '';
-  const [selectedSize, setSelectedSize] = useState(0);
+
+  // Configurator state — owned here, passed to right panel
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState(0); // 0 = 20ft Standard
+  const [condition, setCondition] = useState('used');             // default: Used
 
   const { data: container, isLoading } = useQuery({
     queryKey: ['container', id],
@@ -42,17 +45,20 @@ export default function ProductDetail() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-muted-foreground mb-4">Container not found.</p>
-          <Link to="/inventory" className="text-primary hover:underline">
-            Browse all containers
-          </Link>
+          <Link to="/inventory" className="text-primary hover:underline">Browse all containers</Link>
         </div>
       </div>
     );
   }
 
-  const gradeInfo = GRADE_INFO[container.grade] || {};
-  const selectedSizeOption = SIZE_OPTIONS[selectedSize];
-  const allImages = [selectedSizeOption.image, ...(container.gallery_urls || []).filter(Boolean)];
+  const gradeInfo       = GRADE_INFO[container.grade] || {};
+  const selectedSize    = SIZE_OPTIONS[selectedSizeIndex];
+  const activePrice     = condition === 'new' ? selectedSize.newPrice : selectedSize.usedPrice;
+  // Gallery: selected size image first, then any extra images from the DB record
+  const allImages       = [selectedSize.image, ...(container.gallery_urls || []).filter(Boolean)];
+
+  // Dynamic title derived from selected size + condition
+  const dynamicTitle = `${condition === 'new' ? 'New' : 'Used'} ${selectedSize.label} Shipping Container`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,29 +70,33 @@ export default function ProductDetail() {
             <ChevronRight className="w-3 h-3" />
             <Link to="/inventory" className="hover:text-primary transition-colors">Inventory</Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground font-medium truncate">{container.name}</span>
+            <span className="text-foreground font-medium truncate">{dynamicTitle}</span>
           </nav>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Left - Gallery */}
+
+          {/* Left — Gallery + Info */}
           <div>
-            <ContainerGallery images={allImages} />
-            
-            {/* Description */}
+            <ContainerGallery images={allImages} key={selectedSizeIndex} />
+
             <div className="mt-10">
-              <h2 className="text-3xl font-black text-foreground mb-5 leading-tight">{container.name}</h2>
-              
+              {/* Dynamic title */}
+              <h2 className="text-3xl font-black text-foreground mb-5 leading-tight">
+                {dynamicTitle}
+              </h2>
+
+              {/* Badges */}
               <div className="flex flex-wrap items-center gap-2 mb-6">
                 <Badge className="bg-primary/10 text-primary font-mono rounded-full px-3">
-                  {container.size}ft
+                  {selectedSize.size}ft
                 </Badge>
                 <Badge variant="outline" className="font-mono rounded-full px-3">
-                  {container.condition?.charAt(0).toUpperCase() + container.condition?.slice(1)}
+                  {condition.charAt(0).toUpperCase() + condition.slice(1)}
                 </Badge>
-                {container.height === 'high_cube' && (
+                {selectedSize.height === 'high_cube' && (
                   <Badge variant="outline" className="font-mono text-primary border-primary rounded-full px-3">
                     High Cube
                   </Badge>
@@ -96,6 +106,14 @@ export default function ProductDetail() {
                   <span className="text-sm font-semibold">{container.rating}</span>
                   <span className="text-xs text-muted-foreground">({container.review_count} reviews)</span>
                 </div>
+              </div>
+
+              {/* Live price display */}
+              <div className="mb-6">
+                <p className="text-4xl font-black text-primary tabular-nums">
+                  ${activePrice.toLocaleString()}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">{selectedSize.dims}</p>
               </div>
 
               {/* Grade Info */}
@@ -111,30 +129,20 @@ export default function ProductDetail() {
                 </p>
               )}
 
-              {/* FAQ */}
               <ProductFAQ />
             </div>
           </div>
 
-          {/* Right - Calculator (Sticky) */}
-          <div>
-            <div className="lg:sticky lg:top-24">
-              <SizeSelector selected={selectedSize} onChange={setSelectedSize} />
-              <ShippingCalculator container={container} initialZip={zipCode} overridePrice={selectedSizeOption.price} selectedSizeName={selectedSizeOption.label} />
-              
-              {/* Call Banner */}
-              <div className="mt-4 bg-accent text-white rounded-2xl p-5 flex items-center gap-4 border border-white/[0.08]">
-                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-white/50 font-mono mb-0.5">CALL FOR BEST PRICING</p>
-                  <a href="tel:+18889779085" className="font-mono font-bold text-primary hover:underline text-lg">
-                    (888) 977-9085
-                  </a>
-                </div>
-              </div>
-            </div>
+          {/* Right — Purchase Panel (Sticky) */}
+          <div className="lg:sticky lg:top-24 self-start">
+            <ShippingCalculator
+              container={container}
+              initialZip={zipCode}
+              selectedSizeIndex={selectedSizeIndex}
+              onSizeChange={setSelectedSizeIndex}
+              condition={condition}
+              onConditionChange={setCondition}
+            />
           </div>
         </div>
       </div>
