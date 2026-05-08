@@ -1,241 +1,114 @@
-const inventoryProducts = [
-  {
-    id: 1,
-    name: 'Used 20 ft Shipping Container Standard 8 ft 6 in High | Wind & Water Tight',
-    condition: 'Used',
-    size: 20,
-    height: 'standard',
-    grade: 'WWT',
-    base_price: 1350,
-    rating: 4.9,
-    review_count: 207,
-    image_url: 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=1200&q=80',
-    short_description: 'Affordable wind and water tight storage container ready for fast delivery.',
-    is_available: true,
-    is_bestseller: true,
-  },
+import React, { useState } from 'react';
+import { Star, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import QuickViewModal from '@/components/shared/QuickViewModal';
 
-  {
-    id: 2,
-    name: 'Used 40 ft Shipping Container Standard Height | Wind & Water Tight',
-    condition: 'Used',
-    size: 40,
-    height: 'standard',
-    grade: 'WWT',
-    base_price: 1800,
-    rating: 4.9,
-    review_count: 217,
-    image_url: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80',
-    short_description: 'Heavy-duty 40 ft storage container ideal for commercial use.',
-    is_available: true,
-    is_bestseller: true,
-  },
+const GRADE_LABELS = {
+  'AS_IS': 'As-Is',
+  'WWT': 'Wind & Water Tight',
+  'CW': 'Cargo Worthy',
+  'IICL': 'IICL Certified',
+};
 
-  {
-    id: 3,
-    name: 'Used 40 ft High Cube Shipping Container 9 ft 6 in High | WWT',
-    condition: 'Used',
-    size: 40,
-    height: 'high_cube',
-    grade: 'WWT',
-    base_price: 2050,
-    rating: 4.8,
-    review_count: 198,
-    image_url: 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=1200&q=80',
-    short_description: 'Extra height high cube container with wind and water tight protection.',
-    is_available: true,
-    is_bestseller: true,
-  },
+export default function InventoryListCard({ container, index }) {
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const stars = Math.round(container.rating || 5);
+  const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
 
-  {
-    id: 4,
-    name: 'New 20 ft One-Trip Shipping Container Standard Height | IICL',
-    condition: 'New',
-    size: 20,
-    height: 'standard',
-    grade: 'IICL',
-    base_price: 2900,
-    rating: 5,
-    review_count: 184,
-    image_url: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80',
-    short_description: 'Premium one-trip container with minimal wear and clean interior.',
-    is_available: true,
-    is_bestseller: false,
-  },
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.05, duration: 0.35 }}
+        onClick={() => navigate(`/product/${container.id}`)}
+        className="bg-card border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row cursor-pointer"
+      >
+        {/* LEFT — Single image */}
+        <div className="sm:w-[35%] flex-shrink-0 bg-muted overflow-hidden" style={{ minHeight: '220px' }}>
+          <img
+            src={container.image_url || 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'}
+            alt={container.name}
+            className="w-full h-full object-cover"
+            style={{ minHeight: '220px' }}
+          />
+        </div>
 
-  {
-    id: 5,
-    name: 'Used 20 ft Cargo Worthy Shipping Container Standard Height',
-    condition: 'Used',
-    size: 20,
-    height: 'standard',
-    grade: 'CW',
-    base_price: 1650,
-    rating: 4.8,
-    review_count: 142,
-    image_url: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=80',
-    short_description: 'Cargo worthy certified container suitable for shipping and export.',
-    is_available: true,
-    is_bestseller: false,
-  },
+        {/* RIGHT — Details */}
+        <div className="flex-1 p-5 flex flex-col justify-between">
+          <div>
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2 mb-2">
+              {container.is_bestseller && (
+                <span className="text-xs font-mono font-bold tracking-wider bg-primary text-primary-foreground px-2.5 py-0.5 rounded-full">BESTSELLER</span>
+              )}
+              <span className="text-xs font-mono bg-muted text-muted-foreground px-2.5 py-0.5 rounded-full">{container.size}ft</span>
+              {container.height === 'high_cube' && (
+                <span className="text-xs font-mono bg-primary/10 text-primary px-2.5 py-0.5 rounded-full">HIGH CUBE</span>
+              )}
+              {container.is_available ? (
+                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-0.5 rounded-full">In Stock</span>
+              ) : (
+                <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-0.5 rounded-full">Limited</span>
+              )}
+            </div>
 
-  {
-    id: 6,
-    name: 'Used 40 ft Cargo Worthy Shipping Container Standard Height',
-    condition: 'Used',
-    size: 40,
-    height: 'standard',
-    grade: 'CW',
-    base_price: 2450,
-    rating: 4.7,
-    review_count: 161,
-    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80',
-    short_description: 'Durable steel container certified cargo worthy for export use.',
-    is_available: true,
-    is_bestseller: false,
-  },
+            <h3 className="font-bold text-foreground text-base leading-snug mb-2">{container.name}</h3>
 
-  {
-    id: 7,
-    name: 'New 40 ft High Cube One-Trip Shipping Container | IICL',
-    condition: 'New',
-    size: 40,
-    height: 'high_cube',
-    grade: 'IICL',
-    base_price: 5400,
-    rating: 5,
-    review_count: 124,
-    image_url: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=1200&q=80',
-    short_description: 'Premium one-trip high cube container with extra storage capacity.',
-    is_available: true,
-    is_bestseller: true,
-  },
+            {/* Stars */}
+            <div className="flex items-center gap-1.5 mb-3">
+              <span className="text-sm font-bold text-foreground">{(container.rating || 5).toFixed(1)}</span>
+              <div className="flex">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={`w-3.5 h-3.5 ${i < stars ? 'fill-yellow-400 text-yellow-400' : 'fill-muted text-muted-foreground'}`} />
+                ))}
+              </div>
+              <span className="text-xs text-muted-foreground">({container.review_count || 0})</span>
+            </div>
 
-  {
-    id: 8,
-    name: 'Used 10 ft Shipping Container Standard Height | WWT',
-    condition: 'Used',
-    size: 10,
-    height: 'standard',
-    grade: 'WWT',
-    base_price: 2250,
-    rating: 4.8,
-    review_count: 91,
-    image_url: 'https://images.unsplash.com/photo-1524522173746-f628baad3644?w=1200&q=80',
-    short_description: 'Compact storage solution perfect for residential or business use.',
-    is_available: true,
-    is_bestseller: false,
-  },
+            {/* Price */}
+            <p className="text-2xl font-black text-primary mb-3">
+              ${container.base_price?.toLocaleString() || '—'}
+            </p>
 
-  {
-    id: 9,
-    name: 'Refurbished 20 ft Shipping Container Standard Height',
-    condition: 'Refurbished',
-    size: 20,
-    height: 'standard',
-    grade: 'WWT',
-    base_price: 2350,
-    rating: 4.9,
-    review_count: 76,
-    image_url: 'https://images.unsplash.com/photo-1571823251730-2a3d1ef5958d?w=1200&q=80',
-    short_description: 'Professionally refurbished container with improved appearance.',
-    is_available: true,
-    is_bestseller: false,
-  },
+            {/* Specs */}
+            <div className="space-y-1 text-sm mb-4">
+              {[
+                ['Condition', container.condition],
+                ['Door Type', container.door_type || 'Double Doors at 1 End'],
+                ['Grade', gradeLabel],
+              ].map(([label, value]) => (
+                <div key={label} className="flex gap-2">
+                  <span className="font-semibold text-foreground w-24 flex-shrink-0">{label}:</span>
+                  <span className="text-foreground/80">{value}</span>
+                </div>
+              ))}
+              {container.short_description && (
+                <p className="text-xs text-muted-foreground pt-1 line-clamp-2">{container.short_description}</p>
+              )}
+            </div>
+          </div>
 
-  {
-    id: 10,
-    name: 'Used 40 ft Shipping Container Standard Height | AS IS',
-    condition: 'Used',
-    size: 40,
-    height: 'standard',
-    grade: 'AS_IS',
-    base_price: 1450,
-    rating: 4.5,
-    review_count: 63,
-    image_url: 'https://images.unsplash.com/photo-1578243317822-8088b1c20538?w=1200&q=80',
-    short_description: 'Budget-friendly AS IS container suitable for static storage.',
-    is_available: true,
-    is_bestseller: false,
-  },
+          {/* Quick View button */}
+          <div>
+            <Button
+              variant="outline"
+              onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
+              className="rounded-xl h-10 font-semibold border-2 hover:border-primary hover:text-primary transition-all gap-2"
+            >
+              <Eye className="w-4 h-4" />
+              Quick View
+            </Button>
+          </div>
+        </div>
+      </motion.div>
 
-  {
-    id: 11,
-    name: 'New 20 ft Double Door Shipping Container | IICL',
-    condition: 'New',
-    size: 20,
-    height: 'standard',
-    grade: 'IICL',
-    base_price: 3350,
-    rating: 5,
-    review_count: 88,
-    image_url: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&q=80',
-    short_description: 'One-trip double door container for improved loading access.',
-    is_available: true,
-    is_bestseller: false,
-  },
-
-  {
-    id: 12,
-    name: 'Used 40 ft High Cube Cargo Worthy Container',
-    condition: 'Used',
-    size: 40,
-    height: 'high_cube',
-    grade: 'CW',
-    base_price: 3150,
-    rating: 4.8,
-    review_count: 117,
-    image_url: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
-    short_description: 'High cube cargo worthy container with strong steel structure.',
-    is_available: true,
-    is_bestseller: false,
-  },
-
-  {
-    id: 13,
-    name: 'New 40 ft Shipping Container Standard Height | IICL',
-    condition: 'New',
-    size: 40,
-    height: 'standard',
-    grade: 'IICL',
-    base_price: 4750,
-    rating: 4.9,
-    review_count: 102,
-    image_url: 'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=1200&q=80',
-    short_description: 'One-trip standard height container with premium condition.',
-    is_available: true,
-    is_bestseller: false,
-  },
-
-  {
-    id: 14,
-    name: 'Used 20 ft Shipping Container Standard Height | AS IS',
-    condition: 'Used',
-    size: 20,
-    height: 'standard',
-    grade: 'AS_IS',
-    base_price: 1150,
-    rating: 4.4,
-    review_count: 51,
-    image_url: 'https://images.unsplash.com/photo-1502175353174-a7a70e73b362?w=1200&q=80',
-    short_description: 'Economical storage container available for local delivery.',
-    is_available: true,
-    is_bestseller: false,
-  },
-
-  {
-    id: 15,
-    name: 'Refurbished 40 ft High Cube Shipping Container',
-    condition: 'Refurbished',
-    size: 40,
-    height: 'high_cube',
-    grade: 'WWT',
-    base_price: 3850,
-    rating: 4.9,
-    review_count: 94,
-    image_url: 'https://images.unsplash.com/photo-1546156929-a4c0ac411f47?w=1200&q=80',
-    short_description: 'Refurbished high cube container with clean exterior finish.',
-    is_available: true,
-    is_bestseller: false,
-  },
-];
+      {showModal && (
+        <QuickViewModal container={container} onClose={() => setShowModal(false)} />
+      )}
+    </>
+  );
+}
