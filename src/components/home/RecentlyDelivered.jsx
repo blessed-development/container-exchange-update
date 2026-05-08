@@ -1,87 +1,117 @@
 import React from 'react';
-import { MapPin, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { MapPin, Calendar, Container } from 'lucide-react';
 
 const DELIVERIES = [
-  {
-    id: 1,
-    headline: 'Shipping Containers For Sale Los Angeles CA',
-    date: 'March 18, 2026',
-    city: 'Los Angeles',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
-  },
-  {
-    id: 2,
-    headline: 'Shipping Containers For Sale Oakland Ca',
-    date: 'March 17, 2026',
-    city: 'Oakland',
-    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
-  },
-  {
-    id: 3,
-    headline: 'Shipping Containers For Sale Portland',
-    date: 'March 16, 2026',
-    city: 'Portland',
-    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
-  },
+  ['NEW 40HC One-Trip Shipping Container Delivered Los Angeles, CA', 'Los Angeles, CA', 'March 18, 2026'],
+  ['Used 20ft WWT Shipping Container Delivered Arlington, TN', 'Arlington, TN', 'March 17, 2026'],
+  ['NEW 20ft One-Trip Shipping Container Delivered Dallas, TX', 'Dallas, TX', 'March 16, 2026'],
+  ['Used 40ft Cargo Worthy Shipping Container Delivered Houston, TX', 'Houston, TX', 'March 15, 2026'],
+  ['NEW 40ft High Cube Shipping Container Delivered Miami, FL', 'Miami, FL', 'March 14, 2026'],
+  ['Used 20ft Storage Container Delivered Atlanta, GA', 'Atlanta, GA', 'March 13, 2026'],
+  ['NEW 40HC One-Trip Shipping Container Delivered Chicago, IL', 'Chicago, IL', 'March 12, 2026'],
+  ['Used 40ft WWT Shipping Container Delivered Phoenix, AZ', 'Phoenix, AZ', 'March 11, 2026'],
+  ['NEW 20ft Shipping Container Delivered Denver, CO', 'Denver, CO', 'March 10, 2026'],
+  ['Used 20ft Cargo Worthy Container Delivered Nashville, TN', 'Nashville, TN', 'March 09, 2026'],
+  ['NEW 40HC One-Trip Shipping Container Delivered Seattle, WA', 'Seattle, WA', 'March 08, 2026'],
+  ['Used 40ft Storage Container Delivered Portland, OR', 'Portland, OR', 'March 07, 2026'],
+  ['NEW 20ft One-Trip Container Delivered Tampa, FL', 'Tampa, FL', 'March 06, 2026'],
+  ['Used 20ft WWT Shipping Container Delivered Memphis, TN', 'Memphis, TN', 'March 05, 2026'],
+  ['NEW 40ft Standard Container Delivered Charlotte, NC', 'Charlotte, NC', 'March 04, 2026'],
+  ['Used 40HC WWT Container Delivered Las Vegas, NV', 'Las Vegas, NV', 'March 03, 2026'],
+  ['NEW 20ft Shipping Container Delivered San Antonio, TX', 'San Antonio, TX', 'March 02, 2026'],
+  ['Used 40ft Cargo Worthy Container Delivered Jacksonville, FL', 'Jacksonville, FL', 'March 01, 2026'],
+  ['NEW 40HC One-Trip Container Delivered Long Beach, CA', 'Long Beach, CA', 'February 28, 2026'],
+  ['Used 20ft Storage Container Delivered Cleveland, OH', 'Cleveland, OH', 'February 27, 2026'],
+  ['NEW 40ft High Cube Delivered Detroit, MI', 'Detroit, MI', 'February 26, 2026'],
+  ['Used 20ft WWT Container Delivered St. Louis, MO', 'St. Louis, MO', 'February 25, 2026'],
+  ['NEW 20ft One-Trip Container Delivered Cincinnati, OH', 'Cincinnati, OH', 'February 24, 2026'],
+  ['Used 40ft WWT Container Delivered Kansas City, KS', 'Kansas City, KS', 'February 23, 2026'],
+  ['NEW 40HC One-Trip Container Delivered Savannah, GA', 'Savannah, GA', 'February 22, 2026'],
+  ['Used 20ft Cargo Worthy Container Delivered Norfolk, VA', 'Norfolk, VA', 'February 21, 2026'],
+  ['NEW 40ft Standard Container Delivered Mobile, AL', 'Mobile, AL', 'February 20, 2026'],
+  ['Used 40HC WWT Container Delivered Salt Lake City, UT', 'Salt Lake City, UT', 'February 19, 2026'],
+  ['NEW 20ft Shipping Container Delivered Columbus, OH', 'Columbus, OH', 'February 18, 2026'],
+  ['Used 20ft WWT Container Delivered Raleigh, NC', 'Raleigh, NC', 'February 17, 2026'],
 ];
 
+const IMAGES = [
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&q=80',
+  'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=900&q=80',
+  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&q=80',
+  'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=900&q=80',
+  'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=80',
+];
+
+const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
+  id: index + 1,
+  headline,
+  city,
+  date,
+  image: IMAGES[index % IMAGES.length],
+}));
+
 export default function RecentlyDelivered() {
+  const loopCards = [...deliveryCards, ...deliveryCards];
+
   return (
-    <section className="py-24 bg-primary relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-4xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-            Recently Delivered Containers
-          </h2>
-          <p className="text-white/70 mt-2 font-semibold tracking-widest text-sm font-mono">
-            Updated Daily
-          </p>
+    <section className="bg-[#ff4b00] text-white py-16 overflow-hidden">
+      <style>
+        {`
+          @keyframes deliveredMarquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+
+          .delivered-marquee-track {
+            animation: deliveredMarquee 70s linear infinite;
+          }
+
+          .delivered-marquee-track:hover {
+            animation-play-state: paused;
+          }
+        `}
+      </style>
+
+      <div className="w-[96vw] max-w-[1760px] mx-auto">
+        <h2 className="text-center text-[clamp(38px,4vw,68px)] leading-[0.95] font-extrabold tracking-[-0.055em]">
+          Recently Delivered Containers
+        </h2>
+
+        <div className="text-center mt-4 mb-8 text-white/75 text-[14px] sm:text-[16px] font-bold tracking-[0.22em] uppercase">
+          Updated Daily
         </div>
 
-        {/* 3-column grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {DELIVERIES.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.4 }}
-              className="relative rounded-2xl overflow-hidden group cursor-pointer"
-              style={{ aspectRatio: '4/3' }}
-            >
-              <img
-                src={item.image}
-                alt={item.headline}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              {/* Dark overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="overflow-hidden">
+          <div className="delivered-marquee-track flex gap-3 w-max">
+            {loopCards.map((item, index) => (
+              <article
+                key={`${item.id}-${index}`}
+                className="relative flex-shrink-0 w-[84vw] sm:w-[46vw] lg:w-[24vw] xl:w-[23vw] h-[320px] rounded-[18px] overflow-hidden bg-[#111] bg-cover bg-center shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
+                style={{ backgroundImage: `url('${item.image}')` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
 
-              {/* Caption */}
-              <div className="absolute bottom-0 left-0 right-0 p-4">
-                <div className="flex items-start gap-2 mb-1.5">
-                  <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="text-primary w-4 h-4">
-                      <rect width="24" height="24" rx="2" fill="#cc2200"/>
-                      <path d="M4 5h16v2H4zm0 4h16v2H4zm0 4h10v2H4z" fill="white"/>
-                    </svg>
+                <div className="absolute left-5 right-5 bottom-5 z-10 text-shadow">
+                  <div className="flex items-start gap-2 text-[14px] leading-tight font-bold">
+                    <span className="w-5 h-5 rounded-md bg-[#ff4b00] grid place-items-center flex-shrink-0">
+                      <Container className="w-3.5 h-3.5" />
+                    </span>
+                    {item.headline}
                   </div>
-                  <p className="text-white font-semibold text-sm leading-tight">{item.headline}</p>
+
+                  <div className="flex items-center gap-2 mt-3 text-[12px] font-medium text-white/80">
+                    <Calendar className="w-4 h-4 text-[#ff4b00]" />
+                    {item.date}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-2 text-[12px] font-medium text-white/80">
+                    <MapPin className="w-4 h-4 text-[#ff4b00]" />
+                    {item.city}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-white/70 text-xs mb-1">
-                  <Calendar className="w-3 h-3 flex-shrink-0" />
-                  <span>{item.date}</span>
-                </div>
-                <div className="flex items-center gap-1 text-white/70 text-xs">
-                  <MapPin className="w-3 h-3 flex-shrink-0 text-primary" />
-                  <span>{item.city}</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
