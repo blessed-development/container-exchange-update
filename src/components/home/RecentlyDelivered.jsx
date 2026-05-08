@@ -1,3 +1,6 @@
+import React from 'react';
+import { MapPin, Calendar, Container } from 'lucide-react';
+
 const deliveryTitles = [
   "NEW 40HC One-Trip Shipping Container Delivered Los Angeles, CA",
   "Used 20ft WWT Shipping Container Delivered Arlington, TN",
@@ -148,4 +151,67 @@ if (deliveredTrack) {
   }
 
   setInterval(moveDeliveredSlider, 4400);
+}
+    <section className="bg-[#ff4b00] text-white py-16 overflow-hidden">
+      <style>
+        {`
+          @keyframes deliveredMarquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+
+          .delivered-marquee-track {
+            animation: deliveredMarquee 70s linear infinite;
+          }
+
+          .delivered-marquee-track:hover {
+            animation-play-state: paused;
+          }
+        `}
+      </style>
+
+      <div className="w-[96vw] max-w-[1760px] mx-auto">
+        <h2 className="text-center text-[clamp(38px,4vw,68px)] leading-[0.95] font-extrabold tracking-[-0.055em]">
+          Recently Delivered Containers
+        </h2>
+
+        <div className="text-center mt-4 mb-8 text-white/75 text-[14px] sm:text-[16px] font-bold tracking-[0.22em] uppercase">
+          Updated Daily
+        </div>
+
+        <div className="overflow-hidden">
+          <div className="delivered-marquee-track flex gap-3 w-max">
+            {loopCards.map((item, index) => (
+              <article
+                key={`${item.id}-${index}`}
+                className="relative flex-shrink-0 w-[84vw] sm:w-[46vw] lg:w-[24vw] xl:w-[23vw] h-[320px] rounded-[18px] overflow-hidden bg-[#111] bg-cover bg-center shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
+                style={{ backgroundImage: `url('${item.image}')` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
+
+                <div className="absolute left-5 right-5 bottom-5 z-10 text-shadow">
+                  <div className="flex items-start gap-2 text-[14px] leading-tight font-bold">
+                    <span className="w-5 h-5 rounded-md bg-[#ff4b00] grid place-items-center flex-shrink-0">
+                      <Container className="w-3.5 h-3.5" />
+                    </span>
+                    {item.headline}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-3 text-[12px] font-medium text-white/80">
+                    <Calendar className="w-4 h-4 text-[#ff4b00]" />
+                    {item.date}
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-2 text-[12px] font-medium text-white/80">
+                    <MapPin className="w-4 h-4 text-[#ff4b00]" />
+                    {item.city}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
