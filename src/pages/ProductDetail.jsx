@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 import ContainerGallery from '@/components/product/ContainerGallery';
 import ShippingCalculator from '@/components/product/ShippingCalculator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
+import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2 } from 'lucide-react';
@@ -26,11 +25,10 @@ export default function ProductDetail() {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0); // 0 = 20ft Standard
   const [condition, setCondition] = useState('used');             // default: Used
 
-  const { data: container, isLoading } = useQuery({
-    queryKey: ['container', id],
-    queryFn: () => base44.entities.Container.filter({ id }),
-    select: (data) => data?.[0] || null,
-  });
+  const isLoading = false;
+
+const container =
+  inventoryProducts.find((item) => item.id === id) || null;
 
   if (isLoading) {
     return (
@@ -102,7 +100,18 @@ export default function ProductDetail() {
                   </Badge>
                 )}
                 <div className="flex items-center gap-1.5 ml-1">
-                  <Star className="w-4 h-4 fill-primary text-primary" />
+                <div className="flex items-center gap-0.5">
+  {Array.from({ length: 5 }).map((_, i) => (
+    <Star
+      key={i}
+      className={`w-4 h-4 ${
+        i < Math.round(container.rating || 5)
+          ? 'fill-primary text-primary'
+          : 'text-muted-foreground'
+      }`}
+    />
+  ))}
+</div>  
                   <span className="text-sm font-semibold">{container.rating}</span>
                   <span className="text-xs text-muted-foreground">({container.review_count} reviews)</span>
                 </div>
@@ -115,9 +124,9 @@ export default function ProductDetail() {
                 <p className="text-sm text-muted-foreground leading-relaxed">{gradeInfo.desc}</p>
               </div>
 
-              {container.description && (
+              {container.short_description && (
                 <p className="text-muted-foreground leading-relaxed text-base mb-10">
-                  {container.description}
+                  {container.short_description}
                 </p>
               )}
 
