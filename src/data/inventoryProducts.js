@@ -1,5 +1,4 @@
 export const inventoryProducts = [
-  const inventoryProducts = [
   {
     id: 'used-20-wwt',
     name: 'Used 20 ft Shipping Container Standard 8 ft 6 in High | Wind & Water Tight',
@@ -15,6 +14,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: true,
   },
+
   {
     id: 'used-40-wwt',
     name: 'Used 40 ft Shipping Container Standard Height | Wind & Water Tight',
@@ -30,6 +30,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: true,
   },
+
   {
     id: 'used-40hc-wwt',
     name: 'Used 40 ft High Cube Shipping Container 9 ft 6 in High | WWT',
@@ -45,6 +46,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: true,
   },
+
   {
     id: 'new-20-iicl',
     name: 'New 20 ft One-Trip Shipping Container Standard Height | IICL',
@@ -60,6 +62,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'used-20-cw',
     name: 'Used 20 ft Cargo Worthy Shipping Container Standard Height',
@@ -75,6 +78,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'used-40-cw',
     name: 'Used 40 ft Cargo Worthy Shipping Container Standard Height',
@@ -90,6 +94,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'new-40hc-iicl',
     name: 'New 40 ft High Cube One-Trip Shipping Container | IICL',
@@ -105,6 +110,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: true,
   },
+
   {
     id: 'used-10-wwt',
     name: 'Used 10 ft Shipping Container Standard Height | WWT',
@@ -120,6 +126,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'refurbished-20',
     name: 'Refurbished 20 ft Shipping Container Standard Height',
@@ -135,6 +142,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'used-40-asis',
     name: 'Used 40 ft Shipping Container Standard Height | AS IS',
@@ -150,6 +158,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'new-20-double-door',
     name: 'New 20 ft Double Door Shipping Container | IICL',
@@ -165,6 +174,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'used-40hc-cw',
     name: 'Used 40 ft High Cube Cargo Worthy Container',
@@ -180,6 +190,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'new-40-iicl',
     name: 'New 40 ft Shipping Container Standard Height | IICL',
@@ -195,6 +206,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'used-20-asis',
     name: 'Used 20 ft Shipping Container Standard Height | AS IS',
@@ -210,6 +222,7 @@ export const inventoryProducts = [
     is_available: true,
     is_bestseller: false,
   },
+
   {
     id: 'refurbished-40hc',
     name: 'Refurbished 40 ft High Cube Shipping Container',
