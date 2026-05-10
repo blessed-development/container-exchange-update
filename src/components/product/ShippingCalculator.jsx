@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Phone } from 'lucide-react';
+import { ShoppingCart, Star } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
 
-// Used → first 3 grades. New → only IICL.
 const USED_GRADES = [
-  { key: 'AS_IS', label: 'AS IS',             adjust: -100 },
-  { key: 'WWT',   label: 'Wind & Water Tight', adjust:  200 },
-  { key: 'CW',    label: 'Cargo Worthy (CW)',  adjust:  400 },
+  { key: 'AS_IS', label: 'AS IS' },
+  { key: 'WWT', label: 'Wind & Water Tight' },
+  { key: 'CW', label: 'Cargo Worthy (CW)' },
 ];
+
 const NEW_GRADES = [
-  { key: 'IICL',  label: 'IICL',              adjust:    0 },
+  { key: 'IICL', label: 'IICL Certified' },
 ];
 
 const CONDITION_IMAGES = {
-  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80',
-  new:  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=300&q=80',
+  used:
+    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&q=80',
+  new:
+    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&q=80',
 };
 
 export default function ShippingCalculator({
@@ -28,7 +30,6 @@ export default function ShippingCalculator({
   const [grade, setGrade] = useState('AS_IS');
   const [qty, setQty] = useState(1);
 
-  // When condition changes, reset grade to valid default
   useEffect(() => {
     if (condition === 'new') {
       setGrade('IICL');
@@ -37,85 +38,114 @@ export default function ShippingCalculator({
     }
   }, [condition]);
 
-  const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
-  const sizeOption   = SIZE_OPTIONS[selectedSizeIndex];
-  const gradeAdjust  = gradeOptions.find(g => g.key === grade)?.adjust ?? 0;
-  const basePrice    = (condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice) + gradeAdjust;
-  const totalPrice   = basePrice * qty;
+  const gradeOptions =
+    condition === 'new' ? NEW_GRADES : USED_GRADES;
+
+  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
+
+  const basePrice =
+    condition === 'new'
+      ? sizeOption.newPrice
+      : sizeOption.usedPrice;
+
+  const totalPrice = basePrice * qty;
 
   return (
-    <div className="flex flex-col gap-2.5">
+    <div className="flex flex-col gap-3">
 
-      {/* ── SIZE TABS ── */}
-      <div className="grid grid-cols-3 border border-border rounded-2xl overflow-hidden bg-card">
+      {/* SIZE TABS */}
+      <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-border bg-card">
         {SIZE_OPTIONS.map((opt, i) => {
           const active = selectedSizeIndex === i;
+
           return (
             <button
               key={i}
               onClick={() => onSizeChange(i)}
-              className={`flex flex-col items-center gap-0.5 py-4 px-2 border-r border-border last:border-r-0 transition-colors ${
+              className={`py-5 px-3 border-r border-border last:border-r-0 transition-all ${
                 active
                   ? 'bg-primary text-white'
-                  : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground'
+                  : 'text-muted-foreground hover:bg-muted/30'
               }`}
             >
-              <span className={`text-[9px] font-bold tracking-widest uppercase ${active ? 'text-white/70' : 'text-muted-foreground/60'}`}>
-                BUY
-              </span>
-              <span className="text-[13px] font-bold leading-tight">{opt.label}</span>
-              <span className={`font-mono text-[9px] ${active ? 'text-white/75' : 'text-muted-foreground/55'}`}>
+              <div className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-70">
+                Buy
+              </div>
+
+              <div className="text-lg font-extrabold leading-tight mt-1">
+                {opt.label}
+              </div>
+
+              <div className="font-mono text-[11px] mt-1 opacity-70">
                 {opt.dims}
-              </span>
+              </div>
             </button>
           );
         })}
       </div>
 
-      {/* ── PRICE HERO ── */}
-      <div className="border border-border rounded-2xl bg-card px-5 py-4 flex items-center justify-between">
-        <span className="font-mono text-4xl font-bold text-primary tracking-tight">
-          ${basePrice.toLocaleString()}.00
-        </span>
-        <span className="text-xs font-bold uppercase tracking-widest bg-primary text-primary-foreground rounded-full px-5 py-2">
+      {/* PRICE */}
+      <div className="rounded-2xl border border-border bg-card p-6 flex items-center justify-between">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground font-bold">
+            Container Price
+          </div>
+
+          <div className="font-mono text-5xl font-black text-primary mt-2">
+            ${basePrice.toLocaleString()}
+          </div>
+        </div>
+
+        <button className="bg-primary hover:bg-primary/90 text-white font-bold px-7 py-3 rounded-full transition-all">
           BUY NOW
-        </span>
+        </button>
       </div>
 
-      {/* ── CONDITION ── */}
-      <div className="border border-border rounded-2xl bg-card overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-          <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">CONDITION</span>
-          <span className="text-sm font-semibold text-foreground">
-            {condition === 'new' ? 'New' : 'Used'} {sizeOption.label}
+      {/* CONDITION */}
+      <div className="rounded-2xl border border-border bg-card overflow-hidden">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-border">
+          <span className="text-[11px] tracking-[0.15em] uppercase font-bold text-muted-foreground">
+            Condition
+          </span>
+
+          <span className="font-semibold">
+            {condition === 'new' ? 'New' : 'Used'} Container
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-2.5 p-3">
+
+        <div className="grid grid-cols-2 gap-3 p-4">
           {['used', 'new'].map((cond) => {
             const active = condition === cond;
-            const price = cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+
             return (
               <button
                 key={cond}
                 onClick={() => onConditionChange(cond)}
-                className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                className={`rounded-2xl border-2 p-3 flex gap-3 items-center transition-all ${
                   active
                     ? 'border-green-500 bg-green-500/10'
-                    : 'border-border hover:border-border/80 bg-muted/20'
+                    : 'border-border hover:border-border/70'
                 }`}
               >
                 <img
                   src={CONDITION_IMAGES[cond]}
                   alt={cond}
-                  className="w-[68px] h-[52px] object-cover rounded-lg flex-shrink-0 bg-muted"
+                  className="w-[82px] h-[62px] rounded-xl object-cover"
                 />
-                <div>
-                  <p className="text-sm font-bold text-foreground leading-tight">
+
+                <div className="text-left">
+                  <div className="font-bold text-base">
                     {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
-                  </p>
-                  <p className="text-sm font-bold font-mono text-foreground mt-1">
-                    ${price.toLocaleString()}.00
-                  </p>
+                  </div>
+
+                  <div className="font-mono text-lg mt-1">
+                    $
+                    {(
+                      cond === 'new'
+                        ? sizeOption.newPrice
+                        : sizeOption.usedPrice
+                    ).toLocaleString()}
+                  </div>
                 </div>
               </button>
             );
@@ -123,95 +153,112 @@ export default function ShippingCalculator({
         </div>
       </div>
 
-      {/* ── GRADE ── */}
-      <div className="border border-border rounded-2xl bg-card overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-border">
-          <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">GRADE</span>
-          <span className="text-sm font-semibold text-foreground">
-            {gradeOptions.find(g => g.key === grade)?.label}
+      {/* GRADE */}
+      <div className="rounded-2xl border border-border bg-card overflow-hidden">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-border">
+          <span className="text-[11px] tracking-[0.15em] uppercase font-bold text-muted-foreground">
+            Grade Classification
+          </span>
+
+          <span className="font-semibold">
+            {gradeOptions.find((g) => g.key === grade)?.label}
           </span>
         </div>
-        <div className={`grid gap-2 p-3 ${condition === 'new' ? 'grid-cols-1' : 'grid-cols-3'}`}>
-          {gradeOptions.map((opt) => {
-            const active = grade === opt.key;
+
+        <div
+          className={`grid gap-3 p-4 ${
+            condition === 'new'
+              ? 'grid-cols-1'
+              : 'grid-cols-3'
+          }`}
+        >
+          {gradeOptions.map((g) => {
+            const active = grade === g.key;
+
             return (
               <button
-                key={opt.key}
-                onClick={() => setGrade(opt.key)}
-                className={`py-3 px-2 rounded-xl border-2 text-center transition-all ${
+                key={g.key}
+                onClick={() => setGrade(g.key)}
+                className={`rounded-xl border-2 py-4 px-3 font-bold transition-all ${
                   active
-                    ? 'border-green-500 bg-green-500/10 text-foreground'
-                    : 'border-border bg-muted/20 text-muted-foreground hover:border-border/80 hover:text-foreground'
+                    ? 'border-green-500 bg-green-500/10 text-white'
+                    : 'border-border text-muted-foreground hover:border-border/70'
                 }`}
               >
-                <span className="text-[11px] font-bold leading-tight block">{opt.label}</span>
+                {g.label}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── CHECKOUT ── */}
-      <div className="border border-border rounded-2xl bg-card overflow-hidden">
-        <div className="p-5 flex flex-col gap-4">
-          {/* Price breakdown */}
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{sizeOption.label} · {condition === 'new' ? 'New' : 'Used'}</span>
-              <span className="font-mono font-semibold">${(basePrice - gradeAdjust).toLocaleString()}</span>
+      {/* RATING */}
+      <div className="rounded-2xl border border-border bg-card p-5">
+        <div className="flex items-center gap-1">
+          {[1,2,3,4,5].map((i) => (
+            <Star
+              key={i}
+              className="w-5 h-5 fill-yellow-400 text-yellow-400"
+            />
+          ))}
+
+          <span className="ml-2 text-sm text-muted-foreground">
+            4.9 rating · 217 reviews
+          </span>
+        </div>
+
+        <p className="text-sm text-muted-foreground mt-4 leading-7">
+          Premium quality shipping containers available for
+          nationwide delivery. All units are inspected for
+          structural integrity and secure cargo transport.
+        </p>
+      </div>
+
+      {/* TOTAL */}
+      <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="flex justify-between items-end">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.15em] font-bold text-muted-foreground">
+              Total
             </div>
-            {gradeAdjust !== 0 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Grade adjustment</span>
-                <span className="font-mono font-semibold">{gradeAdjust > 0 ? '+' : ''}${gradeAdjust.toLocaleString()}</span>
-              </div>
-            )}
-            {qty > 1 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Quantity</span>
-                <span className="font-mono font-semibold">× {qty}</span>
-              </div>
-            )}
+
+            <div className="text-sm text-muted-foreground mt-1">
+              Taxes calculated at checkout
+            </div>
           </div>
 
-          <div className="h-px bg-border" />
+          <div className="font-mono text-4xl font-black text-primary">
+            ${totalPrice.toLocaleString()}
+          </div>
+        </div>
 
-          <div className="flex items-baseline justify-between">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground mb-0.5">Total</p>
-              <p className="text-[10px] text-muted-foreground/70">Tax calculated at checkout</p>
-            </div>
-            <span className="font-mono text-3xl font-bold text-primary tracking-tight">
-              ${totalPrice.toLocaleString()}
+        <div className="grid grid-cols-[110px_1fr] gap-3 mt-6">
+          <div className="flex items-center border border-border rounded-xl overflow-hidden bg-muted/20 h-14">
+            <button
+              onClick={() =>
+                setQty((q) => Math.max(1, q - 1))
+              }
+              className="w-12 h-full text-xl"
+            >
+              −
+            </button>
+
+            <span className="flex-1 text-center font-mono font-bold">
+              {qty}
             </span>
+
+            <button
+              onClick={() => setQty((q) => q + 1)}
+              className="w-12 h-full text-xl"
+            >
+              +
+            </button>
           </div>
 
-          {/* Qty + Add to Cart */}
-          <div className="grid grid-cols-[96px_1fr] gap-2">
-            <div className="flex items-center border border-border rounded-xl overflow-hidden bg-muted/30 h-12">
-              <button
-                onClick={() => setQty(q => Math.max(1, q - 1))}
-                className="w-10 h-full flex items-center justify-center text-xl text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
-              >−</button>
-              <span className="flex-1 text-center font-mono text-sm font-semibold select-none">{qty}</span>
-              <button
-                onClick={() => setQty(q => q + 1)}
-                className="w-10 h-full flex items-center justify-center text-xl text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
-              >+</button>
-            </div>
-            <Button className="h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl shadow-md shadow-primary/20 gap-2">
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
-            </Button>
-          </div>
-
-          {/* Phone CTA — replaces Request a Quote */}
-          <a href="tel:+18889779085">
-            <Button variant="outline" className="w-full h-11 rounded-xl font-semibold text-sm border-2 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all gap-2">
-              <Phone className="w-4 h-4" />
-              Call (888) 977-9085
-            </Button>
-          </a>
+          <Button className="h-14 rounded-xl text-base font-bold gap-2">
+            <ShoppingCart className="w-5 h-5" />
+            Add To Cart
+          </Button>
         </div>
       </div>
 
