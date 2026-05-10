@@ -1,2 +1,7 @@
-<style>
-</style>
+.widget {
+  background:black;
+}
+
+.main-tabs {
+  display:flex;
+}
