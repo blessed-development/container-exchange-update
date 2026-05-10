@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
+import './ShippingCalculator.css';
 
 const USED_GRADES = [
   { key: 'AS_IS', label: 'AS IS' },
