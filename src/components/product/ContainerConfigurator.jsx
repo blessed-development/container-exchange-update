@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { SIZE_OPTIONS } from './SizeSelector';
 import {
+  import './ShippingCalculator.css';
   ShoppingCart,
   X,
   Lock,
