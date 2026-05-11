@@ -529,3 +529,20 @@
     font-size:34px;
   }
 }
+.main-tab{
+  min-width:0;
+}
+
+.main-tab .tab-title{
+  max-width:100%;
+  text-align:center;
+}
+
+.main-tab .tab-sub:first-child{
+  display:none;
+}
+
+.main-tab .tab-sub:last-child{
+  margin-top:4px;
+  font-size:11px;
+}
