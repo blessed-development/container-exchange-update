@@ -483,3 +483,49 @@
     grid-template-columns:104px 1fr;
   }
 }
+.main-tab{
+  padding:18px 8px;
+  overflow:hidden;
+}
+
+.main-tab .tab-title{
+  display:block;
+  font-size:15px;
+  line-height:1.15;
+  white-space:normal;
+  word-break:normal;
+}
+
+.main-tab .tab-sub{
+  display:block;
+  line-height:1.2;
+}
+
+.checkout:last-of-type .total-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+}
+
+.checkout:last-of-type .total-price{
+  font-size:42px;
+  line-height:.95;
+}
+
+.checkout:last-of-type .cart-row{
+  display:grid;
+  grid-template-columns:104px 1fr;
+  gap:12px;
+  margin-top:24px;
+}
+
+.checkout:last-of-type .add-btn{
+  width:100%;
+  justify-content:center;
+}
+
+@media(max-width:640px){
+  .checkout:last-of-type .total-price{
+    font-size:34px;
+  }
+}
