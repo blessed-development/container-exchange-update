@@ -1,122 +1,646 @@
-import React, { useState } from 'react';
-import { Phone } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import './ShippingCalculator.css';
+import { SIZE_OPTIONS } from './SizeSelector';
+import {
+  ShoppingCart,
+  X,
+  Lock,
+  ChevronLeft,
+  MapPin,
+  Check,
+  Truck,
+} from 'lucide-react';
 
-const SIZE_OPTIONS = [
-  { label: "20' Standard", price: '$1,350.00' },
-  { label: "40' Standard", price: '$1,750.00' },
-  { label: "40' High Cube", price: '$1,950.00' },
+const USED_GRADES = [
+  { key: 'AS_IS', label: 'AS IS', adjust: -100 },
+  { key: 'WWT', label: 'Wind & Water Tight', adjust: 200 },
+  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 400 },
 ];
 
-const CONDITION_OPTIONS = [
-  { label: "Used 20'", dims: "20' x 8' x 8'", price: '$1,350.00' },
-  { label: "New 20'", dims: "20' x 8' x 8'", price: '$2,500.00' },
-];
+const NEW_GRADES = [{ key: 'IICL', label: 'IICL Certified', adjust: 0 }];
 
-const GRADE_OPTIONS = [
-  { label: 'AS IS', note: 'Save $100' },
-  { label: 'Wind & Water Tight', note: 'Add $200' },
-  { label: 'Cargo Worthy (CW)', note: 'Add $400' },
-];
+const CONDITION_IMAGES = {
+  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
+  new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
+};
 
-const SELECTION_OPTIONS = [
-  { label: 'First off the Stack (FO)' },
-];
+const COUPONS = {
+  CONTAINER10: 0.1,
+  SAVE200: 200,
+  CE2024: 0.05,
+};
 
-function OptionGroup({ label, children }) {
+const fmt = (num) =>
+  `$${Number(num || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+export default function ShippingCalculator({
+  container,
+  selectedSizeIndex,
+  onSizeChange,
+  condition,
+  onConditionChange,
+}) {
+  const [zipOpen, setZipOpen] = useState(false);
+  const [zip, setZip] = useState('');
+  const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'AS_IS');
+  const [qty, setQty] = useState(1);
+  const [cart, setCart] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [panel, setPanel] = useState('cart');
+  const [coupon, setCoupon] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponMsg, setCouponMsg] = useState('');
+  const [payMethod, setPayMethod] = useState('card');
+  const [orderRef, setOrderRef] = useState('');
+
+  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
+  const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
+  const activeGrade = gradeOptions.find((g) => g.key === grade) || gradeOptions[0];
+
+  const unitPrice =
+    (condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice) +
+    (activeGrade.adjust || 0);
+
+  const totalPrice = unitPrice * qty;
+
+  const currentTitle = `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
+  const currentSub = `${sizeOption.size || sizeOption.label} · ${activeGrade.label}`;
+
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const tax = Math.max(0, subtotal - discount) * 0.09;
+  const grandTotal = Math.max(0, subtotal - discount) + tax;
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
+
+  const selectedImage = CONDITION_IMAGES[condition];
+
+  const addToCart = () => {
+    const item = {
+      id: `${Date.now()}`,
+      title: currentTitle,
+      sub: currentSub,
+      condition,
+      grade: activeGrade.label,
+      price: unitPrice,
+      qty,
+      img: selectedImage,
+    };
+
+    setCart((prev) => {
+      const existing = prev.find(
+        (p) => p.title === item.title && p.grade === item.grade
+      );
+
+      if (existing) {
+        return prev.map((p) =>
+          p.id === existing.id ? { ...p, qty: p.qty + qty } : p
+        );
+      }
+
+      return [...prev, item];
+    });
+
+    setDrawerOpen(true);
+  };
+
+  const updateQty = (id, delta) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, qty: Math.max(1, item.qty + delta) } : item
+      )
+    );
+  };
+
+  const removeItem = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const applyCoupon = () => {
+    const code = coupon.trim().toUpperCase();
+    const val = COUPONS[code];
+
+    if (!code) {
+      setCouponMsg('');
+      setDiscount(0);
+      return;
+    }
+
+    if (val === undefined) {
+      setCouponMsg('✗ Invalid coupon code.');
+      setDiscount(0);
+      return;
+    }
+
+    const saved = val < 1 ? subtotal * val : val;
+    setDiscount(saved);
+    setCouponMsg(`✓ Coupon applied! You save ${fmt(saved)}`);
+  };
+
+  const openCheckout = () => {
+    setDrawerOpen(false);
+    setCheckoutOpen(true);
+    setPanel('cart');
+  };
+
+  const placeOrder = () => {
+    setOrderRef(`CE-${Math.random().toString(36).slice(2, 10).toUpperCase()}`);
+    setPanel('success');
+  };
+
   return (
-    <div className="border-b border-border p-5">
-      <p className="text-xs font-mono text-muted-foreground tracking-widest mb-3">{label}</p>
-      {children}
-    </div>
-  );
-}
+    <>
+      <div className="widget">
+        {/* ZIP BAR */}
+        <div className="zip-bar">
+          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
+            <div className="zip-left">
+              <MapPin size={15} />
+              <span>Delivery ZIP</span>
+              <span className="zip-val">{zip || 'Not set'}</span>
+            </div>
+            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>Change</div>
+          </div>
 
-function OptionButton({ selected, onClick, children }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-2 rounded-lg border text-sm font-medium transition-all text-left ${
-        selected
-          ? 'border-primary bg-primary/10 text-primary'
-          : 'border-border bg-card text-foreground hover:border-primary/50'
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+          <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
+            <div className="zip-row">
+              <input
+                className="zip-input"
+                placeholder="Enter ZIP code"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+              />
+              <button className="zip-apply" onClick={() => setZipOpen(false)}>
+                Apply
+              </button>
+            </div>
+            <button className="zip-loc-btn">Use my current location</button>
+          </div>
+        </div>
 
-export default function ContainerConfigurator() {
-  const [size, setSize] = useState(0);
-  const [condition, setCondition] = useState(0);
-  const [grade, setGrade] = useState(0);
-  const [selectionType, setSelectionType] = useState(0);
+        {/* SIZE TABS */}
+        <div className="main-tabs">
+          {SIZE_OPTIONS.map((opt, index) => (
+            <button
+              key={opt.label}
+              className={`main-tab ${selectedSizeIndex === index ? 'active' : ''}`}
+              onClick={() => onSizeChange(index)}
+            >
+              <span className="tab-sub">Buy</span>
+              <span className="tab-title">{opt.label}</span>
+              <span className="tab-sub">{opt.dims}</span>
+            </button>
+          ))}
+        </div>
 
-  return (
-    <div className="border border-border rounded-sm bg-card mt-4">
-      <div className="p-5 border-b border-border bg-muted/30">
-        <p className="text-xs font-mono text-muted-foreground tracking-widest mb-1">STEP 3</p>
-        <p className="font-bold text-foreground text-base">Select Container Specifications</p>
+        {/* PRICE */}
+        <div className="checkout">
+          <div className="checkout-inner">
+            <div className="total-row">
+              <span className="total-price">{fmt(unitPrice)}</span>
+              <button className="add-btn" onClick={addToCart}>
+                Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* CONDITION */}
+        <div className="cond-cards-section">
+          <div className="cond-cards-head">
+            <span className="card-lbl">Condition</span>
+            <span className="card-val">
+              {condition === 'new' ? 'New' : 'Used'} {sizeOption.label}
+            </span>
+          </div>
+
+          <div className="cond-cards">
+            {['used', 'new'].map((cond) => {
+              const active = condition === cond;
+              const price = cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+
+              return (
+                <button
+                  key={cond}
+                  className={`cond-card ${active ? 'active' : ''}`}
+                  onClick={() => {
+                    onConditionChange(cond);
+                    setGrade(cond === 'new' ? 'IICL' : 'AS_IS');
+                  }}
+                >
+                  <img src={CONDITION_IMAGES[cond]} className="cond-img" />
+                  <div className="cc-info">
+                    <span className="cc-name">
+                      {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
+                    </span>
+                    <span className="cc-price">{fmt(price)}</span>
+                  </div>
+                  <span className="cc-check">
+                    <Check size={10} />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* GRADE */}
+        <div className="section-card">
+          <div className="card-head">
+            <span className="card-lbl">Grade</span>
+            <span className="card-val">{activeGrade.label}</span>
+          </div>
+
+          <div className="grade-grid">
+            {gradeOptions.map((g) => (
+              <button
+                key={g.key}
+                onClick={() => setGrade(g.key)}
+                className={`grade-btn ${grade === g.key ? 'active' : ''}`}
+              >
+                {g.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* TOTAL / CART */}
+        <div className="checkout">
+          <div className="checkout-inner">
+            <div className="tax-note">
+              <Lock size={13} />
+              Taxes and delivery calculated at checkout.
+            </div>
+
+            <hr className="divider" />
+
+            <div className="total-row">
+              <span className="total-lbl">Total</span>
+              <span className="total-price">{fmt(totalPrice)}</span>
+            </div>
+
+            <div className="cart-row">
+              <div className="qty-wrap">
+                <button className="qty-btn" onClick={() => setQty(Math.max(1, qty - 1))}>
+                  −
+                </button>
+                <span className="qty-num">{qty}</span>
+                <button className="qty-btn" onClick={() => setQty(qty + 1)}>
+                  +
+                </button>
+              </div>
+
+              <button className="add-btn" onClick={addToCart}>
+                <ShoppingCart size={17} />
+                Add to Cart
+              </button>
+            </div>
+
+            <button className="quote-btn">Add to Quote</button>
+          </div>
+        </div>
       </div>
 
-      {/* Size */}
-      <OptionGroup label="SIZE:">
-        <div className="flex flex-wrap gap-2">
-          {SIZE_OPTIONS.map((opt, i) => (
-            <OptionButton key={i} selected={size === i} onClick={() => setSize(i)}>
-              <span className="block">{opt.label}</span>
-              <span className="block text-xs text-muted-foreground font-mono">{opt.price}</span>
-            </OptionButton>
-          ))}
-        </div>
-      </OptionGroup>
+      {/* CART DRAWER */}
+      <div
+        className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
+        onClick={() => setDrawerOpen(false)}
+      />
 
-      {/* Condition */}
-      <OptionGroup label="CONDITION:">
-        <div className="flex flex-wrap gap-2">
-          {CONDITION_OPTIONS.map((opt, i) => (
-            <OptionButton key={i} selected={condition === i} onClick={() => setCondition(i)}>
-              <span className="block font-semibold">{opt.label}</span>
-              <span className="block text-xs text-muted-foreground">{opt.dims}</span>
-              <span className="block text-xs font-mono text-primary">{opt.price}</span>
-            </OptionButton>
-          ))}
+      <aside className={`cart-drawer ${drawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <div className="drawer-title">
+            <ShoppingCart size={18} />
+            My Cart <span className="cart-count">{cartCount}</span>
+          </div>
+          <button className="drawer-close" onClick={() => setDrawerOpen(false)}>
+            <X size={16} />
+          </button>
         </div>
-      </OptionGroup>
 
-      {/* Grade */}
-      <OptionGroup label="GRADE:">
-        <div className="flex flex-wrap gap-2">
-          {GRADE_OPTIONS.map((opt, i) => (
-            <OptionButton key={i} selected={grade === i} onClick={() => setGrade(i)}>
-              <span className="block font-semibold">{opt.label}</span>
-              <span className="block text-xs text-muted-foreground">{opt.note}</span>
-            </OptionButton>
-          ))}
+        <div className="drawer-body">
+          {cart.length === 0 ? (
+            <div className="empty-cart">Your cart is empty.</div>
+          ) : (
+            cart.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <img src={item.img} className="ci-img" />
+                <div className="ci-info">
+                  <button className="ci-remove" onClick={() => removeItem(item.id)}>
+                    ×
+                  </button>
+                  <div className="ci-name">{item.title}</div>
+                  <div className="ci-meta">
+                    {item.sub}
+                    <br />
+                    Grade: {item.grade}
+                  </div>
+                  <div className="ci-price">{fmt(item.price)}</div>
+                  <div className="ci-qty-row">
+                    <button className="ci-qty-btn" onClick={() => updateQty(item.id, -1)}>
+                      −
+                    </button>
+                    <span className="ci-qty-val">{item.qty}</span>
+                    <button className="ci-qty-btn" onClick={() => updateQty(item.id, 1)}>
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-      </OptionGroup>
 
-      {/* Selection Type */}
-      <OptionGroup label="SELECTION TYPE:">
-        <div className="flex flex-wrap gap-2">
-          {SELECTION_OPTIONS.map((opt, i) => (
-            <OptionButton key={i} selected={selectionType === i} onClick={() => setSelectionType(i)}>
-              <span className="block font-semibold">{opt.label}</span>
-            </OptionButton>
-          ))}
+        <div className="drawer-footer">
+          <div className="drawer-subtotal">
+            <span>Subtotal</span>
+            <span className="drawer-total-val">{fmt(grandTotal)}</span>
+          </div>
+          <div className="drawer-tax-note">Includes estimated tax after coupon.</div>
+          <button className="checkout-btn" onClick={openCheckout}>
+            Checkout
+          </button>
+          <button className="continue-btn" onClick={() => setDrawerOpen(false)}>
+            Continue Shopping
+          </button>
         </div>
-      </OptionGroup>
+      </aside>
 
-      {/* Found it cheaper */}
-      <div className="p-5">
-        <a
-          href="tel:+18889779085"
-          className="text-sm text-primary hover:underline flex items-center gap-2"
-        >
-          <Phone className="w-4 h-4" />
-          Found It Cheaper? (888) 977-9085
-        </a>
-      </div>
-    </div>
+      {/* CHECKOUT PAGE */}
+      <section className={`checkout-page ${checkoutOpen ? 'open' : ''}`}>
+        <div className="co-topbar">
+          <button className="co-back" onClick={() => setCheckoutOpen(false)}>
+            <ChevronLeft size={16} />
+            Back to product
+          </button>
+
+          <div className="co-brand">
+            Containers <span>Exchange</span>
+          </div>
+
+          <div className="co-secure-badge">
+            <Lock size={13} />
+            Secure Checkout
+          </div>
+        </div>
+
+        <div className="co-progress">
+          <div className={`co-prog-step ${panel === 'cart' ? 'active' : panel !== 'cart' ? 'done' : ''}`}>
+            <span className="prog-dot">1</span> Cart
+          </div>
+          <div className="co-prog-line" />
+          <div className={`co-prog-step ${panel === 'details' ? 'active' : panel === 'success' ? 'done' : ''}`}>
+            <span className="prog-dot">2</span> Details
+          </div>
+          <div className="co-prog-line" />
+          <div className={`co-prog-step ${panel === 'success' ? 'active' : ''}`}>
+            <span className="prog-dot">3</span> Complete
+          </div>
+        </div>
+
+        <div className="co-layout">
+          <main className="co-main">
+            {panel === 'cart' && (
+              <div className="co-panel">
+                <div className="co-panel-title">My Cart</div>
+
+                <div className="cct-wrap">
+                  <div className="cct-head">
+                    <span>Item</span>
+                    <span>Price</span>
+                    <span>Qty</span>
+                    <span>Total</span>
+                  </div>
+
+                  {cart.length === 0 ? (
+                    <div className="empty-co-cart">Your cart is empty.</div>
+                  ) : (
+                    cart.map((item) => (
+                      <div className="cct-row" key={item.id}>
+                        <div className="cct-prod">
+                          <img src={item.img} className="cct-img" />
+                          <div className="cct-prod-info">
+                            <div className="cct-title">{item.title}</div>
+                            <div className="cct-sub">{item.sub}</div>
+                          </div>
+                        </div>
+
+                        <div className="cct-price">{fmt(item.price)}</div>
+
+                        <div className="cct-qty">
+                          <button className="cct-qty-btn" onClick={() => updateQty(item.id, -1)}>
+                            −
+                          </button>
+                          <span className="cct-qty-val">{item.qty}</span>
+                          <button className="cct-qty-btn" onClick={() => updateQty(item.id, 1)}>
+                            +
+                          </button>
+                        </div>
+
+                        <div className="cct-subtotal-cell">
+                          <span className="cct-total">{fmt(item.price * item.qty)}</span>
+                          <button className="cct-x-inline" onClick={() => removeItem(item.id)}>
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="co-coupon">
+                  <input
+                    className="co-coupon-input"
+                    placeholder="Coupon code"
+                    value={coupon}
+                    onChange={(e) => setCoupon(e.target.value)}
+                  />
+                  <button className="co-coupon-btn" onClick={applyCoupon}>
+                    Apply
+                  </button>
+                </div>
+
+                {couponMsg && (
+                  <div className={`co-coupon-msg ${couponMsg.startsWith('✓') ? 'ok' : 'err'}`}>
+                    {couponMsg}
+                  </div>
+                )}
+
+                <div className="co-panel-actions">
+                  <button className="co-ghost-btn" onClick={() => setCheckoutOpen(false)}>
+                    Continue Shopping
+                  </button>
+                  <button className="co-primary-btn" onClick={() => setPanel('details')}>
+                    Continue to Details
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {panel === 'details' && (
+              <div className="co-panel">
+                <div className="co-panel-title">
+                  <Truck size={18} />
+                  Delivery & Payment Details
+                </div>
+
+                <div className="co-form">
+                  <div className="co-form-section-lbl">Contact Information</div>
+
+                  <div className="co-row">
+                    <div className="co-field">
+                      <label>First Name</label>
+                      <input />
+                    </div>
+                    <div className="co-field">
+                      <label>Last Name</label>
+                      <input />
+                    </div>
+                  </div>
+
+                  <div className="co-row">
+                    <div className="co-field">
+                      <label>Email</label>
+                      <input type="email" />
+                    </div>
+                    <div className="co-field">
+                      <label>Phone</label>
+                      <input />
+                    </div>
+                  </div>
+
+                  <div className="co-form-section-lbl">Delivery Address</div>
+
+                  <div className="co-field">
+                    <label>Street Address</label>
+                    <input />
+                  </div>
+
+                  <div className="co-row">
+                    <div className="co-field">
+                      <label>City</label>
+                      <input />
+                    </div>
+                    <div className="co-field">
+                      <label>State</label>
+                      <input />
+                    </div>
+                  </div>
+
+                  <div className="co-row">
+                    <div className="co-field">
+                      <label>ZIP Code</label>
+                      <input defaultValue={zip} />
+                    </div>
+                    <div className="co-field">
+                      <label>Delivery Type</label>
+                      <select>
+                        <option>Standard Delivery</option>
+                        <option>Expedited Delivery</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="co-pay-methods">
+                  {['card', 'bank'].map((type) => (
+                    <div
+                      key={type}
+                      className={`pay-method ${payMethod === type ? 'active' : ''}`}
+                      onClick={() => setPayMethod(type)}
+                    >
+                      <div className="pay-method-head">
+                        <span className={`pay-radio ${payMethod === type ? 'active' : ''}`} />
+                        <span className="pay-method-name">
+                          {type === 'card' ? 'Credit / Debit Card' : 'Bank Transfer'}
+                        </span>
+                      </div>
+
+                      {payMethod === type && (
+                        <div className="pay-method-body">
+                          {type === 'card'
+                            ? 'Enter card details securely during final payment confirmation.'
+                            : 'Bank transfer instructions will be provided after placing your order.'}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="co-panel-actions">
+                  <button className="co-ghost-btn" onClick={() => setPanel('cart')}>
+                    Back
+                  </button>
+                  <button className="co-primary-btn" onClick={placeOrder}>
+                    Place Order
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {panel === 'success' && (
+              <div className="co-panel co-success-panel">
+                <div className="co-success-icon">
+                  <Check size={42} />
+                </div>
+                <h2>Order Received</h2>
+                <p>
+                  Thank you. Your container order has been received. Our team will contact
+                  you shortly to confirm delivery details.
+                </p>
+                <div className="co-order-ref">{orderRef}</div>
+              </div>
+            )}
+          </main>
+
+          {panel !== 'success' && (
+            <aside className="co-sidebar">
+              <div className="co-summary-box">
+                <div className="co-summary-hd">Order Summary</div>
+
+                {cart.map((item) => (
+                  <div className="co-sum-item" key={item.id}>
+                    <img src={item.img} className="co-sum-item-img" />
+                    <div className="co-sum-item-info">
+                      <div className="co-sum-item-name">{item.title}</div>
+                      <div className="co-sum-item-meta">
+                        Qty {item.qty} · {item.grade}
+                      </div>
+                    </div>
+                    <div className="co-sum-item-price">{fmt(item.price * item.qty)}</div>
+                  </div>
+                ))}
+
+                <hr className="co-sum-divider" />
+
+                <div className="co-sum-row">
+                  <span>Subtotal</span>
+                  <span>{fmt(subtotal)}</span>
+                </div>
+
+                {discount > 0 && (
+                  <div className="co-sum-row">
+                    <span>Discount</span>
+                    <span>-{fmt(discount)}</span>
+                  </div>
+                )}
+
+                <div className="co-sum-row">
+                  <span>Estimated Tax</span>
+                  <span>{fmt(tax)}</span>
+                </div>
+
+                <div className="co-sum-row co-sum-total-row">
+                  <span>Total</span>
+                  <span>{fmt(grandTotal)}</span>
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
+      </section>
+    </>
   );
 }
