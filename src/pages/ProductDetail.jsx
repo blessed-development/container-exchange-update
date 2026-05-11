@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ContainerGallery from '@/components/product/ContainerGallery';
-import ShippingCalculator from '@/components/product/ShippingCalculator';
+import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import { inventoryProducts } from '@/data/inventoryProducts';
@@ -136,7 +136,7 @@ const container =
 
           {/* Right — Purchase Panel (Sticky) */}
           <div className="lg:sticky lg:top-24 self-start">
-            <ShippingCalculator
+            <ContainerConfigurator
               container={container}
               initialZip={zipCode}
               selectedSizeIndex={selectedSizeIndex}
