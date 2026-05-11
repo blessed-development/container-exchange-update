@@ -453,3 +453,33 @@
   font-size:18px;
   border-radius:14px;
 }
+.checkout:last-of-type .total-row{
+  align-items:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.checkout:last-of-type .total-price{
+  font-size:44px;
+  line-height:1;
+  margin-left:auto;
+}
+
+.cart-row{
+  margin-top:20px;
+  align-items:center;
+}
+
+.add-btn{
+  min-width:0;
+}
+
+@media(max-width:640px){
+  .checkout:last-of-type .total-price{
+    font-size:36px;
+  }
+
+  .cart-row{
+    grid-template-columns:104px 1fr;
+  }
+}
