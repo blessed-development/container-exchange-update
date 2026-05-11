@@ -1,7 +1,243 @@
 .widget {
-  background:black;
+  background: #0b0b0b;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .main-tabs {
-  display:flex;
+  display: flex;
+  gap: 10px;
+}
+
+.main-tab {
+  flex: 1;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #111;
+  color: white;
+  border-radius: 18px;
+  padding: 18px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.main-tab.active {
+  background: #ff5a00;
+}
+
+.tab-sub {
+  font-size: 11px;
+  opacity: .7;
+}
+
+.tab-title {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.checkout {
+  background: #111;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.checkout-inner {
+  padding: 22px;
+}
+
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.total-price {
+  color: #ff5a00;
+  font-size: 48px;
+  font-weight: 900;
+}
+
+.add-btn {
+  background: #ff5a00;
+  border: none;
+  color: white;
+  border-radius: 999px;
+  padding: 14px 24px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cond-cards-section,
+.section-card {
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.cond-cards-head,
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.card-lbl {
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .14em;
+}
+
+.card-val {
+  color: white;
+  font-weight: 700;
+}
+
+.cond-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 16px;
+}
+
+.cond-card {
+  background: #0f0f0f;
+  border: 2px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.cond-card.active {
+  border-color: #00c853;
+}
+
+.cond-img {
+  width: 84px;
+  height: 62px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.cc-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cc-name {
+  color: white;
+  font-weight: 700;
+}
+
+.cc-price {
+  color: white;
+  opacity: .75;
+  margin-top: 4px;
+}
+
+.cc-check {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #00c853;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  padding: 16px;
+}
+
+.grade-btn {
+  height: 56px;
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.08);
+  background: #0f0f0f;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.grade-btn.active {
+  border-color: #00c853;
+}
+
+.tax-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,.65);
+}
+
+.divider {
+  margin: 18px 0;
+  border-color: rgba(255,255,255,0.08);
+}
+
+.total-lbl {
+  color: rgba(255,255,255,.65);
+  font-size: 14px;
+}
+
+.cart-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.qty-wrap {
+  width: 120px;
+  height: 54px;
+  border-radius: 16px;
+  background: #0f0f0f;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qty-btn {
+  width: 42px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.qty-num {
+  color: white;
+  font-weight: 700;
+}
+
+.quote-btn {
+  margin-top: 14px;
+  width: 100%;
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: white;
+  font-weight: 700;
 }
