@@ -1,25 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart, Star } from 'lucide-react';
-import { SIZE_OPTIONS } from './SizeSelector';
+import React, { useMemo, useState } from 'react';
 import './ShippingCalculator.css';
+import { SIZE_OPTIONS } from './SizeSelector';
+import {
+  ShoppingCart,
+  X,
+  Lock,
+  ChevronLeft,
+  MapPin,
+  Check,
+  Truck,
+} from 'lucide-react';
 
 const USED_GRADES = [
-  { key: 'AS_IS', label: 'AS IS' },
-  { key: 'WWT', label: 'Wind & Water Tight' },
-  { key: 'CW', label: 'Cargo Worthy (CW)' },
+  { key: 'AS_IS', label: 'AS IS', adjust: -100 },
+  { key: 'WWT', label: 'Wind & Water Tight', adjust: 200 },
+  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 400 },
 ];
 
 const NEW_GRADES = [
-  { key: 'IICL', label: 'IICL Certified' },
+  { key: 'IICL', label: 'IICL Certified', adjust: 0 },
 ];
 
 const CONDITION_IMAGES = {
   used:
-    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&q=80',
+    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
   new:
-    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&q=80',
+    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
 };
+
+const COUPONS = {
+  CONTAINER10: 0.1,
+  SAVE200: 200,
+  CE2024: 0.05,
+};
+
+const fmt = (num) =>
+  `$${Number(num || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
 export default function ShippingCalculator({
   container,
@@ -28,241 +47,568 @@ export default function ShippingCalculator({
   condition,
   onConditionChange,
 }) {
-  const [grade, setGrade] = useState('AS_IS');
+  const [zipOpen, setZipOpen] = useState(false);
+  const [zip, setZip] = useState('');
+  const [grade, setGrade] = useState(
+    condition === 'new' ? 'IICL' : 'AS_IS'
+  );
   const [qty, setQty] = useState(1);
+  const [cart, setCart] = useState([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [panel, setPanel] = useState('cart');
+  const [coupon, setCoupon] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [couponMsg, setCouponMsg] = useState('');
+  const [payMethod, setPayMethod] = useState('card');
+  const [orderRef, setOrderRef] = useState('');
 
-  useEffect(() => {
-    if (condition === 'new') {
-      setGrade('IICL');
-    } else {
-      setGrade('AS_IS');
-    }
-  }, [condition]);
+  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
 
   const gradeOptions =
     condition === 'new' ? NEW_GRADES : USED_GRADES;
 
-  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
+  const activeGrade =
+    gradeOptions.find((g) => g.key === grade) ||
+    gradeOptions[0];
 
-  const basePrice =
-    condition === 'new'
+  const unitPrice =
+    (condition === 'new'
       ? sizeOption.newPrice
-      : sizeOption.usedPrice;
+      : sizeOption.usedPrice) +
+    (activeGrade.adjust || 0);
 
-  const totalPrice = basePrice * qty;
+  const totalPrice = unitPrice * qty;
+
+  const currentTitle = `${
+    condition === 'new' ? 'New' : 'Used'
+  } ${sizeOption.label} Shipping Container`;
+
+  const currentSub = `${
+    sizeOption.size || sizeOption.label
+  } · ${activeGrade.label}`;
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
+
+  const tax = Math.max(0, subtotal - discount) * 0.09;
+
+  const grandTotal =
+    Math.max(0, subtotal - discount) + tax;
+
+  const cartCount = cart.reduce(
+    (sum, item) => sum + item.qty,
+    0
+  );
+
+  const selectedImage = CONDITION_IMAGES[condition];
+
+  const addToCart = () => {
+    const item = {
+      id: `${Date.now()}`,
+      title: currentTitle,
+      sub: currentSub,
+      condition,
+      grade: activeGrade.label,
+      price: unitPrice,
+      qty,
+      img: selectedImage,
+    };
+
+    setCart((prev) => {
+      const existing = prev.find(
+        (p) =>
+          p.title === item.title &&
+          p.grade === item.grade
+      );
+
+      if (existing) {
+        return prev.map((p) =>
+          p.id === existing.id
+            ? { ...p, qty: p.qty + qty }
+            : p
+        );
+      }
+
+      return [...prev, item];
+    });
+
+    setDrawerOpen(true);
+  };
+
+  const updateQty = (id, delta) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              qty: Math.max(1, item.qty + delta),
+            }
+          : item
+      )
+    );
+  };
+
+  const removeItem = (id) => {
+    setCart((prev) =>
+      prev.filter((item) => item.id !== id)
+    );
+  };
+
+  const applyCoupon = () => {
+    const code = coupon.trim().toUpperCase();
+    const val = COUPONS[code];
+
+    if (!code) {
+      setCouponMsg('');
+      setDiscount(0);
+      return;
+    }
+
+    if (val === undefined) {
+      setCouponMsg('✗ Invalid coupon code.');
+      setDiscount(0);
+      return;
+    }
+
+    const saved = val < 1 ? subtotal * val : val;
+
+    setDiscount(saved);
+
+    setCouponMsg(
+      `✓ Coupon applied! You save ${fmt(saved)}`
+    );
+  };
+
+  const openCheckout = () => {
+    setDrawerOpen(false);
+    setCheckoutOpen(true);
+    setPanel('cart');
+  };
+
+  const placeOrder = () => {
+    setOrderRef(
+      `CE-${Math.random()
+        .toString(36)
+        .slice(2, 10)
+        .toUpperCase()}`
+    );
+
+    setPanel('success');
+  };
 
   return (
-    <div className="flex flex-col gap-3">
+    <>
+      <div className="widget">
 
-      {/* SIZE TABS */}
-      <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-border bg-card">
-        {SIZE_OPTIONS.map((opt, i) => {
-          const active = selectedSizeIndex === i;
-
-          return (
+        <div className="main-tabs">
+          {SIZE_OPTIONS.map((opt, index) => (
             <button
-              key={i}
-              onClick={() => onSizeChange(i)}
-              className={`py-5 px-3 border-r border-border last:border-r-0 transition-all ${
-                active
-                  ? 'bg-primary text-white'
-                  : 'text-muted-foreground hover:bg-muted/30'
+              key={opt.label}
+              className={`main-tab ${
+                selectedSizeIndex === index
+                  ? 'active'
+                  : ''
               }`}
+              onClick={() => onSizeChange(index)}
             >
-              <div className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-70">
-                Buy
-              </div>
+              <span className="tab-sub">Buy</span>
 
-              <div className="text-lg font-extrabold leading-tight mt-1">
+              <span className="tab-title">
                 {opt.label}
-              </div>
+              </span>
 
-              <div className="font-mono text-[11px] mt-1 opacity-70">
+              <span className="tab-sub">
                 {opt.dims}
-              </div>
+              </span>
             </button>
-          );
-        })}
-      </div>
-
-      {/* PRICE */}
-      <div className="rounded-2xl border border-border bg-card p-6 flex items-center justify-between">
-        <div>
-          <div className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground font-bold">
-            Container Price
-          </div>
-
-          <div className="font-mono text-5xl font-black text-primary mt-2">
-            ${basePrice.toLocaleString()}
-          </div>
+          ))}
         </div>
 
-        <button className="bg-primary hover:bg-primary/90 text-white font-bold px-7 py-3 rounded-full transition-all">
-          BUY NOW
-        </button>
-      </div>
+        <div className="checkout">
+          <div className="checkout-inner">
 
-      {/* CONDITION */}
-      <div className="rounded-2xl border border-border bg-card overflow-hidden">
-        <div className="flex justify-between items-center px-5 py-4 border-b border-border">
-          <span className="text-[11px] tracking-[0.15em] uppercase font-bold text-muted-foreground">
-            Condition
-          </span>
+            <div className="total-row">
+              <span className="total-price">
+                {fmt(unitPrice)}
+              </span>
 
-          <span className="font-semibold">
-            {condition === 'new' ? 'New' : 'Used'} Container
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 p-4">
-          {['used', 'new'].map((cond) => {
-            const active = condition === cond;
-
-            return (
               <button
-                key={cond}
-                onClick={() => onConditionChange(cond)}
-                className={`rounded-2xl border-2 p-3 flex gap-3 items-center transition-all ${
-                  active
-                    ? 'border-green-500 bg-green-500/10'
-                    : 'border-border hover:border-border/70'
-                }`}
+                className="add-btn"
+                onClick={addToCart}
               >
-                <img
-                  src={CONDITION_IMAGES[cond]}
-                  alt={cond}
-                  className="w-[82px] h-[62px] rounded-xl object-cover"
-                />
-
-                <div className="text-left">
-                  <div className="font-bold text-base">
-                    {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
-                  </div>
-
-                  <div className="font-mono text-lg mt-1">
-                    $
-                    {(
-                      cond === 'new'
-                        ? sizeOption.newPrice
-                        : sizeOption.usedPrice
-                    ).toLocaleString()}
-                  </div>
-                </div>
+                Buy Now
               </button>
-            );
-          })}
-        </div>
-      </div>
+            </div>
 
-      {/* GRADE */}
-      <div className="rounded-2xl border border-border bg-card overflow-hidden">
-        <div className="flex justify-between items-center px-5 py-4 border-b border-border">
-          <span className="text-[11px] tracking-[0.15em] uppercase font-bold text-muted-foreground">
-            Grade Classification
-          </span>
-
-          <span className="font-semibold">
-            {gradeOptions.find((g) => g.key === grade)?.label}
-          </span>
+          </div>
         </div>
 
-        <div
-          className={`grid gap-3 p-4 ${
-            condition === 'new'
-              ? 'grid-cols-1'
-              : 'grid-cols-3'
-          }`}
-        >
-          {gradeOptions.map((g) => {
-            const active = grade === g.key;
+        <div className="cond-cards-section">
 
-            return (
+          <div className="cond-cards-head">
+            <span className="card-lbl">
+              Condition
+            </span>
+
+            <span className="card-val">
+              {condition === 'new'
+                ? 'New'
+                : 'Used'}{' '}
+              {sizeOption.label}
+            </span>
+          </div>
+
+          <div className="cond-cards">
+            {['used', 'new'].map((cond) => {
+              const active = condition === cond;
+
+              const price =
+                cond === 'new'
+                  ? sizeOption.newPrice
+                  : sizeOption.usedPrice;
+
+              return (
+                <button
+                  key={cond}
+                  className={`cond-card ${
+                    active ? 'active' : ''
+                  }`}
+                  onClick={() => {
+                    onConditionChange(cond);
+
+                    setGrade(
+                      cond === 'new'
+                        ? 'IICL'
+                        : 'AS_IS'
+                    );
+                  }}
+                >
+                  <img
+                    src={CONDITION_IMAGES[cond]}
+                    className="cond-img"
+                  />
+
+                  <div className="cc-info">
+                    <span className="cc-name">
+                      {cond === 'new'
+                        ? 'New'
+                        : 'Used'}{' '}
+                      {sizeOption.label}
+                    </span>
+
+                    <span className="cc-price">
+                      {fmt(price)}
+                    </span>
+                  </div>
+
+                  <span className="cc-check">
+                    <Check size={10} />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="section-card">
+
+          <div className="card-head">
+            <span className="card-lbl">
+              Grade
+            </span>
+
+            <span className="card-val">
+              {activeGrade.label}
+            </span>
+          </div>
+
+          <div className="grade-grid">
+            {gradeOptions.map((g) => (
               <button
                 key={g.key}
                 onClick={() => setGrade(g.key)}
-                className={`rounded-xl border-2 py-4 px-3 font-bold transition-all ${
-                  active
-                    ? 'border-green-500 bg-green-500/10 text-white'
-                    : 'border-border text-muted-foreground hover:border-border/70'
+                className={`grade-btn ${
+                  grade === g.key
+                    ? 'active'
+                    : ''
                 }`}
               >
                 {g.label}
               </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* RATING */}
-      <div className="rounded-2xl border border-border bg-card p-5">
-        <div className="flex items-center gap-1">
-          {[1,2,3,4,5].map((i) => (
-            <Star
-              key={i}
-              className="w-5 h-5 fill-yellow-400 text-yellow-400"
-            />
-          ))}
-
-          <span className="ml-2 text-sm text-muted-foreground">
-            4.9 rating · 217 reviews
-          </span>
-        </div>
-
-        <p className="text-sm text-muted-foreground mt-4 leading-7">
-          Premium quality shipping containers available for
-          nationwide delivery. All units are inspected for
-          structural integrity and secure cargo transport.
-        </p>
-      </div>
-
-      {/* TOTAL */}
-      <div className="rounded-2xl border border-border bg-card p-6">
-        <div className="flex justify-between items-end">
-          <div>
-            <div className="text-[11px] uppercase tracking-[0.15em] font-bold text-muted-foreground">
-              Total
-            </div>
-
-            <div className="text-sm text-muted-foreground mt-1">
-              Taxes calculated at checkout
-            </div>
+            ))}
           </div>
 
-          <div className="font-mono text-4xl font-black text-primary">
-            ${totalPrice.toLocaleString()}
-          </div>
         </div>
 
-        <div className="grid grid-cols-[110px_1fr] gap-3 mt-6">
-          <div className="flex items-center border border-border rounded-xl overflow-hidden bg-muted/20 h-14">
-            <button
-              onClick={() =>
-                setQty((q) => Math.max(1, q - 1))
-              }
-              className="w-12 h-full text-xl"
-            >
-              −
+        <div className="checkout">
+
+          <div className="checkout-inner">
+
+            <div className="tax-note">
+              <Lock size={13} />
+              Taxes and delivery calculated at
+              checkout.
+            </div>
+
+            <hr className="divider" />
+
+            <div className="total-row">
+              <span className="total-lbl">
+                Total
+              </span>
+
+              <span className="total-price">
+                {fmt(totalPrice)}
+              </span>
+            </div>
+
+            <div className="cart-row">
+
+              <div className="qty-wrap">
+                <button
+                  className="qty-btn"
+                  onClick={() =>
+                    setQty(Math.max(1, qty - 1))
+                  }
+                >
+                  −
+                </button>
+
+                <span className="qty-num">
+                  {qty}
+                </span>
+
+                <button
+                  className="qty-btn"
+                  onClick={() => setQty(qty + 1)}
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                className="add-btn"
+                onClick={addToCart}
+              >
+                <ShoppingCart size={17} />
+                Add to Cart
+              </button>
+
+            </div>
+
+            <button className="quote-btn">
+              Add to Quote
             </button>
 
-            <span className="flex-1 text-center font-mono font-bold">
-              {qty}
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`drawer-overlay ${
+          drawerOpen ? 'open' : ''
+        }`}
+        onClick={() => setDrawerOpen(false)}
+      />
+
+      <aside
+        className={`cart-drawer ${
+          drawerOpen ? 'open' : ''
+        }`}
+      >
+        <div className="drawer-header">
+
+          <div className="drawer-title">
+            <ShoppingCart size={18} />
+            My Cart
+
+            <span className="cart-count">
+              {cartCount}
             </span>
-
-            <button
-              onClick={() => setQty((q) => q + 1)}
-              className="w-12 h-full text-xl"
-            >
-              +
-            </button>
           </div>
 
-          <Button className="h-14 rounded-xl text-base font-bold gap-2">
-            <ShoppingCart className="w-5 h-5" />
-            Add To Cart
-          </Button>
-        </div>
-      </div>
+          <button
+            className="drawer-close"
+            onClick={() => setDrawerOpen(false)}
+          >
+            <X size={16} />
+          </button>
 
-    </div>
+        </div>
+
+        <div className="drawer-body">
+
+          {cart.length === 0 ? (
+            <div className="empty-cart">
+              Your cart is empty.
+            </div>
+          ) : (
+            cart.map((item) => (
+              <div
+                className="cart-item"
+                key={item.id}
+              >
+                <img
+                  src={item.img}
+                  className="ci-img"
+                />
+
+                <div className="ci-info">
+
+                  <button
+                    className="ci-remove"
+                    onClick={() =>
+                      removeItem(item.id)
+                    }
+                  >
+                    ×
+                  </button>
+
+                  <div className="ci-name">
+                    {item.title}
+                  </div>
+
+                  <div className="ci-meta">
+                    {item.sub}
+                    <br />
+                    Grade: {item.grade}
+                  </div>
+
+                  <div className="ci-price">
+                    {fmt(item.price)}
+                  </div>
+
+                </div>
+              </div>
+            ))
+          )}
+
+        </div>
+
+        <div className="drawer-footer">
+
+          <div className="drawer-subtotal">
+            <span>Subtotal</span>
+
+            <span className="drawer-total-val">
+              {fmt(grandTotal)}
+            </span>
+          </div>
+
+          <button
+            className="checkout-btn"
+            onClick={openCheckout}
+          >
+            Checkout
+          </button>
+
+        </div>
+      </aside>
+
+      <section
+        className={`checkout-page ${
+          checkoutOpen ? 'open' : ''
+        }`}
+      >
+
+        <div className="co-topbar">
+
+          <button
+            className="co-back"
+            onClick={() =>
+              setCheckoutOpen(false)
+            }
+          >
+            <ChevronLeft size={16} />
+            Back to product
+          </button>
+
+          <div className="co-brand">
+            Containers <span>Exchange</span>
+          </div>
+
+        </div>
+
+        <div className="co-layout">
+
+          <main className="co-main">
+
+            {panel === 'success' ? (
+              <div className="co-panel co-success-panel">
+
+                <div className="co-success-icon">
+                  <Check size={42} />
+                </div>
+
+                <h2>Order Received</h2>
+
+                <p>
+                  Thank you. Your container order
+                  has been received.
+                </p>
+
+                <div className="co-order-ref">
+                  {orderRef}
+                </div>
+
+              </div>
+            ) : (
+              <div className="co-panel">
+
+                <div className="co-panel-title">
+                  <Truck size={18} />
+                  Delivery & Payment Details
+                </div>
+
+                <div className="co-form">
+
+                  <div className="co-row">
+
+                    <div className="co-field">
+                      <label>First Name</label>
+                      <input />
+                    </div>
+
+                    <div className="co-field">
+                      <label>Last Name</label>
+                      <input />
+                    </div>
+
+                  </div>
+
+                  <div className="co-row">
+
+                    <div className="co-field">
+                      <label>Email</label>
+                      <input type="email" />
+                    </div>
+
+                    <div className="co-field">
+                      <label>Phone</label>
+                      <input />
+                    </div>
+
+                  </div>
+
+                  <button
+                    className="co-primary-btn"
+                    onClick={placeOrder}
+                  >
+                    Place Order
+                  </button>
+
+                </div>
+
+              </div>
+            )}
+
+          </main>
+
+        </div>
+      </section>
+    </>
   );
 }
