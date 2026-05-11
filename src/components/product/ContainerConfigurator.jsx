@@ -36,7 +36,7 @@ const fmt = (num) =>
     maximumFractionDigits: 2,
   })}`;
 
-export default function ShippingCalculator({
+export default function ContainerConfigurator({
   container,
   selectedSizeIndex,
   onSizeChange,
