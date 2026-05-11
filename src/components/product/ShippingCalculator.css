@@ -370,3 +370,86 @@
   align-items:center;
   justify-content:center;
 }
+.main-tab{
+  min-height:88px;
+  justify-content:center;
+}
+
+.tab-title{
+  font-size:15px;
+  line-height:1.2;
+  margin-top:2px;
+}
+
+.cond-card{
+  grid-template-columns:72px 1fr;
+  min-height:96px;
+  padding:14px;
+  gap:14px;
+}
+
+.cond-img{
+  width:72px;
+  height:56px;
+  border-radius:10px;
+}
+
+.cc-info{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:6px;
+}
+
+.cc-name{
+  font-size:15px;
+  line-height:1.25;
+  font-weight:700;
+}
+
+.cc-price{
+  font-size:14px;
+  color:#d1d5db;
+  font-weight:600;
+}
+
+.grade-btn{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  line-height:1.2;
+  padding:12px;
+}
+
+.total-price{
+  font-size:52px;
+  line-height:1;
+}
+
+.add-btn{
+  height:64px;
+  border-radius:16px;
+  font-size:20px;
+  font-weight:700;
+}
+
+.qty-wrap{
+  height:64px;
+}
+
+.qty-btn{
+  width:48px;
+  font-size:26px;
+}
+
+.qty-num{
+  font-size:20px;
+}
+
+.quote-btn{
+  height:58px;
+  font-size:18px;
+  border-radius:14px;
+}
