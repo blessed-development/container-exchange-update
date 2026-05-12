@@ -602,3 +602,59 @@
   box-shadow:
     0 10px 24px rgba(255,77,0,.22);
 }
+.zip-bar{
+  background:linear-gradient(180deg,#171717,#111);
+}
+
+.zip-collapsed{
+  min-height:54px;
+  cursor:pointer;
+}
+
+.zip-left{
+  justify-content:flex-start;
+}
+
+.zip-action{
+  color:#22c55e;
+  font-size:12px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.zip-panel{
+  padding:14px;
+  border-top:1px solid #2a2a2a;
+  display:none;
+}
+
+.zip-panel.open{
+  display:block;
+}
+
+.zip-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+
+.zip-input{
+  height:46px;
+  border-radius:12px;
+  border:1px solid #333;
+  background:#0c0c0c;
+  color:#fff;
+  padding:0 14px;
+}
+
+.zip-loc-btn{
+  margin-top:10px;
+  width:100%;
+  height:44px;
+  border-radius:12px;
+  border:1px solid #333;
+  background:#1d1d1d;
+  color:#ddd;
+  font-weight:700;
+}
