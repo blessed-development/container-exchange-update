@@ -559,3 +559,46 @@
   border-color:#22c55e !important;
   background:rgba(34,197,94,.12) !important;
 }
+.main-tab,
+.cond-card,
+.grade-btn,
+.add-btn,
+.quote-btn,
+.qty-btn{
+  transition:
+    background-color .25s ease,
+    border-color .25s ease,
+    transform .2s ease,
+    box-shadow .25s ease,
+    opacity .25s ease;
+}
+
+.main-tab:hover,
+.cond-card:hover,
+.grade-btn:hover{
+  transform:translateY(-2px);
+}
+
+.add-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(255,77,0,.28);
+}
+
+.quote-btn:hover{
+  background:#262626;
+}
+
+.qty-btn:hover{
+  background:#2a2a2a;
+}
+
+.cond-card.active{
+  box-shadow:
+    0 0 0 1px rgba(34,197,94,.35),
+    0 10px 30px rgba(34,197,94,.12);
+}
+
+.main-tab.active{
+  box-shadow:
+    0 10px 24px rgba(255,77,0,.22);
+}
