@@ -841,3 +841,88 @@
   font-size:20px;
   font-weight:900;
 }
+.cct-row{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 120px;
+  gap:16px;
+  align-items:center;
+  padding:18px 0;
+  border-bottom:1px solid #2a2a2a;
+}
+
+.cct-prod{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.cct-img{
+  width:88px;
+  height:66px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+.cct-title{
+  font-size:16px;
+  font-weight:800;
+  line-height:1.25;
+}
+
+.cct-sub{
+  margin-top:6px;
+  color:#9ca3af;
+  font-size:13px;
+}
+
+.cct-qty{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cct-qty-btn{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:#1b1b1b;
+  color:#fff;
+  font-size:18px;
+}
+
+.cct-qty-val{
+  min-width:20px;
+  text-align:center;
+  font-weight:700;
+}
+
+.cct-total{
+  font-size:18px;
+  font-weight:900;
+  color:#ff4d00;
+}
+
+.co-coupon{
+  display:flex;
+  gap:10px;
+  margin-top:24px;
+}
+
+.co-panel-actions{
+  display:flex;
+  gap:14px;
+  margin-top:28px;
+}
+
+@media(max-width:900px){
+
+  .cct-row{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .co-layout{
+    grid-template-columns:1fr;
+  }
+}
