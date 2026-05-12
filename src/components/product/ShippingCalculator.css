@@ -926,3 +926,42 @@
     grid-template-columns:1fr;
   }
 }
+.cct-head{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 120px;
+  gap:16px;
+  color:#9ca3af;
+  font-size:12px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding-bottom:14px;
+  border-bottom:1px solid #2a2a2a;
+}
+
+.cct-subtotal-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cct-x-inline{
+  width:26px;
+  height:26px;
+  border-radius:999px;
+  border:1px solid #333;
+  background:#1b1b1b;
+  color:#fff;
+  cursor:pointer;
+}
+
+.co-sum-row{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:8px;
+}
+
+.co-sum-total-row{
+  margin-top:16px;
+}
