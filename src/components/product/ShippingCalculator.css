@@ -658,3 +658,29 @@
   color:#ddd;
   font-weight:700;
 }
+@media(max-width:768px){
+
+  .checkout:last-of-type{
+    position:sticky;
+    bottom:0;
+    z-index:40;
+    margin-top:18px;
+    background:rgba(10,10,10,.96);
+    backdrop-filter:blur(18px);
+    border:1px solid #2b2b2b;
+    box-shadow:
+      0 -10px 40px rgba(0,0,0,.45);
+  }
+
+  .checkout:last-of-type .checkout-inner{
+    padding:16px;
+  }
+
+  .checkout:last-of-type .cart-row{
+    margin-bottom:0;
+  }
+
+  body{
+    padding-bottom:120px;
+  }
+}
