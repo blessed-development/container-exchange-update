@@ -2002,3 +2002,69 @@
   border-bottom:1px solid rgba(255,255,255,.025) !important;
   padding-bottom:12px !important;
 }
+/* ===== CART ITEM PREMIUM TYPOGRAPHY + CLICKABLE TITLE POLISH ===== */
+
+/* Slightly smaller image for cleaner unit shape */
+.ci-img{
+  width:88px !important;
+  height:54px !important;
+  border-radius:9px !important;
+}
+
+/* Match qty row to image width */
+.ci-qty-row{
+  width:88px !important;
+  height:28px !important;
+}
+
+/* More premium title: less thick, more Apple-like */
+.ci-name,
+.ci-name a{
+  font-size:13px !important;
+  line-height:1.12 !important;
+  font-weight:760 !important;
+  letter-spacing:-.018em !important;
+  color:#f8fafc !important;
+  margin:0 0 3px !important;
+  text-decoration:none !important;
+  cursor:pointer !important;
+}
+
+/* Clickable title hover */
+.ci-name:hover,
+.ci-name a:hover{
+  color:#ffffff !important;
+  text-decoration:none !important;
+  opacity:.92 !important;
+}
+
+/* Tighten subtitle under title */
+.ci-meta{
+  margin-top:0 !important;
+  font-size:11.3px !important;
+  line-height:1.15 !important;
+  color:rgba(156,163,175,.74) !important;
+}
+
+/* Keep text block tighter */
+.ci-info{
+  padding-right:20px !important;
+}
+
+/* Make qty buttons match smaller image better */
+.ci-qty-btn{
+  width:27px !important;
+  height:27px !important;
+  border-radius:8px !important;
+  font-size:13px !important;
+}
+
+.ci-qty-val{
+  font-size:12.8px !important;
+}
+
+/* Price refined */
+.ci-price{
+  font-size:13.5px !important;
+  font-weight:850 !important;
+}
