@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
 import {
@@ -44,7 +44,7 @@ export default function ContainerConfigurator({
   onConditionChange,
 }) {
   const [zipOpen, setZipOpen] = useState(false);
-  const [zip, setZip] = useState('');
+  const [zip, setZip] = useState('33304');
   const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'AS_IS');
   const [qty, setQty] = useState(1);
   const [cart, setCart] = useState([]);
@@ -158,7 +158,7 @@ export default function ContainerConfigurator({
           <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
             <div className="zip-left">
               <MapPin size={15} />
-              <span>Delivery ZIP</span>
+              <span>Delivering to Fort Lauderdale, FL</span>
               <span className="zip-val">{zip || 'Not set'}</span>
             </div>
             <div className={`zip-action ${zipOpen ? 'open' : ''}`}>Change</div>
@@ -180,6 +180,38 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
+        <div className="step-label">STEP 2 — SELECT CONTAINER TYPE</div>
+
+        {/* NEW / USED TABS */}
+        <div className="condition-tabs">
+          <button
+            className={`condition-tab ${condition === 'new' ? 'active' : ''}`}
+            onClick={() => {
+              onConditionChange('new');
+              setGrade('IICL');
+            }}
+          >
+            <span>NEW (One-Trip)</span>
+            <small>SHIPPING CONTAINERS</small>
+          </button>
+
+          <button
+            className={`condition-tab ${condition === 'used' ? 'active' : ''}`}
+            onClick={() => {
+              onConditionChange('used');
+              setGrade('AS_IS');
+            }}
+          >
+            <span>USED (Wind/Water Tight)</span>
+            <small>SHIPPING CONTAINERS</small>
+          </button>
+        </div>
+
+        <div className="section-header">
+          <span>CONTAINER SPECIFICATIONS</span>
+          <strong>{sizeOption.label} Selected</strong>
+        </div>
+
         {/* SIZE TABS */}
         <div className="main-tabs">
           {SIZE_OPTIONS.map((opt, index) => (
@@ -188,31 +220,21 @@ export default function ContainerConfigurator({
               className={`main-tab ${selectedSizeIndex === index ? 'active' : ''}`}
               onClick={() => onSizeChange(index)}
             >
-              <span className="tab-sub">Buy</span>
               <span className="tab-title">{opt.label}</span>
               <span className="tab-sub">{opt.dims}</span>
+              <span className="tab-price">
+                {fmt(condition === 'new' ? opt.newPrice : opt.usedPrice)}
+              </span>
             </button>
           ))}
         </div>
 
-        {/* PRICE */}
-        <div className="checkout">
-          <div className="checkout-inner">
-            <div className="total-row">
-              <span className="total-price">{fmt(unitPrice)}</span>
-              <button className="add-btn" onClick={addToCart}>
-                Buy Now
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* CONDITION */}
+        {/* CONDITION CARDS */}
         <div className="cond-cards-section">
           <div className="cond-cards-head">
-            <span className="card-lbl">Condition</span>
+            <span className="card-lbl">CONDITION</span>
             <span className="card-val">
-              {condition === 'new' ? 'New' : 'Used'} {sizeOption.label}
+              {condition === 'new' ? 'New' : 'Used'} — {sizeOption.label}
             </span>
           </div>
 
@@ -230,7 +252,7 @@ export default function ContainerConfigurator({
                     setGrade(cond === 'new' ? 'IICL' : 'AS_IS');
                   }}
                 >
-                  <img src={CONDITION_IMAGES[cond]} className="cond-img" />
+                  <img src={CONDITION_IMAGES[cond]} className="cond-img" alt={cond} />
                   <div className="cc-info">
                     <span className="cc-name">
                       {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
@@ -249,7 +271,7 @@ export default function ContainerConfigurator({
         {/* GRADE */}
         <div className="section-card">
           <div className="card-head">
-            <span className="card-lbl">Grade</span>
+            <span className="card-lbl">GRADE</span>
             <span className="card-val">{activeGrade.label}</span>
           </div>
 
@@ -260,18 +282,38 @@ export default function ContainerConfigurator({
                 onClick={() => setGrade(g.key)}
                 className={`grade-btn ${grade === g.key ? 'active' : ''}`}
               >
-                {g.label}
+                <span>{g.label}</span>
+                {g.adjust !== 0 && (
+                  <small>{g.adjust > 0 ? '+' : ''}{fmt(g.adjust)}</small>
+                )}
               </button>
             ))}
           </div>
         </div>
 
-        {/* TOTAL / CART */}
+        {/* SELECTION TYPE */}
+        <div className="section-card">
+          <div className="card-head">
+            <span className="card-lbl">SELECTION TYPE</span>
+            <span className="card-val">First off the Stack</span>
+          </div>
+
+          <div className="selection-type">
+            <button className="selection-btn active">
+              <span className="selection-dot">
+                <Check size={10} />
+              </span>
+              <span>First off the Stack</span>
+            </button>
+          </div>
+        </div>
+
+        {/* CHECKOUT FOOTER */}
         <div className="checkout">
           <div className="checkout-inner">
             <div className="tax-note">
               <Lock size={13} />
-              Taxes and delivery calculated at checkout.
+              Sales tax calculated at checkout.
             </div>
 
             <hr className="divider" />
@@ -298,7 +340,7 @@ export default function ContainerConfigurator({
               </button>
             </div>
 
-            <button className="quote-btn">Add to Quote</button>
+            <button className="quote-btn">Request a Quote</button>
           </div>
         </div>
       </div>
@@ -326,7 +368,7 @@ export default function ContainerConfigurator({
           ) : (
             cart.map((item) => (
               <div className="cart-item" key={item.id}>
-                <img src={item.img} className="ci-img" />
+                <img src={item.img} className="ci-img" alt={item.title} />
                 <div className="ci-info">
                   <button className="ci-remove" onClick={() => removeItem(item.id)}>
                     ×
@@ -420,7 +462,7 @@ export default function ContainerConfigurator({
                     cart.map((item) => (
                       <div className="cct-row" key={item.id}>
                         <div className="cct-prod">
-                          <img src={item.img} className="cct-img" />
+                          <img src={item.img} className="cct-img" alt={item.title} />
                           <div className="cct-prod-info">
                             <div className="cct-title">{item.title}</div>
                             <div className="cct-sub">{item.sub}</div>
@@ -602,7 +644,7 @@ export default function ContainerConfigurator({
 
                 {cart.map((item) => (
                   <div className="co-sum-item" key={item.id}>
-                    <img src={item.img} className="co-sum-item-img" />
+                    <img src={item.img} className="co-sum-item-img" alt={item.title} />
                     <div className="co-sum-item-info">
                       <div className="co-sum-item-name">{item.title}</div>
                       <div className="co-sum-item-meta">
