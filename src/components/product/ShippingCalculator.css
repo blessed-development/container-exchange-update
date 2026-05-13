@@ -2068,58 +2068,62 @@
   font-size:13.5px !important;
   font-weight:850 !important;
 }
-/* ===== CART TITLE + TEXT ALIGNMENT POLISH ===== */
+/* ===== PREMIUM TITLE WRAP + APPLE-LEVEL TEXT BALANCE ===== */
 
-/* Give more space to product text */
+/* Better product row balance */
 .cart-item{
-  grid-template-columns:82px minmax(0,1fr) !important;
-  column-gap:8px !important;
+  grid-template-columns:78px minmax(0,1fr) !important;
+  column-gap:10px !important;
+  row-gap:7px !important;
+  padding:10px 0 12px !important;
 }
 
-/* Slightly smaller image to free text space */
+/* Smaller image gives title more room */
 .ci-img{
-  width:82px !important;
-  height:52px !important;
-  border-radius:8px !important;
+  width:78px !important;
+  height:50px !important;
+  border-radius:9px !important;
 }
 
-/* Match qty width with image */
+/* Match qty controls to image */
 .ci-qty-row{
-  width:82px !important;
+  width:78px !important;
+  height:28px !important;
 }
 
-/* Product title: thinner, cleaner, wider */
+/* Title: premium, readable, allows 2 lines */
 .ci-name,
 .ci-name a{
-  display:block !important;
-  max-width:100% !important;
+  display:-webkit-box !important;
+  -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important;
 
-  font-size:13px !important;
-  line-height:1.12 !important;
-  font-weight:680 !important;
-  letter-spacing:-.015em !important;
-
-  color:#f4f7fb !important;
-  margin:0 0 4px !important;
-
-  white-space:nowrap !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
+
+  font-size:13px !important;
+  line-height:1.16 !important;
+  font-weight:720 !important;
+  letter-spacing:-.018em !important;
+
+  color:#f8fafc !important;
+  margin:0 0 4px !important;
+  padding-right:24px !important;
 
   text-decoration:none !important;
 }
 
-/* Product subtitle: clearer and cleaner */
+/* Subtitle: one clean premium line */
 .ci-meta{
   display:block !important;
   max-width:100% !important;
 
-  font-size:11.8px !important;
+  font-size:11.5px !important;
   line-height:1.2 !important;
   font-weight:500 !important;
-  letter-spacing:-.005em !important;
+  letter-spacing:-.006em !important;
 
-  color:rgba(170,178,191,.82) !important;
+  color:rgba(163,172,185,.78) !important;
 
   white-space:nowrap !important;
   overflow:hidden !important;
@@ -2128,14 +2132,27 @@
   margin:0 !important;
 }
 
-/* Keep remove icon from eating title space */
-.ci-info,
-.ci-name{
-  padding-right:26px !important;
+/* Quantity buttons refined */
+.ci-qty-btn{
+  width:26px !important;
+  height:26px !important;
+  border-radius:8px !important;
+  font-size:13px !important;
 }
 
-/* Price still aligned cleanly */
+.ci-qty-val{
+  font-size:12.8px !important;
+  font-weight:780 !important;
+}
+
+/* Price: cleaner, not too loud */
 .ci-price{
-  font-size:13.5px !important;
+  font-size:13.8px !important;
   font-weight:850 !important;
+  letter-spacing:-.018em !important;
+}
+
+/* Softer spacing between multiple products */
+.cart-item + .cart-item{
+  margin-top:4px !important;
 }
