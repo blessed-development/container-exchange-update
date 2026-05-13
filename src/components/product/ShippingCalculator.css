@@ -1623,3 +1623,205 @@
   font-size:12px !important;
   color:#8b94a3 !important;
 }
+/* ===== EXACT PREMIUM CART SAMPLE MATCH ===== */
+
+/* Main drawer */
+.cart-drawer{
+  background:#05080d !important;
+  color:#fff !important;
+}
+
+/* Body spacing */
+.drawer-body{
+  padding:26px 24px !important;
+}
+
+/* Product section like the sample */
+.cart-item{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:260px 1fr !important;
+  grid-template-rows:auto auto !important;
+  column-gap:32px !important;
+  row-gap:24px !important;
+  padding:0 !important;
+  margin:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  align-items:start !important;
+}
+
+/* Rectangle image like the picture */
+.ci-img{
+  grid-column:1 !important;
+  grid-row:1 !important;
+  width:260px !important;
+  height:180px !important;
+  border-radius:18px !important;
+  object-fit:cover !important;
+}
+
+/* Product text */
+.ci-info{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  min-width:0 !important;
+  padding-right:44px !important;
+}
+
+.ci-name{
+  font-size:34px !important;
+  line-height:1.18 !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+  color:#fff !important;
+  margin:8px 0 18px !important;
+  max-width:620px !important;
+}
+
+.ci-meta{
+  display:block !important;
+  font-size:25px !important;
+  line-height:1.25 !important;
+  color:#8e98a8 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  margin:0 !important;
+}
+
+.ci-meta br{
+  display:none !important;
+}
+
+/* Quantity exactly under image */
+.ci-qty-row{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  width:260px !important;
+  height:80px !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+}
+
+/* Big premium quantity buttons */
+.ci-qty-btn{
+  width:82px !important;
+  height:82px !important;
+  border-radius:20px !important;
+  background:#070b11 !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  color:#fff !important;
+  font-size:38px !important;
+  font-weight:600 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 10px 28px rgba(0,0,0,.35) !important;
+}
+
+.ci-qty-val{
+  min-width:60px !important;
+  text-align:center !important;
+  color:#fff !important;
+  font-size:36px !important;
+  font-weight:900 !important;
+}
+
+/* Price same lane as quantity, far right */
+.ci-price{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  justify-self:end !important;
+  align-self:center !important;
+  margin:0 !important;
+  color:#22d65f !important;
+  font-size:36px !important;
+  font-weight:900 !important;
+  letter-spacing:-.03em !important;
+  white-space:nowrap !important;
+}
+
+/* Remove icon */
+.ci-remove{
+  position:absolute !important;
+  top:14px !important;
+  right:10px !important;
+  background:transparent !important;
+  border:0 !important;
+  color:#8b94a3 !important;
+  font-size:34px !important;
+  line-height:1 !important;
+}
+
+/* Footer like the sample */
+.drawer-footer{
+  border-top:1px solid rgba(255,255,255,.08) !important;
+  padding:44px 32px 36px !important;
+  gap:22px !important;
+  background:#05080d !important;
+}
+
+.drawer-subtotal{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:flex-start !important;
+  color:#fff !important;
+  font-size:34px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+}
+
+.drawer-total-val{
+  color:#ff3b3b !important;
+  font-size:42px !important;
+  font-weight:900 !important;
+  letter-spacing:-.04em !important;
+}
+
+.drawer-tax-note{
+  font-size:0 !important;
+  margin-top:-8px !important;
+}
+
+.drawer-tax-note::after{
+  content:"Sales tax calculated at checkout" !important;
+  font-size:25px !important;
+  color:#8e98a8 !important;
+}
+
+/* Checkout */
+.checkout-btn{
+  width:100% !important;
+  height:112px !important;
+  border-radius:22px !important;
+  background:#2fd85f !important;
+  color:#fff !important;
+  font-size:34px !important;
+  font-weight:900 !important;
+  border:0 !important;
+}
+
+.checkout-btn::after{
+  content:" →" !important;
+  margin-left:18px !important;
+}
+
+/* Continue shopping subtitle style */
+.continue-btn{
+  width:100% !important;
+  height:auto !important;
+  padding:22px 0 0 !important;
+  background:transparent !important;
+  border:0 !important;
+  color:#9aa3b2 !important;
+  font-size:28px !important;
+  font-weight:500 !important;
+}
