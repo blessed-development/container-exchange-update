@@ -1753,3 +1753,140 @@
 
   white-space:nowrap !important;
 }
+/* ===== APPLE LEVEL CART UI POLISH ===== */
+
+.cart-drawer{
+  background:#05070b !important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif !important;
+}
+
+/* cleaner item spacing */
+.cart-item{
+  padding:10px 16px !important;
+  column-gap:12px !important;
+  row-gap:8px !important;
+}
+
+/* image polish */
+.ci-img{
+  width:94px !important;
+  height:58px !important;
+  border-radius:9px !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28) !important;
+}
+
+/* title cleaner */
+.ci-name{
+  font-size:13.5px !important;
+  line-height:1.15 !important;
+  font-weight:850 !important;
+  letter-spacing:-.025em !important;
+  color:#f8fafc !important;
+}
+
+/* meta text premium */
+.ci-meta{
+  margin-top:31px !important;
+  font-size:11.5px !important;
+  line-height:1.2 !important;
+  color:#8792a2 !important;
+  letter-spacing:-.01em !important;
+}
+
+/* qty row under image */
+.ci-qty-row{
+  width:94px !important;
+  height:30px !important;
+}
+
+/* qty buttons softer */
+.ci-qty-btn{
+  width:29px !important;
+  height:29px !important;
+  border-radius:9px !important;
+  background:linear-gradient(180deg,#141b25 0%,#0d121a 100%) !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  color:#f8fafc !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 4px 12px rgba(0,0,0,.28) !important;
+}
+
+.ci-qty-val{
+  font-size:13.5px !important;
+  font-weight:850 !important;
+  color:#f8fafc !important;
+}
+
+/* price */
+.ci-price{
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:-.02em !important;
+  color:#00b940 !important;
+}
+
+/* remove icon lighter */
+.ci-remove{
+  color:#768293 !important;
+  opacity:.9 !important;
+  transition:.2s ease !important;
+}
+
+.ci-remove:hover{
+  color:#fff !important;
+  opacity:1 !important;
+}
+
+/* subtotal section */
+.drawer-footer{
+  padding:16px 20px 18px !important;
+  gap:7px !important;
+  background:#05070b !important;
+}
+
+.drawer-subtotal{
+  font-size:16px !important;
+  font-weight:850 !important;
+  letter-spacing:-.025em !important;
+}
+
+.drawer-total-val{
+  font-size:22px !important;
+  font-weight:900 !important;
+  letter-spacing:-.045em !important;
+  color:#ff3b3b !important;
+}
+
+.drawer-tax-note::after{
+  font-size:11.5px !important;
+  color:#8792a2 !important;
+}
+
+/* checkout button */
+.checkout-btn{
+  height:48px !important;
+  border-radius:12px !important;
+  margin-top:4px !important;
+  background:linear-gradient(180deg,#34df66 0%,#27c955 100%) !important;
+  font-size:15px !important;
+  font-weight:850 !important;
+  letter-spacing:-.015em !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.18),
+    0 12px 26px rgba(39,201,85,.18) !important;
+}
+
+/* continue shopping should feel secondary */
+.continue-btn{
+  margin-top:4px !important;
+  padding:5px 0 !important;
+  font-size:12.5px !important;
+  font-weight:700 !important;
+  color:#9aa4b2 !important;
+  letter-spacing:-.01em !important;
+  background:transparent !important;
+  border:0 !important;
+}
