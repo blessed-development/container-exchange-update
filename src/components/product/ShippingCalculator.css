@@ -576,3 +576,10 @@
 .widget{
   gap:6px;
 }
+.cart-row{
+  grid-template-columns:1fr !important;
+}
+
+.add-btn{
+  width:100%;
+}
