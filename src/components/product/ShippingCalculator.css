@@ -2259,3 +2259,305 @@
   font-size:13px !important;
   font-weight:800 !important;
 }
+/* ===== PREMIUM CHECKOUT PAGE MATCH REFERENCE ===== */
+
+.checkout-page{
+  background:
+    radial-gradient(circle at top left, rgba(0,90,40,.14), transparent 34%),
+    radial-gradient(circle at top right, rgba(120,0,0,.12), transparent 34%),
+    #020403 !important;
+  color:#fff !important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif !important;
+}
+
+/* top header */
+.co-topbar{
+  height:48px !important;
+  padding:0 72px !important;
+  background:rgba(5,7,10,.75) !important;
+  border-bottom:1px solid rgba(255,255,255,.04) !important;
+  backdrop-filter:blur(18px) !important;
+}
+
+.co-progress{
+  display:none !important;
+}
+
+/* page layout */
+.co-layout{
+  max-width:1180px !important;
+  margin:0 auto !important;
+  padding:52px 32px !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 360px !important;
+  gap:30px !important;
+  align-items:start !important;
+}
+
+/* left cart card */
+.co-panel{
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  border-radius:22px !important;
+  padding:26px 24px !important;
+  box-shadow:0 28px 80px rgba(0,0,0,.42) !important;
+}
+
+/* title */
+.co-panel-title{
+  font-size:21px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+  letter-spacing:-.04em !important;
+  margin:0 0 26px !important;
+  color:#f8fafc !important;
+}
+
+/* cart table header */
+.cct-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 100px 100px 110px !important;
+  gap:18px !important;
+  padding:0 0 14px !important;
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+  color:#7f8a99 !important;
+  font-size:10px !important;
+  font-weight:850 !important;
+  letter-spacing:.15em !important;
+}
+
+/* product row */
+.cct-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 100px 100px 110px !important;
+  gap:18px !important;
+  align-items:center !important;
+  padding:18px 0 !important;
+  border-bottom:1px solid rgba(255,255,255,.035) !important;
+}
+
+/* product cell */
+.cct-prod{
+  display:grid !important;
+  grid-template-columns:58px minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:center !important;
+}
+
+.cct-img{
+  width:58px !important;
+  height:58px !important;
+  object-fit:cover !important;
+  border-radius:9px !important;
+  background:#fff !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.32) !important;
+}
+
+.cct-title{
+  font-size:13.5px !important;
+  line-height:1.15 !important;
+  font-weight:800 !important;
+  letter-spacing:-.025em !important;
+  color:#f8fafc !important;
+  margin:0 0 4px !important;
+}
+
+.cct-sub{
+  font-size:11.5px !important;
+  line-height:1.25 !important;
+  color:rgba(163,172,185,.78) !important;
+  margin:0 !important;
+}
+
+/* prices */
+.cct-price,
+.cct-total{
+  font-size:13.5px !important;
+  font-weight:850 !important;
+  color:#f8fafc !important;
+  letter-spacing:-.02em !important;
+}
+
+.cct-total{
+  color:#f8fafc !important;
+}
+
+/* qty compact pill */
+.cct-qty{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+  width:max-content !important;
+  padding:4px 9px !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.018) !important;
+  border:1px solid rgba(255,255,255,.035) !important;
+}
+
+.cct-qty-btn{
+  width:18px !important;
+  height:18px !important;
+  border:0 !important;
+  background:transparent !important;
+  color:#cbd5e1 !important;
+  font-size:13px !important;
+  border-radius:999px !important;
+}
+
+.cct-qty span,
+.cct-qty-num{
+  font-size:12px !important;
+  font-weight:800 !important;
+  color:#fff !important;
+}
+
+/* remove x */
+.cct-x-inline{
+  color:rgba(156,163,175,.65) !important;
+  font-size:13px !important;
+}
+
+/* coupon area should disappear for reference look */
+.co-coupon{
+  display:none !important;
+}
+
+/* left action button */
+.co-panel-actions{
+  margin-top:22px !important;
+  display:flex !important;
+  justify-content:flex-start !important;
+}
+
+.co-ghost-btn{
+  height:40px !important;
+  padding:0 20px !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.025) !important;
+  border:1px solid rgba(255,255,255,.055) !important;
+  color:#d1d5db !important;
+  font-size:13px !important;
+  font-weight:750 !important;
+}
+
+.co-primary-btn{
+  display:none !important;
+}
+
+/* right summary box */
+.co-summary-box{
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)) !important;
+  border:1px solid rgba(255,255,255,.06) !important;
+  border-radius:22px !important;
+  padding:24px 20px !important;
+  box-shadow:0 28px 80px rgba(0,0,0,.42) !important;
+}
+
+.co-summary-box::before{
+  content:"Your Total";
+  display:block;
+  font-size:18px;
+  font-weight:850;
+  letter-spacing:-.035em;
+  margin-bottom:24px;
+  color:#f8fafc;
+}
+
+.co-sum-row{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  margin:0 !important;
+  padding:11px 0 !important;
+  border-bottom:0 !important;
+  color:#f8fafc !important;
+  font-size:13.5px !important;
+  font-weight:750 !important;
+}
+
+.co-sum-row span:last-child{
+  font-weight:850 !important;
+}
+
+.co-sum-total-row{
+  margin-top:18px !important;
+  padding-top:20px !important;
+  border-top:1px solid rgba(255,255,255,.07) !important;
+  font-size:18px !important;
+  font-weight:900 !important;
+}
+
+.co-sum-total-row span:last-child{
+  font-size:22px !important;
+  letter-spacing:-.04em !important;
+}
+
+/* checkout button on right */
+.co-summary-box .co-primary-btn{
+  display:flex !important;
+  width:100% !important;
+  height:48px !important;
+  margin-top:20px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:999px !important;
+  background:#ff443d !important;
+  color:#fff !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+  box-shadow:0 16px 35px rgba(255,68,61,.26) !important;
+}
+
+/* remove big order image summary from current version */
+.co-summary-box .cct-prod,
+.co-summary-box img,
+.co-summary-box .order-summary-image{
+  display:none !important;
+}
+
+/* optional warning card style if you have an info/warning box */
+.co-summary-box + .co-panel,
+.checkout-note,
+.shipping-note,
+.lock-price-box{
+  margin-top:12px !important;
+  background:linear-gradient(180deg,#b3322d,#761b1b) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  border-radius:16px !important;
+  padding:18px !important;
+  color:#fff !important;
+}
+
+/* mobile */
+@media(max-width:900px){
+  .co-topbar{
+    padding:0 18px !important;
+  }
+
+  .co-layout{
+    grid-template-columns:1fr !important;
+    padding:24px 14px !important;
+    gap:18px !important;
+  }
+
+  .co-panel,
+  .co-summary-box{
+    border-radius:18px !important;
+    padding:20px 16px !important;
+  }
+
+  .cct-head{
+    display:none !important;
+  }
+
+  .cct-row{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+
+  .cct-price,
+  .cct-total{
+    justify-self:start !important;
+  }
+}
