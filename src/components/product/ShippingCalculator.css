@@ -2156,3 +2156,106 @@
 .cart-item + .cart-item{
   margin-top:4px !important;
 }
+/* ===== APPLE-LEVEL TYPOGRAPHY REFINEMENT ===== */
+
+/* Product layout spacing */
+.cart-item{
+  grid-template-columns:80px minmax(0,1fr) !important;
+  column-gap:12px !important;
+  row-gap:8px !important;
+}
+
+/* Product image */
+.ci-img{
+  width:80px !important;
+  height:52px !important;
+  border-radius:9px !important;
+}
+
+/* Match qty row */
+.ci-qty-row{
+  width:80px !important;
+}
+
+/* ===== TITLE ===== */
+
+.ci-name,
+.ci-name a{
+  display:block !important;
+
+  font-size:15px !important;
+  line-height:1.08 !important;
+
+  font-weight:650 !important;
+  letter-spacing:-0.025em !important;
+
+  color:#f8fafc !important;
+
+  margin:0 0 5px !important;
+  padding-right:22px !important;
+
+  text-decoration:none !important;
+
+  /* allow natural wrapping */
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+}
+
+/* ===== SUBTITLE ===== */
+
+.ci-meta{
+  display:block !important;
+
+  font-size:12.5px !important;
+  line-height:1.28 !important;
+
+  font-weight:500 !important;
+  letter-spacing:-0.01em !important;
+
+  color:rgba(163,172,185,.82) !important;
+
+  margin:0 !important;
+
+  /* allow wrapping naturally */
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+}
+
+/* Better text block width */
+.ci-info{
+  padding-right:28px !important;
+}
+
+/* Cleaner remove icon */
+.ci-remove{
+  top:4px !important;
+  right:0 !important;
+
+  font-size:15px !important;
+
+  color:rgba(163,172,185,.72) !important;
+}
+
+/* Price refinement */
+.ci-price{
+  font-size:14px !important;
+  font-weight:850 !important;
+  letter-spacing:-0.02em !important;
+}
+
+/* Qty refinement */
+.ci-qty-btn{
+  width:27px !important;
+  height:27px !important;
+
+  border-radius:8px !important;
+
+  font-size:13px !important;
+}
+
+.ci-qty-val{
+  font-size:13px !important;
+  font-weight:800 !important;
+}
