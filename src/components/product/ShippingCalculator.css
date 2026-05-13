@@ -3113,3 +3113,290 @@
 .checkout-support strong{
   color:#fff !important;
 }
+/* ===== CHECKOUT PAGE EXACT REFERENCE FINAL PASS ===== */
+
+/* Page background */
+.checkout-page{
+  background:
+    radial-gradient(circle at top left, rgba(0,80,35,.18), transparent 30%),
+    radial-gradient(circle at top right, rgba(120,0,0,.16), transparent 32%),
+    #020403 !important;
+}
+
+/* Top bar visible like reference */
+.co-topbar{
+  height:48px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  padding:0 32px !important;
+  background:rgba(4,6,8,.85) !important;
+  border-bottom:1px solid rgba(255,255,255,.045) !important;
+}
+
+.co-progress{
+  display:none !important;
+}
+
+/* Main layout */
+.co-layout{
+  max-width:1180px !important;
+  margin:0 auto !important;
+  padding:28px 24px 40px !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,790px) 360px !important;
+  gap:30px !important;
+  align-items:start !important;
+}
+
+/* Left cart card */
+.co-panel{
+  min-height:324px !important;
+  border-radius:22px !important;
+  padding:22px 24px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  border:1px solid rgba(255,255,255,.055) !important;
+  box-shadow:0 28px 80px rgba(0,0,0,.45) !important;
+}
+
+/* My Cart heading */
+.co-panel-title{
+  font-size:20px !important;
+  font-weight:850 !important;
+  letter-spacing:-.035em !important;
+  margin:0 0 28px !important;
+}
+
+/* Table header */
+.cct-head{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 100px 80px 115px !important;
+  gap:20px !important;
+  padding-bottom:18px !important;
+  color:rgba(145,155,170,.72) !important;
+  font-size:9.5px !important;
+  font-weight:850 !important;
+  letter-spacing:.16em !important;
+  border-bottom:0 !important;
+}
+
+/* Cart row */
+.cct-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 100px 80px 115px 14px !important;
+  gap:20px !important;
+  align-items:center !important;
+  padding:12px 0 22px !important;
+  border-bottom:1px solid rgba(255,255,255,.035) !important;
+}
+
+/* Product cell */
+.cct-prod{
+  display:grid !important;
+  grid-template-columns:58px minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:center !important;
+}
+
+.cct-img{
+  width:58px !important;
+  height:58px !important;
+  border-radius:8px !important;
+  object-fit:cover !important;
+  background:#fff !important;
+}
+
+.cct-title{
+  font-size:13.5px !important;
+  line-height:1.15 !important;
+  font-weight:800 !important;
+  letter-spacing:-.02em !important;
+  color:#fff !important;
+  margin:0 0 4px !important;
+}
+
+.cct-sub{
+  font-size:11.5px !important;
+  line-height:1.25 !important;
+  color:rgba(163,172,185,.78) !important;
+}
+
+/* Prices and qty */
+.cct-price,
+.cct-total{
+  font-size:13.5px !important;
+  font-weight:850 !important;
+  color:#fff !important;
+}
+
+.cct-qty{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:11px !important;
+  height:28px !important;
+  padding:0 10px !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.012) !important;
+  border:1px solid rgba(255,255,255,.03) !important;
+}
+
+.cct-qty-btn{
+  background:transparent !important;
+  border:0 !important;
+  color:#cbd5e1 !important;
+  font-size:13px !important;
+  width:16px !important;
+  height:16px !important;
+}
+
+.cct-qty-num,
+.cct-qty span{
+  font-size:12px !important;
+  font-weight:850 !important;
+  color:#fff !important;
+}
+
+.cct-x-inline{
+  color:rgba(156,163,175,.55) !important;
+  font-size:12px !important;
+}
+
+/* Continue button */
+.co-panel-actions{
+  margin-top:20px !important;
+}
+
+.co-ghost-btn{
+  height:40px !important;
+  padding:0 20px !important;
+  border-radius:999px !important;
+  background:rgba(255,255,255,.018) !important;
+  border:1px solid rgba(255,255,255,.045) !important;
+  color:#d4dae3 !important;
+  font-size:13px !important;
+  font-weight:760 !important;
+}
+
+.co-primary-btn{
+  display:none !important;
+}
+
+/* Right column */
+.co-summary-box{
+  border-radius:22px !important;
+  padding:24px 20px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)) !important;
+  border:1px solid rgba(255,255,255,.055) !important;
+  box-shadow:0 28px 80px rgba(0,0,0,.45) !important;
+}
+
+.co-summary-box::before{
+  content:"Your Total" !important;
+  display:block !important;
+  font-size:18px !important;
+  font-weight:850 !important;
+  letter-spacing:-.035em !important;
+  margin-bottom:26px !important;
+  color:#fff !important;
+}
+
+/* Hide current order summary text if you want reference total-only box */
+.co-summary-box .order-summary-title,
+.co-summary-box .order-summary-product,
+.co-summary-box .summary-product-title,
+.co-summary-box .summary-product-meta{
+  display:none !important;
+}
+
+/* Summary rows */
+.co-sum-row{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  padding:9px 0 !important;
+  margin:0 !important;
+  color:#fff !important;
+  font-size:13.5px !important;
+  font-weight:750 !important;
+}
+
+.co-sum-row span:last-child{
+  font-weight:850 !important;
+}
+
+.co-sum-total-row{
+  margin-top:18px !important;
+  padding-top:20px !important;
+  border-top:1px solid rgba(255,255,255,.07) !important;
+}
+
+.co-sum-total-row span:first-child{
+  font-size:15px !important;
+  font-weight:850 !important;
+}
+
+.co-sum-total-row span:last-child{
+  font-size:24px !important;
+  font-weight:950 !important;
+  letter-spacing:-.04em !important;
+}
+
+/* Red checkout button */
+.co-summary-box .co-primary-btn,
+.co-summary-box button[type="submit"]{
+  display:flex !important;
+  width:100% !important;
+  height:48px !important;
+  margin-top:22px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#ff5a52,#ff4038) !important;
+  color:#fff !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+  border:0 !important;
+  box-shadow:0 16px 35px rgba(255,64,56,.28) !important;
+}
+
+/* Warning card below total */
+.checkout-warning,
+.lock-price-box,
+.shipping-note{
+  display:block !important;
+  margin-top:14px !important;
+  border-radius:16px !important;
+  padding:18px !important;
+  background:linear-gradient(180deg,#b63830,#761b1b) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:#fff !important;
+  box-shadow:0 20px 45px rgba(0,0,0,.32) !important;
+}
+
+/* Help/support under warning */
+.checkout-support{
+  display:block !important;
+  margin-top:20px !important;
+  color:#aeb7c4 !important;
+  font-size:12.5px !important;
+  line-height:1.6 !important;
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .co-layout{
+    grid-template-columns:1fr !important;
+    padding:20px 14px !important;
+  }
+
+  .cct-head{
+    display:none !important;
+  }
+
+  .cct-row{
+    grid-template-columns:1fr !important;
+  }
+}
