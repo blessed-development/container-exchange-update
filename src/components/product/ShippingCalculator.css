@@ -877,3 +877,134 @@
   font-size:12px !important;
   color:#8b94a3 !important;
 }
+/* ===== FINAL CART ITEM ALIGNMENT FIX ===== */
+
+.cart-item{
+  display:grid !important;
+  grid-template-columns:80px 1fr !important;
+  grid-template-rows:auto auto !important;
+  column-gap:14px !important;
+  row-gap:8px !important;
+  padding:14px !important;
+  align-items:start !important;
+}
+
+/* Rectangle image */
+.ci-img{
+  grid-column:1 !important;
+  grid-row:1 !important;
+  width:80px !important;
+  height:56px !important;
+  border-radius:8px !important;
+  object-fit:cover !important;
+}
+
+/* Text area */
+.ci-info{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  min-width:0 !important;
+  padding-right:22px !important;
+}
+
+.ci-name{
+  font-size:14px !important;
+  line-height:1.2 !important;
+  margin:0 0 6px !important;
+}
+
+/* Subtitle one line */
+.ci-meta{
+  display:block !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  margin:0 !important;
+}
+
+.ci-meta br{
+  display:none !important;
+}
+
+/* Quantity directly under image, same width as image */
+.ci-qty-row{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  width:80px !important;
+  margin-top:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:0 !important;
+}
+
+/* Price same line as quantity, pushed right */
+.ci-price{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  justify-self:end !important;
+  align-self:center !important;
+  margin:0 !important;
+  color:#00b140 !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+/* Quantity buttons */
+.ci-qty-btn{
+  width:26px !important;
+  height:26px !important;
+  border-radius:8px !important;
+  background:#121720 !important;
+  border:1px solid #1b212c !important;
+  color:#fff !important;
+  font-size:14px !important;
+}
+
+.ci-qty-val{
+  min-width:18px !important;
+  text-align:center !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  color:#fff !important;
+}
+
+/* Smaller item card spacing */
+.drawer-body{
+  padding:14px 20px !important;
+}
+
+.cart-item{
+  margin-bottom:10px !important;
+}
+
+/* Compress footer */
+.drawer-footer{
+  padding:16px 20px !important;
+  gap:8px !important;
+}
+
+/* Correct tax wording */
+.drawer-tax-note{
+  font-size:0 !important;
+}
+
+.drawer-tax-note::after{
+  content:"Sales tax calculated at checkout" !important;
+  font-size:12px !important;
+  color:#8b94a3 !important;
+}
+
+/* Slightly smaller footer buttons */
+.checkout-btn{
+  height:48px !important;
+  border-radius:12px !important;
+}
+
+.continue-btn{
+  height:42px !important;
+  border-radius:12px !important;
+}
