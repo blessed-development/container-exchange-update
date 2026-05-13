@@ -2779,3 +2779,337 @@
 .checkout-page{
   min-height:auto !important;
 }
+/* ===== FINAL STRUCTURE + REFERENCE MATCH ===== */
+
+/* top navigation/header */
+.checkout-header,
+.co-topbar{
+  height:54px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  padding:0 28px !important;
+
+  border-bottom:1px solid rgba(255,255,255,.045) !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,80,35,.08),
+      transparent 30%,
+      transparent 70%,
+      rgba(120,0,0,.08)
+    ),
+    #04060a !important;
+
+  backdrop-filter:blur(18px) !important;
+}
+
+/* center logo */
+.checkout-logo{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+
+  font-size:16px !important;
+  font-weight:850 !important;
+  letter-spacing:-.03em !important;
+}
+
+/* secure checkout */
+.secure-checkout{
+  color:#8f9aa8 !important;
+
+  font-size:12px !important;
+  font-weight:650 !important;
+}
+
+/* overall layout */
+.co-layout{
+  max-width:1220px !important;
+
+  padding:22px 24px 40px !important;
+
+  gap:28px !important;
+
+  grid-template-columns:minmax(0,1fr) 360px !important;
+}
+
+/* left cart panel */
+.co-panel{
+  border-radius:22px !important;
+
+  padding:18px 20px 16px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      rgba(255,255,255,.015)
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.05) !important;
+
+  min-height:auto !important;
+}
+
+/* remove giant empty area */
+.co-panel-body,
+.cct-table,
+.cct-wrap{
+  height:auto !important;
+  min-height:auto !important;
+}
+
+/* title */
+.co-panel-title{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+
+  font-size:17px !important;
+  font-weight:820 !important;
+
+  margin-bottom:18px !important;
+}
+
+/* green cart icon */
+.co-panel-title svg{
+  color:#00c853 !important;
+}
+
+/* table header */
+.cct-head{
+  padding-bottom:12px !important;
+
+  font-size:9px !important;
+  letter-spacing:.16em !important;
+
+  color:rgba(145,155,170,.68) !important;
+}
+
+/* rows */
+.cct-row{
+  padding:14px 0 !important;
+
+  grid-template-columns:minmax(0,1fr) 100px 90px 100px 14px !important;
+
+  align-items:center !important;
+}
+
+/* product area */
+.cct-prod{
+  grid-template-columns:54px minmax(0,1fr) !important;
+
+  gap:12px !important;
+}
+
+/* image */
+.cct-img{
+  width:54px !important;
+  height:54px !important;
+
+  border-radius:8px !important;
+}
+
+/* title */
+.cct-title{
+  font-size:13px !important;
+  line-height:1.14 !important;
+
+  font-weight:720 !important;
+
+  margin:0 0 3px !important;
+}
+
+/* subtitle */
+.cct-sub{
+  font-size:11px !important;
+  line-height:1.2 !important;
+
+  color:rgba(155,165,178,.76) !important;
+}
+
+/* stars row optional */
+.cct-rating{
+  margin-top:5px !important;
+
+  font-size:10px !important;
+
+  color:#ffb400 !important;
+}
+
+/* qty pill */
+.cct-qty{
+  height:28px !important;
+
+  padding:0 8px !important;
+
+  border-radius:999px !important;
+
+  background:rgba(255,255,255,.015) !important;
+
+  border:1px solid rgba(255,255,255,.04) !important;
+}
+
+/* qty buttons */
+.cct-qty-btn{
+  width:16px !important;
+  height:16px !important;
+
+  font-size:12px !important;
+}
+
+/* prices */
+.cct-price,
+.cct-total{
+  font-size:13px !important;
+
+  font-weight:760 !important;
+}
+
+/* remove icon */
+.cct-x-inline{
+  font-size:12px !important;
+
+  opacity:.5 !important;
+}
+
+/* Continue Shopping */
+.co-ghost-btn{
+  margin-top:16px !important;
+
+  height:40px !important;
+
+  padding:0 18px !important;
+
+  border-radius:999px !important;
+
+  font-size:12.5px !important;
+}
+
+/* RIGHT SIDE */
+
+/* summary card */
+.co-summary-box{
+  border-radius:22px !important;
+
+  padding:22px 20px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      rgba(255,255,255,.015)
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.05) !important;
+}
+
+/* title */
+.co-summary-box::before{
+  font-size:17px !important;
+  font-weight:820 !important;
+
+  margin-bottom:20px !important;
+}
+
+/* rows */
+.co-sum-row{
+  padding:10px 0 !important;
+
+  font-size:13px !important;
+}
+
+/* tax text */
+.co-tax-note{
+  font-size:12px !important;
+
+  color:rgba(163,172,185,.74) !important;
+
+  font-style:italic !important;
+}
+
+/* total row */
+.co-sum-total-row{
+  margin-top:14px !important;
+
+  padding-top:16px !important;
+}
+
+.co-sum-total-row span:last-child{
+  font-size:20px !important;
+
+  font-weight:900 !important;
+}
+
+/* RED CHECKOUT BUTTON */
+.co-summary-box .co-primary-btn{
+  display:flex !important;
+
+  width:100% !important;
+  height:46px !important;
+
+  margin-top:18px !important;
+
+  border-radius:999px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ff5a52,
+      #ff4038
+    ) !important;
+
+  color:#fff !important;
+
+  font-size:13px !important;
+  font-weight:820 !important;
+
+  border:0 !important;
+
+  box-shadow:
+    0 10px 24px rgba(255,64,56,.24),
+    inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+/* HELP / WARNING CARD */
+.lock-price-box,
+.shipping-note,
+.checkout-warning{
+  margin-top:14px !important;
+
+  border-radius:18px !important;
+
+  padding:18px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #b3342d,
+      #7a1d1d
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.08) !important;
+
+  color:#fff !important;
+
+  box-shadow:0 16px 40px rgba(0,0,0,.26) !important;
+}
+
+/* support section */
+.checkout-support{
+  margin-top:18px !important;
+
+  color:#aeb7c4 !important;
+
+  font-size:12px !important;
+  line-height:1.6 !important;
+}
+
+/* help phone */
+.checkout-support strong{
+  color:#fff !important;
+}
