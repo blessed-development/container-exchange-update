@@ -239,7 +239,7 @@ export default function ContainerConfigurator({
           </div>
 
           <div className="cond-cards">
-            {['used', 'new'].map((cond) => {
+            {['new', 'used'].map((cond) => {
               const active = condition === cond;
               const price = cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
@@ -322,18 +322,6 @@ export default function ContainerConfigurator({
               <span className="total-lbl">Total</span>
               <span className="total-price">{fmt(totalPrice)}</span>
             </div>
-
-            <div className="cart-row">
-              <div className="qty-wrap">
-                <button className="qty-btn" onClick={() => setQty(Math.max(1, qty - 1))}>
-                  −
-                </button>
-                <span className="qty-num">{qty}</span>
-                <button className="qty-btn" onClick={() => setQty(qty + 1)}>
-                  +
-                </button>
-              </div>
-
               <button className="add-btn" onClick={addToCart}>
                 <ShoppingCart size={17} />
                 Add to Cart
