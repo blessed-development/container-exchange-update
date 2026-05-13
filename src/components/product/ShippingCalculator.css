@@ -1279,3 +1279,159 @@
 .continue-btn{
   height:42px !important;
 }
+/* ===== CART DRAWER FINAL CLEAN STRUCTURE ===== */
+
+/* Remove inner card box look */
+.cart-item{
+  display:grid !important;
+  grid-template-columns:86px minmax(0,1fr) !important;
+  grid-template-rows:auto 30px !important;
+  column-gap:10px !important;
+  row-gap:8px !important;
+
+  padding:8px 10px !important;
+  margin:0 !important;
+
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+
+  align-items:start !important;
+}
+
+/* Reduce drawer side spacing */
+.drawer-body{
+  padding:8px 10px !important;
+}
+
+/* Image starts almost from the drawer content edge */
+.ci-img{
+  grid-column:1 !important;
+  grid-row:1 !important;
+  width:86px !important;
+  height:54px !important;
+  border-radius:7px !important;
+  object-fit:cover !important;
+}
+
+/* Text area beside image */
+.ci-info{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  min-width:0 !important;
+  padding-right:18px !important;
+}
+
+/* Title */
+.ci-name{
+  font-size:14px !important;
+  line-height:1.15 !important;
+  margin:0 0 5px !important;
+  max-width:100% !important;
+}
+
+/* Subtitle one line */
+.ci-meta{
+  display:block !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  margin:0 !important;
+}
+
+.ci-meta br{
+  display:none !important;
+}
+
+/* Quantity directly under picture */
+.ci-qty-row{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  width:86px !important;
+  height:28px !important;
+  margin:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:0 !important;
+}
+
+/* Price same horizontal line as quantity */
+.ci-price{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  justify-self:end !important;
+  align-self:center !important;
+
+  margin:0 !important;
+  font-size:14px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  color:#00b140 !important;
+  white-space:nowrap !important;
+}
+
+/* Quantity buttons */
+.ci-qty-btn{
+  width:26px !important;
+  height:26px !important;
+  border-radius:7px !important;
+  font-size:13px !important;
+  background:#121720 !important;
+  border:1px solid #1b212c !important;
+  color:#fff !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.ci-qty-val{
+  min-width:18px !important;
+  text-align:center !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+  color:#fff !important;
+}
+
+/* Remove icon stays inside top right */
+.ci-remove{
+  position:absolute !important;
+  top:8px !important;
+  right:8px !important;
+  font-size:16px !important;
+}
+
+/* Footer cleaner */
+.drawer-footer{
+  border-top:0 !important;
+  padding:14px 20px 16px !important;
+  gap:6px !important;
+}
+
+/* Make Continue Shopping look like subtitle/secondary action */
+.continue-btn{
+  height:auto !important;
+  min-height:0 !important;
+  padding:6px 0 !important;
+  margin-top:2px !important;
+  background:transparent !important;
+  border:0 !important;
+  color:#9ca3af !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+}
+
+/* Tax note */
+.drawer-tax-note{
+  font-size:0 !important;
+}
+
+.drawer-tax-note::after{
+  content:"Sales tax calculated at checkout" !important;
+  font-size:12px !important;
+  color:#8b94a3 !important;
+}
