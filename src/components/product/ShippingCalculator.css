@@ -1623,3 +1623,123 @@
   font-size:12px !important;
   color:#8b94a3 !important;
 }
+/* ===== EXACT QTY POSITION MATCH ===== */
+
+.cart-item{
+  position:relative !important;
+
+  display:grid !important;
+  grid-template-columns:92px 1fr !important;
+  grid-template-areas:
+    "image info"
+    "qty   price" !important;
+
+  column-gap:12px !important;
+  row-gap:10px !important;
+
+  align-items:start !important;
+}
+
+/* image */
+.ci-img{
+  grid-area:image !important;
+
+  width:92px !important;
+  height:58px !important;
+
+  border-radius:8px !important;
+  object-fit:cover !important;
+}
+
+/* text block */
+.ci-info{
+  grid-area:info !important;
+
+  min-width:0 !important;
+  padding-right:20px !important;
+}
+
+/* title */
+.ci-name{
+  font-size:14px !important;
+  line-height:1.1 !important;
+  margin:0 0 6px !important;
+}
+
+/* subtitle */
+.ci-meta{
+  display:block !important;
+
+  font-size:12px !important;
+  line-height:1.2 !important;
+
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+
+  margin:0 !important;
+}
+
+/* ===== THIS IS THE IMPORTANT PART ===== */
+
+/* qty row directly below image */
+.ci-qty-row{
+  grid-area:qty !important;
+
+  width:92px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* buttons */
+.ci-qty-btn{
+  width:30px !important;
+  height:30px !important;
+
+  border-radius:10px !important;
+
+  background:#111722 !important;
+  border:1px solid #1d2633 !important;
+
+  color:#fff !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  font-size:15px !important;
+}
+
+/* qty number */
+.ci-qty-val{
+  min-width:18px !important;
+
+  text-align:center !important;
+
+  font-size:14px !important;
+  font-weight:900 !important;
+
+  color:#fff !important;
+}
+
+/* price aligned same row */
+.ci-price{
+  grid-area:price !important;
+
+  align-self:center !important;
+  justify-self:end !important;
+
+  margin:0 !important;
+
+  color:#00c853 !important;
+
+  font-size:14px !important;
+  font-weight:900 !important;
+
+  white-space:nowrap !important;
+}
