@@ -284,7 +284,10 @@ export default function ContainerConfigurator({
               >
                 <span>{g.label}</span>
                 {g.adjust !== 0 && (
-                  <small>{g.adjust > 0 ? '+' : ''}{fmt(g.adjust)}</small>
+                  <small>
+                    {g.adjust > 0 ? '+' : ''}
+                    {fmt(g.adjust)}
+                  </small>
                 )}
               </button>
             ))}
@@ -309,34 +312,32 @@ export default function ContainerConfigurator({
         </div>
 
         {/* CHECKOUT FOOTER */}
-<div className="checkout">
-  <div className="checkout-inner">
-    <div className="tax-note">
-      <Lock size={13} />
-      Sales tax calculated at checkout.
-    </div>
+        <div className="checkout">
+          <div className="checkout-inner">
+            <div className="tax-note">
+              <Lock size={13} />
+              Sales tax calculated at checkout.
+            </div>
 
-    <hr className="divider" />
+            <hr className="divider" />
 
-    <div className="total-row">
-      <span className="total-lbl">Total</span>
-      <span className="total-price">{fmt(totalPrice)}</span>
-    </div>
+            <div className="total-row">
+              <span className="total-lbl">Total</span>
+              <span className="total-price">{fmt(totalPrice)}</span>
+            </div>
 
-    <div className="cart-row">
-      <button className="add-btn" onClick={addToCart}>
-        <ShoppingCart size={17} />
-        Add to Cart
-      </button>
-    </div>
+            <div className="cart-row">
+              <button className="add-btn" onClick={addToCart}>
+                <ShoppingCart size={17} />
+                Add to Cart
+              </button>
+            </div>
 
-    <button className="quote-btn">
-      Request a Quote
-    </button>
-  </div>
-</div>
- </div>       
-        
+            <button className="quote-btn">Request a Quote</button>
+          </div>
+        </div>
+      </div>
+
       {/* CART DRAWER */}
       <div
         className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
