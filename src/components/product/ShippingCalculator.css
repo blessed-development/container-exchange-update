@@ -1753,86 +1753,79 @@
 
   white-space:nowrap !important;
 }
-/* ===== APPLE LEVEL CART UI POLISH ===== */
+/* ===== APPLE-LEVEL PREMIUM CART UI POLISH ===== */
 
+/* Overall drawer surface */
 .cart-drawer{
   background:#05070b !important;
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif !important;
+  color:#fff !important;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Segoe UI",
+    sans-serif !important;
 }
 
-/* cleaner item spacing */
+/* Cart list spacing */
+.drawer-body{
+  padding:14px 20px 10px !important;
+}
+
+/* Product item refinement */
 .cart-item{
-  padding:10px 16px !important;
+  padding:8px 0 !important;
+  margin:0 !important;
   column-gap:12px !important;
   row-gap:8px !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
 }
 
-/* image polish */
+/* Product image: premium soft rectangle */
 .ci-img{
-  width:94px !important;
+  width:92px !important;
   height:58px !important;
-  border-radius:9px !important;
-  box-shadow:0 8px 22px rgba(0,0,0,.28) !important;
+  border-radius:10px !important;
+  object-fit:cover !important;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(255,255,255,.05) !important;
 }
 
-/* title cleaner */
+/* Product title: cleaner Apple-like hierarchy */
 .ci-name{
   font-size:13.5px !important;
-  line-height:1.15 !important;
+  line-height:1.12 !important;
   font-weight:850 !important;
   letter-spacing:-.025em !important;
   color:#f8fafc !important;
+  margin:0 0 6px !important;
+  max-width:100% !important;
 }
 
-/* meta text premium */
+/* Product meta/subtitle */
 .ci-meta{
-  margin-top:31px !important;
   font-size:11.5px !important;
   line-height:1.2 !important;
-  color:#8792a2 !important;
+  font-weight:500 !important;
   letter-spacing:-.01em !important;
+  color:rgba(156,163,175,.78) !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
 }
 
-/* qty row under image */
-.ci-qty-row{
-  width:94px !important;
-  height:30px !important;
-}
-
-/* qty buttons softer */
-.ci-qty-btn{
-  width:29px !important;
-  height:29px !important;
-  border-radius:9px !important;
-  background:linear-gradient(180deg,#141b25 0%,#0d121a 100%) !important;
-  border:1px solid rgba(255,255,255,.09) !important;
-  color:#f8fafc !important;
-  font-size:14px !important;
-  font-weight:700 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 4px 12px rgba(0,0,0,.28) !important;
-}
-
-.ci-qty-val{
-  font-size:13.5px !important;
-  font-weight:850 !important;
-  color:#f8fafc !important;
-}
-
-/* price */
-.ci-price{
-  font-size:14px !important;
-  font-weight:900 !important;
-  letter-spacing:-.02em !important;
-  color:#00b940 !important;
-}
-
-/* remove icon lighter */
+/* Remove icon */
 .ci-remove{
-  color:#768293 !important;
-  opacity:.9 !important;
-  transition:.2s ease !important;
+  color:rgba(156,163,175,.75) !important;
+  font-size:15px !important;
+  top:6px !important;
+  right:0 !important;
+  opacity:.85 !important;
 }
 
 .ci-remove:hover{
@@ -1840,53 +1833,172 @@
   opacity:1 !important;
 }
 
-/* subtotal section */
+/* Quantity row directly under image */
+.ci-qty-row{
+  width:92px !important;
+  height:30px !important;
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+}
+
+/* Quantity buttons: premium soft square */
+.ci-qty-btn{
+  width:28px !important;
+  height:28px !important;
+  border-radius:9px !important;
+  background:linear-gradient(180deg,#121824,#0d121b) !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  color:#f8fafc !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 4px 12px rgba(0,0,0,.26) !important;
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    border-color .16s ease !important;
+}
+
+.ci-qty-btn:hover{
+  transform:translateY(-1px) !important;
+  background:linear-gradient(180deg,#172030,#101723) !important;
+  border-color:rgba(255,255,255,.16) !important;
+}
+
+/* Quantity number */
+.ci-qty-val{
+  min-width:20px !important;
+  text-align:center !important;
+  font-size:13px !important;
+  font-weight:850 !important;
+  color:#f8fafc !important;
+  letter-spacing:-.02em !important;
+}
+
+/* Unit price */
+.ci-price{
+  color:#00b83f !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  letter-spacing:-.025em !important;
+  line-height:1 !important;
+  text-shadow:0 0 16px rgba(0,184,63,.12) !important;
+}
+
+/* Footer compression and premium spacing */
 .drawer-footer{
   padding:16px 20px 18px !important;
   gap:7px !important;
   background:#05070b !important;
+  border-top:0 !important;
 }
 
+/* Subtotal label */
 .drawer-subtotal{
+  display:flex !important;
+  align-items:flex-end !important;
+  justify-content:space-between !important;
   font-size:16px !important;
   font-weight:850 !important;
   letter-spacing:-.025em !important;
+  color:#f8fafc !important;
+  line-height:1 !important;
 }
 
+/* Total price */
 .drawer-total-val{
-  font-size:22px !important;
-  font-weight:900 !important;
+  color:#ff3838 !important;
+  font-size:21px !important;
+  font-weight:950 !important;
   letter-spacing:-.045em !important;
-  color:#ff3b3b !important;
+  line-height:1 !important;
+  text-shadow:0 0 18px rgba(255,56,56,.12) !important;
+}
+
+/* Sales tax note */
+.drawer-tax-note{
+  font-size:0 !important;
+  margin-top:4px !important;
+  margin-bottom:8px !important;
 }
 
 .drawer-tax-note::after{
-  font-size:11.5px !important;
-  color:#8792a2 !important;
+  content:"Sales tax calculated at checkout" !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  color:rgba(156,163,175,.72) !important;
+  font-weight:500 !important;
+  letter-spacing:-.01em !important;
 }
 
-/* checkout button */
+/* Checkout button */
 .checkout-btn{
+  width:100% !important;
   height:48px !important;
-  border-radius:12px !important;
-  margin-top:4px !important;
-  background:linear-gradient(180deg,#34df66 0%,#27c955 100%) !important;
+  border-radius:13px !important;
+  background:linear-gradient(180deg,#35dc63,#2dcc57) !important;
+  color:#fff !important;
+  border:0 !important;
   font-size:15px !important;
   font-weight:850 !important;
-  letter-spacing:-.015em !important;
+  letter-spacing:-.02em !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.18),
-    0 12px 26px rgba(39,201,85,.18) !important;
+    0 10px 28px rgba(47,216,95,.22),
+    inset 0 1px 0 rgba(255,255,255,.16) !important;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    filter .16s ease !important;
 }
 
-/* continue shopping should feel secondary */
+.checkout-btn:hover{
+  transform:translateY(-1px) !important;
+  filter:brightness(1.04) !important;
+  box-shadow:
+    0 14px 34px rgba(47,216,95,.28),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+
+.checkout-btn::after{
+  content:" →" !important;
+  margin-left:8px !important;
+  font-weight:800 !important;
+}
+
+/* Continue shopping as soft secondary text */
 .continue-btn{
-  margin-top:4px !important;
-  padding:5px 0 !important;
-  font-size:12.5px !important;
-  font-weight:700 !important;
-  color:#9aa4b2 !important;
-  letter-spacing:-.01em !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  margin-top:8px !important;
+  padding:6px 0 2px !important;
   background:transparent !important;
   border:0 !important;
+  color:rgba(203,213,225,.68) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  letter-spacing:-.015em !important;
+  box-shadow:none !important;
+}
+
+.continue-btn:hover{
+  color:#fff !important;
+  background:transparent !important;
+}
+
+/* Better spacing when many cart items exist */
+.cart-item + .cart-item{
+  margin-top:6px !important;
+}
+
+/* Very subtle separation without visible harsh lines */
+.cart-item:not(:last-child){
+  border-bottom:1px solid rgba(255,255,255,.025) !important;
+  padding-bottom:12px !important;
 }
