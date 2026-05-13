@@ -1306,3 +1306,59 @@
 .checkout:last-of-type .add-btn{
   height:56px;
 }
+.checkout:last-of-type .checkout-inner{
+  padding:14px;
+}
+
+.checkout:last-of-type .tax-note{
+  margin-bottom:10px;
+  font-size:12px;
+}
+
+.checkout:last-of-type .divider{
+  margin:10px 0 14px;
+}
+
+.checkout:last-of-type .total-row{
+  align-items:flex-end;
+  margin-bottom:12px;
+}
+
+.checkout:last-of-type .total-lbl{
+  font-size:13px;
+}
+
+.checkout:last-of-type .total-price{
+  font-size:32px;
+  line-height:1;
+  letter-spacing:-.03em;
+}
+
+.checkout:last-of-type .cart-row{
+  gap:8px;
+}
+
+.checkout:last-of-type .qty-wrap{
+  height:52px;
+}
+
+.checkout:last-of-type .add-btn{
+  height:52px;
+  font-size:15px;
+  border-radius:14px;
+}
+
+.quote-btn{
+  width:100%;
+  height:46px;
+  margin-top:10px;
+  border-radius:14px;
+  background:#121317;
+  border:1px solid #242830;
+  color:#d6d9df;
+  font-weight:700;
+}
+
+.quote-btn:hover{
+  background:#17191f;
+}
