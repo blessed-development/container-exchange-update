@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Phone } from 'lucide-react';
+import { ShoppingCart, Phone, ShieldCheck } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
 
 const USED_GRADES = [
@@ -39,13 +39,16 @@ export default function ShippingCalculator({
   const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
   const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
   const gradeAdjust = gradeOptions.find((g) => g.key === grade)?.adjust ?? 0;
+
   const basePrice =
     (condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice) +
     gradeAdjust;
+
   const totalPrice = basePrice * qty;
 
   return (
     <div className="flex flex-col gap-2.5">
+      {/* SIZE OPTIONS */}
       <div className="grid grid-cols-3 border border-border rounded-2xl overflow-hidden bg-card">
         {SIZE_OPTIONS.map((opt, i) => {
           const active = selectedSizeIndex === i;
@@ -67,9 +70,11 @@ export default function ShippingCalculator({
               >
                 BUY
               </span>
+
               <span className="text-[13px] font-bold leading-tight">
                 {opt.label}
               </span>
+
               <span
                 className={`font-mono text-[9px] ${
                   active ? 'text-white/75' : 'text-muted-foreground/55'
@@ -82,20 +87,107 @@ export default function ShippingCalculator({
         })}
       </div>
 
-      <div className="border border-border rounded-2xl bg-card px-5 py-4 flex items-center justify-between">
-        <span className="font-mono text-4xl font-bold text-primary tracking-tight">
-          ${basePrice.toLocaleString()}.00
-        </span>
-        <span className="text-xs font-bold uppercase tracking-widest bg-primary text-primary-foreground rounded-full px-5 py-2">
-          BUY NOW
-        </span>
+      {/* PREMIUM PRICE PANEL */}
+      <div className="premium-buy-panel">
+        <div className="premium-price-row">
+          <div>
+            <p className="premium-price-label">Starting Price</p>
+
+            <h2 className="premium-price">
+              ${basePrice.toLocaleString()}.00
+            </h2>
+          </div>
+
+          <div className="premium-stock-pill">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            In Stock
+          </div>
+        </div>
+
+        <div className="premium-mini-summary">
+          <div className="premium-mini-row">
+            <span>
+              {sizeOption.label} · {condition === 'new' ? 'New' : 'Used'}
+            </span>
+
+            <strong>
+              ${(basePrice - gradeAdjust).toLocaleString()}
+            </strong>
+          </div>
+
+          {gradeAdjust !== 0 && (
+            <div className="premium-mini-row">
+              <span>Grade adjustment</span>
+
+              <strong>
+                {gradeAdjust > 0 ? '+' : ''}${gradeAdjust.toLocaleString()}
+              </strong>
+            </div>
+          )}
+
+          {qty > 1 && (
+            <div className="premium-mini-row">
+              <span>Quantity</span>
+              <strong>× {qty}</strong>
+            </div>
+          )}
+        </div>
+
+        <div className="premium-total-box">
+          <div>
+            <p className="premium-total-label">Total</p>
+            <p className="premium-tax-note">
+              Sales tax calculated at checkout
+            </p>
+          </div>
+
+          <div className="premium-total-price">
+            ${totalPrice.toLocaleString()}
+          </div>
+        </div>
+
+        <div className="premium-actions-row">
+          <div className="premium-qty">
+            <button
+              onClick={() => setQty((q) => Math.max(1, q - 1))}
+              className="premium-qty-btn"
+              type="button"
+            >
+              −
+            </button>
+
+            <span className="premium-qty-value">{qty}</span>
+
+            <button
+              onClick={() => setQty((q) => q + 1)}
+              className="premium-qty-btn"
+              type="button"
+            >
+              +
+            </button>
+          </div>
+
+          <Button className="premium-cart-btn">
+            <ShoppingCart className="w-4 h-4" />
+            Add to Cart
+          </Button>
+        </div>
+
+        <a href="tel:+18889779085">
+          <Button variant="outline" className="premium-call-btn">
+            <Phone className="w-4 h-4" />
+            Call (888) 977-9085
+          </Button>
+        </a>
       </div>
 
+      {/* CONDITION */}
       <div className="border border-border rounded-2xl bg-card overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
             CONDITION
           </span>
+
           <span className="text-sm font-semibold text-foreground">
             {condition === 'new' ? 'New' : 'Used'} {sizeOption.label}
           </span>
@@ -122,10 +214,12 @@ export default function ShippingCalculator({
                   alt={cond}
                   className="w-[68px] h-[52px] object-cover rounded-lg flex-shrink-0 bg-muted"
                 />
+
                 <div>
                   <p className="text-sm font-bold text-foreground leading-tight">
                     {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
                   </p>
+
                   <p className="text-sm font-bold font-mono text-foreground mt-1">
                     ${price.toLocaleString()}.00
                   </p>
@@ -136,11 +230,13 @@ export default function ShippingCalculator({
         </div>
       </div>
 
+      {/* GRADE */}
       <div className="border border-border rounded-2xl bg-card overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
             GRADE
           </span>
+
           <span className="text-sm font-semibold text-foreground">
             {gradeOptions.find((g) => g.key === grade)?.label}
           </span>
@@ -170,88 +266,6 @@ export default function ShippingCalculator({
               </button>
             );
           })}
-        </div>
-      </div>
-
-      <div className="border border-border rounded-2xl bg-card overflow-hidden">
-        <div className="p-5 flex flex-col gap-4">
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">
-                {sizeOption.label} · {condition === 'new' ? 'New' : 'Used'}
-              </span>
-              <span className="font-mono font-semibold">
-                ${(basePrice - gradeAdjust).toLocaleString()}
-              </span>
-            </div>
-
-            {gradeAdjust !== 0 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Grade adjustment</span>
-                <span className="font-mono font-semibold">
-                  {gradeAdjust > 0 ? '+' : ''}${gradeAdjust.toLocaleString()}
-                </span>
-              </div>
-            )}
-
-            {qty > 1 && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Quantity</span>
-                <span className="font-mono font-semibold">× {qty}</span>
-              </div>
-            )}
-          </div>
-
-          <div className="h-px bg-border" />
-
-          <div className="flex items-baseline justify-between">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground mb-0.5">
-                Total
-              </p>
-              <p className="text-[10px] text-muted-foreground/70">
-                Tax calculated at checkout
-              </p>
-            </div>
-            <span className="font-mono text-3xl font-bold text-primary tracking-tight">
-              ${totalPrice.toLocaleString()}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[96px_1fr] gap-2">
-            <div className="flex items-center border border-border rounded-xl overflow-hidden bg-muted/30 h-12">
-              <button
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                className="w-10 h-full flex items-center justify-center text-xl text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
-              >
-                −
-              </button>
-              <span className="flex-1 text-center font-mono text-sm font-semibold select-none">
-                {qty}
-              </span>
-              <button
-                onClick={() => setQty((q) => q + 1)}
-                className="w-10 h-full flex items-center justify-center text-xl text-muted-foreground hover:bg-muted/60 hover:text-foreground transition-colors"
-              >
-                +
-              </button>
-            </div>
-
-            <Button className="h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl shadow-md shadow-primary/20 gap-2">
-              <ShoppingCart className="w-4 h-4" />
-              Add to Cart
-            </Button>
-          </div>
-
-          <a href="tel:+18889779085">
-            <Button
-              variant="outline"
-              className="w-full h-11 rounded-xl font-semibold text-sm border-2 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all gap-2"
-            >
-              <Phone className="w-4 h-4" />
-              Call (888) 977-9085
-            </Button>
-          </a>
         </div>
       </div>
     </div>
