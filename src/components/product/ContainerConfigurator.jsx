@@ -335,6 +335,8 @@ export default function ContainerConfigurator({
     </button>
   </div>
 </div>
+ </div>       
+        
       {/* CART DRAWER */}
       <div
         className={`drawer-overlay ${drawerOpen ? 'open' : ''}`}
