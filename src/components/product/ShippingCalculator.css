@@ -1362,3 +1362,205 @@
 .quote-btn:hover{
   background:#17191f;
 }
+/* ===== REFERENCE TUNING PASS ===== */
+
+.widget{
+  gap:10px;
+}
+
+.widget,
+.section-card,
+.checkout,
+.cond-cards-section,
+.zip-bar{
+  border-radius:16px;
+  border-color:#20242b;
+  background:#0d0f13;
+}
+
+.main-tab,
+.grade-btn,
+.cond-card,
+.selection-btn,
+.quote-btn,
+.qty-wrap{
+  border-radius:14px;
+}
+
+.main-tab,
+.grade-btn,
+.cond-card{
+  background:#14161b;
+  border:1px solid #242830;
+}
+
+.main-tab.active{
+  background:#ff5a2f;
+  border-color:#ff5a2f;
+  box-shadow:none;
+}
+
+.condition-tab.active{
+  background:#ff4b42;
+  box-shadow:none;
+}
+
+.grade-btn.active,
+.cond-card.active,
+.selection-btn.active{
+  box-shadow:none;
+}
+
+.grade-btn.active,
+.cond-card.active{
+  border-color:#00b140;
+}
+
+.selection-btn{
+  background:rgba(0,177,64,.12);
+}
+
+.total-price{
+  letter-spacing:-.05em;
+}
+
+.checkout:last-of-type .total-price{
+  font-size:30px;
+}
+
+.checkout:last-of-type .add-btn{
+  background:#ff5a2f;
+  border-color:#ff5a2f;
+  box-shadow:none;
+}
+
+.add-btn:hover{
+  filter:brightness(1.03);
+}
+
+.quote-btn{
+  background:#111318;
+  border-color:#242830;
+}
+
+.tax-note,
+.card-lbl,
+.step-label,
+.section-header{
+  color:#8a93a3;
+}
+
+.section-header strong,
+.card-val{
+  color:#eef2f7;
+}
+
+.main-tabs{
+  gap:10px;
+}
+
+.grade-grid{
+  gap:10px;
+}
+
+.cond-cards{
+  gap:10px;
+}
+
+.tab-title{
+  font-size:15px;
+  font-weight:800;
+}
+
+.tab-price{
+  margin-top:4px;
+  font-size:14px;
+  font-weight:800;
+}
+
+.cc-name{
+  font-size:14px;
+  font-weight:800;
+}
+
+.cc-price{
+  font-size:13px;
+  color:#d7dde7;
+}
+
+.grade-btn span{
+  font-size:14px;
+  font-weight:800;
+}
+
+.grade-btn small{
+  font-size:10px;
+}
+
+.checkout-inner{
+  padding:14px;
+}
+
+.selection-btn{
+  min-height:50px;
+}
+
+.zip-bar{
+  padding:0;
+  overflow:hidden;
+}
+
+.zip-collapsed{
+  padding:14px 16px;
+}
+
+.zip-left{
+  gap:8px;
+}
+
+.zip-left span:first-of-type{
+  color:#eef2f7;
+  font-weight:700;
+}
+
+.zip-val{
+  color:#8b94a3;
+}
+
+.zip-action{
+  color:#00b140;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+
+.co-panel,
+.co-summary-box{
+  background:#0d0f13;
+  border-color:#20242b;
+}
+
+.co-field input,
+.co-field select,
+.co-coupon-input{
+  background:#121419;
+  border-color:#242830;
+}
+
+.pay-method{
+  background:#121419;
+  border-color:#242830;
+}
+
+.pay-method.active{
+  box-shadow:none;
+}
+
+.co-primary-btn{
+  background:#ff5a2f;
+  box-shadow:none;
+}
+
+.co-success-icon{
+  box-shadow:none;
+}
