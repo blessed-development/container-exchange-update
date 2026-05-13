@@ -776,3 +776,80 @@
     width:100vw;
   }
 }
+/* ===== CART DRAWER EXACT REFERENCE STRUCTURE ===== */
+
+.drawer-header{
+  height:70px;
+  padding:18px 20px;
+}
+
+.drawer-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:20px;
+}
+
+.drawer-title::before{
+  content:"";
+}
+
+.cart-item{
+  grid-template-columns:76px 1fr;
+  padding:18px;
+  min-height:170px;
+}
+
+.ci-img{
+  width:76px;
+  height:76px;
+  border-radius:10px;
+}
+
+.ci-name{
+  font-size:16px;
+  line-height:1.22;
+}
+
+.ci-meta{
+  font-size:13px;
+  line-height:1.45;
+}
+
+.ci-price{
+  font-size:16px;
+  margin-top:12px;
+}
+
+.ci-qty-row{
+  justify-content:flex-start;
+  gap:18px;
+}
+
+.ci-qty-btn{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+}
+
+.drawer-footer{
+  padding:24px 20px;
+}
+
+.drawer-subtotal{
+  font-size:20px;
+}
+
+.drawer-total-val{
+  font-size:24px;
+}
+
+.checkout-btn{
+  height:58px;
+  font-size:17px;
+}
+
+.continue-btn{
+  height:52px;
+  font-size:16px;
+}
