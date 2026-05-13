@@ -3400,3 +3400,89 @@
     grid-template-columns:1fr !important;
   }
 }
+/* ===== CHECKOUT RIGHT PANEL FINAL MATCH ===== */
+
+/* Hide product/order summary text inside right total box */
+.co-summary-box > h3,
+.co-summary-box .order-summary,
+.co-summary-box .order-summary-title,
+.co-summary-box .summary-product,
+.co-summary-box .summary-product-title,
+.co-summary-box .summary-product-meta,
+.co-summary-box .summary-product-price{
+  display:none !important;
+}
+
+/* Keep only total rows */
+.co-summary-box{
+  padding:24px 22px !important;
+}
+
+/* Summary rows like reference */
+.co-sum-row{
+  padding:10px 0 !important;
+  font-size:13.5px !important;
+}
+
+.co-sum-total-row{
+  margin-top:18px !important;
+  padding-top:20px !important;
+  border-top:1px solid rgba(255,255,255,.07) !important;
+}
+
+/* Force checkout button visible */
+.co-summary-box .co-primary-btn,
+.co-summary-box button,
+.co-summary-box button[type="submit"],
+.co-summary-box a[href*="checkout"]{
+  display:flex !important;
+  width:100% !important;
+  height:48px !important;
+  margin-top:20px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#ff5a52,#ff4038) !important;
+  color:#fff !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+  border:0 !important;
+  box-shadow:0 16px 35px rgba(255,64,56,.28) !important;
+}
+
+/* Make sure button text matches */
+.co-summary-box .co-primary-btn::before{
+  content:"Proceed to Checkout";
+}
+
+/* Shipping note under button */
+.co-summary-box::after{
+  content:"Shipping Internationally? Learn more";
+  display:block;
+  margin-top:12px;
+  text-align:center;
+  font-size:12px;
+  color:rgba(163,172,185,.78);
+}
+
+/* Warning box below summary */
+.lock-price-box,
+.checkout-warning,
+.shipping-note{
+  display:block !important;
+  margin-top:14px !important;
+  border-radius:16px !important;
+  padding:18px !important;
+  background:linear-gradient(180deg,#b63830,#761b1b) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  color:#fff !important;
+}
+
+/* Support text */
+.checkout-support{
+  display:block !important;
+  margin-top:18px !important;
+  font-size:12.5px !important;
+  line-height:1.6 !important;
+  color:#aeb7c4 !important;
+}
