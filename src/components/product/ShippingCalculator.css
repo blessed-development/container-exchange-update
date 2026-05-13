@@ -1564,3 +1564,127 @@
 .co-success-icon{
   box-shadow:none;
 }
+/* ===== FINAL COMPACT PASS ===== */
+
+.zip-collapsed{
+  min-height:54px;
+  padding:12px 14px;
+}
+
+.condition-tabs{
+  min-height:66px;
+}
+
+.condition-tab{
+  min-height:66px;
+  padding:10px;
+}
+
+.condition-tab span{
+  font-size:14px;
+}
+
+.condition-tab small{
+  font-size:9px;
+}
+
+.main-tabs{
+  gap:8px;
+}
+
+.main-tab{
+  min-height:92px;
+  padding:10px 8px;
+}
+
+.tab-title{
+  font-size:14px;
+}
+
+.tab-sub{
+  font-size:10px;
+}
+
+.tab-price{
+  font-size:13px;
+}
+
+.cond-cards{
+  gap:8px;
+  padding:10px;
+}
+
+.cond-card{
+  min-height:78px;
+  padding:10px;
+}
+
+.cond-img{
+  width:62px;
+  height:46px;
+}
+
+.cc-name{
+  font-size:13px;
+  line-height:1.15;
+}
+
+.cc-price{
+  font-size:12px;
+}
+
+.section-card{
+  overflow:hidden;
+}
+
+.card-head{
+  padding:12px 14px;
+}
+
+.grade-grid{
+  gap:8px;
+  padding:10px;
+}
+
+.grade-btn{
+  min-height:68px;
+  padding:8px;
+}
+
+.selection-type{
+  padding:10px;
+}
+
+.selection-btn{
+  min-height:46px;
+  padding:0 12px;
+}
+
+.checkout:last-of-type .checkout-inner{
+  padding:12px;
+}
+
+.checkout:last-of-type .total-row{
+  margin-bottom:10px;
+}
+
+.checkout:last-of-type .total-price{
+  font-size:28px;
+}
+
+.checkout:last-of-type .qty-wrap{
+  height:48px;
+}
+
+.checkout:last-of-type .add-btn{
+  height:48px;
+}
+
+.quote-btn{
+  height:42px;
+  margin-top:8px;
+}
+
+.tax-note{
+  font-size:11px;
+}
