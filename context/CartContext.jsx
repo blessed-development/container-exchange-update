@@ -1,4 +1,4 @@
-// context/CartContext.jsx
+// src/context/CartContext.jsx
 import React, { createContext, useState, useContext, useCallback } from 'react';
 
 const CartContext = createContext();
@@ -17,10 +17,8 @@ export const CartProvider = ({ children }) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [discount, setDiscount] = useState(0);
 
-  // Add item to cart
   const addToCart = useCallback((item) => {
     setCart(prev => {
-      // Check if item already exists (by title + sub + unitPrice)
       const existingIndex = prev.findIndex(i => 
         i.title === item.title && 
         i.sub === item.sub && 
@@ -28,7 +26,6 @@ export const CartProvider = ({ children }) => {
       );
       
       if (existingIndex !== -1) {
-        // Update existing item quantity
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
@@ -37,13 +34,11 @@ export const CartProvider = ({ children }) => {
         return updated;
       }
       
-      // Add new item with unique ID
       return [...prev, { ...item, id: Date.now() + Math.random() }];
     });
     setIsDrawerOpen(true);
   }, []);
 
-  // Update quantity
   const updateQuantity = useCallback((id, delta) => {
     setCart(prev => prev.map(item => {
       if (item.id === id) {
@@ -54,35 +49,29 @@ export const CartProvider = ({ children }) => {
     }));
   }, []);
 
-  // Remove item
   const removeItem = useCallback((id) => {
     setCart(prev => prev.filter(item => item.id !== id));
   }, []);
 
-  // Clear entire cart
   const clearCart = useCallback(() => {
     setCart([]);
     setDiscount(0);
   }, []);
 
-  // Get subtotal
   const getSubtotal = useCallback(() => {
     return cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
   }, [cart]);
 
-  // Get total after discount
   const getAfterDiscount = useCallback(() => {
     const subtotal = getSubtotal();
     return Math.max(0, subtotal - discount);
   }, [getSubtotal, discount]);
 
-  // Get grand total with tax (9%)
   const getGrandTotal = useCallback(() => {
     const afterDiscount = getAfterDiscount();
     return afterDiscount + (afterDiscount * 0.09);
   }, [getAfterDiscount]);
 
-  // Apply coupon
   const applyCoupon = useCallback((code) => {
     const COUPONS = {
       'CONTAINER10': 0.10,
