@@ -13,15 +13,15 @@ import Contact from '@/pages/Contact';
 import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
-// Import checkout components
-import { CartProvider } from './context/CartContext';
-import CheckoutPage from './components/CheckoutPage';
-import './components/CheckoutStyles.css';
+
+// Updated imports - pointing to base44/entities/
+import { CartProvider } from './base44/entities/context/CartContext';
+import CheckoutPage from './base44/entities/components/CheckoutPage';
+import './base44/entities/components/CheckoutStyles.css';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
-  // Show loading spinner only while checking app public settings
   if (isLoadingPublicSettings) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
@@ -30,21 +30,17 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors — only block on user_not_registered, not auth_required
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    // auth_required and other errors: allow public access, just continue
   }
 
-  // Render the main app
   return (
     <Routes>
       {/* Checkout - full screen, no layout */}
       <Route path="/checkout" element={<CheckoutPage />} />
       
-      {/* All other routes with layout */}
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/inventory" element={<Inventory />} />
@@ -64,7 +60,6 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          {/* Wrap with CartProvider so cart is available everywhere */}
           <CartProvider>
             <AuthenticatedApp />
           </CartProvider>
