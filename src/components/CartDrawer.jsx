@@ -1,8 +1,7 @@
 // src/components/CartDrawer.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import './CheckoutStyles.css';
-
+// import './CheckoutStyles.css';
 const CartDrawer = ({ onCheckout }) => {
   const { 
     cart, 
