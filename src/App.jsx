@@ -13,6 +13,10 @@ import Contact from '@/pages/Contact';
 import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
+// Import checkout components
+import { CartProvider } from './context/CartContext';
+import CheckoutPage from './components/CheckoutPage';
+import './components/CheckoutStyles.css';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -37,6 +41,10 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
+      {/* Checkout - full screen, no layout */}
+      <Route path="/checkout" element={<CheckoutPage />} />
+      
+      {/* All other routes with layout */}
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/inventory" element={<Inventory />} />
@@ -51,19 +59,20 @@ const AuthenticatedApp = () => {
   );
 };
 
-
 function App() {
-
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <Router>
-          <AuthenticatedApp />
+          {/* Wrap with CartProvider so cart is available everywhere */}
+          <CartProvider>
+            <AuthenticatedApp />
+          </CartProvider>
         </Router>
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;
