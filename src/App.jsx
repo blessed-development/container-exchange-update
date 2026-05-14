@@ -14,10 +14,10 @@ import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
 
-// CORRECTED IMPORTS - pointing to src/ directory
-import { CartProvider } from './src/context/CartContext';
-import CheckoutPage from './src/components/CheckoutPage';
-import './src/components/CheckoutStyles.css';
+// CORRECTED IMPORTS - App.jsx is inside src/, so use relative paths
+import { CartProvider } from './context/CartContext';
+import CheckoutPage from './components/CheckoutPage';
+import './components/CheckoutStyles.css';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
