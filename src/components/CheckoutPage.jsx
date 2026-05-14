@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import { useCart } from '../context/CartContext';
 import CartDrawer from './CartDrawer';
-import './CheckoutStyles.css';
+// import './CheckoutStyles.css';   // Temporarily disabled - will re-enable with scoped styles later
 
 const CheckoutPage = () => {
   const { addToCart } = useCart();
