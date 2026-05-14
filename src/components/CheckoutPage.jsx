@@ -5,7 +5,7 @@ import CartDrawer from './CartDrawer';
 import './CheckoutStyles.css';
 
 const CheckoutPage = () => {
-  const { addToCart, setIsCheckoutOpen, isCheckoutOpen, getGrandTotal } = useCart();
+  const { addToCart } = useCart();
   
   // ========== UI State ==========
   const [mainTab, setMainTab] = useState('new'); // 'new' | 'used'
@@ -94,10 +94,6 @@ const CheckoutPage = () => {
     setIsCheckoutOpenLocal(true);
   };
 
-  const closeCheckout = () => {
-    setIsCheckoutOpenLocal(false);
-  };
-
   return (
     <>
       <div className="widget">
@@ -118,12 +114,7 @@ const CheckoutPage = () => {
               </svg>
               Delivering to &nbsp;<span className="zip-val">{zipDisplay}</span>
             </div>
-            <span className="zip-action">
-              Change
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
-            </span>
+            <span className="zip-action">Change</span>
           </div>
           {zipPanelOpen && (
             <div className="zip-panel open">
