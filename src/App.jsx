@@ -17,7 +17,6 @@ import Delivery from '@/pages/Delivery';
 // CORRECTED IMPORTS - proper capitalization
 import { CartProvider } from './context/CartContext';
 import CheckoutPage from './components/CheckoutPage';
-import './components/CheckoutStyles.css';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
