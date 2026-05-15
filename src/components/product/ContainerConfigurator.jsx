@@ -140,10 +140,8 @@ export default function ContainerConfigurator({
   };
 
   const openCheckout = () => {
-    setDrawerOpen(false);
-    setCheckoutOpen(true);
-    setPanel('cart');
-  };
+  window.location.href = '/checkout';
+};
 
   const placeOrder = () => {
     setOrderRef(`CE-${Math.random().toString(36).slice(2, 10).toUpperCase()}`);
