@@ -11,15 +11,20 @@ const formatMoney = (value) => {
   })}`;
 };
 
+const getItemImage = (item) => {
+  return (
+    item.image ||
+    item.image_url ||
+    item.imageUrl ||
+    item.photo ||
+    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80'
+  );
+};
+
 const CheckoutDetails = () => {
   const navigate = useNavigate();
 
-  const {
-    cart,
-    getSubtotal,
-    getGrandTotal,
-    clearCart,
-  } = useCart();
+  const { cart, getSubtotal, getGrandTotal } = useCart();
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
@@ -27,9 +32,12 @@ const CheckoutDetails = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    company: '',
     email: '',
     phone: '',
+    country: 'United States',
     address: '',
+    apartment: '',
     city: '',
     state: '',
     zip: '',
@@ -43,9 +51,19 @@ const CheckoutDetails = () => {
     }));
   };
 
+  const getShipTo = () => {
+    const parts = [
+      formData.address,
+      formData.city,
+      formData.state,
+      formData.zip,
+    ].filter(Boolean);
+
+    return parts.length ? parts.join(', ') : 'Enter delivery address';
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     navigate('/checkout/success');
   };
 
@@ -71,20 +89,21 @@ const CheckoutDetails = () => {
         </div>
       </header>
 
-      <section className="checkout-main">
-        <section className="cart-panel">
+      <section className="checkout-main checkout-details-layout">
+        <section className="cart-panel checkout-details-panel">
           <div className="cart-panel-title">
             <CreditCard size={21} />
-            <h1>Customer Details</h1>
+            <h1>Shipping Address</h1>
           </div>
 
           <form className="details-form" onSubmit={handleSubmit}>
             <div className="form-grid">
               <div className="form-group">
-                <label>First Name</label>
+                <label>First Name *</label>
                 <input
                   type="text"
                   name="firstName"
+                  placeholder="First name"
                   value={formData.firstName}
                   onChange={handleChange}
                   required
@@ -92,10 +111,11 @@ const CheckoutDetails = () => {
               </div>
 
               <div className="form-group">
-                <label>Last Name</label>
+                <label>Last Name *</label>
                 <input
                   type="text"
                   name="lastName"
+                  placeholder="Last name"
                   value={formData.lastName}
                   onChange={handleChange}
                   required
@@ -104,123 +124,191 @@ const CheckoutDetails = () => {
             </div>
 
             <div className="form-group">
-              <label>Email Address</label>
+              <label>Company Name</label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                name="company"
+                placeholder="Company name optional"
+                value={formData.company}
                 onChange={handleChange}
-                required
               />
             </div>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Phone Number</label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>ZIP Code</label>
-                <input
-                  type="text"
-                  name="zip"
-                  value={formData.zip}
-                  onChange={handleChange}
-                />
-              </div>
+            <div className="form-group">
+              <label>Country / Region *</label>
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                required
+              >
+                <option>United States</option>
+                <option>Canada</option>
+              </select>
             </div>
 
             <div className="form-group">
-              <label>Delivery Address</label>
+              <label>Street Address *</label>
               <input
                 type="text"
                 name="address"
+                placeholder="House number and street name"
                 value={formData.address}
                 onChange={handleChange}
                 required
               />
             </div>
 
+            <div className="form-group">
+              <input
+                type="text"
+                name="apartment"
+                placeholder="Apartment, suite, unit, etc. optional"
+                value={formData.apartment}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Town / City *</label>
+              <input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={formData.city}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
             <div className="form-grid">
               <div className="form-group">
-                <label>City</label>
+                <label>State *</label>
                 <input
                   type="text"
-                  name="city"
-                  value={formData.city}
+                  name="state"
+                  placeholder="State"
+                  value={formData.state}
                   onChange={handleChange}
+                  required
                 />
               </div>
 
               <div className="form-group">
-                <label>State</label>
+                <label>ZIP Code *</label>
                 <input
                   type="text"
-                  name="state"
-                  value={formData.state}
+                  name="zip"
+                  placeholder="ZIP code"
+                  value={formData.zip}
                   onChange={handleChange}
+                  required
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label>Order Notes</label>
-              <textarea
-                rows="5"
-                name="notes"
-                value={formData.notes}
+              <label>Phone *</label>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone number"
+                value={formData.phone}
                 onChange={handleChange}
-                placeholder="Delivery instructions or additional details..."
+                required
               />
             </div>
 
-            <button type="submit" className="checkout-btn">
-              Continue Secure Checkout
+            <div className="form-group">
+              <label>Email Address *</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Order Notes</label>
+              <textarea
+                rows="4"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                placeholder="Notes about your order, e.g. special delivery instructions."
+              />
+            </div>
+
+            <button type="submit" className="checkout-btn reserve-btn">
+              Reserve My Container Now!
             </button>
           </form>
         </section>
 
-        <aside className="checkout-sidebar">
-          <section className="total-card">
+        <aside className="checkout-sidebar checkout-details-sidebar">
+          <section className="total-card details-summary-card">
             <h2>Order Summary</h2>
 
+            <div className="os-head">
+              <span>Products</span>
+              <span>QTY</span>
+              <span>Subtotal</span>
+            </div>
+
             {cart.map((item) => (
-              <div key={item.id} className="summary-line">
-                <div>
-                  <strong>{item.title}</strong>
-                  <p>
-                    Qty {item.qty} · {item.grade}
-                  </p>
+              <div key={item.id} className="os-item">
+                <div className="os-item-wrap">
+                  <img
+                    src={getItemImage(item)}
+                    alt={item.title || 'Shipping container'}
+                    className="os-img"
+                  />
+
+                  <div className="os-prod-copy">
+                    <div className="os-prod-title">{item.title}</div>
+                    <div className="os-prod-sub">
+                      {item.sub || item.grade || 'Shipping container'}
+                    </div>
+                  </div>
                 </div>
 
-                <span>
-                  {formatMoney(
-                    Number(item.unitPrice || 0) * Number(item.qty || 1)
-                  )}
-                </span>
+                <div className="os-qty">{item.qty}</div>
+
+                <div className="os-price">
+                  {formatMoney(Number(item.unitPrice || 0) * Number(item.qty || 1))}
+                </div>
               </div>
             ))}
+
+            <div className="summary-divider" />
 
             <div className="total-row">
               <span>Subtotal</span>
               <strong>{formatMoney(subtotal)}</strong>
             </div>
 
+            <div className="total-row os-shipto">
+              <span>Ship To</span>
+              <em>{getShipTo()}</em>
+            </div>
+
             <div className="total-row tax-row">
-              <span>Sales tax</span>
+              <span>Sales Tax</span>
               <em>Calculated at checkout</em>
             </div>
 
             <div className="total-row grand-total">
               <span>Total</span>
               <strong>{formatMoney(total)}</strong>
+            </div>
+
+            <div className="os-disclaimer">
+              <strong>Disclaimer:</strong> By reserving your container, you are
+              not committing to a purchase. We will contact you to confirm all
+              the details and finalize the pricing.
             </div>
           </section>
 
@@ -231,15 +319,15 @@ const CheckoutDetails = () => {
             </h3>
 
             <p>
-              Our logistics team will contact you immediately after order
-              submission to coordinate the best delivery rates and timing.
+              Our logistics team will contact you immediately after submission
+              to coordinate delivery rates and timing.
             </p>
           </section>
 
           <section className="checkout-help">
             <p>
-              <Lock size={14} /> Your information is encrypted and securely
-              processed.
+              <Lock size={14} />
+              Your information is encrypted and securely processed.
             </p>
           </section>
         </aside>
