@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
+import { useCart } from '../../context/CartContext';
 const CartContext = createContext(null);
 
 const STORAGE_KEY = 'containers_exchange_cart';
