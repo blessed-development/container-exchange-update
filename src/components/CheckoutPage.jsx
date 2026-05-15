@@ -1,97 +1,244 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { Lock, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import './CheckoutPage.css';
+
+const fallbackImage =
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
+
+const formatMoney = (value) => {
+  const amount = Number(value || 0);
+
+  return `$${amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
+const getItemImage = (item) => {
+  return item.image || item.image_url || item.imageUrl || item.photo || fallbackImage;
+};
 
 const CheckoutPage = () => {
-  const { cart, updateQuantity, removeItem, getSubtotal, getGrandTotal } = useCart();
-
-  const formatMoney = (num) => {
-    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-  };
+  const navigate = useNavigate();
+  const {
+    cart,
+    updateQuantity,
+    removeItem,
+    getSubtotal,
+    getGrandTotal,
+  } = useCart();
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
 
-  if (cart.length === 0) {
+  const handleBackToStore = () => {
+    navigate('/inventory');
+  };
+
+  const handleProceedToCheckout = () => {
+    // Replace this with your real payment/shipping step when ready.
+    navigate('/checkout/details');
+  };
+
+  if (!cart.length) {
     return (
-      <div style={{ padding: '40px', textAlign: 'center' }}>
-        <h2>Your cart is empty</h2>
-        <button onClick={() => window.location.href = '/'}>Continue Shopping</button>
-      </div>
+      <main className="checkout-container">
+        <header className="checkout-header">
+          <button type="button" className="back-link" onClick={handleBackToStore}>
+            ← Back to Store
+          </button>
+
+          <Link to="/" className="checkout-logo">
+            Containers<span>Exchange</span>
+          </Link>
+
+          <div className="secure-badge">
+            <ShieldCheck size={14} />
+            Secure Checkout
+          </div>
+        </header>
+
+        <section className="empty-cart">
+          <div className="empty-cart-card">
+            <ShoppingCart size={34} />
+            <h1>Your cart is empty</h1>
+            <p>Add a container to your cart before checkout.</p>
+            <button type="button" onClick={handleBackToStore}>
+              Continue Shopping
+            </button>
+          </div>
+        </section>
+      </main>
     );
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', fontFamily: 'Arial' }}>
-      <h1>Checkout</h1>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '30px' }}>
-        {/* Cart Items */}
-        <div>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid #ddd' }}>
-                <th style={{ textAlign: 'left', padding: '10px' }}>Product</th>
-                <th style={{ padding: '10px' }}>Price</th>
-                <th style={{ padding: '10px' }}>Quantity</th>
-                <th style={{ padding: '10px' }}>Total</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart.map((item) => (
-                <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '10px' }}>
-                    <div>
-                      <div><strong>{item.title}</strong></div>
-                      <div style={{ fontSize: '12px', color: '#666' }}>{item.sub}</div>
-                    </div>
-                  </td>
-                  <td style={{ textAlign: 'center', padding: '10px' }}>{formatMoney(item.unitPrice)}</td>
-                  <td style={{ textAlign: 'center', padding: '10px' }}>
-                    <button onClick={() => updateQuantity(item.id, -1)} style={{ margin: '0 5px' }}>-</button>
-                    {item.qty}
-                    <button onClick={() => updateQuantity(item.id, 1)} style={{ margin: '0 5px' }}>+</button>
-                  </td>
-                  <td style={{ textAlign: 'center', padding: '10px' }}>{formatMoney(item.unitPrice * item.qty)}</td>
-                  <td style={{ textAlign: 'center' }}>
-                    <button onClick={() => removeItem(item.id)} style={{ background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer' }}>×</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          
-          <button onClick={() => window.location.href = '/'} style={{ marginTop: '20px', padding: '10px 20px' }}>
-            ← Continue Shopping
-          </button>
-        </div>
+    <main className="checkout-container">
+      <header className="checkout-header">
+        <button type="button" className="back-link" onClick={handleBackToStore}>
+          ← Back to Store
+        </button>
 
-        {/* Order Summary */}
-        <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', height: 'fit-content' }}>
-          <h3>Order Summary</h3>
-          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}>
-            <span>Subtotal</span>
-            <span>{formatMoney(subtotal)}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', color: '#666' }}>
-            <span>Shipping</span>
-            <span>Calculated at next step</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', color: '#666' }}>
-            <span>Tax</span>
-            <span>Calculated at checkout</span>
-          </div>
-          <hr />
-          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', fontSize: '18px', fontWeight: 'bold' }}>
-            <span>Total</span>
-            <span>{formatMoney(total)}</span>
-          </div>
-          <button style={{ width: '100%', padding: '15px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', cursor: 'pointer', marginTop: '20px' }}>
-            Proceed to Checkout →
-          </button>
+        <Link to="/" className="checkout-logo">
+          Containers<span>Exchange</span>
+        </Link>
+
+        <div className="secure-badge">
+          <ShieldCheck size={14} />
+          Secure Checkout
         </div>
-      </div>
-    </div>
+      </header>
+
+      <section className="checkout-main">
+        <section className="cart-panel">
+          <div className="cart-panel-title">
+            <ShoppingCart size={21} />
+            <h1>My Cart</h1>
+          </div>
+
+          <div className="cart-table-head">
+            <span>Item</span>
+            <span>Unit Price</span>
+            <span>Qty</span>
+            <span>Subtotal</span>
+          </div>
+
+          <div className="cart-items">
+            {cart.map((item) => {
+              const lineTotal = Number(item.unitPrice || 0) * Number(item.qty || 1);
+
+              return (
+                <article className="cart-line" key={item.id}>
+                  <div className="cart-product">
+                    <img
+                      src={getItemImage(item)}
+                      alt={item.title || 'Shipping container'}
+                      className="cart-product-image"
+                    />
+
+                    <div className="cart-product-copy">
+                      {item.url && item.url !== '#' ? (
+                        <Link to={item.url} className="cart-product-title">
+                          {item.title}
+                        </Link>
+                      ) : (
+                        <h2 className="cart-product-title">{item.title}</h2>
+                      )}
+
+                      {item.sub && (
+                        <p className="cart-product-subtitle">{item.sub}</p>
+                      )}
+
+                      {item.rating && (
+                        <div className="cart-rating">
+                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="cart-unit-price">{formatMoney(item.unitPrice)}</div>
+
+                  <div className="cart-qty">
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, -1)}
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+
+                    <strong>{item.qty}</strong>
+
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, 1)}
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div className="cart-line-total">{formatMoney(lineTotal)}</div>
+
+                  <button
+                    type="button"
+                    className="cart-remove"
+                    onClick={() => removeItem(item.id)}
+                    aria-label="Remove item"
+                  >
+                    ×
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+
+          <button type="button" className="return-store-btn" onClick={handleBackToStore}>
+            ← Return to Store
+          </button>
+        </section>
+
+        <aside className="checkout-sidebar">
+          <section className="total-card">
+            <h2>Your Total</h2>
+
+            <div className="total-row">
+              <span>Subtotal</span>
+              <strong>{formatMoney(subtotal)}</strong>
+            </div>
+
+            <div className="total-row tax-row">
+              <span>Sales tax</span>
+              <em>Calculated at checkout</em>
+            </div>
+
+            <div className="total-row grand-total">
+              <span>Total</span>
+              <strong>{formatMoney(total)}</strong>
+            </div>
+
+            <button type="button" className="checkout-btn" onClick={handleProceedToCheckout}>
+              Proceed to Checkout
+            </button>
+
+            <p className="shipping-note">
+              Shipping Internationally? <a href="/delivery">Learn more</a>
+            </p>
+          </section>
+
+          <section className="price-lock-banner">
+            <h3>
+              <Lock size={14} />
+              Lock In Your Price - Don't Wait!
+            </h3>
+
+            <p>
+              Container prices fluctuate — <strong>Order Now</strong> to secure this low price.
+            </p>
+
+            <p>
+              Delivery cost is additional. To save you money, we'll negotiate with local carriers
+              for the lowest shipping rate.
+            </p>
+          </section>
+
+          <section className="checkout-help">
+            <p>
+              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don’t forget
+              to ask about specials in your area to see if you can save even more.
+            </p>
+
+            <p className="checkout-phone">
+              <Phone size={15} />
+              Need help? Call <a href="tel:+17132580199">(713) 258-0199</a>
+            </p>
+          </section>
+        </aside>
+      </section>
+    </main>
   );
 };
 
