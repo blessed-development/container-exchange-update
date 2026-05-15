@@ -14,12 +14,13 @@ import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
 
-// CORRECTED IMPORTS - proper capitalization
 import { CartProvider } from './context/CartContext';
 import CheckoutPage from './components/CheckoutPage';
+import CheckoutDetails from './components/CheckoutDetails';
+import CheckoutSuccess from './components/CheckoutSuccess';
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingPublicSettings, authError } = useAuth();
 
   if (isLoadingPublicSettings) {
     return (
@@ -29,17 +30,17 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    }
+  if (authError?.type === 'user_not_registered') {
+    return <UserNotRegisteredError />;
   }
 
   return (
     <Routes>
-      {/* Checkout - full screen, no layout */}
+      {/* Checkout flow - full screen, no layout */}
       <Route path="/checkout" element={<CheckoutPage />} />
-      
+      <Route path="/checkout/details" element={<CheckoutDetails />} />
+      <Route path="/checkout/success" element={<CheckoutSuccess />} />
+
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/inventory" element={<Inventory />} />
