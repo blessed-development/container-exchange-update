@@ -1,47 +1,67 @@
 import React from 'react';
+import { Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
-const OrderSummary = () => {
-  const { cart, getSubtotal, getGrandTotal } = useCart();
+const formatMoney = (value) => {
+  const amount = Number(value || 0);
+
+  return `$${amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
+const OrderSummary = ({ onCheckout }) => {
+  const { getSubtotal, getGrandTotal } = useCart();
+
   const subtotal = getSubtotal();
-  const tax = subtotal * 0.09;
   const total = getGrandTotal();
 
-  const formatMoney = (num) => {
-    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-  };
-
   return (
-    <div className="co-summary-box premium-buy-panel">
-      <div className="premium-price-row">
-        <div>
-          <div className="premium-price-label">TOTAL</div>
-          <div className="premium-price">{formatMoney(total)}</div>
-        </div>
-        <div className="premium-stock-pill">✓ In Stock</div>
-      </div>
+    <aside className="checkout-sidebar">
+      <section className="total-card">
+        <h2>Your Total</h2>
 
-      <div className="premium-total-box">
-        <div>
-          <div className="premium-total-label">SUBTOTAL</div>
-          <div className="premium-tax-note">Sales tax calculated at checkout</div>
+        <div className="total-row">
+          <span>Subtotal</span>
+          <strong>{formatMoney(subtotal)}</strong>
         </div>
-        <div className="premium-total-price">{formatMoney(subtotal)}</div>
-      </div>
 
-      <div className="premium-actions-row">
-        <div className="premium-qty">
-          <button className="premium-qty-btn">−</button>
-          <span className="premium-qty-value">1</span>
-          <button className="premium-qty-btn">+</button>
+        <div className="total-row tax-row">
+          <span>Sales tax</span>
+          <em>Calculated at checkout</em>
         </div>
-        <button className="premium-cart-btn add-btn">Add to Cart</button>
-      </div>
 
-      <button className="premium-call-btn quote-btn">
-        📞 Request a Quote
-      </button>
-    </div>
+        <div className="total-row grand-total">
+          <span>Total</span>
+          <strong>{formatMoney(total)}</strong>
+        </div>
+
+        <button type="button" className="checkout-btn" onClick={onCheckout}>
+          Proceed to Checkout
+        </button>
+
+        <p className="shipping-note">
+          Shipping Internationally? <a href="/delivery">Learn more</a>
+        </p>
+      </section>
+
+      <section className="price-lock-banner">
+        <h3>
+          <Lock size={14} />
+          Lock In Your Price - Don't Wait!
+        </h3>
+
+        <p>
+          Container prices fluctuate — <strong>Order Now</strong> to secure this low price.
+        </p>
+
+        <p>
+          Delivery cost is additional. To save you money, we'll negotiate with local carriers
+          for the lowest shipping rate.
+        </p>
+      </section>
+    </aside>
   );
 };
 
