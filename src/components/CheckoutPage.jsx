@@ -1,111 +1,94 @@
-// src/components/CheckoutPage.jsx
 import React from 'react';
 import { useCart } from '../../context/CartContext';
-import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const { cart, updateQuantity, removeItem, getSubtotal, getGrandTotal } = useCart();
 
   const formatMoney = (num) => {
-    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
   };
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
 
-  return (
-    <div className="checkout-container">
-      <div className="checkout-header">
-        <button className="back-link" onClick={() => window.location.href = '/'}>
-          ← Back to Store
-        </button>
-        <div className="logo">Containers Exchange</div>
-        <div className="secure-badge">🔒 Secure Checkout</div>
+  if (cart.length === 0) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center' }}>
+        <h2>Your cart is empty</h2>
+        <button onClick={() => window.location.href = '/'}>Continue Shopping</button>
       </div>
+    );
+  }
 
-      <div className="checkout-main">
-        <div className="cart-section">
-          <h2>My Cart</h2>
-          
-          <div className="cart-table">
-            <div className="cart-header">
-              <span>ITEM</span>
-              <span>UNIT PRICE</span>
-              <span>QTY</span>
-              <span>SUBTOTAL</span>
-            </div>
-
-            {cart.length === 0 ? (
-              <div className="empty-cart">Your cart is empty</div>
-            ) : (
-              cart.map((item) => (
-                <div className="cart-row" key={item.id}>
-                  <div className="item-info">
-                    <img src={item.img} alt={item.title} className="item-image" />
-                    <div className="item-details">
-                      <div className="item-title">{item.title}</div>
-                      <div className="item-specs">{item.sub}</div>
+  return (
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px', fontFamily: 'Arial' }}>
+      <h1>Checkout</h1>
+      
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '30px' }}>
+        {/* Cart Items */}
+        <div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #ddd' }}>
+                <th style={{ textAlign: 'left', padding: '10px' }}>Product</th>
+                <th style={{ padding: '10px' }}>Price</th>
+                <th style={{ padding: '10px' }}>Quantity</th>
+                <th style={{ padding: '10px' }}>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((item) => (
+                <tr key={item.id} style={{ borderBottom: '1px solid #eee' }}>
+                  <td style={{ padding: '10px' }}>
+                    <div>
+                      <div><strong>{item.title}</strong></div>
+                      <div style={{ fontSize: '12px', color: '#666' }}>{item.sub}</div>
                     </div>
-                  </div>
-                  <div className="item-price">{formatMoney(item.unitPrice)}</div>
-                  <div className="item-qty">
-                    <button onClick={() => updateQuantity(item.id, -1)}>-</button>
-                    <span>{item.qty}</span>
-                    <button onClick={() => updateQuantity(item.id, 1)}>+</button>
-                  </div>
-                  <div className="item-subtotal">{formatMoney(item.unitPrice * item.qty)}</div>
-                  <button className="remove-item" onClick={() => removeItem(item.id)}>✕</button>
-                </div>
-              ))
-            )}
-          </div>
-
-          <button className="return-btn" onClick={() => window.location.href = '/'}>
-            ← Return to Store
+                  </td>
+                  <td style={{ textAlign: 'center', padding: '10px' }}>{formatMoney(item.unitPrice)}</td>
+                  <td style={{ textAlign: 'center', padding: '10px' }}>
+                    <button onClick={() => updateQuantity(item.id, -1)} style={{ margin: '0 5px' }}>-</button>
+                    {item.qty}
+                    <button onClick={() => updateQuantity(item.id, 1)} style={{ margin: '0 5px' }}>+</button>
+                  </td>
+                  <td style={{ textAlign: 'center', padding: '10px' }}>{formatMoney(item.unitPrice * item.qty)}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <button onClick={() => removeItem(item.id)} style={{ background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer' }}>×</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          <button onClick={() => window.location.href = '/'} style={{ marginTop: '20px', padding: '10px 20px' }}>
+            ← Continue Shopping
           </button>
         </div>
 
-        <div className="summary-section">
-          <div className="total-card">
-            <h3>Your Total</h3>
-            
-            <div className="total-row">
-              <span>Subtotal</span>
-              <span>{formatMoney(subtotal)}</span>
-            </div>
-            
-            <div className="total-row tax-row">
-              <span>Sales tax</span>
-              <span>Calculated at checkout</span>
-            </div>
-            
-            <div className="total-row grand-total">
-              <span>Total</span>
-              <span>{formatMoney(total)}</span>
-            </div>
-            
-            <button className="checkout-btn" onClick={() => alert('Proceed to checkout')}>
-              Proceed to Checkout →
-            </button>
-            
-            <div className="shipping-note">
-              Shipping Internationally? <a href="#">Learn more</a>
-            </div>
+        {/* Order Summary */}
+        <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: '8px', height: 'fit-content' }}>
+          <h3>Order Summary</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0' }}>
+            <span>Subtotal</span>
+            <span>{formatMoney(subtotal)}</span>
           </div>
-
-          <div className="price-lock-banner">
-            <div className="lock-title">🔒 Lock In Your Price - Don't Wait!</div>
-            <p>Container prices fluctuate — <strong>Order Now</strong> to secure this low price.</p>
-            <p>Delivery cost is additional. To save you money, we'll negotiate with local carriers for the lowest shipping rate.</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', color: '#666' }}>
+            <span>Shipping</span>
+            <span>Calculated at next step</span>
           </div>
-
-          <div className="help-section">
-            Want faster service? <a href="tel:7132580199">Give us a ring!</a> Don't forget to ask about specials in your area to see if you can save even more.
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', color: '#666' }}>
+            <span>Tax</span>
+            <span>Calculated at checkout</span>
           </div>
-
-          <div className="contact-info">
-            Need help? Call <a href="tel:7132580199">(713) 258-0199</a>
+          <hr />
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px 0', fontSize: '18px', fontWeight: 'bold' }}>
+            <span>Total</span>
+            <span>{formatMoney(total)}</span>
           </div>
+          <button style={{ width: '100%', padding: '15px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', cursor: 'pointer', marginTop: '20px' }}>
+            Proceed to Checkout →
+          </button>
         </div>
       </div>
     </div>
