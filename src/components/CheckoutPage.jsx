@@ -1,7 +1,7 @@
 // src/components/CheckoutPage.jsx
 import React from 'react';
-import { useCart } from '../context/CartContext';
-import './CheckoutPage.css';  // We'll create this next
+import { useCart } from '../../context/CartContext';
+import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const { cart, updateQuantity, removeItem, getSubtotal, getGrandTotal } = useCart();
@@ -11,12 +11,10 @@ const CheckoutPage = () => {
   };
 
   const subtotal = getSubtotal();
-  const tax = subtotal * 0.09;
   const total = getGrandTotal();
 
   return (
     <div className="checkout-container">
-      {/* Top Bar */}
       <div className="checkout-header">
         <button className="back-link" onClick={() => window.location.href = '/'}>
           ← Back to Store
@@ -25,14 +23,11 @@ const CheckoutPage = () => {
         <div className="secure-badge">🔒 Secure Checkout</div>
       </div>
 
-      {/* Main Layout */}
       <div className="checkout-main">
-        {/* Left Column - My Cart */}
         <div className="cart-section">
           <h2>My Cart</h2>
           
           <div className="cart-table">
-            {/* Table Header */}
             <div className="cart-header">
               <span>ITEM</span>
               <span>UNIT PRICE</span>
@@ -40,7 +35,6 @@ const CheckoutPage = () => {
               <span>SUBTOTAL</span>
             </div>
 
-            {/* Cart Items */}
             {cart.length === 0 ? (
               <div className="empty-cart">Your cart is empty</div>
             ) : (
@@ -71,7 +65,6 @@ const CheckoutPage = () => {
           </button>
         </div>
 
-        {/* Right Column - Your Total */}
         <div className="summary-section">
           <div className="total-card">
             <h3>Your Total</h3>
@@ -100,14 +93,12 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          {/* Lock In Price Banner */}
           <div className="price-lock-banner">
             <div className="lock-title">🔒 Lock In Your Price - Don't Wait!</div>
             <p>Container prices fluctuate — <strong>Order Now</strong> to secure this low price.</p>
             <p>Delivery cost is additional. To save you money, we'll negotiate with local carriers for the lowest shipping rate.</p>
           </div>
 
-          {/* Need Help */}
           <div className="help-section">
             Want faster service? <a href="tel:7132580199">Give us a ring!</a> Don't forget to ask about specials in your area to see if you can save even more.
           </div>
