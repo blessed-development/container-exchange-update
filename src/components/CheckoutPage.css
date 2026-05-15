@@ -839,3 +839,91 @@
 .checkout-phone{
   font-size:15px !important;
 }
+/* ===== FORCE REFERENCE CHECKOUT VIEW ===== */
+
+/* hide the order summary block inside right card */
+.total-card h3,
+.total-card .order-summary,
+.total-card .order-summary-title,
+.total-card .summary-items,
+.total-card .summary-product,
+.total-card .summary-product-title,
+.total-card .summary-product-meta,
+.total-card .summary-product-price {
+  display: none !important;
+}
+
+/* make total card match reference height */
+.total-card {
+  padding: 24px 22px !important;
+  min-height: auto !important;
+}
+
+/* show only total rows cleanly */
+.total-row {
+  padding: 10px 0 !important;
+  min-height: 30px !important;
+}
+
+/* checkout button must show clearly */
+.checkout-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100% !important;
+  height: 46px !important;
+
+  margin: 20px 0 12px !important;
+
+  border-radius: 999px !important;
+  border: 0 !important;
+
+  background: linear-gradient(180deg, #ff5a52, #ff4038) !important;
+  color: #fff !important;
+
+  font-size: 14px !important;
+  font-weight: 850 !important;
+
+  box-shadow: 0 16px 36px rgba(255, 64, 56, 0.28) !important;
+}
+
+/* make sidebar closer to reference */
+.checkout-sidebar {
+  gap: 14px !important;
+}
+
+/* force warning box visible under total card */
+.price-lock-banner {
+  display: block !important;
+  margin-top: 0 !important;
+}
+
+/* reduce left panel height */
+.cart-panel {
+  min-height: 255px !important;
+}
+
+/* make cart rows tighter and cleaner */
+.cart-line {
+  padding: 12px 0 16px !important;
+}
+
+/* reference-like product image */
+.cart-product-image {
+  width: 58px !important;
+  height: 58px !important;
+}
+
+/* reference-like title */
+.cart-product-title {
+  font-size: 13.5px !important;
+  font-weight: 820 !important;
+  line-height: 1.15 !important;
+}
+
+/* reference-like row columns */
+.cart-table-head,
+.cart-line {
+  grid-template-columns: minmax(0, 1fr) 106px 86px 116px 14px !important;
+}
