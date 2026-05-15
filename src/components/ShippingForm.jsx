@@ -12,68 +12,79 @@ const ShippingForm = ({ onNext }) => {
     zipCode: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onNext(formData);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (typeof onNext === 'function') {
+      onNext(formData);
+    }
   };
 
   return (
-    <div className="co-panel">
-      <div className="co-panel-title">📦 Shipping Address</div>
-      <form onSubmit={handleSubmit}>
-        <div className="co-row">
-          <div className="co-field">
-            <label>First Name *</label>
+    <section className="cart-panel">
+      <div className="cart-panel-title">
+        <h1>Shipping Address</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="shipping-form">
+        <div className="form-grid two">
+          <label>
+            <span>First Name *</span>
             <input name="firstName" value={formData.firstName} onChange={handleChange} required />
-          </div>
-          <div className="co-field">
-            <label>Last Name *</label>
+          </label>
+
+          <label>
+            <span>Last Name *</span>
             <input name="lastName" value={formData.lastName} onChange={handleChange} required />
-          </div>
+          </label>
         </div>
 
-        <div className="co-field">
-          <label>Email Address *</label>
+        <label>
+          <span>Email Address *</span>
           <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
+        </label>
 
-        <div className="co-field">
-          <label>Phone Number *</label>
+        <label>
+          <span>Phone Number *</span>
           <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-        </div>
+        </label>
 
-        <div className="co-field">
-          <label>Street Address *</label>
+        <label>
+          <span>Street Address *</span>
           <input name="address" value={formData.address} onChange={handleChange} required />
-        </div>
+        </label>
 
-        <div className="co-row">
-          <div className="co-field">
-            <label>City *</label>
+        <div className="form-grid two">
+          <label>
+            <span>City *</span>
             <input name="city" value={formData.city} onChange={handleChange} required />
-          </div>
-          <div className="co-field">
-            <label>State *</label>
+          </label>
+
+          <label>
+            <span>State *</span>
             <input name="state" value={formData.state} onChange={handleChange} required />
-          </div>
+          </label>
         </div>
 
-        <div className="co-row">
-          <div className="co-field">
-            <label>ZIP Code *</label>
-            <input name="zipCode" value={formData.zipCode} onChange={handleChange} required />
-          </div>
-        </div>
+        <label>
+          <span>ZIP Code *</span>
+          <input name="zipCode" value={formData.zipCode} onChange={handleChange} required />
+        </label>
 
-        <div className="co-panel-actions">
-          <button type="submit" className="co-primary-btn">Continue to Payment →</button>
-        </div>
+        <button type="submit" className="checkout-btn">
+          Continue to Payment →
+        </button>
       </form>
-    </div>
+    </section>
   );
 };
 
