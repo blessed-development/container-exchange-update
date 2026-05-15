@@ -1,5 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useCart } from '../../context/CartContext';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
 const CartContext = createContext(null);
 
 const STORAGE_KEY = 'containers_exchange_cart';
@@ -33,14 +40,13 @@ export const CartProvider = ({ children }) => {
   });
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
     } catch {
-      // localStorage is optional.
+      // localStorage may not be available.
     }
   }, [cart]);
 
@@ -48,18 +54,23 @@ export const CartProvider = ({ children }) => {
     const nextItem = normalizeItem(item);
 
     setCart((prev) => {
-      const existingIndex = prev.findIndex((current) =>
-        current.title === nextItem.title &&
-        current.sub === nextItem.sub &&
-        Number(current.unitPrice) === Number(nextItem.unitPrice)
+      const existingIndex = prev.findIndex(
+        (current) =>
+          current.title === nextItem.title &&
+          current.sub === nextItem.sub &&
+          Number(current.unitPrice) === Number(nextItem.unitPrice)
       );
 
       if (existingIndex >= 0) {
         const updated = [...prev];
+
         updated[existingIndex] = {
           ...updated[existingIndex],
-          qty: Math.max(1, Number(updated[existingIndex].qty || 1)) + nextItem.qty,
+          qty:
+            Math.max(1, Number(updated[existingIndex].qty || 1)) +
+            nextItem.qty,
         };
+
         return updated;
       }
 
@@ -71,14 +82,14 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = useCallback((id, delta) => {
     setCart((prev) =>
-      prev.map((item) => {
-        if (item.id !== id) return item;
-
-        return {
-          ...item,
-          qty: Math.max(1, Number(item.qty || 1) + delta),
-        };
-      })
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              qty: Math.max(1, Number(item.qty || 1) + delta),
+            }
+          : item
+      )
     );
   }, []);
 
@@ -86,7 +97,10 @@ export const CartProvider = ({ children }) => {
     setCart((prev) =>
       prev.map((item) =>
         item.id === id
-          ? { ...item, qty: Math.max(1, Number(qty || 1)) }
+          ? {
+              ...item,
+              qty: Math.max(1, Number(qty || 1)),
+            }
           : item
       )
     );
@@ -102,85 +116,93 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const getSubtotal = useCallback(() => {
-    return cart.reduce((sum, item) => sum + Number(item.unitPrice || 0) * Number(item.qty || 1), 0);
+    return cart.reduce(
+      (sum, item) =>
+        sum + Number(item.unitPrice || 0) * Number(item.qty || 1),
+      0
+    );
   }, [cart]);
 
   const getAfterDiscount = useCallback(() => {
     return Math.max(0, getSubtotal() - Number(discount || 0));
   }, [discount, getSubtotal]);
 
-  // Checkout reference shows sales tax as "Calculated at checkout",
-  // so grand total currently equals subtotal after discount.
   const getGrandTotal = useCallback(() => {
     return getAfterDiscount();
   }, [getAfterDiscount]);
 
-  const applyCoupon = useCallback((code) => {
-    const normalizedCode = String(code || '').trim().toUpperCase();
+  const applyCoupon = useCallback(
+    (code) => {
+      const normalizedCode = String(code || '').trim().toUpperCase();
 
-    const COUPONS = {
-      CONTAINER10: 0.1,
-      SAVE200: 200,
-      CE2024: 0.05,
-    };
+      const COUPONS = {
+        CONTAINER10: 0.1,
+        SAVE200: 200,
+        CE2024: 0.05,
+      };
 
-    const value = COUPONS[normalizedCode];
+      const value = COUPONS[normalizedCode];
 
-    if (value === undefined) {
-      return { success: false, message: 'Invalid coupon code.' };
-    }
+      if (value === undefined) {
+        return {
+          success: false,
+          message: 'Invalid coupon code.',
+        };
+      }
 
-    const subtotal = getSubtotal();
-    const newDiscount = value < 1 ? subtotal * value : value;
-    setDiscount(newDiscount);
+      const subtotal = getSubtotal();
+      const newDiscount = value < 1 ? subtotal * value : value;
 
-    return {
-      success: true,
-      message: `Coupon applied! You save $${newDiscount.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`,
-    };
-  }, [getSubtotal]);
+      setDiscount(newDiscount);
 
-  const value = useMemo(() => ({
-    cart,
-    addToCart,
-    updateQuantity,
-    setQuantity,
-    removeItem,
-    clearCart,
-    isDrawerOpen,
-    setIsDrawerOpen,
-    isCheckoutOpen,
-    setIsCheckoutOpen,
-    discount,
-    setDiscount,
-    getSubtotal,
-    getAfterDiscount,
-    getGrandTotal,
-    applyCoupon,
-  }), [
-    cart,
-    addToCart,
-    updateQuantity,
-    setQuantity,
-    removeItem,
-    clearCart,
-    isDrawerOpen,
-    isCheckoutOpen,
-    discount,
-    getSubtotal,
-    getAfterDiscount,
-    getGrandTotal,
-    applyCoupon,
-  ]);
-
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
+      return {
+        success: true,
+        message: `Coupon applied! You save $${newDiscount.toLocaleString(
+          'en-US',
+          {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }
+        )}`,
+      };
+    },
+    [getSubtotal]
   );
+
+  const value = useMemo(
+    () => ({
+      cart,
+      addToCart,
+      updateQuantity,
+      setQuantity,
+      removeItem,
+      clearCart,
+      isDrawerOpen,
+      setIsDrawerOpen,
+      discount,
+      setDiscount,
+      getSubtotal,
+      getAfterDiscount,
+      getGrandTotal,
+      applyCoupon,
+    }),
+    [
+      cart,
+      addToCart,
+      updateQuantity,
+      setQuantity,
+      removeItem,
+      clearCart,
+      isDrawerOpen,
+      discount,
+      getSubtotal,
+      getAfterDiscount,
+      getGrandTotal,
+      applyCoupon,
+    ]
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export const useCart = () => {
