@@ -606,3 +606,236 @@
     height: 56px;
   }
 }
+/* ===== FINAL APPLE-LEVEL POLISH ===== */
+
+/* tighter overall */
+.checkout-main{
+  width:min(1240px, calc(100% - 44px)) !important;
+  gap:26px !important;
+  padding-top:22px !important;
+}
+
+/* left panel */
+.cart-panel{
+  min-height:230px !important;
+  padding:20px 22px 18px !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.038),
+      rgba(255,255,255,.014)
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.045) !important;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.42) !important;
+}
+
+/* title */
+.cart-panel-title{
+  margin-bottom:22px !important;
+}
+
+.cart-panel-title h1{
+  font-size:18px !important;
+  letter-spacing:-.045em !important;
+}
+
+/* table headers */
+.cart-table-head{
+  padding-bottom:14px !important;
+
+  font-size:8.5px !important;
+
+  letter-spacing:.20em !important;
+
+  opacity:.72;
+}
+
+/* row sizing */
+.cart-line{
+  padding:10px 0 14px !important;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    96px
+    72px
+    92px
+    10px !important;
+}
+
+/* product */
+.cart-product{
+  grid-template-columns:54px minmax(0,1fr) !important;
+
+  gap:12px !important;
+}
+
+.cart-product-image{
+  width:54px !important;
+  height:54px !important;
+
+  border-radius:9px !important;
+}
+
+/* title better */
+.cart-product-title{
+  font-size:12.8px !important;
+
+  font-weight:780 !important;
+
+  line-height:1.1 !important;
+
+  margin-bottom:4px !important;
+}
+
+/* subtitle */
+.cart-product-subtitle{
+  font-size:11px !important;
+
+  line-height:1.2 !important;
+
+  color:rgba(163,172,185,.70) !important;
+}
+
+/* stars */
+.cart-rating{
+  margin-top:5px !important;
+
+  font-size:9px !important;
+}
+
+/* prices */
+.cart-unit-price,
+.cart-line-total{
+  font-size:13px !important;
+
+  font-weight:820 !important;
+}
+
+/* qty */
+.cart-qty{
+  height:26px !important;
+
+  padding:0 7px !important;
+
+  gap:8px !important;
+
+  border-radius:999px !important;
+}
+
+.cart-qty button{
+  width:14px !important;
+  height:14px !important;
+
+  font-size:12px !important;
+}
+
+.cart-qty strong{
+  font-size:11px !important;
+}
+
+/* return button */
+.return-store-btn{
+  margin-top:16px !important;
+
+  height:36px !important;
+
+  padding:0 16px !important;
+
+  font-size:12px !important;
+}
+
+/* sidebar */
+.checkout-sidebar{
+  gap:12px !important;
+}
+
+/* total card */
+.total-card{
+  padding:22px 20px 18px !important;
+
+  border-radius:22px !important;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(255,40,40,.08),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.015)
+    ) !important;
+}
+
+/* total heading */
+.total-card h2{
+  font-size:17px !important;
+
+  margin-bottom:22px !important;
+}
+
+/* rows */
+.total-row{
+  min-height:28px !important;
+
+  font-size:13px !important;
+}
+
+/* total */
+.grand-total{
+  margin-top:18px !important;
+
+  padding-top:18px !important;
+}
+
+.grand-total strong{
+  font-size:22px !important;
+
+  letter-spacing:-.05em !important;
+}
+
+/* checkout button */
+.checkout-btn{
+  height:44px !important;
+
+  margin:18px 0 10px !important;
+
+  font-size:13px !important;
+
+  border-radius:999px !important;
+
+  box-shadow:
+    0 12px 30px rgba(255,64,56,.24),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+/* warning card */
+.price-lock-banner{
+  padding:16px !important;
+
+  border-radius:16px !important;
+}
+
+.price-lock-banner h3{
+  font-size:13px !important;
+}
+
+.price-lock-banner p{
+  font-size:12.5px !important;
+}
+
+/* support section */
+.checkout-help{
+  font-size:12px !important;
+
+  line-height:1.5 !important;
+}
+
+.checkout-phone{
+  font-size:15px !important;
+}
