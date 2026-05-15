@@ -1,124 +1,196 @@
-// src/context/CartContext.jsx
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-const CartContext = createContext();
+const CartContext = createContext(null);
 
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
+const STORAGE_KEY = 'containers_exchange_cart';
+
+const normalizeItem = (item) => {
+  const unitPrice = Number(item.unitPrice ?? item.price ?? item.basePrice ?? 0);
+  const qty = Math.max(1, Number(item.qty ?? item.quantity ?? 1));
+
+  return {
+    id: item.id ?? `${Date.now()}-${Math.random()}`,
+    title: item.title ?? item.name ?? 'Shipping Container',
+    sub: item.sub ?? item.subtitle ?? item.meta ?? '',
+    image: item.image ?? item.image_url ?? item.imageUrl ?? item.photo ?? '',
+    unitPrice,
+    qty,
+    url: item.url ?? item.href ?? '#',
+    grade: item.grade ?? '',
+    size: item.size ?? '',
+    condition: item.condition ?? '',
+  };
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [discount, setDiscount] = useState(0);
 
-  // Add item to cart
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    } catch {
+      // localStorage is optional.
+    }
+  }, [cart]);
+
   const addToCart = useCallback((item) => {
-    setCart(prev => {
-      // Check if item already exists (by title + sub + unitPrice)
-      const existingIndex = prev.findIndex(i => 
-        i.title === item.title && 
-        i.sub === item.sub && 
-        i.unitPrice === item.unitPrice
+    const nextItem = normalizeItem(item);
+
+    setCart((prev) => {
+      const existingIndex = prev.findIndex((current) =>
+        current.title === nextItem.title &&
+        current.sub === nextItem.sub &&
+        Number(current.unitPrice) === Number(nextItem.unitPrice)
       );
-      
-      if (existingIndex !== -1) {
-        // Update existing item quantity
+
+      if (existingIndex >= 0) {
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
-          qty: updated[existingIndex].qty + item.qty
+          qty: Math.max(1, Number(updated[existingIndex].qty || 1)) + nextItem.qty,
         };
         return updated;
       }
-      
-      // Add new item with unique ID
-      return [...prev, { ...item, id: Date.now() + Math.random() }];
+
+      return [...prev, nextItem];
     });
+
     setIsDrawerOpen(true);
   }, []);
 
-  // Update quantity
   const updateQuantity = useCallback((id, delta) => {
-    setCart(prev => prev.map(item => {
-      if (item.id === id) {
-        const newQty = Math.max(1, item.qty + delta);
-        return { ...item, qty: newQty };
-      }
-      return item;
-    }));
+    setCart((prev) =>
+      prev.map((item) => {
+        if (item.id !== id) return item;
+
+        return {
+          ...item,
+          qty: Math.max(1, Number(item.qty || 1) + delta),
+        };
+      })
+    );
   }, []);
 
-  // Remove item
+  const setQuantity = useCallback((id, qty) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, qty: Math.max(1, Number(qty || 1)) }
+          : item
+      )
+    );
+  }, []);
+
   const removeItem = useCallback((id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   }, []);
 
-  // Clear entire cart
   const clearCart = useCallback(() => {
     setCart([]);
     setDiscount(0);
   }, []);
 
-  // Get subtotal
   const getSubtotal = useCallback(() => {
-    return cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+    return cart.reduce((sum, item) => sum + Number(item.unitPrice || 0) * Number(item.qty || 1), 0);
   }, [cart]);
 
-  // Get total after discount
   const getAfterDiscount = useCallback(() => {
-    const subtotal = getSubtotal();
-    return Math.max(0, subtotal - discount);
-  }, [getSubtotal, discount]);
+    return Math.max(0, getSubtotal() - Number(discount || 0));
+  }, [discount, getSubtotal]);
 
-  // Get grand total with tax (9%)
+  // Checkout reference shows sales tax as "Calculated at checkout",
+  // so grand total currently equals subtotal after discount.
   const getGrandTotal = useCallback(() => {
-    const afterDiscount = getAfterDiscount();
-    return afterDiscount + (afterDiscount * 0.09);
+    return getAfterDiscount();
   }, [getAfterDiscount]);
 
-  // Apply coupon
   const applyCoupon = useCallback((code) => {
+    const normalizedCode = String(code || '').trim().toUpperCase();
+
     const COUPONS = {
-      'CONTAINER10': 0.10,
-      'SAVE200': 200,
-      'CE2024': 0.05
+      CONTAINER10: 0.1,
+      SAVE200: 200,
+      CE2024: 0.05,
     };
-    
-    const value = COUPONS[code.toUpperCase()];
-    if (value !== undefined) {
-      const subtotal = getSubtotal();
-      const newDiscount = value < 1 ? subtotal * value : value;
-      setDiscount(newDiscount);
-      return { success: true, message: `Coupon applied! You save $${newDiscount.toFixed(2)}` };
+
+    const value = COUPONS[normalizedCode];
+
+    if (value === undefined) {
+      return { success: false, message: 'Invalid coupon code.' };
     }
-    return { success: false, message: 'Invalid coupon code.' };
+
+    const subtotal = getSubtotal();
+    const newDiscount = value < 1 ? subtotal * value : value;
+    setDiscount(newDiscount);
+
+    return {
+      success: true,
+      message: `Coupon applied! You save $${newDiscount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`,
+    };
   }, [getSubtotal]);
 
+  const value = useMemo(() => ({
+    cart,
+    addToCart,
+    updateQuantity,
+    setQuantity,
+    removeItem,
+    clearCart,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isCheckoutOpen,
+    setIsCheckoutOpen,
+    discount,
+    setDiscount,
+    getSubtotal,
+    getAfterDiscount,
+    getGrandTotal,
+    applyCoupon,
+  }), [
+    cart,
+    addToCart,
+    updateQuantity,
+    setQuantity,
+    removeItem,
+    clearCart,
+    isDrawerOpen,
+    isCheckoutOpen,
+    discount,
+    getSubtotal,
+    getAfterDiscount,
+    getGrandTotal,
+    applyCoupon,
+  ]);
+
   return (
-    <CartContext.Provider value={{
-      cart,
-      addToCart,
-      updateQuantity,
-      removeItem,
-      clearCart,
-      isDrawerOpen,
-      setIsDrawerOpen,
-      isCheckoutOpen,
-      setIsCheckoutOpen,
-      discount,
-      setDiscount,
-      getSubtotal,
-      getAfterDiscount,
-      getGrandTotal,
-      applyCoupon,
-    }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
 };
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+
+  return context;
+};
+
+export default CartContext;
