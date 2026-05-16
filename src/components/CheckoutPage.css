@@ -936,3 +936,11 @@
     flex-direction: column;
   }
 }
+/* REMOVE FAKE DUPLICATE TITLE */
+.co-summary-box::before,
+.co-summary-box::after,
+.co-summary-hd::before,
+.co-summary-hd::after {
+  content: none !important;
+  display: none !important;
+}
