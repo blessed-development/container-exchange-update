@@ -1290,3 +1290,66 @@
 .checkout-details-sidebar .price-lock-banner{
   margin-top:12px !important;
 }
+/* SHIPPING PAGE PREMIUM REFINEMENT */
+
+.checkout-details-layout{
+  grid-template-columns:minmax(620px,1fr) 420px !important;
+  gap:24px !important;
+}
+
+.checkout-details-panel{
+  padding:24px 28px !important;
+}
+
+.details-form{
+  gap:10px !important;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+  min-height:38px !important;
+  padding:8px 12px !important;
+  font-size:12.5px !important;
+  border-radius:10px !important;
+}
+
+.form-group label{
+  font-size:9.5px !important;
+}
+
+.details-summary-card{
+  padding:22px !important;
+}
+
+.os-head,
+.os-item{
+  grid-template-columns:minmax(0,1fr) 34px 88px !important;
+  gap:10px !important;
+}
+
+.os-item-wrap{
+  grid-template-columns:64px minmax(0,1fr) !important;
+  gap:10px !important;
+}
+
+.os-prod-title{
+  font-size:12px !important;
+  line-height:1.25 !important;
+}
+
+.os-prod-sub{
+  font-size:10.5px !important;
+}
+
+.grand-total strong{
+  font-size:28px !important;
+}
+
+.os-disclaimer{
+  display:none !important;
+}
+
+.checkout-details-sidebar .price-lock-banner{
+  margin-top:12px !important;
+}
