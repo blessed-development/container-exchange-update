@@ -1291,3 +1291,45 @@
   text-overflow:ellipsis !important;
   font-size:13px !important;
 }
+.os-head,
+.os-item{
+  grid-template-columns:
+    minmax(0,1fr)
+    26px
+    92px !important;
+},
+.form-group input,
+.form-group select,
+.form-group textarea{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.045),
+      rgba(255,255,255,.022)
+    ) !important;
+
+  border:1px solid rgba(255,255,255,.055) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03) !important;
+}
+.os-disclaimer{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(170,45,45,.88),
+      rgba(115,25,25,.92)
+    ) !important;
+}
+.grand-total span{
+  font-size:14px !important;
+  font-weight:700 !important;
+}
+
+.grand-total strong{
+  font-size:30px !important;
+}
+.checkout-details-panel,
+.details-summary-card{
+  backdrop-filter:blur(18px);
+}
