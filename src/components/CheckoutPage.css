@@ -1253,3 +1253,30 @@
   font-size:12px !important;
   line-height:1.2 !important;
 }
+/* WIDER PREMIUM SUMMARY COLUMN */
+
+.checkout-details-layout{
+  grid-template-columns:
+    minmax(0,1fr)
+    460px !important;
+}
+
+.checkout-details-sidebar{
+  width:460px !important;
+}
+
+.details-summary-card{
+  padding:24px !important;
+}
+
+.os-head,
+.os-item{
+  grid-template-columns:
+    minmax(250px,1fr)
+    36px
+    96px !important;
+}
+
+.os-prod-title{
+  font-size:12.5px !important;
+}
