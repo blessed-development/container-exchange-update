@@ -1154,3 +1154,76 @@
   margin-top:8px !important;
   font-size:12px !important;
 }
+/* =========================
+   RIGHT COLUMN FONT + BALANCE FIX
+========================= */
+
+.checkout-sidebar{
+  width:380px !important;
+}
+
+.total-card{
+  padding:24px 22px !important;
+  border-radius:22px !important;
+}
+
+.total-card h2{
+  font-size:19px !important;
+  font-weight:850 !important;
+  margin-bottom:20px !important;
+}
+
+.total-row{
+  font-size:13.5px !important;
+  padding:8px 0 !important;
+}
+
+.tax-row em{
+  font-size:13px !important;
+}
+
+.grand-total{
+  margin-top:14px !important;
+  padding-top:20px !important;
+}
+
+.grand-total strong{
+  font-size:27px !important;
+  font-weight:900 !important;
+}
+
+.checkout-btn{
+  height:48px !important;
+  border-radius:16px !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+  margin:20px 0 12px !important;
+}
+
+.shipping-note{
+  font-size:12.5px !important;
+}
+
+.price-lock-banner{
+  padding:18px !important;
+  border-radius:16px !important;
+}
+
+.price-lock-banner h3{
+  font-size:14px !important;
+  font-weight:850 !important;
+}
+
+.price-lock-banner p{
+  font-size:12.5px !important;
+  line-height:1.55 !important;
+}
+
+.checkout-help{
+  font-size:12.5px !important;
+  line-height:1.6 !important;
+}
+
+.checkout-phone{
+  font-size:13px !important;
+}
