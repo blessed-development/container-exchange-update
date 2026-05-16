@@ -850,3 +850,37 @@
   text-overflow:ellipsis !important;
   line-height:1.2 !important;
 }
+/* =========================
+   COLUMN ALIGNMENT FIX
+========================= */
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:
+    minmax(420px,1fr)
+    110px
+    90px
+    120px
+    18px !important;
+}
+
+.cart-table-head{
+  align-items:center !important;
+}
+
+.cart-table-head span:nth-child(2),
+.cart-unit-price{
+  justify-self:center !important;
+  text-align:center !important;
+}
+
+.cart-table-head span:nth-child(3),
+.cart-qty{
+  justify-self:center !important;
+}
+
+.cart-table-head span:nth-child(4),
+.cart-line-total{
+  justify-self:end !important;
+  text-align:right !important;
+}
