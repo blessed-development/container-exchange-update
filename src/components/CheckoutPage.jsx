@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Phone, ShieldCheck, ShoppingCart, Star } from 'lucide-react';
+import { Lock, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
@@ -18,32 +18,6 @@ const formatMoney = (value) => {
 
 const getItemImage = (item) => {
   return item.image || item.image_url || item.imageUrl || item.photo || fallbackImage;
-};
-
-const getRatingValue = (item) => {
-  return Number(item.rating || item.stars || 4.9);
-};
-
-const getReviewCount = (item) => {
-  return Number(item.reviewCount || item.review_count || item.ratingCount || 23);
-};
-
-const RatingStars = ({ rating = 4.9, count = 23 }) => {
-  return (
-    <div className="cct-stars">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star
-          key={star}
-          size={13}
-          fill={star <= Math.round(rating) ? '#f59e0b' : 'none'}
-          stroke="#f59e0b"
-          strokeWidth={1.6}
-        />
-      ))}
-
-      <span className="cct-rating-count">({count})</span>
-    </div>
-  );
 };
 
 const CheckoutPage = () => {
@@ -89,11 +63,8 @@ const CheckoutPage = () => {
         <section className="empty-cart">
           <div className="empty-cart-card">
             <ShoppingCart size={34} />
-
             <h1>Your cart is empty</h1>
-
             <p>Add a container to your cart before checkout.</p>
-
             <button type="button" onClick={handleBackToStore}>
               Continue Shopping
             </button>
@@ -120,152 +91,129 @@ const CheckoutPage = () => {
         </div>
       </header>
 
-      <section className="co-layout co-step-cart">
-        <div className="co-main">
-          <section className="co-panel">
-            <div className="co-panel-title">
-              <ShoppingCart size={18} />
-              <span>My Cart</span>
-            </div>
+      <section className="checkout-main">
+        <section className="cart-panel">
+          <div className="cart-panel-title">
+            <ShoppingCart size={21} />
+            <h1>My Cart</h1>
+          </div>
 
-            <div className="cct-wrap">
-              <div className="cct-head">
-                <span className="cct-h-product">Item</span>
-                <span className="cct-h-price">Unit Price</span>
-                <span className="cct-h-qty">QTY</span>
-                <span className="cct-h-total">Subtotal</span>
-              </div>
+          <div className="cart-table-head">
+            <span>Item</span>
+            <span>Unit Price</span>
+            <span>Qty</span>
+            <span>Subtotal</span>
+          </div>
 
-              <div className="co-cart-rows">
-                {cart.map((item) => {
-                  const qty = Number(item.qty || 1);
-                  const unitPrice = Number(item.unitPrice || 0);
-                  const lineTotal = unitPrice * qty;
-                  const subtitle =
-                    item.sub ||
-                    item.subtitle ||
-                    item.description ||
-                    item.grade ||
-                    'Shipping container';
+          <div className="cart-items">
+            {cart.map((item) => {
+              const lineTotal = Number(item.unitPrice || 0) * Number(item.qty || 1);
 
-                  return (
-                    <article className="cct-row" key={item.id}>
-                      <div className="cct-prod">
-                        <img
-                          src={getItemImage(item)}
-                          alt={item.title || 'Shipping container'}
-                          className="cct-img"
-                        />
+              return (
+                <article className="cart-line" key={item.id}>
+                  <div className="cart-product">
+                    <img
+                      src={getItemImage(item)}
+                      alt={item.title || 'Shipping container'}
+                      className="cart-product-image"
+                    />
 
-                        <div className="cct-prod-info">
-                          {item.url && item.url !== '#' ? (
-                            <Link to={item.url} className="cct-title" title={item.title}>
-                              {item.title}
-                            </Link>
-                          ) : (
-                            <div className="cct-title" title={item.title}>
-                              {item.title}
-                            </div>
-                          )}
+                    <div className="cart-product-copy">
+                      {item.url && item.url !== '#' ? (
+                        <Link to={item.url} className="cart-product-title">
+                          {item.title}
+                        </Link>
+                      ) : (
+                        <h2 className="cart-product-title">{item.title}</h2>
+                      )}
 
-                          <div className="cct-sub" title={subtitle}>
-                            {subtitle}
-                          </div>
+                      {item.sub && (
+                        <p className="cart-product-subtitle">{item.sub}</p>
+                      )}
 
-                          <RatingStars
-                            rating={getRatingValue(item)}
-                            count={getReviewCount(item)}
-                          />
+                      {item.rating && (
+                        <div className="cart-rating">
+                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
                         </div>
-                      </div>
+                      )}
+                    </div>
+                  </div>
 
-                      <div className="cct-price">{formatMoney(unitPrice)}</div>
+                  <div className="cart-unit-price">{formatMoney(item.unitPrice)}</div>
 
-                      <div className="cct-qty">
-                        <button
-                          type="button"
-                          className="cct-qty-btn"
-                          onClick={() => updateQuantity(item.id, -1)}
-                          aria-label="Decrease quantity"
-                        >
-                          −
-                        </button>
+                  <div className="cart-qty">
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, -1)}
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
 
-                        <span className="cct-qty-val">{qty}</span>
+                    <strong>{item.qty}</strong>
 
-                        <button
-                          type="button"
-                          className="cct-qty-btn"
-                          onClick={() => updateQuantity(item.id, 1)}
-                          aria-label="Increase quantity"
-                        >
-                          +
-                        </button>
-                      </div>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, 1)}
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
 
-                      <div className="cct-subtotal-cell">
-                        <span className="cct-total">{formatMoney(lineTotal)}</span>
-                      </div>
+                  <div className="cart-line-total">{formatMoney(lineTotal)}</div>
 
-                      <button
-                        type="button"
-                        className="cct-x-inline"
-                        onClick={() => removeItem(item.id)}
-                        aria-label="Remove item"
-                        title="Remove"
-                      >
-                        ×
-                      </button>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
+                  <button
+                    type="button"
+                    className="cart-remove"
+                    onClick={() => removeItem(item.id)}
+                    aria-label="Remove item"
+                  >
+                    ×
+                  </button>
+                </article>
+              );
+            })}
+          </div>
 
-            <div className="co-panel-actions">
-              <button type="button" className="co-ghost-btn" onClick={handleBackToStore}>
-                ← Return to Store
-              </button>
-            </div>
-          </section>
-        </div>
+          <button type="button" className="return-store-btn" onClick={handleBackToStore}>
+            ← Return to Store
+          </button>
+        </section>
 
-        <aside className="co-sidebar">
-          <section className="co-summary-box">
-            <div className="co-summary-hd">TEST TOTAL</div>
-            <div className="co-sum-divider" />
+        <aside className="checkout-sidebar">
+          <section className="total-card">
+            <h2>Your Total</h2>
 
-            <div className="co-sum-row">
+            <div className="total-row">
               <span>Subtotal</span>
-              <span id="sc-subtotal">{formatMoney(subtotal)}</span>
+              <strong>{formatMoney(subtotal)}</strong>
             </div>
 
-            <div className="co-sum-row cart-tax-note-row">
+            <div className="total-row tax-row">
               <span>Sales tax</span>
-              <span>Calculated at checkout</span>
+              <em>Calculated at checkout</em>
             </div>
 
-            <div className="co-sum-divider" />
-
-            <div className="co-sum-row co-sum-total-row cart-total-row">
+            <div className="total-row grand-total">
               <span>Total</span>
-              <span id="sc-total">{formatMoney(total)}</span>
+              <strong>{formatMoney(total)}</strong>
             </div>
 
-            <button type="button" className="co-place-btn" onClick={handleProceedToCheckout}>
+            <button type="button" className="checkout-btn" onClick={handleProceedToCheckout}>
               Proceed to Checkout
             </button>
 
             <p className="shipping-note">
-              Shipping Internationally? <Link to="/delivery">Learn more</Link>
+              Shipping Internationally? <a href="/delivery">Learn more</a>
             </p>
           </section>
 
-          <section className="lock-banner">
-            <div className="lock-title">
+          <section className="price-lock-banner">
+            <h3>
               <Lock size={14} />
-              <span>Lock In Your Price - Don&apos;t Wait!</span>
-            </div>
+              Lock In Your Price - Don&apos;t Wait!
+            </h3>
 
             <p>
               Container prices fluctuate — <strong>Order Now</strong> to secure this low price.
@@ -277,10 +225,10 @@ const CheckoutPage = () => {
             </p>
           </section>
 
-          <section className="want-faster">
+          <section className="checkout-help">
             <p>
-              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don&apos;t
-              forget to ask about specials in your area to see if you can save even more.
+              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don&apos;t forget
+              to ask about specials in your area to see if you can save even more.
             </p>
 
             <p className="checkout-phone">
