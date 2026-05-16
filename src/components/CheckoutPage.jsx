@@ -232,8 +232,7 @@ const CheckoutPage = () => {
 
         <aside className="co-sidebar">
           <section className="co-summary-box">
-            <div className="co-summary-hd">Your Total</div>
-
+            <div className="co-summary-hd">TEST TOTAL</div>
             <div className="co-sum-divider" />
 
             <div className="co-sum-row">
