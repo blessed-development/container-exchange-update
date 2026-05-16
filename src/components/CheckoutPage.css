@@ -1315,3 +1315,39 @@
     height: 46px;
   }
 }
+/* ===== EMERGENCY DUPLICATE CLEANUP ===== */
+
+/* Hide any old duplicated total title inside the new summary card */
+.co-summary-box .co-summary-hd + .co-sum-divider + .co-sum-row::before {
+  content: none !important;
+}
+
+/* If old total-card/checkout-sidebar is still rendered somewhere, hide it on new checkout */
+.co-layout .checkout-sidebar,
+.co-layout .total-card,
+.co-layout .price-lock-banner,
+.co-layout .checkout-help {
+  display: none !important;
+}
+
+/* Keep only the new sidebar system visible */
+.co-layout .co-sidebar,
+.co-layout .co-summary-box,
+.co-layout .lock-banner,
+.co-layout .want-faster {
+  display: flex !important;
+}
+
+.co-layout .co-summary-box {
+  display: block !important;
+}
+
+/* Hide duplicated shipping note if another one is being inherited */
+.co-summary-box .shipping-note + .shipping-note {
+  display: none !important;
+}
+
+/* Remove extra top spacing that makes it look like a second heading */
+.co-summary-box .co-sum-divider:first-of-type {
+  margin-top: 14px !important;
+}
