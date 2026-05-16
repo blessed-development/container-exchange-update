@@ -959,3 +959,14 @@
   justify-self:end !important;
   text-align:right !important;
 }
+/* REDUCE QTY ↔ SUBTOTAL GAP */
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:
+    minmax(440px,1fr)
+    92px
+    74px
+    88px
+    16px !important;
+}
