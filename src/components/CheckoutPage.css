@@ -918,3 +918,44 @@
   justify-self:end !important;
   text-align:right !important;
 }
+/* =========================
+   PREMIUM TABLE BALANCE
+========================= */
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:
+    minmax(440px,1fr)
+    92px
+    74px
+    102px
+    16px !important;
+
+  gap:10px !important;
+}
+
+.cart-panel{
+  padding-left:28px !important;
+  padding-right:28px !important;
+}
+
+.cart-product{
+  padding-right:14px !important;
+}
+
+.cart-table-head span:nth-child(2),
+.cart-unit-price{
+  justify-self:center !important;
+  text-align:center !important;
+}
+
+.cart-table-head span:nth-child(3),
+.cart-qty{
+  justify-self:center !important;
+}
+
+.cart-table-head span:nth-child(4),
+.cart-line-total{
+  justify-self:end !important;
+  text-align:right !important;
+}
