@@ -1227,3 +1227,29 @@
 .checkout-phone{
   font-size:13px !important;
 }
+/* ORDER SUMMARY TITLE FIX */
+
+.os-head,
+.os-item{
+  grid-template-columns:
+    minmax(220px,1fr)
+    34px
+    92px !important;
+}
+
+.os-item-wrap{
+  grid-template-columns:64px minmax(0,1fr) !important;
+  gap:12px !important;
+}
+
+.os-prod-title{
+  display:block !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+
+  max-width:100% !important;
+
+  font-size:12px !important;
+  line-height:1.2 !important;
+}
