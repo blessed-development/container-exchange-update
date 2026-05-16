@@ -939,3 +939,198 @@
 .checkout-help p {
   margin-bottom: 12px !important;
 }
+/* ===== MY CART PAGE — EXACT REFERENCE MATCH POLISH ===== */
+
+.checkout-main:not(.checkout-details-layout) {
+  width: min(1180px, calc(100% - 56px)) !important;
+  grid-template-columns: minmax(0, 1fr) 360px !important;
+  gap: 30px !important;
+  padding-top: 28px !important;
+  align-items: start !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-panel {
+  min-height: 0 !important;
+  height: fit-content !important;
+  padding: 0 !important;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.36) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-panel-title {
+  width: 100% !important;
+  min-height: 62px !important;
+  padding: 18px 24px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.065) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-panel-title h1 {
+  font-size: 20px !important;
+  font-weight: 760 !important;
+  letter-spacing: -.04em !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-table-head {
+  min-height: 42px !important;
+  padding: 11px 24px !important;
+  font-size: 9px !important;
+  font-weight: 750 !important;
+  letter-spacing: .15em !important;
+  color: rgba(203,213,225,.62) !important;
+  border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-line {
+  min-height: 92px !important;
+  padding: 14px 24px !important;
+  border-bottom: 1px solid rgba(255,255,255,.045) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-product {
+  grid-template-columns: 62px minmax(0,1fr) !important;
+  gap: 12px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-product-image {
+  width: 62px !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-product-title {
+  font-size: 13px !important;
+  line-height: 1.22 !important;
+  font-weight: 650 !important;
+  letter-spacing: -.02em !important;
+  margin-bottom: 3px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-product-subtitle {
+  font-size: 10.8px !important;
+  line-height: 1.3 !important;
+  color: rgba(163,172,185,.76) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-rating {
+  margin-top: 4px !important;
+  font-size: 10px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-unit-price,
+.checkout-main:not(.checkout-details-layout) .cart-line-total {
+  font-size: 12.5px !important;
+  font-weight: 650 !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-qty {
+  width: 82px !important;
+  height: 28px !important;
+  padding: 0 4px !important;
+  gap: 0 !important;
+  justify-content: center !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-qty button {
+  width: 21px !important;
+  height: 21px !important;
+  font-size: 13px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .cart-qty strong {
+  min-width: 26px !important;
+  font-size: 12.5px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .return-store-btn {
+  margin: 18px 24px 24px !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+  border-radius: 999px !important;
+  font-size: 13px !important;
+  font-weight: 650 !important;
+}
+
+/* RIGHT TOTAL CARD */
+
+.checkout-main:not(.checkout-details-layout) .checkout-sidebar {
+  gap: 14px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .total-card {
+  height: fit-content !important;
+  padding: 20px !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.014)) !important;
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.36) !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .total-card h2 {
+  font-size: 17px !important;
+  font-weight: 720 !important;
+  letter-spacing: -.04em !important;
+  margin-bottom: 15px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .total-row {
+  min-height: 26px !important;
+  padding: 5px 0 !important;
+  font-size: 12.5px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .tax-row em {
+  font-size: 12.5px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .grand-total {
+  margin-top: 12px !important;
+  padding-top: 15px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .grand-total strong {
+  font-size: 24px !important;
+  font-weight: 820 !important;
+  letter-spacing: -.045em !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .checkout-btn {
+  height: 46px !important;
+  margin: 16px 0 10px !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 720 !important;
+}
+
+/* WARNING / HELP AREA */
+
+.checkout-main:not(.checkout-details-layout) .price-lock-banner {
+  padding: 16px !important;
+  border-radius: 16px !important;
+  font-size: 12.5px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .price-lock-banner h3 {
+  font-size: 13.5px !important;
+  margin-bottom: 8px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .price-lock-banner p {
+  font-size: 12.5px !important;
+  line-height: 1.55 !important;
+  margin-bottom: 6px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .checkout-help {
+  padding: 8px 2px !important;
+  font-size: 12px !important;
+}
+
+.checkout-main:not(.checkout-details-layout) .checkout-help p {
+  margin-bottom: 12px !important;
+}
