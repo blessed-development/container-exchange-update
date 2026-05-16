@@ -40,6 +40,7 @@ const RatingStars = ({ rating = 4.9, count = 23 }) => {
           strokeWidth={1.6}
         />
       ))}
+
       <span className="cct-rating-count">({count})</span>
     </div>
   );
@@ -88,8 +89,11 @@ const CheckoutPage = () => {
         <section className="empty-cart">
           <div className="empty-cart-card">
             <ShoppingCart size={34} />
+
             <h1>Your cart is empty</h1>
+
             <p>Add a container to your cart before checkout.</p>
+
             <button type="button" onClick={handleBackToStore}>
               Continue Shopping
             </button>
@@ -121,7 +125,7 @@ const CheckoutPage = () => {
           <section className="co-panel">
             <div className="co-panel-title">
               <ShoppingCart size={18} />
-              My Cart
+              <span>My Cart</span>
             </div>
 
             <div className="cct-wrap">
@@ -137,6 +141,12 @@ const CheckoutPage = () => {
                   const qty = Number(item.qty || 1);
                   const unitPrice = Number(item.unitPrice || 0);
                   const lineTotal = unitPrice * qty;
+                  const subtitle =
+                    item.sub ||
+                    item.subtitle ||
+                    item.description ||
+                    item.grade ||
+                    'Shipping container';
 
                   return (
                     <article className="cct-row" key={item.id}>
@@ -149,11 +159,7 @@ const CheckoutPage = () => {
 
                         <div className="cct-prod-info">
                           {item.url && item.url !== '#' ? (
-                            <Link
-                              to={item.url}
-                              className="cct-title"
-                              title={item.title}
-                            >
+                            <Link to={item.url} className="cct-title" title={item.title}>
                               {item.title}
                             </Link>
                           ) : (
@@ -162,8 +168,8 @@ const CheckoutPage = () => {
                             </div>
                           )}
 
-                          <div className="cct-sub" title={item.sub || item.subtitle || item.grade || ''}>
-                            {item.sub || item.subtitle || item.grade || 'Shipping container'}
+                          <div className="cct-sub" title={subtitle}>
+                            {subtitle}
                           </div>
 
                           <RatingStars
@@ -259,7 +265,7 @@ const CheckoutPage = () => {
           <section className="lock-banner">
             <div className="lock-title">
               <Lock size={14} />
-              Lock In Your Price - Don&apos;t Wait!
+              <span>Lock In Your Price - Don&apos;t Wait!</span>
             </div>
 
             <p>
