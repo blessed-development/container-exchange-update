@@ -825,3 +825,28 @@
   padding:0 !important;
   font-size:12px !important;
 }
+/* PRODUCT TITLE ONE-LINE FIX */
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:minmax(390px,1fr) 120px 90px 120px 18px !important;
+}
+
+.cart-product{
+  grid-template-columns:68px minmax(0,1fr) !important;
+  gap:14px !important;
+}
+
+.cart-product-copy{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+.cart-product-title{
+  display:block !important;
+  width:100% !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  line-height:1.2 !important;
+}
