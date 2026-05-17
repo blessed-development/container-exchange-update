@@ -1454,9 +1454,3 @@
   width:100%;
   margin-top:14px;
 }
-
-/* REMOVE OLD DELIVERY BOX */
-
-.price-lock-banner{
-  display:none !important;
-}
