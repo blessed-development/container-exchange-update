@@ -1,79 +1,85 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, CreditCard, Phone, Lock } from 'lucide-react';
+import { Lock, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
 
-const formatMoney = (value) =>
-  `$${Number(value || 0).toLocaleString('en-US', {
+const formatMoney = (value) => {
+  const amount = Number(value || 0);
+
+  return `$${amount.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-
-const getItemImage = (item) =>
-  item.image || item.image_url || item.imageUrl || item.photo || fallbackImage;
-
-const emptyAddress = {
-  firstName: '',
-  lastName: '',
-  company: '',
-  country: 'United States',
-  address: '',
-  apartment: '',
-  city: '',
-  state: '',
-  zip: '',
-  phone: '',
-  email: '',
 };
 
-const CheckoutDetails = () => {
+const getItemImage = (item) => {
+  return item.image || item.image_url || item.imageUrl || item.photo || fallbackImage;
+};
+
+const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { cart, getSubtotal, getGrandTotal } = useCart();
+
+  const {
+    cart,
+    updateQuantity,
+    removeItem,
+    getSubtotal,
+    getGrandTotal,
+  } = useCart();
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
 
-  const [shipping, setShipping] = useState(emptyAddress);
-  const [billing, setBilling] = useState(emptyAddress);
-  const [sameBilling, setSameBilling] = useState(true);
-  const [notes, setNotes] = useState('');
-
-  useEffect(() => {
-    if (!cart.length) navigate('/checkout');
-  }, [cart.length, navigate]);
-
-  const updateShipping = (e) => {
-    const { name, value } = e.target;
-    setShipping((prev) => ({ ...prev, [name]: value }));
+  const handleBackToStore = () => {
+    navigate('/inventory');
   };
 
-  const updateBilling = (e) => {
-    const { name, value } = e.target;
-    setBilling((prev) => ({ ...prev, [name]: value }));
+  const handleProceedToCheckout = () => {
+    navigate('/checkout/details');
   };
 
-  const shipTo = useMemo(() => {
-    const parts = [shipping.city, shipping.state, shipping.zip].filter(Boolean);
-    return parts.length ? parts.join(', ') : 'Enter delivery address';
-  }, [shipping.city, shipping.state, shipping.zip]);
+  if (!cart.length) {
+    return (
+      <main className="checkout-container">
+        <header className="checkout-header">
+          <button type="button" className="back-link" onClick={handleBackToStore}>
+            ← Back to Store
+          </button>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate('/checkout/success');
-  };
+          <Link to="/" className="checkout-logo">
+            Containers<span>Exchange</span>
+          </Link>
 
-  if (!cart.length) return null;
+          <div className="secure-badge">
+            <ShieldCheck size={14} />
+            Secure Checkout
+          </div>
+        </header>
+
+        <section className="empty-cart">
+          <div className="empty-cart-card">
+            <ShoppingCart size={34} />
+            <h1>Your cart is empty</h1>
+            <p>Add a container to your cart before checkout.</p>
+            <button type="button" onClick={handleBackToStore}>
+              Continue Shopping
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="checkout-container">
       <header className="checkout-header">
-        <Link to="/checkout" className="back-link">
-          ← Back to Cart
-        </Link>
+        <button type="button" className="back-link" onClick={handleBackToStore}>
+          ← Back to Store
+        </button>
 
         <Link to="/" className="checkout-logo">
           Containers<span>Exchange</span>
@@ -85,382 +91,96 @@ const CheckoutDetails = () => {
         </div>
       </header>
 
-      <section className="checkout-main checkout-details-layout">
-
-        {/* LEFT PANEL */}
-
-        <section className="cart-panel checkout-details-panel">
-
+      <section className="checkout-main">
+        <section className="cart-panel">
           <div className="cart-panel-title">
-            <CreditCard size={21} />
-            <h1>Shipping Address</h1>
+            <ShoppingCart size={21} />
+            <h1>My Cart</h1>
           </div>
 
-          <form
-            id="checkout-details-form"
-            className="details-form"
-            onSubmit={handleSubmit}
-          >
+          <div className="cart-table-head">
+            <span>Item</span>
+            <span>Unit Price</span>
+            <span>Qty</span>
+            <span>Subtotal</span>
+          </div>
 
-            <div className="form-grid">
-              <div className="form-group">
-                <label>First Name *</label>
+          <div className="cart-items">
+            {cart.map((item) => {
+              const lineTotal = Number(item.unitPrice || 0) * Number(item.qty || 1);
 
-                <input
-                  name="firstName"
-                  value={shipping.firstName}
-                  onChange={updateShipping}
-                  placeholder="First name"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Last Name *</label>
-
-                <input
-                  name="lastName"
-                  value={shipping.lastName}
-                  onChange={updateShipping}
-                  placeholder="Last name"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Company Name</label>
-
-              <input
-                name="company"
-                value={shipping.company}
-                onChange={updateShipping}
-                placeholder="Company name optional"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Country / Region *</label>
-
-              <select
-                name="country"
-                value={shipping.country}
-                onChange={updateShipping}
-                required
-              >
-                <option>United States</option>
-                <option>Canada</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Street Address *</label>
-
-              <input
-                name="address"
-                value={shipping.address}
-                onChange={updateShipping}
-                placeholder="House number and street name"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <input
-                name="apartment"
-                value={shipping.apartment}
-                onChange={updateShipping}
-                placeholder="Apartment, suite, unit, etc. optional"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Town / City *</label>
-
-              <input
-                name="city"
-                value={shipping.city}
-                onChange={updateShipping}
-                placeholder="City"
-                required
-              />
-            </div>
-
-            <div className="form-grid">
-              <div className="form-group">
-                <label>State *</label>
-
-                <input
-                  name="state"
-                  value={shipping.state}
-                  onChange={updateShipping}
-                  placeholder="State"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>ZIP Code *</label>
-
-                <input
-                  name="zip"
-                  value={shipping.zip}
-                  onChange={updateShipping}
-                  placeholder="ZIP code"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Phone *</label>
-
-              <input
-                name="phone"
-                value={shipping.phone}
-                onChange={updateShipping}
-                placeholder="Phone number"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Email Address *</label>
-
-              <input
-                type="email"
-                name="email"
-                value={shipping.email}
-                onChange={updateShipping}
-                placeholder="Email address"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Order Notes Optional</label>
-
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Notes about your order, e.g. special delivery instructions."
-              />
-            </div>
-
-            {/* BILLING SECTION */}
-
-            <div className="billing-section">
-
-              <div className="billing-title">
-                Billing Address
-              </div>
-
-              <label className="billing-check">
-                <input
-                  type="checkbox"
-                  checked={sameBilling}
-                  onChange={() => setSameBilling((prev) => !prev)}
-                />
-
-                <span>Same as shipping address</span>
-              </label>
-
-              {!sameBilling && (
-                <>
-
-                  <div className="form-grid">
-
-                    <div className="form-group">
-                      <label>First Name *</label>
-
-                      <input
-                        name="firstName"
-                        value={billing.firstName}
-                        onChange={updateBilling}
-                        placeholder="First name"
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label>Last Name *</label>
-
-                      <input
-                        name="lastName"
-                        value={billing.lastName}
-                        onChange={updateBilling}
-                        placeholder="Last name"
-                      />
-                    </div>
-
-                  </div>
-
-                  <div className="form-group">
-                    <label>Company Optional</label>
-
-                    <input
-                      name="company"
-                      value={billing.company}
-                      onChange={updateBilling}
-                      placeholder="Company name"
+              return (
+                <article className="cart-line" key={item.id}>
+                  <div className="cart-product">
+                    <img
+                      src={getItemImage(item)}
+                      alt={item.title || 'Shipping container'}
+                      className="cart-product-image"
                     />
-                  </div>
 
-                  <div className="form-group">
-                    <label>Country / Region *</label>
+                    <div className="cart-product-copy">
+                      {item.url && item.url !== '#' ? (
+                        <Link to={item.url} className="cart-product-title">
+                          {item.title}
+                        </Link>
+                      ) : (
+                        <h2 className="cart-product-title">{item.title}</h2>
+                      )}
 
-                    <select
-                      name="country"
-                      value={billing.country}
-                      onChange={updateBilling}
-                    >
-                      <option>United States</option>
-                      <option>Canada</option>
-                    </select>
-                  </div>
+                      {item.sub && <p className="cart-product-subtitle">{item.sub}</p>}
 
-                  <div className="form-group">
-                    <label>Street Address *</label>
-
-                    <input
-                      name="address"
-                      value={billing.address}
-                      onChange={updateBilling}
-                      placeholder="House number and street name"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <input
-                      name="apartment"
-                      value={billing.apartment}
-                      onChange={updateBilling}
-                      placeholder="Apartment, suite, unit, etc. optional"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Town / City *</label>
-
-                    <input
-                      name="city"
-                      value={billing.city}
-                      onChange={updateBilling}
-                      placeholder="City"
-                    />
-                  </div>
-
-                  <div className="form-grid">
-
-                    <div className="form-group">
-                      <label>State *</label>
-
-                      <input
-                        name="state"
-                        value={billing.state}
-                        onChange={updateBilling}
-                        placeholder="State"
-                      />
+                      {item.rating && (
+                        <div className="cart-rating">
+                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
+                        </div>
+                      )}
                     </div>
-
-                    <div className="form-group">
-                      <label>ZIP Code *</label>
-
-                      <input
-                        name="zip"
-                        value={billing.zip}
-                        onChange={updateBilling}
-                        placeholder="ZIP code"
-                      />
-                    </div>
-
                   </div>
 
-                </>
-              )}
+                  <div className="cart-unit-price">{formatMoney(item.unitPrice)}</div>
 
-              <button
-                type="button"
-                className="return-store-btn"
-                onClick={() => navigate('/checkout')}
-              >
-                ← Back to Cart
-              </button>
+                  <div className="cart-qty">
+                    <button type="button" onClick={() => updateQuantity(item.id, -1)}>
+                      −
+                    </button>
 
-            </div>
+                    <strong>{item.qty}</strong>
 
-          </form>
+                    <button type="button" onClick={() => updateQuantity(item.id, 1)}>
+                      +
+                    </button>
+                  </div>
 
+                  <div className="cart-line-total">{formatMoney(lineTotal)}</div>
+
+                  <button
+                    type="button"
+                    className="cart-remove"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    ×
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+
+          <button type="button" className="return-store-btn" onClick={handleBackToStore}>
+            ← Return to Store
+          </button>
         </section>
 
-        {/* RIGHT SIDEBAR */}
-
-        <aside className="checkout-sidebar checkout-details-sidebar">
-
-          <section className="total-card details-summary-card">
-
-            <h2>Order Summary</h2>
-
-            <div className="os-head">
-              <span>Products</span>
-              <span>QTY</span>
-              <span>Subtotal</span>
-            </div>
-
-            {cart.map((item) => (
-
-              <div key={item.id} className="os-item">
-
-                <div className="os-item-wrap">
-
-                  <img
-                    src={getItemImage(item)}
-                    alt={item.title || 'Shipping container'}
-                    className="os-img"
-                  />
-
-                  <div className="os-prod-copy">
-
-                    <div className="os-prod-title">
-                      {item.title}
-                    </div>
-
-                    <div className="os-prod-sub">
-                      {item.sub || item.grade || 'Shipping container'}
-                    </div>
-
-                  </div>
-
-                </div>
-
-                <div className="os-qty">
-                  {item.qty}
-                </div>
-
-                <div className="os-price">
-                  {formatMoney(
-                    Number(item.unitPrice || 0) *
-                    Number(item.qty || 1)
-                  )}
-                </div>
-
-              </div>
-
-            ))}
-
-            <div className="summary-divider" />
+        <aside className="checkout-sidebar">
+          <section className="total-card">
+            <h2>Your Total</h2>
 
             <div className="total-row">
               <span>Subtotal</span>
               <strong>{formatMoney(subtotal)}</strong>
             </div>
 
-            <div className="total-row os-shipto">
-              <span>Ship To</span>
-              <em>{shipTo}</em>
-            </div>
-
             <div className="total-row tax-row">
-              <span>Sales Tax</span>
+              <span>Sales tax</span>
               <em>Calculated at checkout</em>
             </div>
 
@@ -469,40 +189,46 @@ const CheckoutDetails = () => {
               <strong>{formatMoney(total)}</strong>
             </div>
 
-            <div className="os-disclaimer">
-              <strong>Disclaimer:</strong> By reserving your container,
-              you are not committing to a purchase.
-              We will contact you to confirm all the details
-              and finalize the pricing.
-            </div>
-
-            <button
-              type="submit"
-              form="checkout-details-form"
-              className="checkout-btn reserve-btn"
-            >
-              Reserve My Container Now!
+            <button type="button" className="checkout-btn" onClick={handleProceedToCheckout}>
+              Proceed to Checkout
             </button>
 
-            <section className="checkout-help checkout-summary-help">
-
-              <p className="checkout-phone">
-                <Phone size={15} />
-                Need help? Call{' '}
-                <a href="tel:+17132580199">
-                  (713) 258-0199
-                </a>
-              </p>
-
-            </section>
-
+            <p className="shipping-note">
+              Shipping Internationally? <Link to="/delivery">Learn more</Link>
+            </p>
           </section>
 
-        </aside>
+          <section className="price-lock-banner">
+            <h3>
+              <Lock size={14} />
+              Lock In Your Price - Don&apos;t Wait!
+            </h3>
 
+            <p>
+              Container prices fluctuate — <strong>Order Now</strong> to secure this low price.
+            </p>
+
+            <p>
+              Delivery cost is additional. To save you money, we&apos;ll negotiate with local
+              carriers for the lowest shipping rate.
+            </p>
+          </section>
+
+          <section className="checkout-help">
+            <p>
+              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don&apos;t forget
+              to ask about specials in your area to see if you can save even more.
+            </p>
+
+            <p className="checkout-phone">
+              <Phone size={15} />
+              Need help? Call <a href="tel:+17132580199">(713) 258-0199</a>
+            </p>
+          </section>
+        </aside>
       </section>
     </main>
   );
 };
 
-export default CheckoutDetails;
+export default CheckoutPage;
