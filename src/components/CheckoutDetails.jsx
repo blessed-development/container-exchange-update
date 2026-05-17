@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, CreditCard, Truck, Lock } from 'lucide-react';
+import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
@@ -23,11 +23,12 @@ const getItemImage = (item) => {
 
 const CheckoutDetails = () => {
   const navigate = useNavigate();
-
   const { cart, getSubtotal, getGrandTotal } = useCart();
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
+
+  const [sameBilling, setSameBilling] = useState(true);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -44,10 +45,33 @@ const CheckoutDetails = () => {
     notes: '',
   });
 
+  const [billingData, setBillingData] = useState({
+    firstName: '',
+    lastName: '',
+    company: '',
+    country: 'United States',
+    address: '',
+    apartment: '',
+    city: '',
+    state: '',
+    zip: '',
+  });
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    }));
+  };
+
+  const handleBillingChange = (e) => {
+    const { name, value } = e.target;
+
+    setBillingData((prev) => ({
+      ...prev,
+      [name]: value,
     }));
   };
 
@@ -96,7 +120,11 @@ const CheckoutDetails = () => {
             <h1>Shipping Address</h1>
           </div>
 
-          <form className="details-form" onSubmit={handleSubmit}>
+          <form
+            id="checkout-form"
+            className="details-form"
+            onSubmit={handleSubmit}
+          >
             <div className="form-grid">
               <div className="form-group">
                 <label>First Name *</label>
@@ -242,9 +270,133 @@ const CheckoutDetails = () => {
               />
             </div>
 
-            <button type="submit" className="checkout-btn reserve-btn">
-              Reserve My Container Now!
-            </button>
+            <div className="billing-section">
+              <div className="billing-title">Billing Address</div>
+
+              <label className="billing-check">
+                <input
+                  type="checkbox"
+                  checked={sameBilling}
+                  onChange={() => setSameBilling((prev) => !prev)}
+                />
+                <span>Same as shipping address</span>
+              </label>
+
+              {!sameBilling && (
+                <div className="billing-fields">
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>First Name *</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        placeholder="First name"
+                        value={billingData.firstName}
+                        onChange={handleBillingChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Last Name *</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Last name"
+                        value={billingData.lastName}
+                        onChange={handleBillingChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Company Name</label>
+                    <input
+                      type="text"
+                      name="company"
+                      placeholder="Company name optional"
+                      value={billingData.company}
+                      onChange={handleBillingChange}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Country / Region *</label>
+                    <select
+                      name="country"
+                      value={billingData.country}
+                      onChange={handleBillingChange}
+                    >
+                      <option>United States</option>
+                      <option>Canada</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Street Address *</label>
+                    <input
+                      type="text"
+                      name="address"
+                      placeholder="House number and street name"
+                      value={billingData.address}
+                      onChange={handleBillingChange}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      name="apartment"
+                      placeholder="Apartment, suite, unit, etc. optional"
+                      value={billingData.apartment}
+                      onChange={handleBillingChange}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Town / City *</label>
+                    <input
+                      type="text"
+                      name="city"
+                      placeholder="City"
+                      value={billingData.city}
+                      onChange={handleBillingChange}
+                    />
+                  </div>
+
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label>State *</label>
+                      <input
+                        type="text"
+                        name="state"
+                        placeholder="State"
+                        value={billingData.state}
+                        onChange={handleBillingChange}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>ZIP Code *</label>
+                      <input
+                        type="text"
+                        name="zip"
+                        placeholder="ZIP code"
+                        value={billingData.zip}
+                        onChange={handleBillingChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="return-store-btn"
+                onClick={() => navigate('/checkout')}
+              >
+                ← Back to Cart
+              </button>
+            </div>
           </form>
         </section>
 
@@ -306,29 +458,25 @@ const CheckoutDetails = () => {
             </div>
 
             <div className="os-disclaimer">
-              <strong>Disclaimer:</strong> By reserving your container, you are
-              not committing to a purchase. We will contact you to confirm all
-              the details and finalize the pricing.
+              <strong>Disclaimer:</strong> By reserving your container, you are not committing
+              to a purchase. We will contact you to confirm all the details and finalize the
+              pricing.
             </div>
-          </section>
 
-          <section className="price-lock-banner">
-            <h3>
-              <Truck size={14} />
-              Fast Delivery Coordination
-            </h3>
+            <button
+              type="submit"
+              form="checkout-form"
+              className="checkout-btn reserve-btn"
+            >
+              Reserve My Container Now!
+            </button>
 
-            <p>
-              Our logistics team will contact you immediately after submission
-              to coordinate delivery rates and timing.
-            </p>
-          </section>
-
-          <section className="checkout-help">
-            <p>
-              <Lock size={14} />
-              Your information is encrypted and securely processed.
-            </p>
+            <section className="checkout-help checkout-summary-help">
+              <p>
+                <Lock size={14} />
+                Your information is encrypted and securely processed.
+              </p>
+            </section>
           </section>
         </aside>
       </section>
