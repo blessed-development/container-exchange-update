@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, CreditCard, Phone } from 'lucide-react';
+import { ShieldCheck, CreditCard, Phone, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
@@ -86,33 +86,68 @@ const CheckoutDetails = () => {
       </header>
 
       <section className="checkout-main checkout-details-layout">
+
+        {/* LEFT PANEL */}
+
         <section className="cart-panel checkout-details-panel">
+
           <div className="cart-panel-title">
             <CreditCard size={21} />
             <h1>Shipping Address</h1>
           </div>
 
-          <form id="checkout-details-form" className="details-form" onSubmit={handleSubmit}>
+          <form
+            id="checkout-details-form"
+            className="details-form"
+            onSubmit={handleSubmit}
+          >
+
             <div className="form-grid">
               <div className="form-group">
                 <label>First Name *</label>
-                <input name="firstName" value={shipping.firstName} onChange={updateShipping} placeholder="First name" required />
+
+                <input
+                  name="firstName"
+                  value={shipping.firstName}
+                  onChange={updateShipping}
+                  placeholder="First name"
+                  required
+                />
               </div>
 
               <div className="form-group">
                 <label>Last Name *</label>
-                <input name="lastName" value={shipping.lastName} onChange={updateShipping} placeholder="Last name" required />
+
+                <input
+                  name="lastName"
+                  value={shipping.lastName}
+                  onChange={updateShipping}
+                  placeholder="Last name"
+                  required
+                />
               </div>
             </div>
 
             <div className="form-group">
               <label>Company Name</label>
-              <input name="company" value={shipping.company} onChange={updateShipping} placeholder="Company name optional" />
+
+              <input
+                name="company"
+                value={shipping.company}
+                onChange={updateShipping}
+                placeholder="Company name optional"
+              />
             </div>
 
             <div className="form-group">
               <label>Country / Region *</label>
-              <select name="country" value={shipping.country} onChange={updateShipping} required>
+
+              <select
+                name="country"
+                value={shipping.country}
+                onChange={updateShipping}
+                required
+              >
                 <option>United States</option>
                 <option>Canada</option>
               </select>
@@ -120,75 +155,164 @@ const CheckoutDetails = () => {
 
             <div className="form-group">
               <label>Street Address *</label>
-              <input name="address" value={shipping.address} onChange={updateShipping} placeholder="House number and street name" required />
+
+              <input
+                name="address"
+                value={shipping.address}
+                onChange={updateShipping}
+                placeholder="House number and street name"
+                required
+              />
             </div>
 
             <div className="form-group">
-              <input name="apartment" value={shipping.apartment} onChange={updateShipping} placeholder="Apartment, suite, unit, etc. optional" />
+              <input
+                name="apartment"
+                value={shipping.apartment}
+                onChange={updateShipping}
+                placeholder="Apartment, suite, unit, etc. optional"
+              />
             </div>
 
             <div className="form-group">
               <label>Town / City *</label>
-              <input name="city" value={shipping.city} onChange={updateShipping} placeholder="City" required />
+
+              <input
+                name="city"
+                value={shipping.city}
+                onChange={updateShipping}
+                placeholder="City"
+                required
+              />
             </div>
 
             <div className="form-grid">
               <div className="form-group">
                 <label>State *</label>
-                <input name="state" value={shipping.state} onChange={updateShipping} placeholder="State" required />
+
+                <input
+                  name="state"
+                  value={shipping.state}
+                  onChange={updateShipping}
+                  placeholder="State"
+                  required
+                />
               </div>
 
               <div className="form-group">
                 <label>ZIP Code *</label>
-                <input name="zip" value={shipping.zip} onChange={updateShipping} placeholder="ZIP code" required />
+
+                <input
+                  name="zip"
+                  value={shipping.zip}
+                  onChange={updateShipping}
+                  placeholder="ZIP code"
+                  required
+                />
               </div>
             </div>
 
             <div className="form-group">
               <label>Phone *</label>
-              <input name="phone" value={shipping.phone} onChange={updateShipping} placeholder="Phone number" required />
+
+              <input
+                name="phone"
+                value={shipping.phone}
+                onChange={updateShipping}
+                placeholder="Phone number"
+                required
+              />
             </div>
 
             <div className="form-group">
               <label>Email Address *</label>
-              <input type="email" name="email" value={shipping.email} onChange={updateShipping} placeholder="Email address" required />
+
+              <input
+                type="email"
+                name="email"
+                value={shipping.email}
+                onChange={updateShipping}
+                placeholder="Email address"
+                required
+              />
             </div>
 
             <div className="form-group">
               <label>Order Notes Optional</label>
-              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Notes about your order, e.g. special delivery instructions." />
+
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Notes about your order, e.g. special delivery instructions."
+              />
             </div>
 
+            {/* BILLING SECTION */}
+
             <div className="billing-section">
-              <div className="billing-title">Billing Address</div>
+
+              <div className="billing-title">
+                Billing Address
+              </div>
 
               <label className="billing-check">
-                <input type="checkbox" checked={sameBilling} onChange={() => setSameBilling((prev) => !prev)} />
+                <input
+                  type="checkbox"
+                  checked={sameBilling}
+                  onChange={() => setSameBilling((prev) => !prev)}
+                />
+
                 <span>Same as shipping address</span>
               </label>
 
               {!sameBilling && (
                 <>
+
                   <div className="form-grid">
+
                     <div className="form-group">
                       <label>First Name *</label>
-                      <input name="firstName" value={billing.firstName} onChange={updateBilling} placeholder="First name" required={!sameBilling} />
+
+                      <input
+                        name="firstName"
+                        value={billing.firstName}
+                        onChange={updateBilling}
+                        placeholder="First name"
+                      />
                     </div>
 
                     <div className="form-group">
                       <label>Last Name *</label>
-                      <input name="lastName" value={billing.lastName} onChange={updateBilling} placeholder="Last name" required={!sameBilling} />
+
+                      <input
+                        name="lastName"
+                        value={billing.lastName}
+                        onChange={updateBilling}
+                        placeholder="Last name"
+                      />
                     </div>
+
                   </div>
 
                   <div className="form-group">
                     <label>Company Optional</label>
-                    <input name="company" value={billing.company} onChange={updateBilling} placeholder="Company name" />
+
+                    <input
+                      name="company"
+                      value={billing.company}
+                      onChange={updateBilling}
+                      placeholder="Company name"
+                    />
                   </div>
 
                   <div className="form-group">
                     <label>Country / Region *</label>
-                    <select name="country" value={billing.country} onChange={updateBilling} required={!sameBilling}>
+
+                    <select
+                      name="country"
+                      value={billing.country}
+                      onChange={updateBilling}
+                    >
                       <option>United States</option>
                       <option>Canada</option>
                     </select>
@@ -196,41 +320,84 @@ const CheckoutDetails = () => {
 
                   <div className="form-group">
                     <label>Street Address *</label>
-                    <input name="address" value={billing.address} onChange={updateBilling} placeholder="House number and street name" required={!sameBilling} />
+
+                    <input
+                      name="address"
+                      value={billing.address}
+                      onChange={updateBilling}
+                      placeholder="House number and street name"
+                    />
                   </div>
 
                   <div className="form-group">
-                    <input name="apartment" value={billing.apartment} onChange={updateBilling} placeholder="Apartment, suite, unit, etc. optional" />
+                    <input
+                      name="apartment"
+                      value={billing.apartment}
+                      onChange={updateBilling}
+                      placeholder="Apartment, suite, unit, etc. optional"
+                    />
                   </div>
 
                   <div className="form-group">
                     <label>Town / City *</label>
-                    <input name="city" value={billing.city} onChange={updateBilling} placeholder="City" required={!sameBilling} />
+
+                    <input
+                      name="city"
+                      value={billing.city}
+                      onChange={updateBilling}
+                      placeholder="City"
+                    />
                   </div>
 
                   <div className="form-grid">
+
                     <div className="form-group">
                       <label>State *</label>
-                      <input name="state" value={billing.state} onChange={updateBilling} placeholder="State" required={!sameBilling} />
+
+                      <input
+                        name="state"
+                        value={billing.state}
+                        onChange={updateBilling}
+                        placeholder="State"
+                      />
                     </div>
 
                     <div className="form-group">
                       <label>ZIP Code *</label>
-                      <input name="zip" value={billing.zip} onChange={updateBilling} placeholder="ZIP code" required={!sameBilling} />
+
+                      <input
+                        name="zip"
+                        value={billing.zip}
+                        onChange={updateBilling}
+                        placeholder="ZIP code"
+                      />
                     </div>
+
                   </div>
+
                 </>
               )}
 
-              <button type="button" className="return-store-btn" onClick={() => navigate('/checkout')}>
+              <button
+                type="button"
+                className="return-store-btn"
+                onClick={() => navigate('/checkout')}
+              >
                 ← Back to Cart
               </button>
+
             </div>
+
           </form>
+
         </section>
 
+        {/* RIGHT SIDEBAR */}
+
         <aside className="checkout-sidebar checkout-details-sidebar">
+
           <section className="total-card details-summary-card">
+
             <h2>Order Summary</h2>
 
             <div className="os-head">
@@ -240,22 +407,44 @@ const CheckoutDetails = () => {
             </div>
 
             {cart.map((item) => (
+
               <div key={item.id} className="os-item">
+
                 <div className="os-item-wrap">
-                  <img src={getItemImage(item)} alt={item.title || 'Shipping container'} className="os-img" />
+
+                  <img
+                    src={getItemImage(item)}
+                    alt={item.title || 'Shipping container'}
+                    className="os-img"
+                  />
 
                   <div className="os-prod-copy">
-                    <div className="os-prod-title">{item.title}</div>
-                    <div className="os-prod-sub">{item.sub || item.grade || 'Shipping container'}</div>
+
+                    <div className="os-prod-title">
+                      {item.title}
+                    </div>
+
+                    <div className="os-prod-sub">
+                      {item.sub || item.grade || 'Shipping container'}
+                    </div>
+
                   </div>
+
                 </div>
 
-                <div className="os-qty">{item.qty}</div>
+                <div className="os-qty">
+                  {item.qty}
+                </div>
 
                 <div className="os-price">
-                  {formatMoney(Number(item.unitPrice || 0) * Number(item.qty || 1))}
+                  {formatMoney(
+                    Number(item.unitPrice || 0) *
+                    Number(item.qty || 1)
+                  )}
                 </div>
+
               </div>
+
             ))}
 
             <div className="summary-divider" />
@@ -281,21 +470,36 @@ const CheckoutDetails = () => {
             </div>
 
             <div className="os-disclaimer">
-              <strong>Disclaimer:</strong> By reserving your container, you are not committing to a purchase. We will contact you to confirm all the details and finalize the pricing.
+              <strong>Disclaimer:</strong> By reserving your container,
+              you are not committing to a purchase.
+              We will contact you to confirm all the details
+              and finalize the pricing.
             </div>
 
-            <button type="submit" form="checkout-details-form" className="checkout-btn reserve-btn">
+            <button
+              type="submit"
+              form="checkout-details-form"
+              className="checkout-btn reserve-btn"
+            >
               Reserve My Container Now!
             </button>
 
             <section className="checkout-help checkout-summary-help">
+
               <p className="checkout-phone">
                 <Phone size={15} />
-                Need help? Call <a href="tel:+17132580199">(713) 258-0199</a>
+                Need help? Call{' '}
+                <a href="tel:+17132580199">
+                  (713) 258-0199
+                </a>
               </p>
+
             </section>
+
           </section>
+
         </aside>
+
       </section>
     </main>
   );
