@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { ShieldCheck, Phone, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
@@ -20,65 +20,34 @@ const getItemImage = (item) => {
   return item.image || item.image_url || item.imageUrl || item.photo || fallbackImage;
 };
 
-const CheckoutPage = () => {
+const CheckoutDetails = () => {
   const navigate = useNavigate();
 
-  const {
-    cart,
-    updateQuantity,
-    removeItem,
-    getSubtotal,
-    getGrandTotal,
-  } = useCart();
+  const { cart, getSubtotal, getGrandTotal } = useCart();
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
 
-  const handleBackToStore = () => {
-    navigate('/inventory');
+  const [sameBilling, setSameBilling] = useState(true);
+
+  const shippingAddress = useMemo(() => {
+    return 'Enter delivery address';
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate('/checkout/success');
   };
-
-  const handleProceedToCheckout = () => {
-    navigate('/checkout/details');
-  };
-
-  if (!cart.length) {
-    return (
-      <main className="checkout-container">
-        <header className="checkout-header">
-          <button type="button" className="back-link" onClick={handleBackToStore}>
-            ← Back to Store
-          </button>
-
-          <Link to="/" className="checkout-logo">
-            Containers<span>Exchange</span>
-          </Link>
-
-          <div className="secure-badge">
-            <ShieldCheck size={14} />
-            Secure Checkout
-          </div>
-        </header>
-
-        <section className="empty-cart">
-          <div className="empty-cart-card">
-            <ShoppingCart size={34} />
-            <h1>Your cart is empty</h1>
-            <p>Add a container to your cart before checkout.</p>
-            <button type="button" onClick={handleBackToStore}>
-              Continue Shopping
-            </button>
-          </div>
-        </section>
-      </main>
-    );
-  }
 
   return (
     <main className="checkout-container">
       <header className="checkout-header">
-        <button type="button" className="back-link" onClick={handleBackToStore}>
-          ← Back to Store
+        <button
+          type="button"
+          className="back-link"
+          onClick={() => navigate('/checkout')}
+        >
+          ← Back to Cart
         </button>
 
         <Link to="/" className="checkout-logo">
@@ -91,107 +60,191 @@ const CheckoutPage = () => {
         </div>
       </header>
 
-      <section className="checkout-main">
-        <section className="cart-panel">
+      <section className="checkout-main checkout-details-layout">
+
+        {/* LEFT PANEL */}
+
+        <section className="cart-panel checkout-details-panel">
+
           <div className="cart-panel-title">
-            <ShoppingCart size={21} />
-            <h1>My Cart</h1>
+            <Lock size={20} />
+            <h1>Shipping Address</h1>
           </div>
 
-          <div className="cart-table-head">
-            <span>Item</span>
-            <span>Unit Price</span>
-            <span>Qty</span>
-            <span>Subtotal</span>
-          </div>
+          <form className="details-form" onSubmit={handleSubmit}>
 
-          <div className="cart-items">
-            {cart.map((item) => {
-              const lineTotal = Number(item.unitPrice || 0) * Number(item.qty || 1);
+            <div className="form-grid">
+              <div className="form-group">
+                <label>FIRST NAME *</label>
+                <input type="text" placeholder="First name" />
+              </div>
 
-              return (
-                <article className="cart-line" key={item.id}>
-                  <div className="cart-product">
-                    <img
-                      src={getItemImage(item)}
-                      alt={item.title || 'Shipping container'}
-                      className="cart-product-image"
-                    />
+              <div className="form-group">
+                <label>LAST NAME *</label>
+                <input type="text" placeholder="Last name" />
+              </div>
+            </div>
 
-                    <div className="cart-product-copy">
-                      {item.url && item.url !== '#' ? (
-                        <Link to={item.url} className="cart-product-title">
-                          {item.title}
-                        </Link>
-                      ) : (
-                        <h2 className="cart-product-title">{item.title}</h2>
-                      )}
+            <div className="form-group">
+              <label>COMPANY NAME</label>
+              <input type="text" placeholder="Company name optional" />
+            </div>
 
-                      {item.sub && (
-                        <p className="cart-product-subtitle">{item.sub}</p>
-                      )}
+            <div className="form-group">
+              <label>COUNTRY / REGION *</label>
 
-                      {item.rating && (
-                        <div className="cart-rating">
-                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+              <select>
+                <option>United States</option>
+                <option>Canada</option>
+                <option>United Kingdom</option>
+              </select>
+            </div>
 
-                  <div className="cart-unit-price">{formatMoney(item.unitPrice)}</div>
+            <div className="form-group">
+              <label>STREET ADDRESS *</label>
+              <input type="text" placeholder="House number and street name" />
+            </div>
 
-                  <div className="cart-qty">
-                    <button
-                      type="button"
-                      onClick={() => updateQuantity(item.id, -1)}
-                      aria-label="Decrease quantity"
-                    >
-                      −
-                    </button>
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Apartment, suite, unit, etc. optional"
+              />
+            </div>
 
-                    <strong>{item.qty}</strong>
+            <div className="form-group">
+              <label>TOWN / CITY *</label>
+              <input type="text" placeholder="City" />
+            </div>
 
-                    <button
-                      type="button"
-                      onClick={() => updateQuantity(item.id, 1)}
-                      aria-label="Increase quantity"
-                    >
-                      +
-                    </button>
-                  </div>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>STATE *</label>
+                <input type="text" placeholder="State" />
+              </div>
 
-                  <div className="cart-line-total">{formatMoney(lineTotal)}</div>
+              <div className="form-group">
+                <label>ZIP CODE *</label>
+                <input type="text" placeholder="ZIP code" />
+              </div>
+            </div>
 
-                  <button
-                    type="button"
-                    className="cart-remove"
-                    onClick={() => removeItem(item.id)}
-                    aria-label="Remove item"
-                  >
-                    ×
-                  </button>
-                </article>
-              );
-            })}
-          </div>
+            <div className="form-group">
+              <label>PHONE *</label>
+              <input type="text" placeholder="Phone number" />
+            </div>
 
-          <button type="button" className="return-store-btn" onClick={handleBackToStore}>
-            ← Return to Store
-          </button>
+            <div className="form-group">
+              <label>EMAIL ADDRESS *</label>
+              <input type="email" placeholder="Email address" />
+            </div>
+
+            <div className="form-group">
+              <label>ORDER NOTES (OPTIONAL)</label>
+
+              <textarea placeholder="Notes about your order, e.g. special delivery instructions." />
+            </div>
+
+            {/* BILLING ADDRESS */}
+
+            <div className="billing-section">
+
+              <div className="billing-title">
+                Billing Address
+              </div>
+
+              <label className="billing-check">
+                <input
+                  type="checkbox"
+                  checked={sameBilling}
+                  onChange={() => setSameBilling(!sameBilling)}
+                />
+
+                <span>Same as shipping address</span>
+              </label>
+
+              <button
+                type="button"
+                className="return-store-btn"
+                onClick={() => navigate('/checkout')}
+              >
+                ← Back to Cart
+              </button>
+
+            </div>
+
+          </form>
         </section>
 
-        <aside className="checkout-sidebar">
-          <section className="total-card">
-            <h2>Your Total</h2>
+        {/* RIGHT SIDEBAR */}
+
+        <aside className="checkout-sidebar checkout-details-sidebar">
+
+          <section className="total-card details-summary-card">
+
+            <h2>Order Summary</h2>
+
+            <div className="os-head">
+              <span>PRODUCTS</span>
+              <span>QTY</span>
+              <span>SUBTOTAL</span>
+            </div>
+
+            {cart.map((item) => {
+
+              const lineTotal =
+                Number(item.unitPrice || 0) *
+                Number(item.qty || 1);
+
+              return (
+                <div className="os-item" key={item.id}>
+
+                  <div className="os-item-wrap">
+
+                    <img
+                      src={getItemImage(item)}
+                      alt={item.title}
+                      className="os-img"
+                    />
+
+                    <div>
+                      <div className="os-prod-title">
+                        {item.title}
+                      </div>
+
+                      <div className="os-prod-sub">
+                        {item.sub}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div className="os-qty">
+                    {item.qty}
+                  </div>
+
+                  <div className="os-price">
+                    {formatMoney(lineTotal)}
+                  </div>
+
+                </div>
+              );
+            })}
+
+            <div className="summary-divider" />
 
             <div className="total-row">
               <span>Subtotal</span>
               <strong>{formatMoney(subtotal)}</strong>
             </div>
 
+            <div className="total-row">
+              <span>Ship To</span>
+              <em>{shippingAddress}</em>
+            </div>
+
             <div className="total-row tax-row">
-              <span>Sales tax</span>
+              <span>Sales Tax</span>
               <em>Calculated at checkout</em>
             </div>
 
@@ -200,46 +253,49 @@ const CheckoutPage = () => {
               <strong>{formatMoney(total)}</strong>
             </div>
 
-            <button type="button" className="checkout-btn" onClick={handleProceedToCheckout}>
-              Proceed to Checkout
+            <div className="os-disclaimer">
+              <strong>Disclaimer:</strong> By reserving your container,
+              you are not committing to a purchase.
+              We will contact you to confirm all the details
+              and finalize the pricing.
+            </div>
+
+            <button
+              type="submit"
+              className="checkout-btn reserve-btn"
+              onClick={handleSubmit}
+            >
+              Reserve My Container Now!
             </button>
 
-            <p className="shipping-note">
-              Shipping Internationally? <a href="/delivery">Learn more</a>
-            </p>
           </section>
 
           <section className="price-lock-banner">
             <h3>
               <Lock size={14} />
-              Lock In Your Price - Don&apos;t Wait!
+              Fast Delivery Coordination
             </h3>
 
             <p>
-              Container prices fluctuate — <strong>Order Now</strong> to secure this low price.
-            </p>
-
-            <p>
-              Delivery cost is additional. To save you money, we&apos;ll negotiate with local
-              carriers for the lowest shipping rate.
+              Our logistics team will contact you immediately after
+              order submission to coordinate delivery rates and timing.
             </p>
           </section>
 
           <section className="checkout-help">
-            <p>
-              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don&apos;t forget
-              to ask about specials in your area to see if you can save even more.
-            </p>
 
             <p className="checkout-phone">
               <Phone size={15} />
               Need help? Call <a href="tel:+17132580199">(713) 258-0199</a>
             </p>
+
           </section>
+
         </aside>
+
       </section>
     </main>
   );
 };
 
-export default CheckoutPage;
+export default CheckoutDetails;
