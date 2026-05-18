@@ -1735,3 +1735,131 @@
   .success-actions{
     flex-direction:column !important;
   }
+  /* =========================
+   PREMIUM CART DRAWER FIX
+========================= */
+
+.cart-item{
+  position:relative;
+  display:grid !important;
+  grid-template-columns:88px minmax(0,1fr) !important;
+  gap:16px !important;
+  align-items:flex-start !important;
+  padding:18px 0 !important;
+}
+
+/* LEFT */
+
+.ci-left{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+  align-items:flex-start !important;
+}
+
+/* IMAGE */
+
+.ci-img{
+  width:82px !important;
+  height:62px !important;
+  border-radius:14px !important;
+  object-fit:cover !important;
+  flex-shrink:0 !important;
+}
+
+/* INFO */
+
+.ci-info{
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+  gap:6px !important;
+
+  min-width:0 !important;
+  width:100% !important;
+
+  padding-right:24px !important;
+}
+
+/* TITLE */
+
+.ci-name{
+  width:100% !important;
+
+  font-size:16px !important;
+  font-weight:800 !important;
+  line-height:1.22 !important;
+  color:#fff !important;
+
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+
+  margin:0 !important;
+}
+
+/* SUBTITLE */
+
+.ci-sub{
+  width:100% !important;
+
+  font-size:13px !important;
+  line-height:1.45 !important;
+  color:rgba(203,213,225,.65) !important;
+
+  white-space:normal !important;
+
+  margin:0 !important;
+}
+
+/* PRICE */
+
+.ci-price{
+  margin-top:8px !important;
+
+  font-size:34px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+
+  color:#18d45c !important;
+}
+
+/* REMOVE BUTTON */
+
+.ci-x{
+  position:absolute !important;
+  top:0 !important;
+  right:0 !important;
+
+  width:24px !important;
+  height:24px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:999px !important;
+}
+
+/* QTY */
+
+.ci-qty-row{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+.ci-qty-btn{
+  width:34px !important;
+  height:34px !important;
+  border-radius:12px !important;
+}
+
+.ci-qty-val{
+  min-width:12px !important;
+  text-align:center !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+}
