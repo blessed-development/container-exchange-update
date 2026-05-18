@@ -29,7 +29,9 @@ const CartDrawer = ({ onCheckout }) => {
     if (!sub) return 'Shipping container';
 
     return String(sub)
-      .replace(/Grade:/gi, ' · Grade:')
+      .replace(/Container([A-Z])/g, 'Container · $1')
+      .replace(/Grade:/gi, ' · Grade: ')
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
       .replace(/\s+/g, ' ')
       .trim();
   };
@@ -80,10 +82,6 @@ const CartDrawer = ({ onCheckout }) => {
           font-weight:850;
         }
 
-        .ce-title svg{
-          color:#22c55e;
-        }
-
         .ce-count{
           min-width:24px;
           height:24px;
@@ -103,6 +101,7 @@ const CartDrawer = ({ onCheckout }) => {
           background:transparent;
           color:rgba(255,255,255,.65);
           cursor:pointer;
+          font-size:20px;
         }
 
         .ce-body{
@@ -278,29 +277,47 @@ const CartDrawer = ({ onCheckout }) => {
         </div>
 
         <div className="ce-body">
-          {cart.map((item) => (
-            <div className="ce-item" key={item.id}>
-              <div className="ce-left">
-                <img className="ce-img" src={getImage(item)} alt={item.title || 'Container'} />
+          {cart.length === 0 ? (
+            <div className="empty-cart">
+              <p>Your cart is empty</p>
+            </div>
+          ) : (
+            cart.map((item) => (
+              <div className="ce-item" key={item.id}>
+                <div className="ce-left">
+                  <img className="ce-img" src={getImage(item)} alt={item.title || 'Container'} />
 
-                <div className="ce-qty">
-                  <button onClick={() => updateQuantity(item.id, -1)}>−</button>
-                  <span>{item.qty}</span>
-                  <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+                  <div className="ce-qty">
+                    <button type="button" onClick={() => updateQuantity(item.id, -1)}>
+                      −
+                    </button>
+
+                    <span>{item.qty}</span>
+
+                    <button type="button" onClick={() => updateQuantity(item.id, 1)}>
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="ce-info">
+                  <button
+                    type="button"
+                    className="ce-remove"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    ×
+                  </button>
+
+                  <div className="ce-name">{item.title}</div>
+
+                  <div className="ce-sub">{cleanSub(item.sub || item.grade)}</div>
+
+                  <div className="ce-price">{formatMoney(item.unitPrice)}</div>
                 </div>
               </div>
-
-              <div className="ce-info">
-                <button className="ce-remove" onClick={() => removeItem(item.id)}>
-                  ×
-                </button>
-
-                <div className="ce-name">{item.title}</div>
-                <div className="ce-sub">{cleanSub(item.sub || item.grade)}</div>
-                <div className="ce-price">{formatMoney(item.unitPrice)}</div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {cart.length > 0 && (
@@ -312,11 +329,15 @@ const CartDrawer = ({ onCheckout }) => {
 
             <div className="ce-tax">Sales tax calculated at checkout</div>
 
-            <button className="ce-checkout" onClick={onCheckout}>
+            <button type="button" className="ce-checkout" onClick={onCheckout}>
               Checkout →
             </button>
 
-            <button className="ce-continue" onClick={() => setIsDrawerOpen(false)}>
+            <button
+              type="button"
+              className="ce-continue"
+              onClick={() => setIsDrawerOpen(false)}
+            >
               Continue Shopping
             </button>
           </div>
