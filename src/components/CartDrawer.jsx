@@ -1,4 +1,3 @@
-// src/components/CartDrawer.jsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
 
@@ -12,23 +11,19 @@ const CartDrawer = ({ onCheckout }) => {
     getSubtotal,
   } = useCart();
 
-  const formatMoney = (num) => {
-    return `$${Number(num || 0).toLocaleString('en-US', {
+  const formatMoney = (num) =>
+    `$${Number(num || 0).toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
-  };
 
-  const getImage = (item) => {
-    return (
-      item.img ||
-      item.image ||
-      item.image_url ||
-      item.imageUrl ||
-      item.photo ||
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80'
-    );
-  };
+  const getImage = (item) =>
+    item.img ||
+    item.image ||
+    item.image_url ||
+    item.imageUrl ||
+    item.photo ||
+    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
 
   const cleanSub = (sub) => {
     if (!sub) return 'Shipping container';
@@ -46,14 +41,14 @@ const CartDrawer = ({ onCheckout }) => {
   return (
     <>
       <style>{`
-        .drawer-overlay.open{
+        .ce-overlay{
           position:fixed;
           inset:0;
-          background:rgba(0,0,0,.55);
+          background:rgba(0,0,0,.58);
           z-index:9998;
         }
 
-        .cart-drawer.open{
+        .ce-drawer{
           position:fixed;
           top:0;
           right:0;
@@ -68,7 +63,7 @@ const CartDrawer = ({ onCheckout }) => {
           box-shadow:-30px 0 80px rgba(0,0,0,.55);
         }
 
-        .drawer-header{
+        .ce-head{
           height:64px;
           padding:0 22px;
           display:flex;
@@ -77,7 +72,7 @@ const CartDrawer = ({ onCheckout }) => {
           border-bottom:1px solid rgba(255,255,255,.08);
         }
 
-        .drawer-title{
+        .ce-title{
           display:flex;
           align-items:center;
           gap:10px;
@@ -85,11 +80,11 @@ const CartDrawer = ({ onCheckout }) => {
           font-weight:850;
         }
 
-        .drawer-title svg{
+        .ce-title svg{
           color:#22c55e;
         }
 
-        .cart-count{
+        .ce-count{
           min-width:24px;
           height:24px;
           padding:0 7px;
@@ -103,53 +98,52 @@ const CartDrawer = ({ onCheckout }) => {
           justify-content:center;
         }
 
-        .drawer-close{
+        .ce-close{
           border:0;
           background:transparent;
           color:rgba(255,255,255,.65);
           cursor:pointer;
         }
 
-        .drawer-body{
+        .ce-body{
           flex:1;
           overflow-y:auto;
           padding:20px 22px;
         }
 
-        .cart-item{
+        .ce-item{
           position:relative;
           display:grid;
           grid-template-columns:84px minmax(0,1fr);
           gap:14px;
-          padding:0 0 24px;
+          padding:0 0 26px;
           margin-bottom:22px;
           border-bottom:1px solid rgba(255,255,255,.06);
         }
 
-        .ci-left{
+        .ce-left{
           display:flex;
           flex-direction:column;
           gap:11px;
           align-items:flex-start;
         }
 
-        .ci-img{
+        .ce-img{
           width:84px;
           height:58px;
           border-radius:13px;
           object-fit:cover;
           background:#111827;
           display:block;
-          flex-shrink:0;
         }
 
-        .ci-qty-row{
+        .ce-qty{
           display:flex;
           align-items:center;
           gap:10px;
         }
 
-        .ci-qty-btn{
+        .ce-qty button{
           width:30px;
           height:30px;
           border:1px solid rgba(255,255,255,.08);
@@ -159,21 +153,16 @@ const CartDrawer = ({ onCheckout }) => {
           font-size:18px;
           font-weight:800;
           cursor:pointer;
-          display:flex;
-          align-items:center;
-          justify-content:center;
         }
 
-        .ci-qty-val{
+        .ce-qty span{
           min-width:13px;
-          color:#fff;
+          text-align:center;
           font-size:15px;
           font-weight:800;
-          text-align:center;
         }
 
-        .ci-info{
-          position:relative;
+        .ce-info{
           min-width:0;
           padding-right:24px;
           display:flex;
@@ -181,78 +170,77 @@ const CartDrawer = ({ onCheckout }) => {
           align-items:flex-start;
         }
 
-        .ci-name{
+        .ce-name{
+          display:block;
           width:100%;
-          margin:0 0 5px;
+          margin:0 0 6px;
           color:#fff;
           font-size:15px;
           font-weight:850;
-          line-height:1.18;
+          line-height:1.2;
           letter-spacing:-.02em;
           white-space:normal;
+          overflow:visible;
         }
 
-        .ci-sub{
+        .ce-sub{
+          display:block;
           width:100%;
           margin:0;
           color:rgba(203,213,225,.67);
           font-size:12.5px;
-          line-height:1.35;
+          line-height:1.38;
           white-space:normal;
+          clear:both;
         }
 
-        .ci-price{
+        .ce-price{
           margin-top:14px;
           align-self:flex-end;
           color:#18d45c;
           font-size:17px;
           font-weight:900;
-          letter-spacing:-.02em;
         }
 
-        .ci-x{
+        .ce-remove{
           position:absolute;
           top:-2px;
           right:0;
           width:24px;
           height:24px;
           border:0;
-          border-radius:999px;
           background:transparent;
           color:rgba(255,255,255,.45);
           font-size:18px;
           cursor:pointer;
         }
 
-        .drawer-footer{
+        .ce-footer{
           padding:18px 22px 24px;
           border-top:1px solid rgba(255,255,255,.08);
-          background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));
         }
 
-        .drawer-subtotal{
+        .ce-subtotal{
           display:flex;
-          align-items:center;
           justify-content:space-between;
-          gap:16px;
           font-size:18px;
           font-weight:850;
           margin-bottom:6px;
         }
 
-        .drawer-total-val{
+        .ce-total{
           color:#ff443d;
           font-size:24px;
           font-weight:950;
         }
 
-        .drawer-tax-note{
+        .ce-tax{
           color:rgba(203,213,225,.66);
           font-size:12.5px;
           margin-bottom:28px;
         }
 
-        .checkout-btn{
+        .ce-checkout{
           width:100%;
           height:48px;
           border:0;
@@ -262,10 +250,9 @@ const CartDrawer = ({ onCheckout }) => {
           font-size:15px;
           font-weight:900;
           cursor:pointer;
-          box-shadow:0 18px 42px rgba(34,197,94,.28);
         }
 
-        .continue-btn{
+        .ce-continue{
           width:100%;
           margin-top:18px;
           border:0;
@@ -275,119 +262,61 @@ const CartDrawer = ({ onCheckout }) => {
           font-weight:800;
           cursor:pointer;
         }
-
-        .empty-cart{
-          min-height:260px;
-          display:flex;
-          flex-direction:column;
-          align-items:center;
-          justify-content:center;
-          color:rgba(203,213,225,.75);
-          gap:14px;
-          text-align:center;
-        }
-
-        @media(max-width:480px){
-          .cart-drawer.open{
-            width:100vw;
-          }
-
-          .cart-item{
-            grid-template-columns:82px minmax(0,1fr);
-            gap:12px;
-          }
-
-          .ci-name{
-            font-size:14.5px;
-          }
-
-          .ci-price{
-            font-size:16px;
-          }
-        }
       `}</style>
 
-      <div className="drawer-overlay open" onClick={() => setIsDrawerOpen(false)} />
+      <div className="ce-overlay" onClick={() => setIsDrawerOpen(false)} />
 
-      <div className="cart-drawer open">
-        <div className="drawer-header">
-          <div className="drawer-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-            Your Cart
-            <span className="cart-count">{itemCount}</span>
+      <div className="ce-drawer">
+        <div className="ce-head">
+          <div className="ce-title">
+            Your Cart <span className="ce-count">{itemCount}</span>
           </div>
 
-          <button className="drawer-close" onClick={() => setIsDrawerOpen(false)}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+          <button className="ce-close" onClick={() => setIsDrawerOpen(false)}>
+            ×
           </button>
         </div>
 
-        <div className="drawer-body">
-          {cart.length === 0 ? (
-            <div className="empty-cart">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-              </svg>
-              <p>Your cart is empty</p>
-            </div>
-          ) : (
-            cart.map((item) => (
-              <div className="cart-item" key={item.id}>
-                <div className="ci-left">
-                  <img className="ci-img" src={getImage(item)} alt={item.title || 'Container'} />
+        <div className="ce-body">
+          {cart.map((item) => (
+            <div className="ce-item" key={item.id}>
+              <div className="ce-left">
+                <img className="ce-img" src={getImage(item)} alt={item.title || 'Container'} />
 
-                  <div className="ci-qty-row">
-                    <button className="ci-qty-btn" onClick={() => updateQuantity(item.id, -1)}>
-                      −
-                    </button>
-
-                    <span className="ci-qty-val">{item.qty}</span>
-
-                    <button className="ci-qty-btn" onClick={() => updateQuantity(item.id, 1)}>
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="ci-info">
-                  <button className="ci-x" onClick={() => removeItem(item.id)}>
-                    ×
-                  </button>
-
-                  <div className="ci-name">{item.title}</div>
-
-                  <div className="ci-sub">{cleanSub(item.sub || item.grade)}</div>
-
-                  <div className="ci-price">{formatMoney(item.unitPrice)}</div>
+                <div className="ce-qty">
+                  <button onClick={() => updateQuantity(item.id, -1)}>−</button>
+                  <span>{item.qty}</span>
+                  <button onClick={() => updateQuantity(item.id, 1)}>+</button>
                 </div>
               </div>
-            ))
-          )}
+
+              <div className="ce-info">
+                <button className="ce-remove" onClick={() => removeItem(item.id)}>
+                  ×
+                </button>
+
+                <div className="ce-name">{item.title}</div>
+                <div className="ce-sub">{cleanSub(item.sub || item.grade)}</div>
+                <div className="ce-price">{formatMoney(item.unitPrice)}</div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {cart.length > 0 && (
-          <div className="drawer-footer">
-            <div className="drawer-subtotal">
+          <div className="ce-footer">
+            <div className="ce-subtotal">
               <span>Subtotal</span>
-              <span className="drawer-total-val">{formatMoney(getSubtotal())}</span>
+              <span className="ce-total">{formatMoney(getSubtotal())}</span>
             </div>
 
-            <div className="drawer-tax-note">Sales tax calculated at checkout</div>
+            <div className="ce-tax">Sales tax calculated at checkout</div>
 
-            <button className="checkout-btn" onClick={onCheckout}>
+            <button className="ce-checkout" onClick={onCheckout}>
               Checkout →
             </button>
 
-            <button className="continue-btn" onClick={() => setIsDrawerOpen(false)}>
+            <button className="ce-continue" onClick={() => setIsDrawerOpen(false)}>
               Continue Shopping
             </button>
           </div>
