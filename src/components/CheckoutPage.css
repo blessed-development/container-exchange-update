@@ -1736,3 +1736,43 @@
     flex-direction:column !important;
   }
 }
+/* CART DRAWER TEXT STACK FIX */
+
+.ce-item{
+  grid-template-columns:92px minmax(0,1fr) !important;
+  gap:18px !important;
+}
+
+.ce-info{
+  display:grid !important;
+  grid-template-rows:auto auto auto !important;
+  align-content:start !important;
+  gap:7px !important;
+  min-width:0 !important;
+  padding-right:28px !important;
+}
+
+.ce-name{
+  display:block !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+  line-height:1.22 !important;
+  margin:0 !important;
+}
+
+.ce-sub{
+  display:block !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  line-height:1.35 !important;
+  margin:0 !important;
+  clear:both !important;
+}
+
+.ce-price{
+  align-self:end !important;
+  justify-self:end !important;
+  margin-top:8px !important;
+}
