@@ -3690,3 +3690,203 @@
   height:56px !important;
   object-fit:cover !important;
 }
+
+
+/* =========================================================
+   FINAL ACTIVE CART DRAWER FIX
+   Scope: only the product cart drawer.
+   Keeps quantity perfectly under the image and price opposite.
+========================================================= */
+
+.cart-drawer.open .drawer-body{
+  padding:14px 20px 10px !important;
+}
+
+.cart-drawer.open .cart-item{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:86px minmax(0,1fr) !important;
+  grid-template-rows:auto 32px !important;
+  column-gap:12px !important;
+  row-gap:10px !important;
+  padding:10px 0 14px !important;
+  margin:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  align-items:start !important;
+}
+
+.cart-drawer.open .cart-item + .cart-item{
+  margin-top:10px !important;
+  padding-top:10px !important;
+  border-top:1px solid rgba(255,255,255,.035) !important;
+}
+
+.cart-drawer.open .ci-img{
+  grid-column:1 !important;
+  grid-row:1 !important;
+  width:86px !important;
+  height:56px !important;
+  border-radius:9px !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+
+.cart-drawer.open .ci-info{
+  display:contents !important;
+}
+
+.cart-drawer.open .ci-name,
+.cart-drawer.open .ci-name a{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  display:block !important;
+  margin:0 26px 0 0 !important;
+  padding:0 !important;
+  color:#f8fafc !important;
+  font-size:14px !important;
+  line-height:1.15 !important;
+  font-weight:780 !important;
+  letter-spacing:-.02em !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+}
+
+.cart-drawer.open .ci-meta{
+  grid-column:2 !important;
+  grid-row:1 !important;
+  align-self:end !important;
+  display:block !important;
+  margin:34px 26px 0 0 !important;
+  padding:0 !important;
+  color:rgba(163,172,185,.78) !important;
+  font-size:12px !important;
+  line-height:1.22 !important;
+  font-weight:500 !important;
+  letter-spacing:-.01em !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:unset !important;
+}
+
+.cart-drawer.open .ci-meta br{
+  display:none !important;
+}
+
+.cart-drawer.open .ci-qty-row{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  width:86px !important;
+  height:30px !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:0 !important;
+}
+
+.cart-drawer.open .ci-qty-btn{
+  width:28px !important;
+  height:28px !important;
+  border-radius:9px !important;
+  border:1px solid rgba(255,255,255,.09) !important;
+  background:linear-gradient(180deg,#121824,#0d121b) !important;
+  color:#f8fafc !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-size:14px !important;
+  font-weight:750 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 4px 12px rgba(0,0,0,.25) !important;
+}
+
+.cart-drawer.open .ci-qty-val{
+  min-width:22px !important;
+  text-align:center !important;
+  color:#f8fafc !important;
+  font-size:13px !important;
+  font-weight:850 !important;
+  letter-spacing:-.02em !important;
+}
+
+.cart-drawer.open .ci-price{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  justify-self:end !important;
+  align-self:center !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#00b83f !important;
+  font-size:14px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:-.02em !important;
+  white-space:nowrap !important;
+  text-shadow:0 0 16px rgba(0,184,63,.12) !important;
+}
+
+.cart-drawer.open .ci-remove{
+  position:absolute !important;
+  top:8px !important;
+  right:0 !important;
+  width:22px !important;
+  height:22px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:transparent !important;
+  border:0 !important;
+  color:rgba(163,172,185,.72) !important;
+  font-size:15px !important;
+  line-height:1 !important;
+  opacity:.85 !important;
+}
+
+.cart-drawer.open .ci-remove:hover{
+  color:#fff !important;
+  opacity:1 !important;
+}
+
+.cart-drawer.open .drawer-footer{
+  border-top:0 !important;
+  padding:16px 20px 18px !important;
+  gap:7px !important;
+  background:#05070b !important;
+}
+
+.cart-drawer.open .drawer-tax-note{
+  font-size:0 !important;
+  margin-top:4px !important;
+  margin-bottom:8px !important;
+}
+
+.cart-drawer.open .drawer-tax-note::after{
+  content:"Sales tax calculated at checkout" !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  color:rgba(156,163,175,.72) !important;
+  font-weight:500 !important;
+  letter-spacing:-.01em !important;
+}
+
+.cart-drawer.open .continue-btn{
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  margin-top:8px !important;
+  padding:6px 0 2px !important;
+  background:transparent !important;
+  border:0 !important;
+  color:rgba(203,213,225,.68) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  letter-spacing:-.015em !important;
+  box-shadow:none !important;
+}
+
