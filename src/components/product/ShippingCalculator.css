@@ -3641,3 +3641,52 @@
   color:#fff;
   font-weight:700;
 }
+/* CART DRAWER TITLE/SUBTITLE FIX */
+
+.cart-drawer .cart-item{
+  display:grid !important;
+  grid-template-columns:86px minmax(0,1fr) !important;
+  gap:14px !important;
+  align-items:flex-start !important;
+}
+
+.cart-drawer .ci-info{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  gap:6px !important;
+  min-width:0 !important;
+  padding-right:26px !important;
+}
+
+.cart-drawer .ci-name{
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  font-size:14px !important;
+  line-height:1.22 !important;
+  font-weight:750 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+}
+
+.cart-drawer .ci-meta{
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+  color:rgba(203,213,225,.72) !important;
+  white-space:normal !important;
+}
+
+.cart-drawer .ci-price{
+  margin-top:8px !important;
+  align-self:flex-end !important;
+}
+
+.cart-drawer .ci-img{
+  width:86px !important;
+  height:56px !important;
+  object-fit:cover !important;
+}
