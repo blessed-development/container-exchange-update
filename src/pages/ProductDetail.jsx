@@ -135,6 +135,7 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+
       {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
@@ -175,24 +176,15 @@ export default function ProductDetail() {
             />
 
             <div className="mt-10">
-              <h2 className="text-3xl font-black text-foreground mb-3 leading-tight">
+
+              {/* TITLE */}
+              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-5 leading-tight tracking-tight">
                 {productTitle}
               </h2>
 
-              {/* PRICE */}
-              <div className="mb-6">
-                <p className="text-xs font-mono uppercase tracking-[0.22em] text-muted-foreground mb-2">
-                  Starting From
-                </p>
+              {/* BADGES + RATING */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
 
-                <div className="text-4xl font-black tracking-tight text-orange-500">
-                  $
-                  {Number(displayPrice).toLocaleString()}
-                </div>
-              </div>
-
-              {/* BADGES */}
-              <div className="flex flex-wrap items-center gap-2 mb-6">
                 <Badge className="bg-primary/10 text-primary font-mono rounded-full px-3">
                   {container.size}ft
                 </Badge>
@@ -216,6 +208,7 @@ export default function ProductDetail() {
                 )}
 
                 <div className="flex items-center gap-1.5 ml-1">
+
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
@@ -223,7 +216,7 @@ export default function ProductDetail() {
                         className={`w-4 h-4 ${
                           i <
                           Math.round(container.rating || 5)
-                            ? 'fill-primary text-primary'
+                            ? 'fill-orange-500 text-orange-500'
                             : 'text-muted-foreground'
                         }`}
                       />
@@ -237,6 +230,20 @@ export default function ProductDetail() {
                   <span className="text-xs text-muted-foreground">
                     ({container.review_count || 42} reviews)
                   </span>
+                </div>
+              </div>
+
+              {/* PRICE */}
+              <div className="mb-6">
+
+                <div className="inline-flex items-center rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 mb-3">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-green-500">
+                    Starting From
+                  </span>
+                </div>
+
+                <div className="text-5xl md:text-6xl font-black tracking-tight text-orange-500 leading-none">
+                  ${Number(displayPrice).toLocaleString()}
                 </div>
               </div>
 
