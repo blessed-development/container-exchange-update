@@ -51,7 +51,7 @@ export default function RelatedProducts() {
 
             <div className="p-4 flex flex-col min-h-[270px]">
               <Link to={`/product/${product.id}`} className="block">
-                <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2">
+                <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2 hover:text-orange-400 transition-colors">
                   {product.name}
                 </h3>
               </Link>
@@ -60,9 +60,16 @@ export default function RelatedProducts() {
                 {product.short_description}
               </p>
 
-              <p className="text-xs text-muted-foreground leading-snug mb-3">
+              <p className="text-xs text-muted-foreground leading-snug mb-2">
                 {product.condition} · {product.size} ft · {product.grade}
               </p>
+
+              <div className="flex items-center gap-1 text-[12px] text-amber-400 mb-3">
+                <span>★★★★★</span>
+                <span className="text-muted-foreground">
+                  ({product.review_count || 42})
+                </span>
+              </div>
 
               <p className="text-xl font-black text-orange-500 tracking-tight mb-4">
                 {formatMoney(product.base_price)}
