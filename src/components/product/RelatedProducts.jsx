@@ -47,31 +47,45 @@ export default function RelatedProducts({ zipCode }) {
   const city = locationInfo ? `${locationInfo.city}, ${locationInfo.state}` : null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <h2 className="text-2xl font-black text-foreground mb-8">Related Products</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+      <h2 className="text-2xl font-black text-foreground mb-6">
+        Related Products
+      </h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {RELATED.map((product) => (
           <div
             key={product.id}
-            className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300"
+            className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300"
           >
-            <div className="aspect-video overflow-hidden bg-muted">
+            <div className="h-48 overflow-hidden bg-muted">
               <img
                 src={product.image}
                 alt={product.title}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="p-5">
-              <h3 className="font-bold text-foreground text-sm leading-snug mb-1">{product.title}</h3>
-              <p className="text-xs text-muted-foreground mb-1">{product.subtitle}</p>
-              <p className="text-xs text-muted-foreground mb-3">
+
+            <div className="p-4">
+              <h3 className="font-black text-foreground text-[15px] leading-tight mb-1">
+                {product.title}
+              </h3>
+
+              <p className="text-xs text-muted-foreground leading-snug mb-1">
+                {product.subtitle}
+              </p>
+
+              <p className="text-xs text-muted-foreground leading-snug mb-3">
                 {product.locationLabel} — {city || product.defaultCity}
               </p>
-              <p className="text-xl font-black text-primary font-mono mb-4">{product.price}</p>
+
+              <p className="text-xl font-black text-primary font-mono mb-4">
+                {product.price}
+              </p>
+
               <Link to={`/product/${product.id}`}>
-                <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm rounded-xl">
-                  View Details
+                <Button className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-xl shadow-md">
+                  Add to Cart
                 </Button>
               </Link>
             </div>
@@ -80,88 +94,4 @@ export default function RelatedProducts({ zipCode }) {
       </div>
     </section>
   );
-}
-/* PREMIUM RELATED PRODUCTS SECTION */
-
-.related-products{
-  gap:22px !important;
-}
-
-.related-products-grid{
-  gap:22px !important;
-}
-
-.related-product-card{
-  border-radius:22px !important;
-  overflow:hidden !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)) !important;
-  border:1px solid rgba(255,255,255,.08) !important;
-  box-shadow:0 18px 50px rgba(0,0,0,.28) !important;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
-}
-
-.related-product-card:hover{
-  transform:translateY(-3px) !important;
-  border-color:rgba(34,197,94,.22) !important;
-  box-shadow:0 24px 70px rgba(0,0,0,.38) !important;
-}
-
-.related-product-card img{
-  height:240px !important;
-  width:100% !important;
-  object-fit:cover !important;
-}
-
-.related-product-card-content{
-  padding:22px 24px 24px !important;
-}
-
-.related-product-card h3{
-  font-size:23px !important;
-  line-height:1.12 !important;
-  font-weight:850 !important;
-  letter-spacing:-.04em !important;
-  margin-bottom:10px !important;
-}
-
-.related-product-card p{
-  font-size:18px !important;
-  line-height:1.45 !important;
-  color:rgba(203,213,225,.72) !important;
-}
-
-.related-product-card .price{
-  margin-top:20px !important;
-  color:#22c55e !important;
-  font-size:27px !important;
-  font-weight:900 !important;
-  letter-spacing:-.04em !important;
-}
-
-.related-product-card button,
-.related-product-card a{
-  margin-top:22px !important;
-}
-
-.related-product-card .view-details,
-.related-product-card .details-button{
-  background:linear-gradient(180deg,#35df62,#22c55e) !important;
-  color:#fff !important;
-  border:0 !important;
-  border-radius:16px !important;
-  height:54px !important;
-  font-size:18px !important;
-  font-weight:850 !important;
-  box-shadow:0 14px 34px rgba(34,197,94,.24) !important;
-}
-
-.related-product-card .view-details::before,
-.related-product-card .details-button::before{
-  content:"Add to Cart";
-  font-size:18px;
-}
-
-.related-product-card .view-details,
-.related-product-card .details-button{
-  font-size:0 !important;
 }
