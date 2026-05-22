@@ -15,7 +15,6 @@ export default function RelatedProducts() {
 
   const handleAddToCart = (product) => {
     addToCart({
-      id: product.id,
       title: product.name,
       sub: `${product.condition} · ${product.size} ft · ${product.grade}`,
       unitPrice: Number(product.base_price || 0),
@@ -38,44 +37,34 @@ export default function RelatedProducts() {
         {inventoryProducts.map((product) => (
           <article
             key={product.id}
-            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-orange-500/30 transition-all duration-300"
+            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
             <Link to={`/product/${product.id}`} className="block">
-              <div className="relative h-44 overflow-hidden bg-muted">
+              <div className="h-44 overflow-hidden bg-muted">
                 <img
                   src={product.image_url}
                   alt={product.name}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                 />
-
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent" />
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[245px]">
+            <div className="p-4 flex flex-col min-h-[270px]">
               <Link to={`/product/${product.id}`} className="block">
-                <h3 className="font-extrabold text-foreground text-[14px] leading-tight mb-2 line-clamp-2 tracking-tight hover:text-orange-400 transition-colors">
+                <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2">
                   {product.name}
                 </h3>
               </Link>
 
-              <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-1">
+              <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
                 {product.short_description}
               </p>
 
-              <p className="text-xs text-muted-foreground leading-snug mb-2">
+              <p className="text-xs text-muted-foreground leading-snug mb-3">
                 {product.condition} · {product.size} ft · {product.grade}
               </p>
 
-              <div className="flex items-center gap-1 text-[12px] text-amber-400 mb-3">
-                <span>★★★★★</span>
-
-                <span className="text-muted-foreground">
-                  ({product.review_count || 42})
-                </span>
-              </div>
-
-              <p className="text-xl font-black text-orange-400 tracking-tight mb-4">
+              <p className="text-xl font-black text-orange-500 tracking-tight mb-4">
                 {formatMoney(product.base_price)}
               </p>
 
@@ -83,7 +72,7 @@ export default function RelatedProducts() {
                 <Button
                   type="button"
                   onClick={() => handleAddToCart(product)}
-                  className="w-full h-10 rounded-2xl font-bold text-sm bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 border border-orange-400/20 shadow-[0_8px_30px_rgba(255,115,0,0.20)] transition-all duration-300"
+                  className="w-full h-10 rounded-xl font-bold text-sm bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 border border-orange-400/20 shadow-[0_8px_30px_rgba(255,115,0,0.22)] transition-all duration-300"
                 >
                   Add to Cart
                 </Button>
