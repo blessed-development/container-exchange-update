@@ -51,16 +51,13 @@ const getInitialSizeIndex = (container) => {
 
 export default function ProductDetail() {
   const { id } = useParams();
-
   const urlParams = new URLSearchParams(window.location.search);
-
   const zipCode = urlParams.get('zip') || '';
 
   const container =
     inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
-
   const [condition, setCondition] = useState('used');
 
   useEffect(() => {
@@ -115,13 +112,10 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
 
   const productTitle = container.name;
-
-  const productImage =
-    container.image_url || selectedSize.image;
+  const productImage = container.image_url || selectedSize.image;
 
   const displayPrice =
     container.base_price ||
@@ -135,7 +129,6 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-
       {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
@@ -167,7 +160,6 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-
           {/* LEFT COLUMN */}
           <div>
             <ContainerGallery
@@ -176,15 +168,13 @@ export default function ProductDetail() {
             />
 
             <div className="mt-10">
-
               {/* TITLE */}
-              <h2 className="text-3xl md:text-4xl font-black text-foreground mb-5 leading-tight tracking-tight">
+              <h2 className="text-3xl font-black text-foreground mb-5 leading-tight">
                 {productTitle}
               </h2>
 
               {/* BADGES + RATING */}
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-
+              <div className="flex flex-wrap items-center gap-2 mb-4">
                 <Badge className="bg-primary/10 text-primary font-mono rounded-full px-3">
                   {container.size}ft
                 </Badge>
@@ -208,14 +198,12 @@ export default function ProductDetail() {
                 )}
 
                 <div className="flex items-center gap-1.5 ml-1">
-
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
                         key={i}
                         className={`w-4 h-4 ${
-                          i <
-                          Math.round(container.rating || 5)
+                          i < Math.round(container.rating || 5)
                             ? 'fill-orange-500 text-orange-500'
                             : 'text-muted-foreground'
                         }`}
@@ -234,15 +222,14 @@ export default function ProductDetail() {
               </div>
 
               {/* PRICE */}
-              <div className="mb-6">
-
-                <div className="inline-flex items-center rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 mb-3">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-green-500">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="inline-flex items-center rounded-full bg-green-600 px-4 py-2 shadow-sm">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white font-black">
                     Starting From
                   </span>
                 </div>
 
-                <div className="text-5xl md:text-6xl font-black tracking-tight text-orange-500 leading-none">
+                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
                   ${Number(displayPrice).toLocaleString()}
                 </div>
               </div>
