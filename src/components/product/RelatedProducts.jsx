@@ -1,8 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { inventoryProducts } from '@/data/inventoryProducts';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '../../context/CartContext';
 
 const formatMoney = (value) =>
   `$${Number(value || 0).toLocaleString('en-US', {
@@ -11,15 +11,10 @@ const formatMoney = (value) =>
   })}`;
 
 export default function RelatedProducts() {
-  const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const openProduct = (product) => {
-    navigate(`/product/${product.id}`);
-  };
-
   const handleAddToCart = (e, product) => {
-    e.stopPropagation();
+    e.preventDefault();
 
     addToCart({
       id: product.id,
@@ -45,21 +40,24 @@ export default function RelatedProducts() {
         {inventoryProducts.map((product) => (
           <article
             key={product.id}
-            onClick={() => openProduct(product)}
-            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300 cursor-pointer"
+            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
-            <div className="h-44 overflow-hidden bg-muted">
-              <img
-                src={product.image_url}
-                alt={product.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+            <Link to={`/product/${product.id}`} className="block">
+              <div className="h-44 overflow-hidden bg-muted">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </Link>
 
             <div className="p-4 flex flex-col min-h-[270px]">
-              <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2 hover:text-orange-400 transition-colors">
-                {product.name}
-              </h3>
+              <Link to={`/product/${product.id}`} className="block">
+                <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2 hover:text-orange-400 transition-colors">
+                  {product.name}
+                </h3>
+              </Link>
 
               <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
                 {product.short_description}
