@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { useCart } from '@/context/CartContext';
@@ -11,10 +11,18 @@ const formatMoney = (value) =>
   })}`;
 
 export default function RelatedProducts() {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const handleAddToCart = (product) => {
+  const openProduct = (product) => {
+    navigate(`/product/${product.id}`);
+  };
+
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+
     addToCart({
+      id: product.id,
       title: product.name,
       sub: `${product.condition} · ${product.size} ft · ${product.grade}`,
       unitPrice: Number(product.base_price || 0),
@@ -37,24 +45,21 @@ export default function RelatedProducts() {
         {inventoryProducts.map((product) => (
           <article
             key={product.id}
-            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
+            onClick={() => openProduct(product)}
+            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300 cursor-pointer"
           >
-            <Link to={`/product/${product.id}`} className="block">
-              <div className="h-44 overflow-hidden bg-muted">
-                <img
-                  src={product.image_url}
-                  alt={product.name}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </Link>
+            <div className="h-44 overflow-hidden bg-muted">
+              <img
+                src={product.image_url}
+                alt={product.name}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
+            </div>
 
             <div className="p-4 flex flex-col min-h-[270px]">
-              <Link to={`/product/${product.id}`} className="block">
-                <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2 hover:text-orange-400 transition-colors">
-                  {product.name}
-                </h3>
-              </Link>
+              <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2 hover:text-orange-400 transition-colors">
+                {product.name}
+              </h3>
 
               <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
                 {product.short_description}
@@ -78,7 +83,7 @@ export default function RelatedProducts() {
               <div className="mt-auto">
                 <Button
                   type="button"
-                  onClick={() => handleAddToCart(product)}
+                  onClick={(e) => handleAddToCart(e, product)}
                   className="w-full h-10 rounded-xl font-bold text-sm bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 border border-orange-400/20 shadow-[0_8px_30px_rgba(255,115,0,0.22)] transition-all duration-300"
                 >
                   Add to Cart
