@@ -1,95 +1,61 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { getLocationFromZip } from '@/lib/zipUtils';
+import { inventoryProducts } from '@/data/inventoryProducts';
 
-const RELATED = [
-  {
-    id: 'used-20ft-asis',
-    title: 'Used 20 ft Shipping Container',
-    subtitle: 'Standard 8 ft 6 in High II Used...',
-    locationLabel: 'AS IS Conex Storage Container',
-    defaultCity: 'Miami, FL',
-    price: '$1,250.00',
-    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=600&q=80',
-  },
-  {
-    id: 'used-20ft-iicl',
-    title: 'Used 20 ft Shipping Container',
-    subtitle: 'Standard 8 ft 6 in High II Used...',
-    locationLabel: 'IICL Conex Storage Container',
-    defaultCity: 'Miami, FL',
-    price: '$1,750.00',
-    image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&q=80',
-  },
-  {
-    id: 'used-20ft-cw',
-    title: 'Used 20 ft Shipping Container',
-    subtitle: 'Standard 8 ft 6 in High II Used...',
-    locationLabel: 'Cargo Worthy CW Conex Storage Container',
-    defaultCity: 'Miami, FL',
-    price: '$1,550.00',
-    image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&q=80',
-  },
-  {
-    id: 'new-40ft-hc',
-    title: 'New 40 ft High Cube Container',
-    subtitle: 'High Cube 9 ft 6 in | One-Trip New...',
-    locationLabel: 'IICL New One-Trip Conex Box',
-    defaultCity: 'Miami, FL',
-    price: '$5,400.00',
-    image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=600&q=80',
-  },
-];
+const formatMoney = (value) =>
+  `$${Number(value || 0).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
-export default function RelatedProducts({ zipCode }) {
-  const locationInfo = zipCode ? getLocationFromZip(zipCode) : null;
-  const city = locationInfo ? `${locationInfo.city}, ${locationInfo.state}` : null;
-
+export default function RelatedProducts() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <h2 className="text-2xl font-black text-foreground mb-6">
+      <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-6">
         Related Products
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {RELATED.map((product) => (
-          <div
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+        {inventoryProducts.map((product) => (
+          <article
             key={product.id}
-            className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-300"
+            className="snap-start shrink-0 w-[290px] sm:w-[315px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
-            <div className="h-48 overflow-hidden bg-muted">
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+            <Link to={`/product/${product.id}`} className="block">
+              <div className="h-48 overflow-hidden bg-muted">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </Link>
 
-            <div className="p-4">
-              <h3 className="font-black text-foreground text-[15px] leading-tight mb-1">
-                {product.title}
+            <div className="p-4 pb-3">
+              <h3 className="font-black text-foreground text-[15px] leading-tight mb-1 line-clamp-2">
+                {product.name}
               </h3>
 
-              <p className="text-xs text-muted-foreground leading-snug mb-1">
-                {product.subtitle}
+              <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
+                {product.short_description}
               </p>
 
               <p className="text-xs text-muted-foreground leading-snug mb-3">
-                {product.locationLabel} — {city || product.defaultCity}
+                {product.condition} · {product.size} ft · {product.grade}
               </p>
 
-              <p className="text-xl font-black text-primary font-mono mb-4">
-                {product.price}
+              <p className="text-xl font-black text-orange-500 tracking-tight mb-4">
+                {formatMoney(product.base_price)}
               </p>
 
               <Link to={`/product/${product.id}`}>
-                <Button className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm rounded-xl shadow-md">
+                <Button className="w-full h-10 rounded-xl font-bold text-sm bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 border border-orange-400/20 shadow-[0_8px_30px_rgba(255,115,0,0.22)] transition-all duration-300">
                   Add to Cart
                 </Button>
               </Link>
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </section>
