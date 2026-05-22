@@ -56,7 +56,13 @@ export default function ProductDetail() {
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
-
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
+}, [id]);
   const isLoading = false;
 
   useEffect(() => {
