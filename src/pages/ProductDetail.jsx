@@ -36,19 +36,15 @@ const SAMPLE_GALLERY_IMAGES = [
 ];
 
 const normalize = (value) =>
-  String(value || '')
-    .toLowerCase()
-    .replace(/[\s_-]/g, '');
+  String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
 const getInitialSizeIndex = (container) => {
   if (!container) return 0;
 
   const matchIndex = SIZE_OPTIONS.findIndex((option) => {
     const sameSize = Number(option.size) === Number(container.size);
-
     const sameHeight =
-      !container.height ||
-      normalize(option.height) === normalize(container.height);
+      !container.height || normalize(option.height) === normalize(container.height);
 
     return sameSize && sameHeight;
   });
@@ -61,24 +57,16 @@ export default function ProductDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const zipCode = urlParams.get('zip') || '';
 
-  const container =
-    inventoryProducts.find((item) => item.id === id) || null;
+  const container = inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     setActiveImageIndex(0);
   }, [id]);
-
-  const isLoading = false;
 
   useEffect(() => {
     if (!container) return;
@@ -86,13 +74,13 @@ export default function ProductDetail() {
     setSelectedSizeIndex(getInitialSizeIndex(container));
 
     setCondition(
-      String(container.condition || '')
-        .toLowerCase()
-        .includes('new')
+      String(container.condition || '').toLowerCase().includes('new')
         ? 'new'
         : 'used'
     );
   }, [container?.id]);
+
+  const isLoading = false;
 
   if (isLoading) {
     return (
@@ -106,14 +94,9 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground mb-4">
-            Container not found.
-          </p>
+          <p className="text-muted-foreground mb-4">Container not found.</p>
 
-          <Link
-            to="/inventory"
-            className="text-primary hover:underline"
-          >
+          <Link to="/inventory" className="text-primary hover:underline">
             Browse all containers
           </Link>
         </div>
@@ -127,10 +110,7 @@ export default function ProductDetail() {
   const productTitle = container.name;
   const productImage = container.image_url || selectedSize.image;
 
-  const displayPrice =
-    container.base_price ||
-    container.price ||
-    0;
+  const displayPrice = container.base_price || container.price || 0;
 
   const allImages = [
     productImage,
@@ -143,23 +123,16 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link
-              to="/"
-              className="hover:text-primary transition-colors"
-            >
+            <Link to="/" className="hover:text-primary transition-colors">
               Home
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <Link
-              to="/inventory"
-              className="hover:text-primary transition-colors"
-            >
+            <Link to="/inventory" className="hover:text-primary transition-colors">
               Inventory
             </Link>
 
@@ -174,14 +147,13 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* LEFT COLUMN */}
           <div>
-            {/* HERO GALLERY */}
-            <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl">
+            <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
               <img
+                key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="w-full h-[430px] object-cover transition-all duration-500"
+                className="w-full h-[430px] object-cover transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
               />
 
               {showHeroOverlay && (
@@ -202,9 +174,7 @@ export default function ProductDetail() {
                       {container.condition}
                     </Badge>
 
-                    {String(container.height || '')
-                      .toLowerCase()
-                      .includes('high') && (
+                    {String(container.height || '').toLowerCase().includes('high') && (
                       <Badge
                         variant="outline"
                         className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
@@ -240,14 +210,13 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* THUMBNAILS */}
-            <div className="mt-4 flex gap-1 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {allImages.slice(0, 10).map((image, index) => (
                 <button
                   key={`${image}-${index}`}
                   type="button"
                   onClick={() => setActiveImageIndex(index)}
-                  className={`shrink-0 w-20 h-16 rounded-xl overflow-hidden border transition-all duration-200 ${
+                  className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
                     activeImageIndex === index
                       ? 'border-orange-500 ring-2 ring-orange-500/25'
                       : 'border-border hover:border-orange-400/50'
@@ -256,16 +225,14 @@ export default function ProductDetail() {
                   <img
                     src={image}
                     alt={`${productTitle} preview ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </button>
               ))}
             </div>
 
-            {/* CONTENT */}
-            <div className="mt-4 pb-6">
-              {/* PRICE */}
-              <div className="mb-6 flex items-end gap-4">
+            <div className="mt-6 pb-6">
+              <div className="mb-8 flex items-center gap-4">
                 <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
                   <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
                     Starting From
@@ -277,7 +244,6 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              {/* GRADE */}
               <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
                 <p className="text-xs font-mono text-primary tracking-widest mb-2">
                   GRADE CLASSIFICATION
@@ -303,7 +269,6 @@ export default function ProductDetail() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
               container={container}
