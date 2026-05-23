@@ -43,7 +43,7 @@ export default function RelatedProducts() {
             className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
             <Link to={`/product/${product.id}`} className="block">
-              <div className="relative h-44 overflow-hidden bg-muted group">
+              <div className="relative h-52 overflow-hidden bg-muted group">
                 <img
                   src={product.image_url}
                   alt={product.name}
@@ -67,7 +67,7 @@ export default function RelatedProducts() {
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[270px]">
+            <div className="p-4 flex flex-col min-h-[225px]">
               <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
                 {product.short_description}
               </p>
