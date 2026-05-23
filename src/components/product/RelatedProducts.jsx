@@ -31,16 +31,16 @@ export default function RelatedProducts() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-4 lg:pt-10 lg:pb-6">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
       <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-5">
         Related Products
       </h2>
 
-      <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {inventoryProducts.map((product) => (
           <article
             key={product.id}
-            className="snap-start shrink-0 w-[300px] sm:w-[320px] lg:w-[340px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
+            className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
             <Link to={`/product/${product.id}`} className="block">
               <div className="relative h-52 overflow-hidden bg-muted group">
@@ -50,7 +50,7 @@ export default function RelatedProducts() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/38 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <h3 className="font-black text-white text-[15px] leading-tight mb-2 line-clamp-2 drop-shadow">
@@ -67,20 +67,20 @@ export default function RelatedProducts() {
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[225px]">
+            <div className="p-4 flex flex-col min-h-[205px]">
               <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
                 {product.short_description}
               </p>
 
-              <p className="text-xs text-muted-foreground leading-snug mb-3">
+              <p className="text-xs text-muted-foreground leading-snug mb-2">
                 {product.condition} · {product.size} ft · {product.grade}
               </p>
 
-              <p className="text-xl font-black text-orange-500 tracking-tight mb-4">
-                {formatMoney(product.base_price || product.price)}
-              </p>
-
               <div className="mt-auto">
+                <p className="text-xl font-black text-orange-500 tracking-tight mb-3">
+                  {formatMoney(product.base_price || product.price)}
+                </p>
+
                 <Button
                   type="button"
                   onClick={(e) => handleAddToCart(e, product)}
