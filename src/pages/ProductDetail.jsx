@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ContainerGallery from '@/components/product/ContainerGallery';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
@@ -28,6 +27,14 @@ const GRADE_INFO = {
   },
 };
 
+const SAMPLE_GALLERY_IMAGES = [
+  'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=85',
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=85',
+  'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=85',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=85',
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=85',
+];
+
 const normalize = (value) =>
   String(value || '')
     .toLowerCase()
@@ -51,17 +58,15 @@ const getInitialSizeIndex = (container) => {
 
 export default function ProductDetail() {
   const { id } = useParams();
-
   const urlParams = new URLSearchParams(window.location.search);
-
   const zipCode = urlParams.get('zip') || '';
 
   const container =
     inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
-
   const [condition, setCondition] = useState('used');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     window.scrollTo({
@@ -69,6 +74,8 @@ export default function ProductDetail() {
       left: 0,
       behavior: 'smooth',
     });
+
+    setActiveImageIndex(0);
   }, [id]);
 
   const isLoading = false;
@@ -115,13 +122,10 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
 
   const productTitle = container.name;
-
-  const productImage =
-    container.image_url || selectedSize.image;
+  const productImage = container.image_url || selectedSize.image;
 
   const displayPrice =
     container.base_price ||
@@ -131,11 +135,14 @@ export default function ProductDetail() {
   const allImages = [
     productImage,
     ...(container.gallery_urls || []),
+    ...SAMPLE_GALLERY_IMAGES,
   ].filter(Boolean);
+
+  const activeImage = allImages[activeImageIndex] || productImage;
+  const showHeroOverlay = activeImageIndex === 0;
 
   return (
     <div className="min-h-screen bg-background">
-
       {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
@@ -167,85 +174,98 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-
           {/* LEFT COLUMN */}
           <div>
-
-            {/* HERO IMAGE */}
-            <div className="relative overflow-hidden rounded-[30px]">
-
-              <ContainerGallery
-                images={allImages}
-                key={container.id}
+            {/* HERO GALLERY */}
+            <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl">
+              <img
+                src={activeImage}
+                alt={productTitle}
+                className="w-full h-[430px] object-cover transition-all duration-500"
               />
 
-              {/* OVERLAY */}
-              <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
+              {showHeroOverlay && (
+                <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
+                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
+                    {productTitle}
+                  </h2>
 
-                {/* TITLE */}
-                <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
-                  {productTitle}
-                </h2>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                      {container.size}ft
+                    </Badge>
 
-                {/* BADGES + RATING */}
-                <div className="flex flex-wrap items-center gap-2">
-
-                  <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
-                    {container.size}ft
-                  </Badge>
-
-                  <Badge
-                    variant="outline"
-                    className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                  >
-                    {container.condition}
-                  </Badge>
-
-                  {String(container.height || '')
-                    .toLowerCase()
-                    .includes('high') && (
                     <Badge
                       variant="outline"
                       className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
                     >
-                      High Cube
+                      {container.condition}
                     </Badge>
-                  )}
 
-                  <div className="flex items-center gap-1.5 ml-1">
+                    {String(container.height || '')
+                      .toLowerCase()
+                      .includes('high') && (
+                      <Badge
+                        variant="outline"
+                        className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                      >
+                        High Cube
+                      </Badge>
+                    )}
 
-                    <div className="flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i <
-                            Math.round(container.rating || 5)
-                              ? 'fill-orange-500 text-orange-500'
-                              : 'text-white/30'
-                          }`}
-                        />
-                      ))}
+                    <div className="flex items-center gap-1.5 ml-1">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.round(container.rating || 5)
+                                ? 'fill-orange-500 text-orange-500'
+                                : 'text-white/30'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="text-sm font-semibold text-white">
+                        {container.rating || 5}
+                      </span>
+
+                      <span className="text-xs text-white/70">
+                        ({container.review_count || 42} reviews)
+                      </span>
                     </div>
-
-                    <span className="text-sm font-semibold text-white">
-                      {container.rating || 5}
-                    </span>
-
-                    <span className="text-xs text-white/70">
-                      ({container.review_count || 42} reviews)
-                    </span>
                   </div>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* THUMBNAILS */}
+            <div className="mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {allImages.slice(0, 10).map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  onClick={() => setActiveImageIndex(index)}
+                  className={`shrink-0 w-20 h-16 rounded-xl overflow-hidden border transition-all duration-200 ${
+                    activeImageIndex === index
+                      ? 'border-orange-500 ring-2 ring-orange-500/25'
+                      : 'border-border hover:border-orange-400/50'
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`${productTitle} preview ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
             </div>
 
             {/* CONTENT */}
             <div className="mt-8">
-
               {/* PRICE */}
               <div className="mb-6 flex items-end gap-4">
-
                 <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
                   <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
                     Starting From
@@ -273,7 +293,6 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              {/* DESCRIPTION */}
               {container.short_description && (
                 <p className="text-muted-foreground leading-relaxed text-base mb-10">
                   {container.short_description}
@@ -298,7 +317,6 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      {/* RELATED PRODUCTS */}
       <div className="border-t border-border">
         <RelatedProducts zipCode={zipCode} />
       </div>
