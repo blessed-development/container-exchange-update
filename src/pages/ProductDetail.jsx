@@ -263,7 +263,7 @@ export default function ProductDetail() {
             </div>
 
             {/* CONTENT */}
-            <div className="mt-8">
+            <div className="mt-12 pb-6">
               {/* PRICE */}
               <div className="mb-6 flex items-end gap-4">
                 <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
