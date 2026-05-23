@@ -241,7 +241,7 @@ export default function ProductDetail() {
             </div>
 
             {/* THUMBNAILS */}
-            <div className="mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {allImages.slice(0, 10).map((image, index) => (
                 <button
                   key={`${image}-${index}`}
@@ -263,7 +263,7 @@ export default function ProductDetail() {
             </div>
 
             {/* CONTENT */}
-            <div className="mt-12 pb-6">
+            <div className="mt-6 pb-6">
               {/* PRICE */}
               <div className="mb-6 flex items-end gap-4">
                 <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
