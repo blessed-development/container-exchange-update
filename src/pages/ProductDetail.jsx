@@ -51,13 +51,16 @@ const getInitialSizeIndex = (container) => {
 
 export default function ProductDetail() {
   const { id } = useParams();
+
   const urlParams = new URLSearchParams(window.location.search);
+
   const zipCode = urlParams.get('zip') || '';
 
   const container =
     inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
+
   const [condition, setCondition] = useState('used');
 
   useEffect(() => {
@@ -112,10 +115,13 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
+
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
 
   const productTitle = container.name;
-  const productImage = container.image_url || selectedSize.image;
+
+  const productImage =
+    container.image_url || selectedSize.image;
 
   const displayPrice =
     container.base_price ||
@@ -129,6 +135,7 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+
       {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
@@ -160,71 +167,87 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
           {/* LEFT COLUMN */}
           <div>
-            <ContainerGallery
-              images={allImages}
-              key={container.id}
-            />
 
-            <div className="mt-10">
-              {/* TITLE */}
-              <h2 className="text-3xl font-black text-foreground mb-5 leading-tight">
-                {productTitle}
-              </h2>
+            {/* HERO IMAGE */}
+            <div className="relative overflow-hidden rounded-[30px]">
 
-              {/* BADGES + RATING */}
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <Badge className="bg-primary/10 text-primary font-mono rounded-full px-3">
-                  {container.size}ft
-                </Badge>
+              <ContainerGallery
+                images={allImages}
+                key={container.id}
+              />
 
-                <Badge
-                  variant="outline"
-                  className="font-mono rounded-full px-3"
-                >
-                  {container.condition}
-                </Badge>
+              {/* OVERLAY */}
+              <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
 
-                {String(container.height || '')
-                  .toLowerCase()
-                  .includes('high') && (
+                {/* TITLE */}
+                <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
+                  {productTitle}
+                </h2>
+
+                {/* BADGES + RATING */}
+                <div className="flex flex-wrap items-center gap-2">
+
+                  <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                    {container.size}ft
+                  </Badge>
+
                   <Badge
                     variant="outline"
-                    className="font-mono text-primary border-primary rounded-full px-3"
+                    className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
                   >
-                    High Cube
+                    {container.condition}
                   </Badge>
-                )}
 
-                <div className="flex items-center gap-1.5 ml-1">
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.round(container.rating || 5)
-                            ? 'fill-orange-500 text-orange-500'
-                            : 'text-muted-foreground'
-                        }`}
-                      />
-                    ))}
+                  {String(container.height || '')
+                    .toLowerCase()
+                    .includes('high') && (
+                    <Badge
+                      variant="outline"
+                      className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                    >
+                      High Cube
+                    </Badge>
+                  )}
+
+                  <div className="flex items-center gap-1.5 ml-1">
+
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i <
+                            Math.round(container.rating || 5)
+                              ? 'fill-orange-500 text-orange-500'
+                              : 'text-white/30'
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    <span className="text-sm font-semibold text-white">
+                      {container.rating || 5}
+                    </span>
+
+                    <span className="text-xs text-white/70">
+                      ({container.review_count || 42} reviews)
+                    </span>
                   </div>
-
-                  <span className="text-sm font-semibold">
-                    {container.rating || 5}
-                  </span>
-
-                  <span className="text-xs text-muted-foreground">
-                    ({container.review_count || 42} reviews)
-                  </span>
                 </div>
               </div>
+            </div>
+
+            {/* CONTENT */}
+            <div className="mt-8">
 
               {/* PRICE */}
-              <div className="mb-6 flex items-center gap-3">
-                <div className="inline-flex items-center rounded-full bg-green-600 px-4 py-2 shadow-sm">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white font-black">
+              <div className="mb-6 flex items-end gap-4">
+
+                <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
                     Starting From
                   </span>
                 </div>
