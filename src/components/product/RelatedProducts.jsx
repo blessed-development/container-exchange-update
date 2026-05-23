@@ -43,19 +43,23 @@ export default function RelatedProducts() {
             className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
             <Link to={`/product/${product.id}`} className="block">
-              <div className="relative h-52 overflow-hidden bg-muted group">
+              <div className="relative h-[300px] overflow-hidden bg-muted group">
                 <img
                   src={product.image_url}
                   alt={product.name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-transparent" />
 
                 <div className="absolute inset-x-0 bottom-0 p-4">
-                  <h3 className="font-black text-white text-[15px] leading-tight mb-2 line-clamp-2 drop-shadow">
+                  <h3 className="font-black text-white text-[16px] leading-tight mb-2 line-clamp-2 drop-shadow">
                     {product.name}
                   </h3>
+
+                  <p className="text-white/78 text-[12px] leading-snug mb-3 line-clamp-2">
+                    {product.short_description}
+                  </p>
 
                   <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
                     <span className="tracking-tight">★★★★★</span>
@@ -67,12 +71,8 @@ export default function RelatedProducts() {
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[205px]">
-              <p className="text-xs text-muted-foreground leading-snug mb-2 line-clamp-2">
-                {product.short_description}
-              </p>
-
-              <p className="text-xs text-muted-foreground leading-snug mb-2">
+            <div className="p-4 flex flex-col min-h-[190px]">
+              <p className="text-xs text-muted-foreground leading-snug mb-3">
                 {product.condition} · {product.size} ft · {product.grade}
               </p>
 
@@ -80,6 +80,16 @@ export default function RelatedProducts() {
                 <p className="text-xl font-black text-orange-500 tracking-tight mb-3">
                   {formatMoney(product.base_price || product.price)}
                 </p>
+
+                <Link to={`/product/${product.id}`} className="block mb-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full h-10 rounded-xl font-bold text-sm border-orange-500/30 text-orange-500 hover:bg-orange-500/10 hover:text-orange-500 transition-all duration-300"
+                  >
+                    Quick View
+                  </Button>
+                </Link>
 
                 <Button
                   type="button"
