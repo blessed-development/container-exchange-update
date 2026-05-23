@@ -50,8 +50,7 @@ export default function RelatedProducts() {
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/45 to-transparent" />
-
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 via-35% to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <h3 className="font-black text-white text-[16px] leading-tight mb-2 line-clamp-2 drop-shadow">
                     {product.name}
