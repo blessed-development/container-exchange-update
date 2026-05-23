@@ -57,8 +57,8 @@ export default function RelatedProducts() {
                     {product.name}
                   </h3>
 
-                  <p className="text-white/78 text-[12px] leading-snug mb-3 line-clamp-2">
-                    {product.short_description}
+                  <p className="text-white/78 text-[12px] leading-snug mb-3">
+                    {product.condition} · {product.size} ft · {product.grade}
                   </p>
 
                   <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
@@ -71,11 +71,7 @@ export default function RelatedProducts() {
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[190px]">
-              <p className="text-xs text-muted-foreground leading-snug mb-3">
-                {product.condition} · {product.size} ft · {product.grade}
-              </p>
-
+            <div className="p-4 flex flex-col min-h-[170px]">
               <div className="mt-auto">
                 <p className="text-xl font-black text-orange-500 tracking-tight mb-3">
                   {formatMoney(product.base_price || product.price)}
