@@ -10,11 +10,15 @@ const formatMoney = (value) =>
     maximumFractionDigits: 2,
   })}`;
 
+const fallbackImage =
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85';
+
 export default function RelatedProducts() {
   const { addToCart } = useCart();
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
+    e.stopPropagation();
 
     addToCart({
       id: product.id,
@@ -22,8 +26,8 @@ export default function RelatedProducts() {
       sub: `${product.condition} · ${product.size} ft · ${product.grade}`,
       unitPrice: Number(product.base_price || product.price || 0),
       qty: 1,
-      img: product.image_url,
-      image: product.image_url,
+      img: product.image_url || fallbackImage,
+      image: product.image_url || fallbackImage,
       url: `/product/${product.id}`,
       rating: product.rating,
       reviewCount: product.review_count,
@@ -45,28 +49,32 @@ export default function RelatedProducts() {
             <Link to={`/product/${product.id}`} className="block">
               <div className="relative h-[300px] overflow-hidden bg-muted group">
                 <img
-                  src={product.image_url}
+                  src={product.image_url || fallbackImage}
                   alt={product.name}
+                  onError={(e) => {
+                    e.currentTarget.src = fallbackImage;
+                  }}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 via-35% to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-4">
-  <h3 className="font-black text-white text-[16px] leading-tight mb-1 line-clamp-2 drop-shadow">
-    {product.name}
-  </h3>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
 
-  <p className="text-white/85 text-[12px] leading-snug mb-1">
-    {product.condition} · {product.size} ft · {product.grade}
-  </p>
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h3 className="font-black text-white text-[16px] leading-tight mb-1 line-clamp-2 drop-shadow">
+                    {product.name}
+                  </h3>
 
-  <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
-    <span className="tracking-tight">★★★★★</span>
-    <span className="text-white/90 text-[13px]">
-      ({product.review_count || 42})
-    </span>
-  </div>
-</div>
+                  <p className="text-white/90 text-[12px] leading-snug mb-1">
+                    {product.condition} · {product.size} ft · {product.grade}
+                  </p>
+
+                  <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
+                    <span className="tracking-tight">★★★★★</span>
+                    <span className="text-white/90 text-[13px]">
+                      ({product.review_count || 42})
+                    </span>
+                  </div>
+                </div>
               </div>
             </Link>
 
