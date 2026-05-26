@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ShippingCalculator.css';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Phone, ShieldCheck } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
@@ -9,9 +10,7 @@ const USED_GRADES = [
   { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 400 },
 ];
 
-const NEW_GRADES = [
-  { key: 'IICL', label: 'IICL', adjust: 0 },
-];
+const NEW_GRADES = [{ key: 'IICL', label: 'IICL', adjust: 0 }];
 
 const CONDITION_IMAGES = {
   used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80',
@@ -29,11 +28,7 @@ export default function ShippingCalculator({
   const [qty, setQty] = useState(1);
 
   useEffect(() => {
-    if (condition === 'new') {
-      setGrade('IICL');
-    } else {
-      setGrade('AS_IS');
-    }
+    setGrade(condition === 'new' ? 'IICL' : 'AS_IS');
   }, [condition]);
 
   const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
@@ -47,8 +42,7 @@ export default function ShippingCalculator({
   const totalPrice = basePrice * qty;
 
   return (
-    <div className="flex flex-col gap-2.5">
-      {/* SIZE OPTIONS */}
+    <div className="shipping-calculator-wrap">
       <div className="grid grid-cols-3 border border-border rounded-2xl overflow-hidden bg-card">
         {SIZE_OPTIONS.map((opt, i) => {
           const active = selectedSizeIndex === i;
@@ -56,6 +50,7 @@ export default function ShippingCalculator({
           return (
             <button
               key={i}
+              type="button"
               onClick={() => onSizeChange(i)}
               className={`flex flex-col items-center gap-0.5 py-4 px-2 border-r border-border last:border-r-0 transition-colors ${
                 active
@@ -87,15 +82,11 @@ export default function ShippingCalculator({
         })}
       </div>
 
-      {/* PREMIUM PRICE PANEL */}
       <div className="premium-buy-panel">
         <div className="premium-price-row">
           <div>
             <p className="premium-price-label">Starting Price</p>
-
-            <h2 className="premium-price">
-              ${basePrice.toLocaleString()}.00
-            </h2>
+            <h2 className="premium-price">${basePrice.toLocaleString()}.00</h2>
           </div>
 
           <div className="premium-stock-pill">
@@ -109,16 +100,12 @@ export default function ShippingCalculator({
             <span>
               {sizeOption.label} · {condition === 'new' ? 'New' : 'Used'}
             </span>
-
-            <strong>
-              ${(basePrice - gradeAdjust).toLocaleString()}
-            </strong>
+            <strong>${(basePrice - gradeAdjust).toLocaleString()}</strong>
           </div>
 
           {gradeAdjust !== 0 && (
             <div className="premium-mini-row">
               <span>Grade adjustment</span>
-
               <strong>
                 {gradeAdjust > 0 ? '+' : ''}${gradeAdjust.toLocaleString()}
               </strong>
@@ -136,9 +123,7 @@ export default function ShippingCalculator({
         <div className="premium-total-box">
           <div>
             <p className="premium-total-label">Total</p>
-            <p className="premium-tax-note">
-              Sales tax calculated at checkout
-            </p>
+            <p className="premium-tax-note">Sales tax calculated at checkout</p>
           </div>
 
           <div className="premium-total-price">
@@ -181,7 +166,6 @@ export default function ShippingCalculator({
         </a>
       </div>
 
-      {/* CONDITION */}
       <div className="border border-border rounded-2xl bg-card overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
@@ -202,6 +186,7 @@ export default function ShippingCalculator({
             return (
               <button
                 key={cond}
+                type="button"
                 onClick={() => onConditionChange(cond)}
                 className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
                   active
@@ -230,7 +215,6 @@ export default function ShippingCalculator({
         </div>
       </div>
 
-      {/* GRADE */}
       <div className="border border-border rounded-2xl bg-card overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <span className="text-[11px] font-bold tracking-[0.12em] uppercase text-muted-foreground">
@@ -253,6 +237,7 @@ export default function ShippingCalculator({
             return (
               <button
                 key={opt.key}
+                type="button"
                 onClick={() => setGrade(opt.key)}
                 className={`py-3 px-2 rounded-xl border-2 text-center transition-all ${
                   active
