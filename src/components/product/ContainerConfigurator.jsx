@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
-import { ShoppingCart, X, Lock, MapPin, Check } from 'lucide-react';
+import {
+  ShoppingCart,
+  X,
+  Lock,
+  MapPin,
+  Check,
+  ChevronDown,
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 const USED_GRADES = [
@@ -16,6 +23,19 @@ const NEW_GRADES = [{ key: 'IICL', label: 'IICL Certified', adjust: 0 }];
 const CONDITION_IMAGES = {
   used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
   new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
+};
+
+const PRODUCT_SWITCH_MAP = {
+  used: {
+    0: 'used-20-wwt',
+    1: 'used-40-wwt',
+    2: 'used-40hc-wwt',
+  },
+  new: {
+    0: 'new-20-iicl',
+    1: 'new-40-iicl',
+    2: 'new-40hc-iicl',
+  },
 };
 
 const fmt = (num) =>
@@ -71,6 +91,16 @@ export default function ContainerConfigurator({
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
+  const handleSizeSwitch = (index) => {
+    onSizeChange(index);
+
+    const targetId = PRODUCT_SWITCH_MAP?.[condition]?.[index];
+
+    if (targetId && targetId !== container?.id) {
+      navigate(`/product/${targetId}`);
+    }
+  };
+
   const addToCart = () => {
     addCartItem({
       title: currentTitle,
@@ -93,7 +123,6 @@ export default function ContainerConfigurator({
   return (
     <>
       <div className="widget">
-        {/* ZIP BAR */}
         <div className="zip-bar">
           <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
             <div className="zip-left">
@@ -122,7 +151,6 @@ export default function ContainerConfigurator({
 
         <div className="step-label">STEP 2 — SELECT CONTAINER TYPE</div>
 
-        {/* NEW / USED TABS */}
         <div className="condition-tabs">
           <button
             className={`condition-tab ${condition === 'new' ? 'active' : ''}`}
@@ -152,13 +180,12 @@ export default function ContainerConfigurator({
           <strong>{sizeOption.label} Selected</strong>
         </div>
 
-        {/* SIZE TABS */}
         <div className="main-tabs">
           {SIZE_OPTIONS.map((opt, index) => (
             <button
               key={opt.label}
               className={`main-tab ${selectedSizeIndex === index ? 'active' : ''}`}
-              onClick={() => onSizeChange(index)}
+              onClick={() => handleSizeSwitch(index)}
             >
               <span className="tab-title">{opt.label}</span>
               <span className="tab-sub">{opt.dims}</span>
@@ -169,7 +196,6 @@ export default function ContainerConfigurator({
           ))}
         </div>
 
-        {/* CONDITION CARDS */}
         <div className="cond-cards-section">
           <div className="cond-cards-head">
             <span className="card-lbl">CONDITION</span>
@@ -208,33 +234,36 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        {/* GRADE */}
         <div className="section-card">
           <div className="card-head">
             <span className="card-lbl">GRADE</span>
             <span className="card-val">{activeGrade.label}</span>
           </div>
 
-          <div className="grade-grid">
-            {gradeOptions.map((g) => (
-              <button
-                key={g.key}
-                onClick={() => setGrade(g.key)}
-                className={`grade-btn ${grade === g.key ? 'active' : ''}`}
-              >
-                <span>{g.label}</span>
-                {g.adjust !== 0 && (
-                  <small>
-                    {g.adjust > 0 ? '+' : ''}
-                    {fmt(g.adjust)}
-                  </small>
-                )}
-              </button>
-            ))}
+          <div className="grade-select-box">
+            <span className="grade-tick">
+              <Check size={12} />
+            </span>
+
+            <select
+              className="grade-select-input"
+              value={grade}
+              onChange={(e) => setGrade(e.target.value)}
+            >
+              {gradeOptions.map((g) => (
+                <option key={g.key} value={g.key}>
+                  {g.label}
+                  {g.adjust !== 0
+                    ? ` (${g.adjust > 0 ? '+' : ''}${fmt(g.adjust)})`
+                    : ''}
+                </option>
+              ))}
+            </select>
+
+            <ChevronDown className="grade-select-arrow" size={16} />
           </div>
         </div>
 
-        {/* SELECTION TYPE */}
         <div className="section-card">
           <div className="card-head">
             <span className="card-lbl">SELECTION TYPE</span>
@@ -251,7 +280,6 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        {/* CHECKOUT FOOTER */}
         <div className="checkout">
           <div className="checkout-inner">
             <div className="tax-note">
@@ -278,7 +306,6 @@ export default function ContainerConfigurator({
         </div>
       </div>
 
-      {/* CART DRAWER */}
       <div
         className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
         onClick={() => setIsDrawerOpen(false)}
