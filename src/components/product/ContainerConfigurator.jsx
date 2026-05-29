@@ -235,34 +235,34 @@ export default function ContainerConfigurator({
         </div>
 
         <div className="section-card">
-          <div className="card-head">
-            <span className="card-lbl">GRADE</span>
-            <span className="card-val">{activeGrade.label}</span>
-          </div>
+  <div className="card-head">
+    <span className="card-lbl">GRADE</span>
+    <span className="card-val">{activeGrade.label}</span>
+  </div>
 
-          <div className="grade-select-box">
-            <span className="grade-tick">
-              <Check size={12} />
-            </span>
+  <div className="grade-dropdown-wrap">
+    <span className="grade-selected-tick">
+      <Check size={11} />
+    </span>
 
-            <select
-              className="grade-select-input"
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-            >
-              {gradeOptions.map((g) => (
-                <option key={g.key} value={g.key}>
-                  {g.label}
-                  {g.adjust !== 0
-                    ? ` (${g.adjust > 0 ? '+' : ''}${fmt(g.adjust)})`
-                    : ''}
-                </option>
-              ))}
-            </select>
+    <select
+      className="grade-dropdown-select"
+      value={grade}
+      onChange={(e) => setGrade(e.target.value)}
+    >
+      {gradeOptions.map((g) => (
+        <option key={g.key} value={g.key}>
+          {g.label}
+          {g.adjust !== 0
+            ? ` (${g.adjust > 0 ? '+' : ''}${fmt(g.adjust)})`
+            : ''}
+        </option>
+      ))}
+    </select>
 
-            <ChevronDown className="grade-select-arrow" size={16} />
-          </div>
-        </div>
+    <ChevronDown className="grade-dropdown-arrow" size={15} />
+  </div>
+</div>
 
         <div className="section-card">
           <div className="card-head">
