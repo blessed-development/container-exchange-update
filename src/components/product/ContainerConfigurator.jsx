@@ -68,7 +68,8 @@ export default function ContainerConfigurator({
   const [zip, setZip] = useState('33304');
   const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'AS_IS');
   const [qty, setQty] = useState(1);
-
+  const [gradeOpen, setGradeOpen] = useState(false);
+  
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'AS_IS');
   }, [condition]);
@@ -235,33 +236,51 @@ export default function ContainerConfigurator({
         </div>
 
         <div className="section-card">
-  <div className="card-head">
+  <button
+    type="button"
+    className="card-head grade-dropdown-head"
+    onClick={() => setGradeOpen(!gradeOpen)}
+  >
     <span className="card-lbl">GRADE</span>
-    <span className="card-val">{activeGrade.label}</span>
-  </div>
 
-  <div className="grade-dropdown-wrap">
-    <span className="grade-selected-tick">
-      <Check size={11} />
+    <span className="card-val grade-head-val">
+      <span className="grade-head-tick">
+        <Check size={10} />
+      </span>
+
+      {activeGrade.label}
+
+      <ChevronDown
+        size={15}
+        className={`grade-head-arrow ${gradeOpen ? 'open' : ''}`}
+      />
     </span>
+  </button>
 
-    <select
-      className="grade-dropdown-select"
-      value={grade}
-      onChange={(e) => setGrade(e.target.value)}
-    >
+  {gradeOpen && (
+    <div className="grade-grid">
       {gradeOptions.map((g) => (
-        <option key={g.key} value={g.key}>
-          {g.label}
-          {g.adjust !== 0
-            ? ` (${g.adjust > 0 ? '+' : ''}${fmt(g.adjust)})`
-            : ''}
-        </option>
-      ))}
-    </select>
+        <button
+          key={g.key}
+          type="button"
+          className={`grade-btn ${grade === g.key ? 'active' : ''}`}
+          onClick={() => {
+            setGrade(g.key);
+            setGradeOpen(false);
+          }}
+        >
+          <span>{g.label}</span>
 
-    <ChevronDown className="grade-dropdown-arrow" size={15} />
-  </div>
+          {g.adjust !== 0 && (
+            <small>
+              {g.adjust > 0 ? '+' : ''}
+              {fmt(g.adjust)}
+            </small>
+          )}
+        </button>
+      ))}
+    </div>
+  )}
 </div>
 
         <div className="section-card">
