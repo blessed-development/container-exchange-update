@@ -518,38 +518,40 @@
 
 .add-btn{
   width:100%;
-  height:46px;
-  background:linear-gradient(180deg,#1a8d43 0%,#106d33 45%,#084b23 100%);
+  height:48px;
+
+  background:
+  linear-gradient(
+    180deg,
+    #ff7038 0%,
+    #ff5d2d 22%,
+    #159447 58%,
+    #0a5f2c 82%,
+    #042e16 100%
+  );
+
   color:#fff;
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:14px;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  border-radius:15px;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   gap:8px;
+
   font-size:14px;
+
   font-weight:900;
-  box-shadow:0 12px 32px rgba(5,60,26,.30);
-  transition:all .22s ease;
-}
 
-.add-btn:hover{
-  transform:translateY(-1px);
-  background:linear-gradient(180deg,#23a54f,#12753a,#0a5327);
-}
+  box-shadow:
+  0 16px 34px rgba(6,70,30,.32);
 
-.add-btn:active{
-  transform:translateY(1px);
-}
-
-.quote-btn{
-  width:100%;
-  height:38px;
-  margin-top:6px;
-  background:#101318;
-  border:1px solid #242830;
-  color:#dce3ec;
-  font-size:13px;
+  transition:.25s ease;
 }
 
 /* DRAWER */
