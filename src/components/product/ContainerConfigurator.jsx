@@ -159,24 +159,23 @@ export default function ContainerConfigurator({
     <>
       <div className="widget">
         <div className="buy-header">
-          <div className="buy-header-title">BUY</div>
-          <div className="buy-header-sub">SELECT CONTAINER TYPE</div>
-
-          <div className="premium-buy-rent-tabs">
+          <div className="premium-buy-tabs">
             <button
               type="button"
-              className={`premium-buy-rent-tab ${condition === 'new' ? 'active' : ''}`}
+              className={`premium-buy-tab ${condition === 'new' ? 'active' : ''}`}
               onClick={() => handleConditionSwitch('new')}
             >
+              <strong>BUY</strong>
               <span>NEW (One-Trip)</span>
               <small>Shipping Containers</small>
             </button>
 
             <button
               type="button"
-              className={`premium-buy-rent-tab ${condition === 'used' ? 'active' : ''}`}
+              className={`premium-buy-tab ${condition === 'used' ? 'active' : ''}`}
               onClick={() => handleConditionSwitch('used')}
             >
+              <strong>BUY</strong>
               <span>USED (Wind/Water Tight)</span>
               <small>Shipping Containers</small>
             </button>
@@ -361,87 +360,6 @@ export default function ContainerConfigurator({
           </div>
         </div>
       </div>
-
-      <div
-        className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
-        onClick={() => setIsDrawerOpen(false)}
-      />
-
-      <aside className={`cart-drawer ${isDrawerOpen ? 'open' : ''}`}>
-        <div className="drawer-header">
-          <div className="drawer-title">
-            <ShoppingCart size={18} />
-            My Cart <span className="cart-count">{cartCount}</span>
-          </div>
-
-          <button className="drawer-close" onClick={() => setIsDrawerOpen(false)}>
-            <X size={16} />
-          </button>
-        </div>
-
-        <div className="drawer-body">
-          {cart.length === 0 ? (
-            <div className="empty-cart">Your cart is empty.</div>
-          ) : (
-            cart.map((item) => (
-              <div className="cart-item" key={item.id}>
-                <img src={item.image} className="ci-img" alt={item.title} />
-
-                <div className="ci-info">
-                  <button className="ci-remove" onClick={() => removeItem(item.id)}>
-                    ×
-                  </button>
-
-                  <div className="ci-name">{item.title}</div>
-
-                  <div className="ci-meta">
-                    {item.sub}
-                    <br />
-                    Grade: {item.grade}
-                  </div>
-
-                  <div className="ci-price">{fmt(item.unitPrice)}</div>
-
-                  <div className="ci-qty-row">
-                    <button
-                      className="ci-qty-btn"
-                      onClick={() => updateQuantity(item.id, -1)}
-                    >
-                      −
-                    </button>
-
-                    <span className="ci-qty-val">{item.qty}</span>
-
-                    <button
-                      className="ci-qty-btn"
-                      onClick={() => updateQuantity(item.id, 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className="drawer-footer">
-          <div className="drawer-subtotal">
-            <span>Subtotal</span>
-            <span className="drawer-total-val">{fmt(grandTotal || subtotal)}</span>
-          </div>
-
-          <div className="drawer-tax-note">Sales tax calculated at checkout.</div>
-
-          <button className="checkout-btn" onClick={openCheckout}>
-            Checkout
-          </button>
-
-          <button className="continue-btn" onClick={() => setIsDrawerOpen(false)}>
-            Continue Shopping
-          </button>
-        </div>
-      </aside>
     </>
   );
 }
