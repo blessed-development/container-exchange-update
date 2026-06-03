@@ -120,10 +120,28 @@ condition === 'new'
 ? sizeOption.newPrice
 : sizeOption.usedPrice;
 
+ const selectedPrice =
+condition==='new'
+? sizeOption.newPrice
+: sizeOption.usedPrice;
+
 const basePrice =
-productPrice > 0
-? productPrice
-: fallbackPrice;
+
+userChangedConfig
+
+?
+
+selectedPrice
+
+:
+
+(
+
+productPrice
+||
+selectedPrice
+
+);
 
 const gradeAdjustment =
 productPrice > 0
@@ -146,29 +164,38 @@ qty;
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
-  const handleSizeSwitch = (index) => {
-    onSizeChange(index);
+ const handleSizeSwitch = (
+index
+) => {
 
-    const targetId = PRODUCT_SWITCH_MAP?.[condition]?.[index];
+setUserChangedConfig(
+true
+);
 
-    if (targetId && targetId !== container?.id) {
-      navigate(`/product/${targetId}`);
-    }
-  };
+onSizeChange(
+index
+);
 
-  const addToCart = () => {
-    addCartItem({
-      title: currentTitle,
-      sub: currentSub,
-      condition,
-      grade: activeGrade.label,
-      size: sizeOption.label,
-      unitPrice,
-      qty,
-      image: selectedImage,
-      url: container?.id ? `/product/${container.id}` : '#',
-    });
-  };
+const targetId =
+PRODUCT_SWITCH_MAP[
+condition
+]?.[
+index
+];
+
+if(
+targetId
+&&
+targetId!==container?.id
+){
+
+navigate(
+`/product/${targetId}`
+);
+
+}
+
+};
 
   const openCheckout = () => {
     setIsDrawerOpen(false);
@@ -209,10 +236,38 @@ qty;
         <div className="condition-tabs">
           <button
             className={`condition-tab ${condition === 'new' ? 'active' : ''}`}
-            onClick={() => {
-              onConditionChange('new');
-              setGrade('IICL');
-            }}
+           onClick={() => {
+
+setUserChangedConfig(
+true
+);
+
+setGrade(
+'IICL'
+);
+
+onConditionChange(
+'new'
+);
+
+const id =
+PRODUCT_SWITCH_MAP
+.new[
+selectedSizeIndex
+];
+
+if(
+id &&
+id!==container?.id
+){
+
+navigate(
+`/product/${id}`
+);
+
+}
+
+}}
           >
             <span>NEW (One-Trip)</span>
             <small>SHIPPING CONTAINERS</small>
@@ -221,9 +276,37 @@ qty;
           <button
             className={`condition-tab ${condition === 'used' ? 'active' : ''}`}
             onClick={() => {
-              onConditionChange('used');
-              setGrade('AS_IS');
-            }}
+
+setUserChangedConfig(
+true
+);
+
+setGrade(
+'AS_IS'
+);
+
+onConditionChange(
+'used'
+);
+
+const id =
+PRODUCT_SWITCH_MAP
+.used[
+selectedSizeIndex
+];
+
+if(
+id &&
+id!==container?.id
+){
+
+navigate(
+`/product/${id}`
+);
+
+}
+
+}}
           >
             <span>USED (Wind/Water Tight)</span>
             <small>SHIPPING CONTAINERS</small>
