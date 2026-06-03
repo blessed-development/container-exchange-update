@@ -65,10 +65,27 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-  const [zip, setZip] = useState('33304');
-  const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'AS_IS');
-  const [qty, setQty] = useState(1);
-  const [gradeOpen, setGradeOpen] = useState(false);
+const [zip, setZip] = useState('33304');
+
+const [grade, setGrade] =
+useState(
+condition === 'new'
+? 'IICL'
+: 'AS_IS'
+);
+
+const [qty, setQty] =
+useState(1);
+
+const [gradeOpen, setGradeOpen] =
+useState(false);
+
+/* NEW */
+const [
+userChangedConfig,
+setUserChangedConfig
+] =
+useState(false);
   
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'AS_IS');
