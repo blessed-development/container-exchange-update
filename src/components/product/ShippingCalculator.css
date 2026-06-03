@@ -997,20 +997,42 @@
     font-size:15px;
   }
 }
-/* FINAL DARK GREEN BUTTON OVERRIDE */
+/* FINAL CTA BUTTON — ORANGE TO GREEN TO DARK */
 
 .widget .add-btn,
 .cart-drawer .checkout-btn,
 .checkout-btn{
-  background:linear-gradient(180deg,#0f7f39 0%,#0a5f2b 48%,#063f1d 100%) !important;
+  background:
+    linear-gradient(
+      180deg,
+      #ff6a3d 0%,
+      #f05a2f 22%,
+      #159447 55%,
+      #0b642f 78%,
+      #063719 100%
+    ) !important;
+
   color:#ffffff !important;
-  border:1px solid rgba(255,255,255,.08) !important;
-  box-shadow:0 14px 34px rgba(4,70,31,.38) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:15px !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    0 16px 36px rgba(8,75,35,.34) !important;
 }
 
 .widget .add-btn:hover,
 .cart-drawer .checkout-btn:hover,
 .checkout-btn:hover{
-  background:linear-gradient(180deg,#139447 0%,#0c6c33 48%,#074923 100%) !important;
+  background:
+    linear-gradient(
+      180deg,
+      #ff7448 0%,
+      #f26335 20%,
+      #18a950 55%,
+      #0d7437 78%,
+      #07421f 100%
+    ) !important;
+
   transform:translateY(-1px);
 }
