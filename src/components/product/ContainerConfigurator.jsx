@@ -78,9 +78,16 @@ export default function ContainerConfigurator({
   const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
   const activeGrade = gradeOptions.find((g) => g.key === grade) || gradeOptions[0];
 
-  const unitPrice =
-    (condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice) +
-    (activeGrade.adjust || 0);
+  const productBasePrice =
+  Number(container?.base_price ?? container?.price ?? 0);
+
+const fallbackPrice =
+  condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+
+const unitPrice =
+  productBasePrice > 0
+    ? productBasePrice
+    : fallbackPrice + (activeGrade.adjust || 0);
 
   const totalPrice = unitPrice * qty;
 
