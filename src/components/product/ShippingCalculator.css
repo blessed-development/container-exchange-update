@@ -997,3 +997,20 @@
     font-size:15px;
   }
 }
+/* FINAL DARK GREEN BUTTON OVERRIDE */
+
+.widget .add-btn,
+.cart-drawer .checkout-btn,
+.checkout-btn{
+  background:linear-gradient(180deg,#0f7f39 0%,#0a5f2b 48%,#063f1d 100%) !important;
+  color:#ffffff !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 14px 34px rgba(4,70,31,.38) !important;
+}
+
+.widget .add-btn:hover,
+.cart-drawer .checkout-btn:hover,
+.checkout-btn:hover{
+  background:linear-gradient(180deg,#139447 0%,#0c6c33 48%,#074923 100%) !important;
+  transform:translateY(-1px);
+}
