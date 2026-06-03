@@ -842,76 +842,121 @@
 }
 /* TOP BUY SELECTOR — FINAL OVERRIDE */
 
-.widget .buy-header{
-  margin:0 0 10px 0 !important;
-  padding:0 !important;
+.buy-header{
+display:flex;
+flex-direction:column;
+
+padding:14px;
+
+margin-bottom:12px;
+
+background:#111318;
+
+border:1px solid #252a34;
+
+border-radius:22px;
+
+overflow:hidden;
 }
 
-.widget .buy-header-title{
-  font-size:34px !important;
-  font-weight:950 !important;
-  line-height:.95 !important;
-  letter-spacing:-.06em !important;
-  color:#ffffff !important;
-  margin:0 0 4px 0 !important;
+.buy-header-title{
+font-size:18px;
+
+font-weight:950;
+
+line-height:1;
+
+color:#fff;
+
+margin:0 0 14px;
+
+letter-spacing:-.04em;
 }
 
-.widget .buy-header-sub{
-  font-size:10px !important;
-  font-weight:900 !important;
-  letter-spacing:.18em !important;
-  text-transform:uppercase !important;
-  color:#7f8797 !important;
-  margin:0 0 10px 0 !important;
+.buy-header-sub{
+display:none;
 }
 
-.widget .premium-buy-rent-tabs{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
-  border-radius:18px !important;
-  overflow:hidden !important;
-  background:#111318 !important;
-  border:1px solid #252a34 !important;
+.premium-buy-rent-tabs{
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+border-radius:18px;
+
+overflow:hidden;
+
+background:#0d1016;
+
+border:1px solid #232831;
 }
 
-.widget .premium-buy-rent-tab{
-  min-height:86px !important;
-  border:0 !important;
-  border-right:1px solid #252a34 !important;
-  background:#111318 !important;
-  color:#8b94a5 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  justify-content:center !important;
-  align-items:center !important;
-  gap:5px !important;
-  cursor:pointer !important;
-  transition:all .2s ease !important;
-  padding:10px !important;
+.premium-buy-rent-tab{
+min-height:96px;
+
+padding:18px;
+
+background:transparent;
+
+border:0;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+gap:6px;
+
+color:#6f7888;
+
+transition:.2s;
 }
 
-.widget .premium-buy-rent-tab:last-child{
-  border-right:0 !important;
+.premium-buy-rent-tab span{
+
+font-size:16px;
+
+font-weight:900;
+
+line-height:1.15;
+
+text-align:center;
+
 }
 
-.widget .premium-buy-rent-tab span{
-  font-size:14px !important;
-  font-weight:950 !important;
-  line-height:1.1 !important;
-  text-align:center !important;
+.premium-buy-rent-tab small{
+
+font-size:10px;
+
+font-weight:800;
+
+letter-spacing:.12em;
+
+text-transform:uppercase;
+
 }
 
-.widget .premium-buy-rent-tab small{
-  font-size:9px !important;
-  font-weight:900 !important;
-  letter-spacing:.14em !important;
-  text-transform:uppercase !important;
-  text-align:center !important;
+.premium-buy-rent-tab.active{
+
+background:
+linear-gradient(
+135deg,
+#ff5a4b,
+#e73c31
+);
+
+color:#fff;
+
 }
 
-.widget .premium-buy-rent-tab.active{
-  background:linear-gradient(135deg,#ff5948,#df382f) !important;
-  color:#ffffff !important;
+.premium-buy-rent-tab.active span,
+.premium-buy-rent-tab.active small{
+
+color:#fff;
+
 }
 
 .widget .premium-buy-rent-tab.active span,
