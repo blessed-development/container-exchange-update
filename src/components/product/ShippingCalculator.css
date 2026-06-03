@@ -64,9 +64,9 @@
 
 .premium-buy-tab.active{
   flex:1.28;
-  background:linear-gradient(135deg,#ff604f,#df352c);
+  background:linear-gradient(180deg,#ff6a3d 0%,#f05a2f 24%,#159447 58%,#0b642f 82%,#063719 100%);
   color:#fff;
-  box-shadow:0 18px 46px rgba(255,82,64,.22);
+  box-shadow:0 18px 46px rgba(8,75,35,.28);
 }
 
 .premium-buy-tab.active strong{
@@ -519,39 +519,46 @@
 .add-btn{
   width:100%;
   height:48px;
-
-  background:
-  linear-gradient(
-    180deg,
-    #ff7038 0%,
-    #ff5d2d 22%,
-    #159447 58%,
-    #0a5f2c 82%,
-    #042e16 100%
-  );
-
+  background:linear-gradient(180deg,#ff6a3d 0%,#f05a2f 24%,#159447 58%,#0b642f 82%,#063719 100%);
   color:#fff;
-
-  border:1px solid rgba(255,255,255,.08);
-
+  border:1px solid rgba(255,255,255,.10);
   border-radius:15px;
-
   display:flex;
-
   align-items:center;
-
   justify-content:center;
-
   gap:8px;
-
   font-size:14px;
-
   font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 16px 36px rgba(8,75,35,.34);
+  transition:all .25s ease;
+}
 
-  box-shadow:
-  0 16px 34px rgba(6,70,30,.32);
+.add-btn:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(180deg,#ff7448 0%,#f26335 22%,#18a950 58%,#0d7437 82%,#07421f 100%);
+}
 
-  transition:.25s ease;
+.add-btn:active{
+  transform:translateY(1px);
+}
+
+.quote-btn{
+  width:100%;
+  height:40px;
+  margin-top:6px;
+  background:linear-gradient(180deg,#ff6a3d 0%,#f05a2f 24%,#159447 58%,#0b642f 82%,#063719 100%);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  font-size:13px;
+  font-weight:900;
+  box-shadow:0 14px 30px rgba(8,75,35,.26);
+  transition:all .25s ease;
+}
+
+.quote-btn:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(180deg,#ff7448 0%,#f26335 22%,#18a950 58%,#0d7437 82%,#07421f 100%);
 }
 
 /* DRAWER */
@@ -805,18 +812,18 @@
   width:100%;
   height:52px;
   border:none;
-  border-radius:14px;
-  background:linear-gradient(180deg,#1a8d43,#106d33,#084b23);
+  border-radius:15px;
+  background:linear-gradient(180deg,#ff6a3d 0%,#f05a2f 24%,#159447 58%,#0b642f 82%,#063719 100%);
   color:#fff;
   font-size:15px;
   font-weight:900;
-  box-shadow:0 14px 34px rgba(7,77,36,.28);
-  transition:all .22s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 16px 36px rgba(8,75,35,.34);
+  transition:all .25s ease;
 }
 
 .checkout-btn:hover{
   transform:translateY(-1px);
-  background:linear-gradient(180deg,#22a14d,#12753a,#0b5227);
+  background:linear-gradient(180deg,#ff7448 0%,#f26335 22%,#18a950 58%,#0d7437 82%,#07421f 100%);
 }
 
 .checkout-btn::after{
@@ -998,43 +1005,4 @@
   .premium-buy-tab.active span{
     font-size:15px;
   }
-}
-/* FINAL CTA BUTTON — ORANGE TO GREEN TO DARK */
-
-.widget .add-btn,
-.cart-drawer .checkout-btn,
-.checkout-btn{
-  background:
-    linear-gradient(
-      180deg,
-      #ff6a3d 0%,
-      #f05a2f 22%,
-      #159447 55%,
-      #0b642f 78%,
-      #063719 100%
-    ) !important;
-
-  color:#ffffff !important;
-  border:1px solid rgba(255,255,255,.10) !important;
-  border-radius:15px !important;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.20),
-    0 16px 36px rgba(8,75,35,.34) !important;
-}
-
-.widget .add-btn:hover,
-.cart-drawer .checkout-btn:hover,
-.checkout-btn:hover{
-  background:
-    linear-gradient(
-      180deg,
-      #ff7448 0%,
-      #f26335 20%,
-      #18a950 55%,
-      #0d7437 78%,
-      #07421f 100%
-    ) !important;
-
-  transform:translateY(-1px);
 }
