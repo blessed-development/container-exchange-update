@@ -790,47 +790,158 @@
   background:#0f1116;
 }
 
+/* PREMIUM EXPAND TABS */
+
+.buy-header{
+margin:0 0 12px;
+padding:0;
+background:transparent;
+border:0;
+}
+
+.buy-header-title,
+.buy-header-sub{
+display:none;
+}
+
+.premium-buy-rent-tabs{
+
+display:flex;
+
+gap:10px;
+
+height:108px;
+
+transition:.35s ease;
+
+}
+
 .premium-buy-rent-tab{
-  min-height:82px;
-  border:0;
-  border-right:1px solid #2a2f38;
-  background:linear-gradient(180deg,#171a20,#101318);
-  color:#9aa3b2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  cursor:pointer;
-  transition:all .2s ease;
-}
 
-.premium-buy-rent-tab:last-child{
-  border-right:0;
-}
+flex:1;
 
-.premium-buy-rent-tab strong{
-  font-size:22px;
-  line-height:1;
-  font-weight:950;
-  letter-spacing:.02em;
-  color:#fff;
+border:1px solid #262b34;
+
+border-radius:22px;
+
+background:#101319;
+
+color:#8f98a8;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+padding:18px;
+
+overflow:hidden;
+
+transition:
+all .32s cubic-bezier(.2,.9,.2,1);
+
+transform-origin:center;
+
 }
 
 .premium-buy-rent-tab span{
-  font-size:13px;
-  font-weight:900;
-  line-height:1.15;
+
+font-size:17px;
+
+font-weight:850;
+
+line-height:1.08;
+
+text-align:center;
+
+transition:.28s;
+
 }
 
 .premium-buy-rent-tab small{
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.14em;
-  text-transform:uppercase;
+
+font-size:10px;
+
+letter-spacing:.14em;
+
+text-transform:uppercase;
+
+opacity:.65;
+
+transition:.28s;
+
+}
+
+.premium-buy-rent-tab:hover{
+
+transform:translateY(-1px);
+
 }
 
 .premium-buy-rent-tab.active{
+
+flex:1.28;
+
+background:
+linear-gradient(
+135deg,
+#ff5648,
+#ea4136
+);
+
+color:#fff;
+
+box-shadow:
+0 10px 40px
+rgba(
+255,
+88,
+72,
+.18
+);
+
+}
+
+.premium-buy-rent-tab.active span{
+
+font-size:21px;
+
+font-weight:950;
+
+}
+
+.premium-buy-rent-tab.active small{
+
+font-size:11px;
+
+opacity:1;
+
+}
+
+.premium-buy-rent-tab:not(.active){
+
+flex:.82;
+
+}
+
+.premium-buy-rent-tab:not(.active) span{
+
+font-size:14px;
+
+opacity:.75;
+
+}
+
+.premium-buy-rent-tab:not(.active) small{
+
+font-size:8px;
+
+opacity:.55;
+
+}
   background:linear-gradient(135deg,#ff4b3f,#e2352d);
   color:#fff;
 }
