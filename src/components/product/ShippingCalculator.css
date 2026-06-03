@@ -10,6 +10,88 @@
   color:#fff;
 }
 
+/* BUY TAB */
+
+.buy-header{
+  margin:0 0 12px;
+  padding:0;
+}
+
+.premium-buy-tabs{
+  display:flex;
+  gap:10px;
+  height:118px;
+}
+
+.premium-buy-tab{
+  flex:1;
+  background:#101319;
+  border:1px solid #242a34;
+  border-radius:22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  padding:14px;
+  cursor:pointer;
+  transition:all .32s cubic-bezier(.2,.9,.2,1);
+  color:#8d97a8;
+  overflow:hidden;
+}
+
+.premium-buy-tab strong{
+  font-size:18px;
+  font-weight:950;
+  line-height:1;
+}
+
+.premium-buy-tab span{
+  font-size:15px;
+  font-weight:900;
+  text-align:center;
+  line-height:1.08;
+}
+
+.premium-buy-tab small{
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.65;
+}
+
+.premium-buy-tab.active{
+  flex:1.28;
+  background:linear-gradient(135deg,#ff5948,#e83b31);
+  color:#fff;
+  box-shadow:0 10px 40px rgba(255,88,72,.18);
+}
+
+.premium-buy-tab.active strong{
+  font-size:24px;
+}
+
+.premium-buy-tab.active span{
+  font-size:18px;
+}
+
+.premium-buy-tab:not(.active){
+  flex:.82;
+}
+
+.premium-buy-tab:not(.active) strong{
+  font-size:14px;
+  opacity:.65;
+}
+
+.premium-buy-tab:not(.active) span{
+  font-size:13px;
+}
+
+.premium-buy-tab:not(.active) small{
+  opacity:.5;
+}
+
 .zip-bar,.condition-tabs,.main-tabs,.cond-cards-section,.section-card,.checkout{
   background:#111318;
   border:1px solid #20242b;
@@ -222,17 +304,6 @@
   gap:7px;
 }
 
-.grade-head-tick{
-  width:17px;
-  height:17px;
-  border-radius:999px;
-  background:#22c55e;
-  color:#07130a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
 .grade-head-arrow{
   color:#22c55e;
   transition:transform .2s ease;
@@ -250,6 +321,7 @@
 }
 
 .grade-btn{
+  position:relative;
   min-height:60px;
   border:1px solid #242830;
   border-radius:12px;
@@ -269,9 +341,27 @@
   font-size:10px;
 }
 
+.grade-btn .grade-check{
+  display:none;
+}
+
 .grade-btn.active{
   border-color:#22c55e;
   background:rgba(34,197,94,.12);
+}
+
+.grade-btn.active .grade-check{
+  display:flex;
+  position:absolute;
+  top:7px;
+  right:7px;
+  width:18px;
+  height:18px;
+  border-radius:999px;
+  background:#22c55e;
+  color:#07130a;
+  align-items:center;
+  justify-content:center;
 }
 
 .selection-type{padding:8px;}
@@ -378,6 +468,7 @@
 }
 
 /* DRAWER */
+
 .drawer-overlay{display:none;}
 
 .drawer-overlay.open{
@@ -643,6 +734,7 @@
 }
 
 /* CHECKOUT BASE */
+
 .checkout-page{
   position:fixed;
   inset:0;
@@ -778,299 +870,22 @@
   .cart-drawer{
     width:100vw;
   }
-}
-/* STEP 2 BUY TYPE TABS */
 
-.premium-buy-rent-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid #2a2f38;
-  background:#0f1116;
-}
-
-/* PREMIUM EXPAND TABS */
-
-.buy-header{
-margin:0 0 12px;
-padding:0;
-background:transparent;
-border:0;
-}
-
-.buy-header-title,
-.buy-header-sub{
-display:none;
-}
-
-.premium-buy-rent-tabs{
-
-display:flex;
-
-gap:10px;
-
-height:108px;
-
-transition:.35s ease;
-
-}
-
-.premium-buy-rent-tab{
-
-flex:1;
-
-border:1px solid #262b34;
-
-border-radius:22px;
-
-background:#101319;
-
-color:#8f98a8;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-padding:18px;
-
-overflow:hidden;
-
-transition:
-all .32s cubic-bezier(.2,.9,.2,1);
-
-transform-origin:center;
-
-}
-
-.premium-buy-rent-tab span{
-
-font-size:17px;
-
-font-weight:850;
-
-line-height:1.08;
-
-text-align:center;
-
-transition:.28s;
-
-}
-
-.premium-buy-rent-tab small{
-
-font-size:10px;
-
-letter-spacing:.14em;
-
-text-transform:uppercase;
-
-opacity:.65;
-
-transition:.28s;
-
-}
-
-.premium-buy-rent-tab:hover{
-
-transform:translateY(-1px);
-
-}
-
-.premium-buy-rent-tab.active{
-
-flex:1.28;
-
-background:
-linear-gradient(
-135deg,
-#ff5648,
-#ea4136
-);
-
-color:#fff;
-
-box-shadow:
-0 10px 40px
-rgba(
-255,
-88,
-72,
-.18
-);
-
-}
-
-.premium-buy-rent-tab.active span{
-
-font-size:21px;
-
-font-weight:950;
-
-}
-
-.premium-buy-rent-tab.active small{
-
-font-size:11px;
-
-opacity:1;
-
-}
-
-.premium-buy-rent-tab:not(.active){
-
-flex:.82;
-
-}
-
-.premium-buy-rent-tab:not(.active) span{
-
-font-size:14px;
-
-opacity:.75;
-
-}
-
-.premium-buy-rent-tab:not(.active) small{
-
-font-size:8px;
-
-opacity:.55;
-
-}
-  background:linear-gradient(135deg,#ff4b3f,#e2352d);
-  color:#fff;
-}
-
-.premium-buy-rent-tab.active strong,
-.premium-buy-rent-tab.active span,
-.premium-buy-rent-tab.active small{
-  color:#fff;
-}
-/* TOP BUY SELECTOR — FINAL OVERRIDE */
-
-.buy-header{
-display:flex;
-flex-direction:column;
-
-padding:14px;
-
-margin-bottom:12px;
-
-background:#111318;
-
-border:1px solid #252a34;
-
-border-radius:22px;
-
-overflow:hidden;
-}
-
-.buy-header-title{
-font-size:18px;
-
-font-weight:950;
-
-line-height:1;
-
-color:#fff;
-
-margin:0 0 14px;
-
-letter-spacing:-.04em;
-}
-
-.buy-header-sub{
-display:none;
-}
-
-.premium-buy-rent-tabs{
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-border-radius:18px;
-
-overflow:hidden;
-
-background:#0d1016;
-
-border:1px solid #232831;
-}
-
-.premium-buy-rent-tab{
-min-height:96px;
-
-padding:18px;
-
-background:transparent;
-
-border:0;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-gap:6px;
-
-color:#6f7888;
-
-transition:.2s;
-}
-
-.premium-buy-rent-tab span{
-
-font-size:16px;
-
-font-weight:900;
-
-line-height:1.15;
-
-text-align:center;
-
-}
-
-.premium-buy-rent-tab small{
-
-font-size:10px;
-
-font-weight:800;
-
-letter-spacing:.12em;
-
-text-transform:uppercase;
-
-}
-
-.premium-buy-rent-tab.active{
-
-background:
-linear-gradient(
-135deg,
-#ff5a4b,
-#e73c31
-);
-
-color:#fff;
-
-}
-
-.premium-buy-rent-tab.active span,
-.premium-buy-rent-tab.active small{
-
-color:#fff;
-
-}
-
-.widget .premium-buy-rent-tab.active span,
-.widget .premium-buy-rent-tab.active small{
-  color:#ffffff !important;
+  .premium-buy-tabs{
+    height:104px;
+    gap:8px;
+  }
+
+  .premium-buy-tab{
+    border-radius:18px;
+    padding:12px 8px;
+  }
+
+  .premium-buy-tab.active strong{
+    font-size:21px;
+  }
+
+  .premium-buy-tab.active span{
+    font-size:15px;
+  }
 }
