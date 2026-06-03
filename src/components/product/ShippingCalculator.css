@@ -779,3 +779,64 @@
     width:100vw;
   }
 }
+/* STEP 2 BUY TYPE TABS */
+
+.premium-buy-rent-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid #2a2f38;
+  background:#0f1116;
+}
+
+.premium-buy-rent-tab{
+  min-height:82px;
+  border:0;
+  border-right:1px solid #2a2f38;
+  background:linear-gradient(180deg,#171a20,#101318);
+  color:#9aa3b2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.premium-buy-rent-tab:last-child{
+  border-right:0;
+}
+
+.premium-buy-rent-tab strong{
+  font-size:22px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.02em;
+  color:#fff;
+}
+
+.premium-buy-rent-tab span{
+  font-size:13px;
+  font-weight:900;
+  line-height:1.15;
+}
+
+.premium-buy-rent-tab small{
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.premium-buy-rent-tab.active{
+  background:linear-gradient(135deg,#ff4b3f,#e2352d);
+  color:#fff;
+}
+
+.premium-buy-rent-tab.active strong,
+.premium-buy-rent-tab.active span,
+.premium-buy-rent-tab.active small{
+  color:#fff;
+}
