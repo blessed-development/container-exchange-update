@@ -211,25 +211,21 @@ export default function ContainerConfigurator({
               const price = cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
               return (
-                <button
+                <div
                   key={cond}
-                  className={`cond-card ${active ? 'active' : ''}`}
-                  onClick={() => {
-                    onConditionChange(cond);
-                    setGrade(cond === 'new' ? 'IICL' : 'AS_IS');
-                  }}
-                >
+                   className={`cond-card ${active ? 'active' : ''}`}
+                   >
                   <img src={CONDITION_IMAGES[cond]} className="cond-img" alt={cond} />
                   <div className="cc-info">
                     <span className="cc-name">
-                      {cond === 'new' ? 'New' : 'Used'} {sizeOption.label}
+                    {cond === 'new' ? 'NEW' : 'USED'}
                     </span>
                     <span className="cc-price">{fmt(price)}</span>
                   </div>
                   <span className="cc-check">
                     <Check size={10} />
                   </span>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -273,7 +269,7 @@ export default function ContainerConfigurator({
 
           {g.adjust !== 0 && (
             <small>
-              {g.adjust > 0 ? '+' : ''}
+              {g.adjust > 0 ? 'Add' : ''}
               {fmt(g.adjust)}
             </small>
           )}
