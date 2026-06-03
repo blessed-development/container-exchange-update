@@ -13,9 +13,9 @@ import {
 import { useCart } from '../../context/CartContext';
 
 const USED_GRADES = [
-  { key: 'AS_IS', label: 'AS IS', adjust: -100 },
-  { key: 'WWT', label: 'Wind & Water Tight', adjust: 200 },
-  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 400 },
+  { key: 'AS_IS', label: 'AS IS', adjust: 0 },
+  { key: 'WWT', label: 'Wind & Water Tight', adjust: 0 },
+  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 0 },
 ];
 
 const NEW_GRADES = [{ key: 'IICL', label: 'IICL Certified', adjust: 0 }];
@@ -65,137 +65,90 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-const [zip, setZip] = useState('33304');
+  const [zip, setZip] = useState('33304');
+  const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'WWT');
+  const [qty, setQty] = useState(1);
+  const [gradeOpen, setGradeOpen] = useState(false);
+  const [userChangedConfig, setUserChangedConfig] = useState(false);
 
-const [grade, setGrade] =
-useState(
-condition === 'new'
-? 'IICL'
-: 'AS_IS'
-);
-
-const [qty, setQty] =
-useState(1);
-
-const [gradeOpen, setGradeOpen] =
-useState(false);
-
-/* NEW */
-const [
-userChangedConfig,
-setUserChangedConfig
-] =
-useState(false);
-  
   useEffect(() => {
-    setGrade(condition === 'new' ? 'IICL' : 'AS_IS');
+    setGrade(condition === 'new' ? 'IICL' : 'WWT');
   }, [condition]);
 
-  const sizeOption =
-SIZE_OPTIONS[selectedSizeIndex];
+  useEffect(() => {
+    setUserChangedConfig(false);
+  }, [container?.id]);
 
-const gradeOptions =
-condition === 'new'
-? NEW_GRADES
-: USED_GRADES;
+  const safeSizeIndex = selectedSizeIndex ?? 0;
+  const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
 
-const activeGrade =
-gradeOptions.find(
-(g)=>g.key===grade
-)
-||
-gradeOptions[0];
+  const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
+  const activeGrade =
+    gradeOptions.find((g) => g.key === grade) || gradeOptions[0];
 
-const productPrice =
-Number(
-container?.base_price
-??
-container?.price
-??
-0
-);
+  const openedProductPrice = Number(container?.base_price ?? container?.price ?? 0);
 
-const fallbackPrice =
-condition === 'new'
-? sizeOption.newPrice
-: sizeOption.usedPrice;
+  const selectedStandardPrice =
+    condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
- const selectedPrice =
-condition==='new'
-? sizeOption.newPrice
-: sizeOption.usedPrice;
+  const basePrice =
+    !userChangedConfig && openedProductPrice > 0
+      ? openedProductPrice
+      : selectedStandardPrice;
 
-const basePrice =
+  const unitPrice = basePrice;
+  const totalPrice = unitPrice * qty;
 
-userChangedConfig
+  const currentTitle =
+    container?.name ||
+    `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
 
-?
-
-selectedPrice
-
-:
-
-(
-
-productPrice
-||
-selectedPrice
-
-);
-
-const gradeAdjustment =
-productPrice > 0
-? 0
-: (activeGrade.adjust || 0);
-
-const unitPrice =
-basePrice +
-gradeAdjustment;
-
-const totalPrice =
-unitPrice *
-qty;
-
-  const currentTitle = `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
   const currentSub = `${sizeOption.size || sizeOption.label} · ${activeGrade.label}`;
-  const selectedImage = CONDITION_IMAGES[condition];
+
+  const selectedImage =
+    container?.image_url || container?.image || CONDITION_IMAGES[condition];
 
   const subtotal = getSubtotal();
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
- const handleSizeSwitch = (
-index
-) => {
+  const switchProduct = (nextCondition, nextSizeIndex) => {
+    setUserChangedConfig(true);
 
-setUserChangedConfig(
-true
-);
+    const targetId = PRODUCT_SWITCH_MAP?.[nextCondition]?.[nextSizeIndex];
 
-onSizeChange(
-index
-);
+    if (targetId && targetId !== container?.id) {
+      navigate(`/product/${targetId}`);
+    }
+  };
 
-const targetId =
-PRODUCT_SWITCH_MAP[
-condition
-]?.[
-index
-];
+  const handleSizeSwitch = (index) => {
+    onSizeChange(index);
+    switchProduct(condition, index);
+  };
 
-if(
-targetId
-&&
-targetId!==container?.id
-){
+  const handleConditionSwitch = (nextCondition) => {
+    setGrade(nextCondition === 'new' ? 'IICL' : 'WWT');
+    onConditionChange(nextCondition);
+    switchProduct(nextCondition, safeSizeIndex);
+  };
 
-navigate(
-`/product/${targetId}`
-);
+  const addToCart = () => {
+    addCartItem({
+      id: `${container?.id || condition}-${safeSizeIndex}-${grade}-${Date.now()}`,
+      title: currentTitle,
+      sub: currentSub,
+      condition,
+      grade: activeGrade.label,
+      size: sizeOption.label,
+      unitPrice,
+      qty,
+      image: selectedImage,
+      url: container?.id ? `/product/${container.id}` : '#',
+    });
 
-}
-
-};
+    setIsDrawerOpen(true);
+  };
 
   const openCheckout = () => {
     setIsDrawerOpen(false);
@@ -235,78 +188,18 @@ navigate(
 
         <div className="condition-tabs">
           <button
+            type="button"
             className={`condition-tab ${condition === 'new' ? 'active' : ''}`}
-           onClick={() => {
-
-setUserChangedConfig(
-true
-);
-
-setGrade(
-'IICL'
-);
-
-onConditionChange(
-'new'
-);
-
-const id =
-PRODUCT_SWITCH_MAP
-.new[
-selectedSizeIndex
-];
-
-if(
-id &&
-id!==container?.id
-){
-
-navigate(
-`/product/${id}`
-);
-
-}
-
-}}
+            onClick={() => handleConditionSwitch('new')}
           >
             <span>NEW (One-Trip)</span>
             <small>SHIPPING CONTAINERS</small>
           </button>
 
           <button
+            type="button"
             className={`condition-tab ${condition === 'used' ? 'active' : ''}`}
-            onClick={() => {
-
-setUserChangedConfig(
-true
-);
-
-setGrade(
-'AS_IS'
-);
-
-onConditionChange(
-'used'
-);
-
-const id =
-PRODUCT_SWITCH_MAP
-.used[
-selectedSizeIndex
-];
-
-if(
-id &&
-id!==container?.id
-){
-
-navigate(
-`/product/${id}`
-);
-
-}
-
-}}
+            onClick={() => handleConditionSwitch('used')}
           >
             <span>USED (Wind/Water Tight)</span>
             <small>SHIPPING CONTAINERS</small>
@@ -319,54 +212,60 @@ navigate(
         </div>
 
         <div className="main-tabs">
-          {SIZE_OPTIONS.map((opt, index) => (
-            <button
-              key={opt.label}
-              className={`main-tab ${selectedSizeIndex === index ? 'active' : ''}`}
-              onClick={() => handleSizeSwitch(index)}
-            >
-              <span className="tab-title">{opt.label}</span>
-              <span className="tab-sub">{opt.dims}</span>
-              <span className="tab-price">
-               {
-              selectedSizeIndex===index
-              ? fmt(basePrice)
-               : fmt(
-              condition==='new'
-              ? opt.newPrice
-              : opt.usedPrice
-               )
-              }
-               </span>
-            </button>
-          ))}
+          {SIZE_OPTIONS.map((opt, index) => {
+            const isActive = safeSizeIndex === index;
+            const standardPrice =
+              condition === 'new' ? opt.newPrice : opt.usedPrice;
+
+            return (
+              <button
+                key={opt.label}
+                type="button"
+                className={`main-tab ${isActive ? 'active' : ''}`}
+                onClick={() => handleSizeSwitch(index)}
+              >
+                <span className="tab-title">{opt.label}</span>
+                <span className="tab-sub">{opt.dims}</span>
+                <span className="tab-price">
+                  {isActive ? fmt(basePrice) : fmt(standardPrice)}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="cond-cards-section">
           <div className="cond-cards-head">
             <span className="card-lbl">CONDITION</span>
             <span className="card-val">
-              {condition === 'new' ? 'New' : 'Used'} — {sizeOption.label}
+              {condition === 'new' ? 'NEW' : 'USED'} — {sizeOption.label}
             </span>
           </div>
 
           <div className="cond-cards">
             {['new', 'used'].map((cond) => {
               const active = condition === cond;
-              const price = cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+              const standardPrice =
+                cond === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
               return (
-                <div
-                  key={cond}
-                   className={`cond-card ${active ? 'active' : ''}`}
-                   >
-                  <img src={CONDITION_IMAGES[cond]} className="cond-img" alt={cond} />
+                <div key={cond} className={`cond-card ${active ? 'active' : ''}`}>
+                  <img
+                    src={CONDITION_IMAGES[cond]}
+                    className="cond-img"
+                    alt={cond}
+                  />
+
                   <div className="cc-info">
                     <span className="cc-name">
-                    {cond === 'new' ? 'NEW' : 'USED'}
+                      {cond === 'new' ? 'NEW' : 'USED'}
                     </span>
-                    <span className="cc-price">{fmt(price)}</span>
+
+                    <span className="cc-price">
+                      {active ? fmt(basePrice) : fmt(standardPrice)}
+                    </span>
                   </div>
+
                   <span className="cc-check">
                     <Check size={10} />
                   </span>
@@ -377,52 +276,45 @@ navigate(
         </div>
 
         <div className="section-card">
-  <button
-    type="button"
-    className="card-head grade-dropdown-head"
-    onClick={() => setGradeOpen(!gradeOpen)}
-  >
-    <span className="card-lbl">GRADE</span>
+          <button
+            type="button"
+            className="card-head grade-dropdown-head"
+            onClick={() => setGradeOpen(!gradeOpen)}
+          >
+            <span className="card-lbl">GRADE</span>
 
-    <span className="card-val grade-head-val">
-      <span className="grade-head-tick">
-        <Check size={10} />
-      </span>
+            <span className="card-val grade-head-val">
+              {activeGrade.label}
 
-      {activeGrade.label}
+              <ChevronDown
+                size={15}
+                className={`grade-head-arrow ${gradeOpen ? 'open' : ''}`}
+              />
+            </span>
+          </button>
 
-      <ChevronDown
-        size={15}
-        className={`grade-head-arrow ${gradeOpen ? 'open' : ''}`}
-      />
-    </span>
-  </button>
+          {gradeOpen && (
+            <div className="grade-grid">
+              {gradeOptions.map((g) => (
+                <button
+                  key={g.key}
+                  type="button"
+                  className={`grade-btn ${grade === g.key ? 'active' : ''}`}
+                  onClick={() => {
+                    setGrade(g.key);
+                    setGradeOpen(false);
+                  }}
+                >
+                  <span className="grade-check">
+                    <Check size={10} />
+                  </span>
 
-  {gradeOpen && (
-    <div className="grade-grid">
-      {gradeOptions.map((g) => (
-        <button
-          key={g.key}
-          type="button"
-          className={`grade-btn ${grade === g.key ? 'active' : ''}`}
-          onClick={() => {
-            setGrade(g.key);
-            setGradeOpen(false);
-          }}
-        >
-          <span>{g.label}</span>
-
-          {g.adjust !== 0 && (
-            <small>
-              {g.adjust > 0 ? 'Add' : ''}
-              {fmt(g.adjust)}
-            </small>
+                  <span>{g.label}</span>
+                </button>
+              ))}
+            </div>
           )}
-        </button>
-      ))}
-    </div>
-  )}
-</div>
+        </div>
 
         <div className="section-card">
           <div className="card-head">
@@ -431,7 +323,7 @@ navigate(
           </div>
 
           <div className="selection-type">
-            <button className="selection-btn active">
+            <button type="button" className="selection-btn active">
               <span className="selection-dot">
                 <Check size={10} />
               </span>
@@ -455,13 +347,15 @@ navigate(
             </div>
 
             <div className="cart-row">
-              <button className="add-btn" onClick={addToCart}>
+              <button type="button" className="add-btn" onClick={addToCart}>
                 <ShoppingCart size={17} />
                 Add to Cart
               </button>
             </div>
 
-            <button className="quote-btn">Request a Quote</button>
+            <button type="button" className="quote-btn">
+              Request a Quote
+            </button>
           </div>
         </div>
       </div>
