@@ -74,22 +74,52 @@ export default function ContainerConfigurator({
     setGrade(condition === 'new' ? 'IICL' : 'AS_IS');
   }, [condition]);
 
-  const sizeOption = SIZE_OPTIONS[selectedSizeIndex];
-  const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
-  const activeGrade = gradeOptions.find((g) => g.key === grade) || gradeOptions[0];
+  const sizeOption =
+SIZE_OPTIONS[selectedSizeIndex];
 
-  const productBasePrice =
-  Number(container?.base_price ?? container?.price ?? 0);
+const gradeOptions =
+condition === 'new'
+? NEW_GRADES
+: USED_GRADES;
+
+const activeGrade =
+gradeOptions.find(
+(g)=>g.key===grade
+)
+||
+gradeOptions[0];
+
+const productPrice =
+Number(
+container?.base_price
+??
+container?.price
+??
+0
+);
 
 const fallbackPrice =
-  condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
+condition === 'new'
+? sizeOption.newPrice
+: sizeOption.usedPrice;
+
+const basePrice =
+productPrice > 0
+? productPrice
+: fallbackPrice;
+
+const gradeAdjustment =
+productPrice > 0
+? 0
+: (activeGrade.adjust || 0);
 
 const unitPrice =
-  productBasePrice > 0
-    ? productBasePrice
-    : fallbackPrice + (activeGrade.adjust || 0);
+basePrice +
+gradeAdjustment;
 
-  const totalPrice = unitPrice * qty;
+const totalPrice =
+unitPrice *
+qty;
 
   const currentTitle = `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
   const currentSub = `${sizeOption.size || sizeOption.label} · ${activeGrade.label}`;
@@ -198,8 +228,16 @@ const unitPrice =
               <span className="tab-title">{opt.label}</span>
               <span className="tab-sub">{opt.dims}</span>
               <span className="tab-price">
-                {fmt(condition === 'new' ? opt.newPrice : opt.usedPrice)}
-              </span>
+               {
+              selectedSizeIndex===index
+              ? fmt(basePrice)
+               : fmt(
+              condition==='new'
+              ? opt.newPrice
+              : opt.usedPrice
+               )
+              }
+               </span>
             </button>
           ))}
         </div>
