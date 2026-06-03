@@ -184,27 +184,29 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="step-label">STEP 2 — SELECT CONTAINER TYPE</div>
+       <div className="step-label">STEP 2 — SELECT CONTAINER TYPE</div>
 
-        <div className="condition-tabs">
-          <button
-            type="button"
-            className={`condition-tab ${condition === 'new' ? 'active' : ''}`}
-            onClick={() => handleConditionSwitch('new')}
-          >
-            <span>NEW (One-Trip)</span>
-            <small>SHIPPING CONTAINERS</small>
-          </button>
+<div className="condition-tabs premium-buy-rent-tabs">
+  <button
+    type="button"
+    className={`condition-tab premium-buy-rent-tab ${condition === 'new' ? 'active' : ''}`}
+    onClick={() => handleConditionSwitch('new')}
+  >
+    <strong>BUY</strong>
+    <span>NEW (One-Trip)</span>
+    <small>Shipping Containers</small>
+  </button>
 
-          <button
-            type="button"
-            className={`condition-tab ${condition === 'used' ? 'active' : ''}`}
-            onClick={() => handleConditionSwitch('used')}
-          >
-            <span>USED (Wind/Water Tight)</span>
-            <small>SHIPPING CONTAINERS</small>
-          </button>
-        </div>
+  <button
+    type="button"
+    className={`condition-tab premium-buy-rent-tab ${condition === 'used' ? 'active' : ''}`}
+    onClick={() => handleConditionSwitch('used')}
+  >
+    <strong>BUY</strong>
+    <span>USED (Wind/Water Tight)</span>
+    <small>Shipping Containers</small>
+  </button>
+</div>
 
         <div className="section-header">
           <span>CONTAINER SPECIFICATIONS</span>
