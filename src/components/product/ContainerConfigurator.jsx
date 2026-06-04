@@ -359,7 +359,141 @@ export default function ContainerConfigurator({
             </button>
           </div>
         </div>
-      </div>
+            </div>
+
+      <div
+        className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+        onClick={() => setIsDrawerOpen(false)}
+      />
+
+      <aside className={`cart-drawer ${isDrawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+
+          <div className="drawer-title">
+            <ShoppingCart size={18}/>
+            My Cart
+            <span className="cart-count">
+              {cartCount}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="drawer-close"
+            onClick={() => setIsDrawerOpen(false)}
+          >
+            <X size={16}/>
+          </button>
+
+        </div>
+
+        <div className="drawer-body">
+
+          {cart.length===0 ? (
+
+            <div className="empty-cart">
+              Your cart is empty.
+            </div>
+
+          ) : (
+
+            cart.map((item)=>(
+
+              <div className="cart-item" key={item.id}>
+
+                <img
+                  src={item.image}
+                  className="ci-img"
+                  alt={item.title}
+                />
+
+                <div className="ci-info">
+
+                  <button
+                    type="button"
+                    className="ci-remove"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    ×
+                  </button>
+
+                  <div className="ci-name">
+                    {item.title}
+                  </div>
+
+                  <div className="ci-meta">
+                    {item.sub}
+                  </div>
+
+                  <div className="ci-price">
+                    {fmt(item.unitPrice)}
+                  </div>
+
+                  <div className="ci-qty-row">
+
+                    <button
+                      type="button"
+                      className="ci-qty-btn"
+                      onClick={() => updateQuantity(item.id,-1)}
+                    >
+                      −
+                    </button>
+
+                    <span className="ci-qty-val">
+                      {item.qty}
+                    </span>
+
+                    <button
+                      type="button"
+                      className="ci-qty-btn"
+                      onClick={() => updateQuantity(item.id,1)}
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))
+
+          )}
+
+        </div>
+
+        <div className="drawer-footer">
+
+          <div className="drawer-subtotal">
+            <span>Subtotal</span>
+            <span className="drawer-total-val">
+              {fmt(grandTotal || subtotal)}
+            </span>
+          </div>
+
+          <div className="drawer-tax-note"/>
+
+          <button
+            type="button"
+            className="checkout-btn"
+            onClick={openCheckout}
+          >
+            Checkout
+          </button>
+
+          <button
+            type="button"
+            className="continue-btn"
+            onClick={() => setIsDrawerOpen(false)}
+          >
+            Continue Shopping
+          </button>
+
+        </div>
+
+      </aside>
+
     </>
   );
 }
