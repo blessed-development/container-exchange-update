@@ -62,32 +62,6 @@
   opacity:.65;
 }
 
-.premium-buy-tab.active{
-
-flex:1.28;
-
-background:
-linear-gradient(
-180deg,
-#ff6c42 0%,
-#d94e2f 28%,
-#474c54 68%,
-#20242b 100%
-);
-
-color:#fff;
-
-box-shadow:
-0 18px 42px
-rgba(
-0,
-0,
-0,
-.24
-);
-
-}
-
 /* GRADE COLLAPSIBLE */
 
 .grade-dropdown-head{
