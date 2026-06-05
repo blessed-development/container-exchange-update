@@ -993,3 +993,40 @@ margin-top:1px !important;
     font-size:15px;
   }
 }
+.zip-location-text{
+  color:#f8fafc;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:-.02em;
+  text-transform:none;
+}
+
+.zip-input{
+  font-size:14px;
+}
+
+.zip-input::placeholder{
+  color:#697384;
+}
+
+.zip-error{
+  margin-top:8px;
+  color:#ff6b6b;
+  font-size:11px;
+  font-weight:800;
+}
+
+.zip-apply:disabled,
+.zip-loc-btn:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.step-label{
+  margin:10px 2px 4px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#7b8595;
+  text-transform:uppercase;
+}
