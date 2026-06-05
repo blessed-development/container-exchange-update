@@ -103,8 +103,11 @@ export default function ContainerConfigurator({
     container?.name ||
     `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
 
-  const currentSub = `${sizeOption.size || sizeOption.label} · ${activeGrade.label}`;
-
+  const currentSub =
+  container?.short_description ||
+  (sizeOption.height === 'high_cube'
+    ? 'High Cube • 9ft 6in High'
+    : 'Standard Height • 8ft 6in High');
   const selectedImage =
     container?.image_url || container?.image || CONDITION_IMAGES[condition];
 
