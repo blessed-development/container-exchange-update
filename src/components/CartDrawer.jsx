@@ -113,23 +113,23 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-item{
           position:relative;
           display:grid;
-          grid-template-columns:84px minmax(0,1fr);
+          grid-template-columns:74px minmax(0,1fr);
           gap:14px;
-          padding:0 0 26px;
-          margin-bottom:22px;
+          padding:0 0 16px;
+          margin-bottom:10px;
           border-bottom:1px solid rgba(255,255,255,.06);
         }
 
         .ce-left{
           display:flex;
           flex-direction:column;
-          gap:11px;
+          gap:7px;
           align-items:flex-start;
         }
 
         .ce-img{
-          width:84px;
-          height:58px;
+          width:74px;
+          height:54px;
           border-radius:13px;
           object-fit:cover;
           background:#111827;
@@ -172,7 +172,7 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-name{
           display:block;
           width:100%;
-          margin:0 0 6px;
+          margin:0 0 3px;
           color:#fff;
           font-size:15px;
           font-weight:850;
@@ -183,14 +183,11 @@ const CartDrawer = ({ onCheckout }) => {
         }
 
         .ce-sub{
-          display:block;
-          width:100%;
-          margin:0;
-          color:rgba(203,213,225,.67);
-          font-size:12.5px;
-          line-height:1.38;
-          white-space:normal;
-          clear:both;
+          font-size:13px;
+          font-weight:600;
+          line-height:1.22;
+          color:rgba(203,213,225,.58);
+       }
         }
 
         .ce-price{
