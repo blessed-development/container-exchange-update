@@ -25,15 +25,22 @@ const CartDrawer = ({ onCheckout }) => {
     item.photo ||
     'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
 
-  const cleanSub = (sub) => {
-    if (!sub) return 'Shipping container';
+  const cleanSub = (item) => {
+    const sub = item?.sub || '';
 
-    return String(sub)
-      .replace(/Container([A-Z])/g, 'Container · $1')
-      .replace(/Grade:/gi, ' · Grade: ')
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/\s+/g, ' ')
-      .trim();
+    if (sub.includes('High Cube') || sub.includes('9ft 6in')) {
+      return 'High Cube • 9ft 6in High';
+    }
+
+    if (sub.includes('Standard Height') || sub.includes('8ft 6in')) {
+      return 'Standard Height • 8ft 6in High';
+    }
+
+    if (String(item?.title || '').includes('40HC')) {
+      return 'High Cube • 9ft 6in High';
+    }
+
+    return 'Standard Height • 8ft 6in High';
   };
 
   const itemCount = cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
@@ -66,7 +73,7 @@ const CartDrawer = ({ onCheckout }) => {
         }
 
         .ce-head{
-          height:64px;
+          height:62px;
           padding:0 22px;
           display:flex;
           align-items:center;
@@ -107,17 +114,17 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-body{
           flex:1;
           overflow-y:auto;
-          padding:20px 22px;
+          padding:16px 22px 8px;
         }
 
         .ce-item{
           position:relative;
           display:grid;
           grid-template-columns:74px minmax(0,1fr);
-          gap:14px;
-          padding:0 0 16px;
-          margin-bottom:10px;
-          border-bottom:1px solid rgba(255,255,255,.06);
+          gap:12px;
+          padding:0 0 14px;
+          margin-bottom:12px;
+          border-bottom:1px solid rgba(255,255,255,.055);
         }
 
         .ce-left{
@@ -129,36 +136,38 @@ const CartDrawer = ({ onCheckout }) => {
 
         .ce-img{
           width:74px;
-          height:54px;
-          border-radius:13px;
+          height:52px;
+          border-radius:11px;
           object-fit:cover;
           background:#111827;
           display:block;
         }
 
         .ce-qty{
+          width:74px;
           display:flex;
           align-items:center;
-          gap:10px;
+          justify-content:space-between;
+          gap:0;
         }
 
         .ce-qty button{
-          width:30px;
-          height:30px;
+          width:26px;
+          height:26px;
           border:1px solid rgba(255,255,255,.08);
-          border-radius:10px;
+          border-radius:9px;
           background:#111827;
           color:#fff;
-          font-size:18px;
+          font-size:15px;
           font-weight:800;
           cursor:pointer;
         }
 
         .ce-qty span{
-          min-width:13px;
+          min-width:14px;
           text-align:center;
-          font-size:15px;
-          font-weight:800;
+          font-size:14px;
+          font-weight:850;
         }
 
         .ce-info{
@@ -170,31 +179,37 @@ const CartDrawer = ({ onCheckout }) => {
         }
 
         .ce-name{
-          display:block;
+          display:-webkit-box;
+          -webkit-line-clamp:2;
+          -webkit-box-orient:vertical;
           width:100%;
-          margin:0 0 3px;
+          margin:0 0 4px;
           color:#fff;
-          font-size:15px;
+          font-size:14px;
           font-weight:850;
-          line-height:1.2;
+          line-height:1.14;
           letter-spacing:-.02em;
-          white-space:normal;
-          overflow:visible;
+          overflow:hidden;
         }
 
         .ce-sub{
+          display:block;
+          width:100%;
+          margin:0;
+          color:rgba(203,213,225,.58);
           font-size:13px;
           font-weight:600;
           line-height:1.22;
-          color:rgba(203,213,225,.58);
-       }
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
         }
 
         .ce-price{
-          margin-top:14px;
+          margin-top:10px;
           align-self:flex-end;
           color:#18d45c;
-          font-size:17px;
+          font-size:16px;
           font-weight:900;
         }
 
@@ -308,7 +323,7 @@ const CartDrawer = ({ onCheckout }) => {
 
                   <div className="ce-name">{item.title}</div>
 
-                  <div className="ce-sub">{cleanSub(item.sub || item.grade)}</div>
+                  <div className="ce-sub">{cleanSub(item)}</div>
 
                   <div className="ce-price">{formatMoney(item.unitPrice)}</div>
                 </div>
