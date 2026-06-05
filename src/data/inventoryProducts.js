@@ -1,310 +1,278 @@
-import React, { useState } from 'react';
-import { Star, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import QuickViewModal from '@/components/shared/QuickViewModal';
+const used20WwtGallery = [
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-hero.jpg',
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-front-view.jpg',
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-front-doors.jpg',
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-interior.jpg',
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-rear-side.jpg',
+  '/assets/products/20ft-wind-and-water-tight-shipping-containers/20ft-wind-and-water-tight-shipping-containers-delivery.jpg',
+];
 
-const GRADE_LABELS = {
-  AS_IS: 'As-Is',
-  WWT: 'Wind & Water Tight',
-  CW: 'Cargo Worthy',
-  IICL: 'IICL',
-};
+const used40WwtGallery = [
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-hero.jpg',
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-front-view.jpg',
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-front-doors.jpg',
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-interior.jpg',
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-rear-side.jpg',
+  '/assets/products/40ft-x-8ft-wind-and-water-tight-shipping-containers/40ft-x-8ft-wind-and-water-tight-shipping-containers-delivery.jpg',
+];
 
-export default function InventoryListCard({ container, index }) {
-  const [showModal, setShowModal] = useState(false);
+const new20IiclGallery = [
+  '/assets/products/new-20ft-beige-one-trip-shipping-containers/new-20ft-beige-one-trip-shipping-containers-hero.jpg',
+  '/assets/products/new-20ft-beige-one-trip-shipping-containers/new-20ft-beige-one-trip-shipping-containers-front-view.jpg',
+  '/assets/products/new-20ft-beige-one-trip-shipping-containers/new-20ft-beige-one-trip-shipping-containers-front-doors.jpg',
+  '/assets/products/new-20ft-beige-one-trip-shipping-containers/new-20ft-beige-one-trip-shipping-containers-interior.jpg',
+  '/assets/products/new-20ft-beige-one-trip-shipping-containers/new-20ft-beige-one-trip-shipping-containers-rear-side.jpg',
+];
 
-  const navigate = useNavigate();
+const new40hcDoubleDoorGallery = [
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-hero.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-front-view.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-front-doors.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-interior.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-rear-side.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-delivery.jpg',
+  '/assets/products/new-40hc-double-ended-door-one-trip-shipping-container/new-40hc-double-ended-door-one-trip-shipping-container-gallery-7.jpg',
+];
 
-  const stars = Math.round(container.rating || 5);
-
-  const gradeLabel =
-    GRADE_LABELS[container.grade] || container.grade;
-
-  return (
-    <>
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: index * 0.04,
-          duration: 0.35,
-        }}
-        onClick={() =>
-          navigate(`/product/${container.id}`)
-        }
-        className="
-bg-card
-border
-border-border
-hover:border-primary/25
-hover:shadow-xl
-rounded-[26px]
-overflow-hidden
-flex
-flex-col
-sm:flex-row
-cursor-pointer
-transition-all
-duration-300
-"
-      >
-        {/* IMAGE */}
-
-        <div
-          className="
-relative
-sm:w-[34%]
-overflow-hidden
-bg-muted
-"
-          style={{
-            minHeight: '228px',
-          }}
-        >
-          {container.is_bestseller && (
-            <div
-              className="
-absolute
-top-4
-left-4
-z-10
-rounded-full
-px-3
-py-[7px]
-text-[11px]
-font-black
-tracking-[.08em]
-text-white
-bg-gradient-to-b
-from-orange-500
-to-orange-700
-shadow-lg
-"
-            >
-              BESTSELLER
-            </div>
-          )}
-
-          <img
-            src={
-              container.image_url ||
-              'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
-            }
-            alt={container.name}
-            className="
-w-full
-h-full
-object-cover
-hover:scale-[1.02]
-transition-transform
-duration-500
-"
-          />
-        </div>
-
-        {/* CONTENT */}
-
-        <div
-          className="
-flex-1
-px-6
-pt-5
-pb-5
-flex
-flex-col
-justify-between
-"
-        >
-          <div>
-
-            {/* TITLE */}
-
-            <h3
-              className="
-text-[18px]
-leading-[1.14]
-font-[820]
-tracking-[-0.03em]
-text-foreground
-mb-[8px]
-"
-            >
-              {container.name}
-            </h3>
-
-            {/* SUBTITLE */}
-
-            {container.short_description && (
-              <div
-                className="
-text-[14px]
-font-[560]
-leading-[1.35]
-text-muted-foreground
-mb-[14px]
-"
-              >
-                {container.short_description}
-              </div>
-            )}
-
-            {/* RATING */}
-
-            <div
-              className="
-flex
-items-center
-gap-1.5
-mb-[14px]
-"
-            >
-              <span
-                className="
-text-[14px]
-font-[850]
-"
-              >
-                {(container.rating || 5).toFixed(1)}
-              </span>
-
-              <div className="flex">
-                {Array.from({
-                  length: 5,
-                }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`
-w-[14px]
-h-[14px]
-${
-  i < stars
-    ? 'fill-yellow-400 text-yellow-400'
-    : 'fill-muted text-muted-foreground'
-}
-`}
-                  />
-                ))}
-              </div>
-
-              <span
-                className="
-text-[12px]
-text-muted-foreground
-"
-              >
-                (
-                {container.review_count ||
-                  0}
-                )
-              </span>
-            </div>
-
-            {/* PRICE */}
-
-            <div
-              className="
-text-[34px]
-leading-none
-font-black
-text-primary
-mb-[16px]
-tracking-[-0.05em]
-"
-            >
-              $
-              {container.base_price?.toLocaleString() ||
-                '—'}
-            </div>
-
-            {/* SPECS */}
-
-            <div
-              className="
-space-y-[7px]
-text-[13px]
-"
-            >
-              {[
-                [
-                  'Condition',
-                  container.condition,
-                ],
-
-                [
-                  'Door Type',
-                  container.door_type ||
-                    'Double Doors at 1 End',
-                ],
-
-                [
-                  'Grade',
-                  gradeLabel,
-                ],
-              ].map(
-                ([label, value]) => (
-                  <div
-                    key={label}
-                    className="
-flex
-gap-2
-"
-                  >
-                    <span
-                      className="
-font-[760]
-w-[92px]
-flex-shrink-0
-"
-                    >
-                      {label}:
-                    </span>
-
-                    <span
-                      className="
-text-muted-foreground
-"
-                    >
-                      {value}
-                    </span>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* BUTTON */}
-
-          <div className="pt-5">
-            <Button
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowModal(true);
-              }}
-              className="
-h-[42px]
-rounded-[14px]
-font-[760]
-gap-2
-"
-            >
-              <Eye className="w-4 h-4" />
-              Quick View
-            </Button>
-          </div>
-        </div>
-      </motion.div>
-
-      {showModal && (
-        <QuickViewModal
-          container={container}
-          onClose={() =>
-            setShowModal(false)
-          }
-        />
-      )}
-    </>
-  );
-}
+export const inventoryProducts = [
+  {
+    id: 'used-20-wwt',
+    name: 'Used 20ft Wind & Water Tight Shipping Container | WWT',
+    condition: 'Used',
+    size: 20,
+    height: 'standard',
+    grade: 'WWT',
+    base_price: 1350,
+    rating: 4.9,
+    review_count: 207,
+    image_url: used20WwtGallery[0],
+    gallery_urls: used20WwtGallery.slice(1),
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: true,
+  },
+  {
+    id: 'used-40-wwt',
+    name: 'Used 40ft Wind & Water Tight Shipping Container | WWT',
+    condition: 'Used',
+    size: 40,
+    height: 'standard',
+    grade: 'WWT',
+    base_price: 1800,
+    rating: 4.9,
+    review_count: 217,
+    image_url: used40WwtGallery[0],
+    gallery_urls: used40WwtGallery.slice(1),
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: true,
+  },
+  {
+    id: 'used-40hc-wwt',
+    name: 'Used 40HC Wind & Water Tight Shipping Container | WWT',
+    condition: 'Used',
+    size: 40,
+    height: 'high_cube',
+    grade: 'WWT',
+    base_price: 2050,
+    rating: 4.8,
+    review_count: 198,
+    image_url: 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'High Cube • 9ft 6in High',
+    is_available: true,
+    is_bestseller: true,
+  },
+  {
+    id: 'new-20-iicl',
+    name: 'New 20ft One-Trip Shipping Container | IICL',
+    condition: 'New',
+    size: 20,
+    height: 'standard',
+    grade: 'IICL',
+    base_price: 2900,
+    rating: 5,
+    review_count: 184,
+    image_url: new20IiclGallery[0],
+    gallery_urls: new20IiclGallery.slice(1),
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'used-20-cw',
+    name: 'Used 20ft Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
+    size: 20,
+    height: 'standard',
+    grade: 'CW',
+    base_price: 1650,
+    rating: 4.8,
+    review_count: 142,
+    image_url: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'used-40-cw',
+    name: 'Used 40ft Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
+    size: 40,
+    height: 'standard',
+    grade: 'CW',
+    base_price: 2450,
+    rating: 4.7,
+    review_count: 161,
+    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'new-40hc-iicl',
+    name: 'New 40HC One-Trip Shipping Container | IICL',
+    condition: 'New',
+    size: 40,
+    height: 'high_cube',
+    grade: 'IICL',
+    base_price: 5400,
+    rating: 5,
+    review_count: 124,
+    image_url: new40hcDoubleDoorGallery[0],
+    gallery_urls: new40hcDoubleDoorGallery.slice(1),
+    short_description: 'High Cube • 9ft 6in High',
+    is_available: true,
+    is_bestseller: true,
+  },
+  {
+    id: 'used-10-wwt',
+    name: 'Used 10ft Wind & Water Tight Shipping Container | WWT',
+    condition: 'Used',
+    size: 10,
+    height: 'standard',
+    grade: 'WWT',
+    base_price: 2250,
+    rating: 4.8,
+    review_count: 91,
+    image_url: 'https://images.unsplash.com/photo-1524522173746-f628baad3644?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'refurbished-20',
+    name: 'Refurbished 20ft Shipping Container | WWT',
+    condition: 'Refurbished',
+    size: 20,
+    height: 'standard',
+    grade: 'WWT',
+    base_price: 2350,
+    rating: 4.9,
+    review_count: 76,
+    image_url: 'https://images.unsplash.com/photo-1571823251730-2a3d1ef5958d?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'used-40-asis',
+    name: 'Used 40ft Shipping Container | AS IS',
+    condition: 'Used',
+    size: 40,
+    height: 'standard',
+    grade: 'AS_IS',
+    base_price: 1450,
+    rating: 4.5,
+    review_count: 63,
+    image_url: 'https://images.unsplash.com/photo-1578243317822-8088b1c20538?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'new-20-double-door',
+    name: 'New 20ft One-Trip Double Door Shipping Container | IICL',
+    condition: 'New',
+    size: 20,
+    height: 'standard',
+    grade: 'IICL',
+    base_price: 3350,
+    rating: 5,
+    review_count: 88,
+    image_url: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'used-40hc-cw',
+    name: 'Used 40HC Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
+    size: 40,
+    height: 'high_cube',
+    grade: 'CW',
+    base_price: 3150,
+    rating: 4.8,
+    review_count: 117,
+    image_url: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'High Cube • 9ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'new-40-iicl',
+    name: 'New 40ft One-Trip Shipping Container | IICL',
+    condition: 'New',
+    size: 40,
+    height: 'standard',
+    grade: 'IICL',
+    base_price: 4750,
+    rating: 4.9,
+    review_count: 102,
+    image_url: 'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'used-20-asis',
+    name: 'Used 20ft Shipping Container | AS IS',
+    condition: 'Used',
+    size: 20,
+    height: 'standard',
+    grade: 'AS_IS',
+    base_price: 1150,
+    rating: 4.4,
+    review_count: 51,
+    image_url: 'https://images.unsplash.com/photo-1502175353174-a7a70e73b362?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'Standard Height • 8ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+  {
+    id: 'refurbished-40hc',
+    name: 'Refurbished 40HC Shipping Container | WWT',
+    condition: 'Refurbished',
+    size: 40,
+    height: 'high_cube',
+    grade: 'WWT',
+    base_price: 3850,
+    rating: 4.9,
+    review_count: 94,
+    image_url: 'https://images.unsplash.com/photo-1546156929-a4c0ac411f47?w=1200&q=80',
+    gallery_urls: [],
+    short_description: 'High Cube • 9ft 6in High',
+    is_available: true,
+    is_bestseller: false,
+  },
+];
