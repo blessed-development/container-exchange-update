@@ -184,58 +184,32 @@ export default function ContainerConfigurator({
             </button>
           </div>
         </div>
-<div className="step-label">STEP 1 — ENTER ZIP / POSTAL CODE</div>
 
-<div className="zip-bar">
-  <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
-    <div className="zip-left">
-      <MapPin size={15} />
-      <span className="zip-location-text">
-        {location.city}, {location.state} {location.postalCode}
-      </span>
-    </div>
+        <div className="zip-bar">
+          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
+            <div className="zip-left">
+              <MapPin size={15} />
+              <span>Delivering to Fort Lauderdale, FL</span>
+              <span className="zip-val">{zip || 'Not set'}</span>
+            </div>
+            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>Change</div>
+          </div>
 
-    <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
-      {zipOpen ? 'Close' : 'Change'}
-    </div>
-  </div>
-
-  <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-    <div className="zip-row">
-      <input
-        className="zip-input"
-        placeholder="Enter your ZIP / Postal Code"
-        value={postalInput}
-        onChange={(e) => setPostalInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            applyPostalCode();
-          }
-        }}
-      />
-
-      <button
-        type="button"
-        className="zip-apply"
-        onClick={applyPostalCode}
-        disabled={isLookingUp}
-      >
-        {isLookingUp ? 'Checking' : 'Apply'}
-      </button>
-    </div>
-
-    {zipError && <div className="zip-error">{zipError}</div>}
-
-    <button
-      type="button"
-      className="zip-loc-btn"
-      onClick={useCurrentLocation}
-      disabled={isLookingUp}
-    >
-      Use my current location
-    </button>
-  </div>
-</div>
+          <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
+            <div className="zip-row">
+              <input
+                className="zip-input"
+                placeholder="Enter ZIP code"
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+              />
+              <button className="zip-apply" onClick={() => setZipOpen(false)}>
+                Apply
+              </button>
+            </div>
+            <button className="zip-loc-btn">Use my current location</button>
+          </div>
+        </div>
 
         <div className="section-header">
           <span>CONTAINER SPECIFICATIONS</span>
