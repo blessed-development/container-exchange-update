@@ -63,6 +63,17 @@ const CA_PROVINCES = {
 };
 
 const CANADIAN_MAJOR_CITIES = [
+  'Richmond Hill',
+  'North York',
+  'Scarborough',
+  'Etobicoke',
+  'Mississauga',
+  'Brampton',
+  'Vaughan',
+  'Markham',
+  'Burnaby',
+  'Surrey',
+  'Richmond',
   'Toronto',
   'Montreal',
   'Montréal',
@@ -118,7 +129,11 @@ const getCountryLabel = (country) => {
 const cleanCanadianCity = (name) => {
   const raw = String(name || '').trim();
 
-  const matchedCity = CANADIAN_MAJOR_CITIES.find((city) =>
+  const sortedCities = [...CANADIAN_MAJOR_CITIES].sort(
+    (a, b) => b.length - a.length
+  );
+
+  const matchedCity = sortedCities.find((city) =>
     raw.toLowerCase().includes(city.toLowerCase())
   );
 
