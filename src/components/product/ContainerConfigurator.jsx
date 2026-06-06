@@ -203,9 +203,13 @@ export default function ContainerConfigurator({
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
   useEffect(() => {
-    setLocation(getSavedLocation());
-  }, []);
-
+  setLocation({
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+  });
+}, []);
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'WWT');
   }, [condition]);
@@ -287,10 +291,12 @@ export default function ContainerConfigurator({
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
-  const locationLabel = `${location.city}${location.state ? `, ${location.state}` : ''}${
-    location.postalCode ? ` ${location.postalCode}` : ''
-  } ${getCountryLabel(location.country)}`;
-
+  const locationLabel =
+  location?.postalCode
+    ? `${location.city}${location.state ? `, ${location.state}` : ''} ${
+        location.postalCode
+      }, ${getCountryLabel(location.country)}`
+    : 'Enter your ZIP / Postal Code';
   const useCurrentLocation = () => {
     setZipError('');
 
