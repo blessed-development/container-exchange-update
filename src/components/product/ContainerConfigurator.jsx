@@ -96,8 +96,28 @@ async function lookupPostalCode(value) {
   }
 
   return {
-    city: place['place name'] || '',
-    state: place['state abbreviation'] || place.state || '',
+    city:
+(
+place['place name']
+||
+''
+)
+.split(',')
+
+.pop()
+
+.replace(
+/^(Downtown|Old|East|West|North|South)\s+/i,
+''
+)
+
+.trim(),
+    sstate:
+place['state abbreviation']
+||
+place.state
+||
+'',
     postalCode: displayPostal,
     country: isCanada ? 'CA' : 'US',
   };
