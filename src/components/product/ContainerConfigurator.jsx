@@ -12,6 +12,11 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
+import {
+  lookupPostalCode,
+  getCountryLabel,
+} from '../../lib/locationEngine';
+
 const USED_GRADES = [
   { key: 'AS_IS', label: 'AS IS', adjust: 0 },
   { key: 'WWT', label: 'Wind & Water Tight', adjust: 0 },
@@ -44,62 +49,6 @@ const EMPTY_LOCATION = {
   postalCode: '',
   country: '',
 };
-
-const CA_PROVINCES = {
-  Ontario: 'ON',
-  Quebec: 'QC',
-  Québec: 'QC',
-  Manitoba: 'MB',
-  Alberta: 'AB',
-  'British Columbia': 'BC',
-  Saskatchewan: 'SK',
-  'Nova Scotia': 'NS',
-  'New Brunswick': 'NB',
-  'Newfoundland and Labrador': 'NL',
-  'Prince Edward Island': 'PE',
-  Yukon: 'YT',
-  Nunavut: 'NU',
-  'Northwest Territories': 'NT',
-};
-
-const CANADIAN_MAJOR_CITIES = [
-  'Richmond Hill',
-  'North York',
-  'Scarborough',
-  'Etobicoke',
-  'Mississauga',
-  'Brampton',
-  'Vaughan',
-  'Markham',
-  'Burnaby',
-  'Surrey',
-  'Richmond',
-  'Toronto',
-  'Montreal',
-  'Montréal',
-  'Vancouver',
-  'Winnipeg',
-  'Calgary',
-  'Edmonton',
-  'Ottawa',
-  'Quebec',
-  'Québec',
-  'Hamilton',
-  'Mississauga',
-  'Brampton',
-  'Surrey',
-  'Laval',
-  'Halifax',
-  'Saskatoon',
-  'Regina',
-  'Victoria',
-  'London',
-  'Windsor',
-  'Kitchener',
-  'Waterloo',
-  'Markham',
-  'Richmond',
-];
 
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
