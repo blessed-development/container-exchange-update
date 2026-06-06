@@ -38,6 +38,13 @@ const PRODUCT_SWITCH_MAP = {
   },
 };
 
+const EMPTY_LOCATION = {
+  city: '',
+  state: '',
+  postalCode: '',
+  country: '',
+};
+
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -68,6 +75,8 @@ async function lookupPostalCode(value) {
 
   const isCanada = isCanadianPostal(clean);
   const country = isCanada ? 'ca' : 'us';
+
+  // Canada lookup uses the FSA only, e.g. M5V from M5V 2T6
   const apiPostal = isCanada ? clean.slice(0, 3) : clean;
   const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
 
@@ -86,12 +95,13 @@ async function lookupPostalCode(value) {
     throw new Error('ZIP / Postal Code not found.');
   }
 
- return {
-  city: place['place name'] || '',
-  state: place['state abbreviation'] || place.state || '',
-  postalCode: displayPostal,
-  country: isCanada ? 'CA' : 'US',
-};
+  return {
+    city: place['place name'] || '',
+    state: place['state abbreviation'] || place.state || '',
+    postalCode: displayPostal,
+    country: isCanada ? 'CA' : 'US',
+  };
+}
 
 function getRegionAbbreviation(address) {
   const iso =
@@ -159,12 +169,7 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-  const [location, setLocation] = useState({
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  });
+  const [location, setLocation] = useState(EMPTY_LOCATION);
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
