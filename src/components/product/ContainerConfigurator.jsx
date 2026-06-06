@@ -15,6 +15,9 @@ import { useCart } from '../../context/CartContext';
 import {
   lookupPostalCode,
   getCountryLabel,
+  cleanPostal,
+  isUsZip,
+  isCanadianPostal,
 } from '../../lib/locationEngine';
 
 const USED_GRADES = [
@@ -50,80 +53,28 @@ const EMPTY_LOCATION = {
   country: '',
 };
 
+const CA_PROVINCES = {
+  Ontario: 'ON',
+  Quebec: 'QC',
+  Québec: 'QC',
+  Manitoba: 'MB',
+  Alberta: 'AB',
+  'British Columbia': 'BC',
+  Saskatchewan: 'SK',
+  'Nova Scotia': 'NS',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Prince Edward Island': 'PE',
+  Yukon: 'YT',
+  Nunavut: 'NU',
+  'Northwest Territories': 'NT',
+};
+
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-
-const cleanPostal = (value) =>
-  String(value || '').trim().toUpperCase().replace(/\s+/g, '');
-
-const isUsZip = (value) => /^\d{5}$/.test(cleanPostal(value));
-
-const isCanadianPostal = (value) =>
-  /^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(cleanPostal(value));
-
-const formatCanadianPostal = (value) => {
-  const clean = cleanPostal(value);
-  return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
-};
-
-const cleanCanadianCity = (name) => {
-  const raw = String(name || '').trim();
-
-  const sortedCities = [...CANADIAN_MAJOR_CITIES].sort(
-    (a, b) => b.length - a.length
-  );
-
-  const matchedCity = sortedCities.find((city) =>
-    raw.toLowerCase().includes(city.toLowerCase())
-  );
-
-  if (matchedCity) {
-    return matchedCity === 'Montréal' ? 'Montreal' : matchedCity;
-  }
-
-  return raw
-    .split('(')[0]
-    .split('/')[0]
-    .replace(/Provincial Government/gi, '')
-    .replace(/\b(Downtown|Old|East|West|North|South|Central)\b/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-};
-
-  const isCanada = isCanadianPostal(clean);
-  const country = isCanada ? 'ca' : 'us';
-  const apiPostal = isCanada ? clean.slice(0, 3) : clean;
-  const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
-
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(apiPostal)}`
-  );
-
-  if (!response.ok) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
-  const data = await response.json();
-  const place = data?.places?.[0];
-
-  if (!place) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
-  return {
-    city: isCanada
-      ? cleanCanadianCity(place['place name'])
-      : place['place name'] || '',
-    state: isCanada
-      ? place['state abbreviation'] || CA_PROVINCES[place.state] || place.state || ''
-      : place['state abbreviation'] || place.state || '',
-    postalCode: displayPostal,
-    country: isCanada ? 'CA' : 'US',
-  };
-}
 
 function getRegionAbbreviation(address) {
   const iso =
