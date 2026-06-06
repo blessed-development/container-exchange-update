@@ -64,6 +64,23 @@ const formatCanadianPostal = (value) => {
   return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
 };
 
+const getCountryLabel = (country) => (country === 'US' ? 'USA' : 'CA');
+
+async function fetchZippopotam(country, postal) {
+  const response = await fetch(
+    `https://api.zippopotam.us/${country}/${encodeURIComponent(postal)}`
+  );
+
+  if (!response.ok) return null;
+
+  const data = await response.json();
+  const place = data?.places?.[0];
+
+  if (!place) return null;
+
+  return place;
+}
+
 async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
 
@@ -71,19 +88,18 @@ async function lookupPostalCode(value) {
     throw new Error('Enter a valid US ZIP or Canadian postal code.');
   }
 
-  const country = isUsZip(clean) ? 'us' : 'ca';
-  const postalDisplay = country === 'ca' ? formatCanadianPostal(clean) : clean;
+  const isCanada = isCanadianPostal(clean);
+  const country = isCanada ? 'ca' : 'us';
+  const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
 
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(clean)}`
-  );
+  const candidates = isCanada ? [formatCanadianPostal(clean), clean] : [clean];
 
-  if (!response.ok) {
-    throw new Error('ZIP / Postal Code not found.');
+  let place = null;
+
+  for (const candidate of candidates) {
+    place = await fetchZippopotam(country, candidate);
+    if (place) break;
   }
-
-  const data = await response.json();
-  const place = data?.places?.[0];
 
   if (!place) {
     throw new Error('ZIP / Postal Code not found.');
@@ -91,10 +107,24 @@ async function lookupPostalCode(value) {
 
   return {
     city: place['place name'],
-    state: place['state abbreviation'],
-    postalCode: postalDisplay,
-    country: country === 'us' ? 'US' : 'CA',
+    state: place['state abbreviation'] || place.state || '',
+    postalCode: displayPostal,
+    country: isCanada ? 'CA' : 'US',
   };
+}
+
+function getRegionAbbreviation(address) {
+  const iso =
+    address?.['ISO3166-2-lvl4'] ||
+    address?.['ISO3166-2-lvl6'] ||
+    address?.state_code ||
+    '';
+
+  if (typeof iso === 'string' && iso.includes('-')) {
+    return iso.split('-').pop();
+  }
+
+  return address?.state_code || address?.state || '';
 }
 
 async function reverseGeocode(latitude, longitude) {
@@ -122,7 +152,7 @@ async function reverseGeocode(latitude, longitude) {
       address.suburb ||
       address.county ||
       'Current Location',
-    state: address.state_code || address.state || '',
+    state: getRegionAbbreviation(address),
     postalCode: address.postcode || '',
     country,
   };
@@ -184,6 +214,42 @@ export default function ContainerConfigurator({
     setUserChangedConfig(false);
   }, [container?.id]);
 
+  useEffect(() => {
+    const raw = postalInput.trim().toUpperCase();
+    const clean = cleanPostal(raw);
+
+    if (!clean) {
+      setZipError('');
+      return;
+    }
+
+    const ready = isUsZip(clean) || isCanadianPostal(clean);
+
+    if (!ready) {
+      setZipError('');
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setZipError('');
+      setIsLookingUp(true);
+
+      try {
+        const resolved = await lookupPostalCode(raw);
+        setLocation(resolved);
+        saveLocation(resolved);
+        setPostalInput('');
+        setZipOpen(false);
+      } catch (error) {
+        setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
+      } finally {
+        setIsLookingUp(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [postalInput]);
+
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
 
@@ -223,24 +289,7 @@ export default function ContainerConfigurator({
 
   const locationLabel = `${location.city}${location.state ? `, ${location.state}` : ''}${
     location.postalCode ? ` ${location.postalCode}` : ''
-  }`;
-
-  const applyPostalCode = async () => {
-    setZipError('');
-    setIsLookingUp(true);
-
-    try {
-      const resolved = await lookupPostalCode(postalInput);
-      setLocation(resolved);
-      saveLocation(resolved);
-      setPostalInput('');
-      setZipOpen(false);
-    } catch (error) {
-      setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
-    } finally {
-      setIsLookingUp(false);
-    }
-  };
+  } ${getCountryLabel(location.country)}`;
 
   const useCurrentLocation = () => {
     setZipError('');
@@ -367,27 +416,16 @@ export default function ContainerConfigurator({
           </div>
 
           <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-            <div className="zip-row">
+            <div className="zip-row zip-row-single">
               <input
                 className="zip-input"
                 placeholder="Enter your ZIP / Postal Code"
                 value={postalInput}
                 onChange={(e) => setPostalInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') applyPostalCode();
-                }}
               />
-
-              <button
-                type="button"
-                className="zip-apply"
-                onClick={applyPostalCode}
-                disabled={isLookingUp}
-              >
-                {isLookingUp ? 'Checking' : 'Apply'}
-              </button>
             </div>
 
+            {isLookingUp && <div className="zip-status">Detecting location...</div>}
             {zipError && <div className="zip-error">{zipError}</div>}
 
             <button
