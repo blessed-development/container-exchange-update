@@ -45,6 +45,51 @@ const EMPTY_LOCATION = {
   country: '',
 };
 
+const CA_PROVINCES = {
+  Ontario: 'ON',
+  Quebec: 'QC',
+  Québec: 'QC',
+  Manitoba: 'MB',
+  Alberta: 'AB',
+  'British Columbia': 'BC',
+  Saskatchewan: 'SK',
+  'Nova Scotia': 'NS',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Prince Edward Island': 'PE',
+  Yukon: 'YT',
+  Nunavut: 'NU',
+  'Northwest Territories': 'NT',
+};
+
+const CANADIAN_MAJOR_CITIES = [
+  'Toronto',
+  'Montreal',
+  'Montréal',
+  'Vancouver',
+  'Winnipeg',
+  'Calgary',
+  'Edmonton',
+  'Ottawa',
+  'Quebec',
+  'Québec',
+  'Hamilton',
+  'Mississauga',
+  'Brampton',
+  'Surrey',
+  'Laval',
+  'Halifax',
+  'Saskatoon',
+  'Regina',
+  'Victoria',
+  'London',
+  'Windsor',
+  'Kitchener',
+  'Waterloo',
+  'Markham',
+  'Richmond',
+];
+
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -64,7 +109,31 @@ const formatCanadianPostal = (value) => {
   return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
 };
 
-const getCountryLabel = (country) => (country === 'US' ? 'USA' : 'CA');
+const getCountryLabel = (country) => {
+  if (country === 'US') return 'USA';
+  if (country === 'CA') return 'CA';
+  return '';
+};
+
+const cleanCanadianCity = (name) => {
+  const raw = String(name || '').trim();
+
+  const matchedCity = CANADIAN_MAJOR_CITIES.find((city) =>
+    raw.toLowerCase().includes(city.toLowerCase())
+  );
+
+  if (matchedCity) {
+    return matchedCity === 'Montréal' ? 'Montreal' : matchedCity;
+  }
+
+  return raw
+    .split('(')[0]
+    .split('/')[0]
+    .replace(/Provincial Government/gi, '')
+    .replace(/\b(Downtown|Old|East|West|North|South|Central)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
 
 async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
@@ -75,8 +144,6 @@ async function lookupPostalCode(value) {
 
   const isCanada = isCanadianPostal(clean);
   const country = isCanada ? 'ca' : 'us';
-
-  // Canada lookup uses the FSA only, e.g. M5V from M5V 2T6
   const apiPostal = isCanada ? clean.slice(0, 3) : clean;
   const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
 
@@ -96,28 +163,12 @@ async function lookupPostalCode(value) {
   }
 
   return {
-    city:
-(
-place['place name']
-||
-''
-)
-.split(',')
-
-.pop()
-
-.replace(
-/^(Downtown|Old|East|West|North|South)\s+/i,
-''
-)
-
-.trim(),
-    sstate:
-place['state abbreviation']
-||
-place.state
-||
-'',
+    city: isCanada
+      ? cleanCanadianCity(place['place name'])
+      : place['place name'] || '',
+    state: isCanada
+      ? place['state abbreviation'] || CA_PROVINCES[place.state] || place.state || ''
+      : place['state abbreviation'] || place.state || '',
     postalCode: displayPostal,
     country: isCanada ? 'CA' : 'US',
   };
@@ -134,7 +185,7 @@ function getRegionAbbreviation(address) {
     return iso.split('-').pop();
   }
 
-  return address?.state_code || address?.state || '';
+  return CA_PROVINCES[address?.state] || address?.state_code || address?.state || '';
 }
 
 async function reverseGeocode(latitude, longitude) {
