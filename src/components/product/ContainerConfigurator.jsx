@@ -86,13 +86,12 @@ async function lookupPostalCode(value) {
     throw new Error('ZIP / Postal Code not found.');
   }
 
-  return {
-    city: place['place name'] || '',
-    state: place['state abbreviation'] || place.state || '',
-    postalCode: displayPostal,
-    country: isCanada ? 'CA' : 'US',
-  };
-}
+ return {
+  city: place['place name'] || '',
+  state: place['state abbreviation'] || place.state || '',
+  postalCode: displayPostal,
+  country: isCanada ? 'CA' : 'US',
+};
 
 function getRegionAbbreviation(address) {
   const iso =
