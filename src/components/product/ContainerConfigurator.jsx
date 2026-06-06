@@ -38,13 +38,6 @@ const PRODUCT_SWITCH_MAP = {
   },
 };
 
-const DEFAULT_LOCATION = {
-  city: 'Fort Lauderdale',
-  state: 'FL',
-  postalCode: '33304',
-  country: 'US',
-};
-
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -66,21 +59,6 @@ const formatCanadianPostal = (value) => {
 
 const getCountryLabel = (country) => (country === 'US' ? 'USA' : 'CA');
 
-async function fetchZippopotam(country, postal) {
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(postal)}`
-  );
-
-  if (!response.ok) return null;
-
-  const data = await response.json();
-  const place = data?.places?.[0];
-
-  if (!place) return null;
-
-  return place;
-}
-
 async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
 
@@ -89,12 +67,8 @@ async function lookupPostalCode(value) {
   }
 
   const isCanada = isCanadianPostal(clean);
-
   const country = isCanada ? 'ca' : 'us';
-
-  // Zippopotam Canada works with FSA only: M5V, H2Y, V6B
   const apiPostal = isCanada ? clean.slice(0, 3) : clean;
-
   const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
 
   const response = await fetch(
@@ -113,32 +87,7 @@ async function lookupPostalCode(value) {
   }
 
   return {
-    city: place['place name'],
-    state: place['state abbreviation'] || place.state || '',
-    postalCode: displayPostal,
-    country: isCanada ? 'CA' : 'US',
-  };
-}
-
-  const isCanada = isCanadianPostal(clean);
-  const country = isCanada ? 'ca' : 'us';
-  const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
-
-  const candidates = isCanada ? [formatCanadianPostal(clean), clean] : [clean];
-
-  let place = null;
-
-  for (const candidate of candidates) {
-    place = await fetchZippopotam(country, candidate);
-    if (place) break;
-  }
-
-  if (!place) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
-  return {
-    city: place['place name'],
+    city: place['place name'] || '',
     state: place['state abbreviation'] || place.state || '',
     postalCode: displayPostal,
     country: isCanada ? 'CA' : 'US',
@@ -190,19 +139,6 @@ async function reverseGeocode(latitude, longitude) {
   };
 }
 
-function getSavedLocation() {
-  try {
-    const saved = localStorage.getItem('ce_location');
-    return saved ? JSON.parse(saved) : DEFAULT_LOCATION;
-  } catch {
-    return DEFAULT_LOCATION;
-  }
-}
-
-function saveLocation(location) {
-  localStorage.setItem('ce_location', JSON.stringify(location));
-}
-
 export default function ContainerConfigurator({
   container,
   selectedSizeIndex,
@@ -224,7 +160,12 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-  const [location, setLocation] = useState(DEFAULT_LOCATION);
+  const [location, setLocation] = useState({
+    city: '',
+    state: '',
+    postalCode: '',
+    country: '',
+  });
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
@@ -234,14 +175,6 @@ export default function ContainerConfigurator({
   const [gradeOpen, setGradeOpen] = useState(false);
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
-  useEffect(() => {
-  setLocation({
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  });
-}, []);
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'WWT');
   }, [condition]);
@@ -273,7 +206,6 @@ export default function ContainerConfigurator({
       try {
         const resolved = await lookupPostalCode(raw);
         setLocation(resolved);
-        saveLocation(resolved);
         setPostalInput('');
         setZipOpen(false);
       } catch (error) {
@@ -323,12 +255,12 @@ export default function ContainerConfigurator({
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
-  const locationLabel =
-  location?.postalCode
+  const locationLabel = location.postalCode
     ? `${location.city}${location.state ? `, ${location.state}` : ''} ${
         location.postalCode
       }, ${getCountryLabel(location.country)}`
     : 'Enter your ZIP / Postal Code';
+
   const useCurrentLocation = () => {
     setZipError('');
 
@@ -348,7 +280,6 @@ export default function ContainerConfigurator({
           );
 
           setLocation(resolved);
-          saveLocation(resolved);
           setPostalInput('');
           setZipOpen(false);
         } catch (error) {
