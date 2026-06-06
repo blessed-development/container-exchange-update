@@ -1030,3 +1030,21 @@ margin-top:1px !important;
   color:#7b8595;
   text-transform:uppercase;
 }
+.zip-row-single{
+  grid-template-columns:1fr;
+}
+
+.zip-status{
+  margin-top:8px;
+  color:#22c55e;
+  font-size:11px;
+  font-weight:800;
+}
+
+.zip-location-text{
+  color:#f8fafc;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:-.02em;
+  text-transform:none;
+}
