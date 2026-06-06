@@ -69,12 +69,6 @@ const formatCanadianPostal = (value) => {
   return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
 };
 
-const getCountryLabel = (country) => {
-  if (country === 'US') return 'USA';
-  if (country === 'CA') return 'CA';
-  return '';
-};
-
 const cleanCanadianCity = (name) => {
   const raw = String(name || '').trim();
 
@@ -98,13 +92,6 @@ const cleanCanadianCity = (name) => {
     .replace(/\s+/g, ' ')
     .trim();
 };
-
-async function lookupPostalCode(value) {
-  const clean = cleanPostal(value);
-
-  if (!isUsZip(clean) && !isCanadianPostal(clean)) {
-    throw new Error('Enter a valid US ZIP or Canadian postal code.');
-  }
 
   const isCanada = isCanadianPostal(clean);
   const country = isCanada ? 'ca' : 'us';
