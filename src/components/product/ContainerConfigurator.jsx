@@ -89,6 +89,38 @@ async function lookupPostalCode(value) {
   }
 
   const isCanada = isCanadianPostal(clean);
+
+  const country = isCanada ? 'ca' : 'us';
+
+  // Zippopotam Canada works with FSA only: M5V, H2Y, V6B
+  const apiPostal = isCanada ? clean.slice(0, 3) : clean;
+
+  const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
+
+  const response = await fetch(
+    `https://api.zippopotam.us/${country}/${encodeURIComponent(apiPostal)}`
+  );
+
+  if (!response.ok) {
+    throw new Error('ZIP / Postal Code not found.');
+  }
+
+  const data = await response.json();
+  const place = data?.places?.[0];
+
+  if (!place) {
+    throw new Error('ZIP / Postal Code not found.');
+  }
+
+  return {
+    city: place['place name'],
+    state: place['state abbreviation'] || place.state || '',
+    postalCode: displayPostal,
+    country: isCanada ? 'CA' : 'US',
+  };
+}
+
+  const isCanada = isCanadianPostal(clean);
   const country = isCanada ? 'ca' : 'us';
   const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
 
