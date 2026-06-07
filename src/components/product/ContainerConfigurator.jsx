@@ -212,8 +212,39 @@ export default function ContainerConfigurator({
       ? openedProductPrice
       : selectedStandardPrice;
 
-  const unitPrice = basePrice;
-  const totalPrice = unitPrice * qty;
+  const getRegionalMultiplier = () => {
+  if (!location?.state) return 1;
+
+  const regionMap = {
+    // USA
+    FL: 1.00,
+    TX: 0.98,
+    CA: 1.18,
+    NY: 1.12,
+    WA: 1.08,
+    IL: 1.04,
+
+    // Canada
+    ON: 1.10,
+    QC: 1.08,
+    BC: 1.15,
+    AB: 1.05,
+    MB: 1.03,
+  };
+
+  return regionMap[location.state] || 1;
+};
+
+const regionalPrice = Math.round(
+  basePrice * getRegionalMultiplier()
+);
+
+const unitPrice =
+  location?.postalCode
+    ? regionalPrice
+    : basePrice;
+
+const totalPrice = unitPrice * qty;
 
   const currentTitle =
     container?.name ||
@@ -513,7 +544,23 @@ export default function ContainerConfigurator({
 
             <div className="total-row">
               <span className="total-lbl">Total</span>
-              <span className="total-price">{fmt(totalPrice)}</span>
+             <div className="flex flex-col items-end">
+  <span className="total-price">
+    {fmt(totalPrice)}
+  </span>
+
+  {!location?.postalCode && (
+    <span className="text-[11px] text-muted-foreground">
+      Starting From
+    </span>
+  )}
+
+  {location?.postalCode && (
+    <span className="text-[11px] text-green-600">
+      Local pricing applied
+    </span>
+  )}
+</div>
             </div>
 
             <div className="cart-row">
