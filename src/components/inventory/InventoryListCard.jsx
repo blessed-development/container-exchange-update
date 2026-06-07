@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Star, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
+
+import {
+  getSavedSelectedLocation,
+  getLocalizedPrice,
+} from '../../lib/locationEngine';
 
 const GRADE_LABELS = {
   AS_IS: 'As-Is',
@@ -14,10 +19,35 @@ const GRADE_LABELS = {
 
 export default function InventoryListCard({ container, index }) {
   const [showModal, setShowModal] = useState(false);
+  const [savedLocation, setSavedLocation] = useState(() =>
+    getSavedSelectedLocation()
+  );
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const refreshLocation = () => {
+      setSavedLocation(getSavedSelectedLocation());
+    };
+
+    window.addEventListener('ce-location-change', refreshLocation);
+    window.addEventListener('storage', refreshLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', refreshLocation);
+      window.removeEventListener('storage', refreshLocation);
+    };
+  }, []);
 
   const stars = Math.round(container.rating || 5);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
+
+  const hasZip = Boolean(savedLocation?.postalCode);
+
+  const displayPrice = getLocalizedPrice(
+    container.base_price || container.price || 0,
+    savedLocation
+  );
 
   return (
     <>
@@ -28,7 +58,6 @@ export default function InventoryListCard({ container, index }) {
         onClick={() => navigate(`/product/${container.id}`)}
         className="bg-card border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row cursor-pointer"
       >
-        {/* LEFT — Image */}
         <div
           className="relative sm:w-[35%] flex-shrink-0 bg-muted overflow-hidden"
           style={{ minHeight: '220px' }}
@@ -50,7 +79,6 @@ export default function InventoryListCard({ container, index }) {
           />
         </div>
 
-        {/* RIGHT — Details */}
         <div className="flex-1 p-5 flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-foreground text-base leading-snug mb-1">
@@ -63,7 +91,6 @@ export default function InventoryListCard({ container, index }) {
               </p>
             )}
 
-            {/* Stars */}
             <div className="flex items-center gap-1.5 mb-3">
               <span className="text-sm font-bold text-foreground">
                 {(container.rating || 5).toFixed(1)}
@@ -87,18 +114,18 @@ export default function InventoryListCard({ container, index }) {
               </span>
             </div>
 
-            {/* Price */}
-            <p className="text-2xl font-black text-primary mb-3">
-            <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-              Starting From
-               </div>
+            <div className="mb-3">
+              {!hasZip && (
+                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
+                  Starting From
+                </div>
+              )}
 
-          <p className="text-2xl font-black text-primary mb-3">
-            ${container.base_price?.toLocaleString() || '—'}
-            </p>
-            </p>
+              <p className="text-2xl font-black text-primary">
+                ${Number(displayPrice || 0).toLocaleString()}
+              </p>
+            </div>
 
-            {/* Specs */}
             <div className="space-y-1 text-sm mb-4">
               {[
                 ['Condition', container.condition],
@@ -115,7 +142,6 @@ export default function InventoryListCard({ container, index }) {
             </div>
           </div>
 
-          {/* Quick View button */}
           <div>
             <Button
               variant="outline"
