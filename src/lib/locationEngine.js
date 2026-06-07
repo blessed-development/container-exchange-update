@@ -95,7 +95,15 @@ export function getStartingPrice(price) {
 }
 
 export function getLocalizedPrice(price, location) {
-  const value = Number(price || 0);
+  const original = Number(price || 0);
+
+  if (!location?.postalCode) {
+    return getStartingPrice(original);
+  }
+
+  return original;
+}
+const value = Number(price || 0);
 
   if (!location?.postalCode) {
     return getStartingPrice(value);
