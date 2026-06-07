@@ -9,6 +9,8 @@ export const POSTAL_OVERRIDES = {
   },
 };
 
+export const LOCATION_STORAGE_KEY = 'ce_selected_location';
+
 export const cleanPostal = (value) =>
   String(value || '').trim().toUpperCase().replace(/\s+/g, '');
 
@@ -72,7 +74,6 @@ export async function lookupPostalCode(value) {
     country: isCanada ? 'CA' : 'US',
   };
 }
-export const LOCATION_STORAGE_KEY = 'ce_selected_location';
 
 export function saveSelectedLocation(location) {
   try {
@@ -102,22 +103,4 @@ export function getLocalizedPrice(price, location) {
   }
 
   return original;
-}
-const value = Number(price || 0);
-
-  if (!location?.postalCode) {
-    return getStartingPrice(value);
-  }
-
-  const stateRates = {
-    FL: 1.0,
-    TX: 0.94,
-    GA: 0.92,
-    CA: 1.15,
-    NY: 1.1,
-    ON: 1.08,
-    BC: 1.12,
-  };
-
-  return Math.round(value * (stateRates[location.state] || 1));
 }
