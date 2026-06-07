@@ -53,6 +53,8 @@ const EMPTY_LOCATION = {
   country: '',
 };
 
+const LOCATION_STORAGE_KEY = 'ce_selected_location';
+
 const CA_PROVINCES = {
   Ontario: 'ON',
   Quebec: 'QC',
@@ -71,7 +73,6 @@ const CA_PROVINCES = {
 };
 
 const REGION_PRICE_MULTIPLIERS = {
-  // USA
   FL: 1.0,
   TX: 0.98,
   CA: 1.18,
@@ -83,7 +84,6 @@ const REGION_PRICE_MULTIPLIERS = {
   AZ: 1.06,
   NV: 1.07,
 
-  // Canada
   ON: 1.1,
   QC: 1.08,
   BC: 1.15,
@@ -99,6 +99,21 @@ const fmt = (num) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+
+function saveSelectedLocation(location) {
+  try {
+    localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(location));
+  } catch {}
+}
+
+function getSavedSelectedLocation() {
+  try {
+    const saved = localStorage.getItem(LOCATION_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
 
 function getRegionAbbreviation(address) {
   const iso =
@@ -168,8 +183,9 @@ export default function ContainerConfigurator({
 
   const [zipOpen, setZipOpen] = useState(false);
   const [location, setLocation] = useState(() => {
-  return getSavedSelectedLocation() || EMPTY_LOCATION;
-});
+    return getSavedSelectedLocation() || EMPTY_LOCATION;
+  });
+
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
@@ -209,10 +225,10 @@ export default function ContainerConfigurator({
 
       try {
         const resolved = await lookupPostalCode(raw);
-       setLocation(resolved);
-       saveSelectedLocation(resolved);
-       setPostalInput('');
-       setZipOpen(false);
+        setLocation(resolved);
+        saveSelectedLocation(resolved);
+        setPostalInput('');
+        setZipOpen(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
@@ -241,33 +257,35 @@ export default function ContainerConfigurator({
       : selectedStandardPrice;
 
   const regionalMultiplier =
-  location?.postalCode && location?.state
-    ? REGION_PRICE_MULTIPLIERS[location.state] || 1
-    : 1;
+    location?.postalCode && location?.state
+      ? REGION_PRICE_MULTIPLIERS[location.state] || 1
+      : 1;
 
-const applyLocalPrice = (price) =>
-  location?.postalCode
-    ? Math.round(Number(price || 0) * regionalMultiplier)
-    : Number(price || 0);
+  const applyLocalPrice = (price) =>
+    location?.postalCode
+      ? Math.round(Number(price || 0) * regionalMultiplier)
+      : Number(price || 0);
 
-const unitPrice = applyLocalPrice(basePrice);
-const totalPrice = unitPrice * qty;
-useEffect(() => {
-  if (typeof onPricingChange === 'function') {
-    onPricingChange({
-      price: unitPrice,
-      hasLocalPrice: Boolean(location?.postalCode),
-      location,
-    });
-  }
-}, [
-  unitPrice,
-  location?.postalCode,
-  location?.city,
-  location?.state,
-  location?.country,
-  onPricingChange,
-]);
+  const unitPrice = applyLocalPrice(basePrice);
+  const totalPrice = unitPrice * qty;
+
+  useEffect(() => {
+    if (typeof onPricingChange === 'function') {
+      onPricingChange({
+        price: unitPrice,
+        hasLocalPrice: Boolean(location?.postalCode),
+        location,
+      });
+    }
+  }, [
+    unitPrice,
+    location?.postalCode,
+    location?.city,
+    location?.state,
+    location?.country,
+    onPricingChange,
+  ]);
+
   const currentTitle =
     container?.name ||
     `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
@@ -310,6 +328,7 @@ useEffect(() => {
           );
 
           setLocation(resolved);
+          saveSelectedLocation(resolved);
           setPostalInput('');
           setZipOpen(false);
         } catch (error) {
@@ -459,7 +478,7 @@ useEffect(() => {
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                {isActive ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
+                  {isActive ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                 </span>
               </button>
             );
@@ -487,7 +506,7 @@ useEffect(() => {
                   <div className="cc-info">
                     <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
                     <span className="cc-price">
-                    {active ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
+                      {active ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                     </span>
                   </div>
 
