@@ -72,3 +72,44 @@ export async function lookupPostalCode(value) {
     country: isCanada ? 'CA' : 'US',
   };
 }
+export const LOCATION_STORAGE_KEY = 'ce_selected_location';
+
+export function saveSelectedLocation(location) {
+  try {
+    localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(location));
+    window.dispatchEvent(new Event('ce-location-change'));
+  } catch {}
+}
+
+export function getSavedSelectedLocation() {
+  try {
+    const saved = localStorage.getItem(LOCATION_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function getStartingPrice(price) {
+  return Math.round(Number(price || 0) * 0.88);
+}
+
+export function getLocalizedPrice(price, location) {
+  const value = Number(price || 0);
+
+  if (!location?.postalCode) {
+    return getStartingPrice(value);
+  }
+
+  const stateRates = {
+    FL: 1.0,
+    TX: 0.94,
+    GA: 0.92,
+    CA: 1.15,
+    NY: 1.1,
+    ON: 1.08,
+    BC: 1.12,
+  };
+
+  return Math.round(value * (stateRates[location.state] || 1));
+}
