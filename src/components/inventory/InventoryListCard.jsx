@@ -271,38 +271,26 @@ export default function InventoryListCard({
         </div>
       </motion.div>
 
+     {showModal && (
+ 
       <QuickViewModal
-        open={
-          showModal
-        }
-        onClose={() =>
-          setShowModal(
-            false
-          )
-        }
-        container={
-          container
-        }
-      />
+    container={container}
+    onClose={() => setShowModal(false)}
+  />
+)}
 
-     {showZipModal && (
+{showZipModal && (
   <ZipRequiredModal
+    open={true}
+    onClose={() => setShowZipModal(false)}
+    onSuccess={() => {
+      setShowZipModal(false);
 
-        onClose={() =>
-          setShowZipModal(
-            false
-          )
-        }
-        onSuccess={() => {
-          setShowZipModal(
-            false
-          );
-
-          navigate(
-            `/product/${container.id}`
-          );
-        }}
-      />
-    </>
+      setTimeout(() => {
+        navigate(`/product/${container.id}`);
+      }, 120);
+    }}
+  />
+)}
   );
 }
