@@ -100,17 +100,16 @@ export default function InventoryListCard({
       savedLocation
     );
 
-  const openProduct =
-    () => {
-      if (!hasZip) {
-        setShowZipModal(true);
-        return;
-      }
+  const openProduct = (e) => {
+  e.stopPropagation();
 
-      navigate(
-        `/product/${container.id}`
-      );
-    };
+  if (hasZip) {
+    navigate(`/product/${container.id}`);
+    return;
+  }
+
+  setShowZipModal(true);
+};
 
   return (
     <>
@@ -128,8 +127,8 @@ export default function InventoryListCard({
             index *
             0.05,
         }}
-        onClick={
-          openProduct
+       onClick={(e) =>
+        openProduct(e)
         }
         className="
           bg-card
@@ -288,14 +287,7 @@ export default function InventoryListCard({
 
      {showZipModal && (
   <ZipRequiredModal
-    open={showZipModal}
-    onClose={() => setShowZipModal(false)}
-    onSuccess={() => {
-      setShowZipModal(false);
-      navigate(`/product/${container.id}`);
-    }}
-  />
-)}
+
         onClose={() =>
           setShowZipModal(
             false
