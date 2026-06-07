@@ -167,7 +167,9 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-  const [location, setLocation] = useState(EMPTY_LOCATION);
+  const [location, setLocation] = useState(() => {
+  return getSavedSelectedLocation() || EMPTY_LOCATION;
+});
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
@@ -207,9 +209,10 @@ export default function ContainerConfigurator({
 
       try {
         const resolved = await lookupPostalCode(raw);
-        setLocation(resolved);
-        setPostalInput('');
-        setZipOpen(false);
+       setLocation(resolved);
+       saveSelectedLocation(resolved);
+       setPostalInput('');
+       setZipOpen(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
