@@ -70,6 +70,30 @@ const CA_PROVINCES = {
   'Northwest Territories': 'NT',
 };
 
+const REGION_PRICE_MULTIPLIERS = {
+  // USA
+  FL: 1.0,
+  TX: 0.98,
+  CA: 1.18,
+  NY: 1.12,
+  WA: 1.08,
+  IL: 1.04,
+  GA: 1.02,
+  NC: 1.01,
+  AZ: 1.06,
+  NV: 1.07,
+
+  // Canada
+  ON: 1.1,
+  QC: 1.08,
+  BC: 1.15,
+  AB: 1.05,
+  MB: 1.03,
+  SK: 1.04,
+  NS: 1.06,
+  NB: 1.05,
+};
+
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -212,39 +236,15 @@ export default function ContainerConfigurator({
       ? openedProductPrice
       : selectedStandardPrice;
 
-  const getRegionalMultiplier = () => {
-  if (!location?.state) return 1;
+  const regionalMultiplier =
+    location?.postalCode && location?.state
+      ? REGION_PRICE_MULTIPLIERS[location.state] || 1
+      : 1;
 
-  const regionMap = {
-    // USA
-    FL: 1.00,
-    TX: 0.98,
-    CA: 1.18,
-    NY: 1.12,
-    WA: 1.08,
-    IL: 1.04,
+  const localizedPrice = Math.round(basePrice * regionalMultiplier);
 
-    // Canada
-    ON: 1.10,
-    QC: 1.08,
-    BC: 1.15,
-    AB: 1.05,
-    MB: 1.03,
-  };
-
-  return regionMap[location.state] || 1;
-};
-
-const regionalPrice = Math.round(
-  basePrice * getRegionalMultiplier()
-);
-
-const unitPrice =
-  location?.postalCode
-    ? regionalPrice
-    : basePrice;
-
-const totalPrice = unitPrice * qty;
+  const unitPrice = location?.postalCode ? localizedPrice : basePrice;
+  const totalPrice = unitPrice * qty;
 
   const currentTitle =
     container?.name ||
@@ -544,23 +544,20 @@ const totalPrice = unitPrice * qty;
 
             <div className="total-row">
               <span className="total-lbl">Total</span>
-             <div className="flex flex-col items-end">
-  <span className="total-price">
-    {fmt(totalPrice)}
-  </span>
 
-  {!location?.postalCode && (
-    <span className="text-[11px] text-muted-foreground">
-      Starting From
-    </span>
-  )}
+              <div className="flex flex-col items-end">
+                <span className="total-price">{fmt(totalPrice)}</span>
 
-  {location?.postalCode && (
-    <span className="text-[11px] text-green-600">
-      Local pricing applied
-    </span>
-  )}
-</div>
+                {!location?.postalCode ? (
+                  <span className="text-[11px] text-muted-foreground">
+                    Starting From
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-green-600">
+                    Exact local price
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="cart-row">
