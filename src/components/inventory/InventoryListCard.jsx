@@ -286,10 +286,16 @@ export default function InventoryListCard({
         }
       />
 
-      <ZipRequiredModal
-        open={
-          showZipModal
-        }
+     {showZipModal && (
+  <ZipRequiredModal
+    open={showZipModal}
+    onClose={() => setShowZipModal(false)}
+    onSuccess={() => {
+      setShowZipModal(false);
+      navigate(`/product/${container.id}`);
+    }}
+  />
+)}
         onClose={() =>
           setShowZipModal(
             false
