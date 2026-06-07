@@ -237,14 +237,17 @@ export default function ContainerConfigurator({
       : selectedStandardPrice;
 
   const regionalMultiplier =
-    location?.postalCode && location?.state
-      ? REGION_PRICE_MULTIPLIERS[location.state] || 1
-      : 1;
+  location?.postalCode && location?.state
+    ? REGION_PRICE_MULTIPLIERS[location.state] || 1
+    : 1;
 
-  const localizedPrice = Math.round(basePrice * regionalMultiplier);
+const applyLocalPrice = (price) =>
+  location?.postalCode
+    ? Math.round(Number(price || 0) * regionalMultiplier)
+    : Number(price || 0);
 
-  const unitPrice = location?.postalCode ? localizedPrice : basePrice;
-  const totalPrice = unitPrice * qty;
+const unitPrice = applyLocalPrice(basePrice);
+const totalPrice = unitPrice * qty;
 
   const currentTitle =
     container?.name ||
@@ -437,7 +440,7 @@ export default function ContainerConfigurator({
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                  {isActive ? fmt(basePrice) : fmt(standardPrice)}
+                {isActive ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                 </span>
               </button>
             );
@@ -465,7 +468,7 @@ export default function ContainerConfigurator({
                   <div className="cc-info">
                     <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
                     <span className="cc-price">
-                      {active ? fmt(basePrice) : fmt(standardPrice)}
+                    {active ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                     </span>
                   </div>
 
