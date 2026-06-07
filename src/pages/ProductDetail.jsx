@@ -68,40 +68,26 @@ export default function ProductDetail() {
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const [savedLocation, setSavedLocation] = useState(() =>
-  getSavedSelectedLocation()
-);
-
-  useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: 'smooth',
+  const [localizedPricing, setLocalizedPricing] = useState({
+    hasLocalPrice: false,
+    price: null,
+    location: null,
   });
 
-  setActiveImageIndex(0);
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
 
-  const sync = () => {
-    setSavedLocation(
-      getSavedSelectedLocation()
-    );
-  };
-
-  sync();
-
-  window.addEventListener(
-    'ce-location-change',
-    sync
-  );
-
-  return () => {
-    window.removeEventListener(
-      'ce-location-change',
-      sync
-    );
-  };
-
-}, [id]);
+    setActiveImageIndex(0);
+    setLocalizedPricing({
+      hasLocalPrice: false,
+      price: null,
+      location: null,
+    });
+  }, [id]);
 
   useEffect(() => {
     if (!container) return;
@@ -159,13 +145,16 @@ export default function ProductDetail() {
     container.price ||
     0;
 
- const heroPrice =
-  localizedPricing.hasLocalPrice && localizedPricing.price
-    ? localizedPricing.price
-    : getLocalizedPrice(baseDisplayPrice, null);
+  const hasActiveZip =
+    Boolean(localizedPricing?.location?.postalCode);
 
-const showStartingFrom =
-  !localizedPricing?.location?.postalCode;
+  const heroPrice =
+    hasActiveZip && localizedPricing.price
+      ? localizedPricing.price
+      : getLocalizedPrice(baseDisplayPrice, null);
+
+  const showStartingFrom =
+    !hasActiveZip;
 
   const allImages = [
     productImage,
