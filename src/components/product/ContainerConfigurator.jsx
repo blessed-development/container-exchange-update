@@ -18,6 +18,9 @@ import {
   cleanPostal,
   isUsZip,
   isCanadianPostal,
+  getLocalizedPrice,
+  saveSelectedLocation,
+  getSavedSelectedLocation,
 } from '../../lib/locationEngine';
 
 const USED_GRADES = [
@@ -53,8 +56,6 @@ const EMPTY_LOCATION = {
   country: '',
 };
 
-const LOCATION_STORAGE_KEY = 'ce_selected_location';
-
 const CA_PROVINCES = {
   Ontario: 'ON',
   Quebec: 'QC',
@@ -72,48 +73,11 @@ const CA_PROVINCES = {
   'Northwest Territories': 'NT',
 };
 
-const REGION_PRICE_MULTIPLIERS = {
-  FL: 1.0,
-  TX: 0.98,
-  CA: 1.18,
-  NY: 1.12,
-  WA: 1.08,
-  IL: 1.04,
-  GA: 1.02,
-  NC: 1.01,
-  AZ: 1.06,
-  NV: 1.07,
-
-  ON: 1.1,
-  QC: 1.08,
-  BC: 1.15,
-  AB: 1.05,
-  MB: 1.03,
-  SK: 1.04,
-  NS: 1.06,
-  NB: 1.05,
-};
-
 const fmt = (num) =>
   `$${Number(num || 0).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-
-function saveSelectedLocation(location) {
-  try {
-    localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(location));
-  } catch {}
-}
-
-function getSavedSelectedLocation() {
-  try {
-    const saved = localStorage.getItem(LOCATION_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
-  } catch {
-    return null;
-  }
-}
 
 function getRegionAbbreviation(address) {
   const iso =
@@ -256,15 +220,7 @@ export default function ContainerConfigurator({
       ? openedProductPrice
       : selectedStandardPrice;
 
-  const regionalMultiplier =
-    location?.postalCode && location?.state
-      ? REGION_PRICE_MULTIPLIERS[location.state] || 1
-      : 1;
-
-  const applyLocalPrice = (price) =>
-    location?.postalCode
-      ? Math.round(Number(price || 0) * regionalMultiplier)
-      : Number(price || 0);
+  const applyLocalPrice = (price) => getLocalizedPrice(price, location);
 
   const unitPrice = applyLocalPrice(basePrice);
   const totalPrice = unitPrice * qty;
