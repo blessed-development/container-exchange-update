@@ -7,6 +7,7 @@ import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2 } from 'lucide-react';
+import { getLocalizedPrice } from '@/lib/locationEngine';
 
 const GRADE_INFO = {
   AS_IS: {
@@ -158,14 +159,13 @@ export default function ProductDetail() {
     container.price ||
     0;
 
-  const heroPrice =
-  getLocalizedPrice(
-    baseDisplayPrice,
-    savedLocation
-  );
+ const heroPrice =
+  localizedPricing.hasLocalPrice && localizedPricing.price
+    ? localizedPricing.price
+    : getLocalizedPrice(baseDisplayPrice, null);
 
 const showStartingFrom =
-  !savedLocation?.postalCode;
+  !localizedPricing?.location?.postalCode;
 
   const allImages = [
     productImage,
