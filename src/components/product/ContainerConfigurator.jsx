@@ -151,6 +151,7 @@ export default function ContainerConfigurator({
   onSizeChange,
   condition,
   onConditionChange,
+  onPricingChange,
 }) {
   const navigate = useNavigate();
 
@@ -248,7 +249,22 @@ const applyLocalPrice = (price) =>
 
 const unitPrice = applyLocalPrice(basePrice);
 const totalPrice = unitPrice * qty;
-
+useEffect(() => {
+  if (typeof onPricingChange === 'function') {
+    onPricingChange({
+      price: unitPrice,
+      hasLocalPrice: Boolean(location?.postalCode),
+      location,
+    });
+  }
+}, [
+  unitPrice,
+  location?.postalCode,
+  location?.city,
+  location?.state,
+  location?.country,
+  onPricingChange,
+]);
   const currentTitle =
     container?.name ||
     `${condition === 'new' ? 'New' : 'Used'} ${sizeOption.label} Shipping Container`;
