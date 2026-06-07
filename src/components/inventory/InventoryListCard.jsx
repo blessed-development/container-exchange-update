@@ -89,7 +89,13 @@ export default function InventoryListCard({ container, index }) {
 
             {/* Price */}
             <p className="text-2xl font-black text-primary mb-3">
-              ${container.base_price?.toLocaleString() || '—'}
+            <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
+              Starting From
+               </div>
+
+          <p className="text-2xl font-black text-primary mb-3">
+            ${container.base_price?.toLocaleString() || '—'}
+            </p>
             </p>
 
             {/* Specs */}
