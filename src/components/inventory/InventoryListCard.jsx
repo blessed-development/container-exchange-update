@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
 
+import ZipRequiredModal from '../shared/ZipRequiredModal';
+
 import {
   getSavedSelectedLocation,
   getLocalizedPrice,
@@ -17,153 +19,292 @@ const GRADE_LABELS = {
   IICL: 'IICL Certified',
 };
 
-export default function InventoryListCard({ container, index }) {
-  const [showModal, setShowModal] = useState(false);
-  const [savedLocation, setSavedLocation] = useState(() =>
+export default function InventoryListCard({
+  container,
+  index,
+}) {
+  const navigate = useNavigate();
+
+  const [showModal, setShowModal] =
+    useState(false);
+
+  const [showZipModal, setShowZipModal] =
+    useState(false);
+
+  const [
+    savedLocation,
+    setSavedLocation,
+  ] = useState(
     getSavedSelectedLocation()
   );
 
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const refreshLocation = () => {
-      setSavedLocation(getSavedSelectedLocation());
-    };
+    const sync = () =>
+      setSavedLocation(
+        getSavedSelectedLocation()
+      );
 
-    window.addEventListener('ce-location-change', refreshLocation);
-    window.addEventListener('storage', refreshLocation);
+    window.addEventListener(
+      'ce-location-change',
+      sync
+    );
+
+    window.addEventListener(
+      'storage',
+      sync
+    );
+
+    window.addEventListener(
+      'focus',
+      sync
+    );
+
+    window.addEventListener(
+      'pageshow',
+      sync
+    );
 
     return () => {
-      window.removeEventListener('ce-location-change', refreshLocation);
-      window.removeEventListener('storage', refreshLocation);
+      window.removeEventListener(
+        'ce-location-change',
+        sync
+      );
+
+      window.removeEventListener(
+        'storage',
+        sync
+      );
+
+      window.removeEventListener(
+        'focus',
+        sync
+      );
+
+      window.removeEventListener(
+        'pageshow',
+        sync
+      );
     };
   }, []);
 
-  const stars = Math.round(container.rating || 5);
-  const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
+  const hasZip =
+    Boolean(
+      savedLocation?.postalCode
+    );
 
-  const hasZip = Boolean(savedLocation?.postalCode);
+  const price =
+    getLocalizedPrice(
+      container.base_price ||
+      container.price ||
+      0,
+      savedLocation
+    );
 
-  const displayPrice = getLocalizedPrice(
-    container.base_price || container.price || 0,
-    savedLocation
-  );
+  const openProduct =
+    () => {
+      if (!hasZip) {
+        setShowZipModal(true);
+        return;
+      }
+
+      navigate(
+        `/product/${container.id}`
+      );
+    };
 
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05, duration: 0.35 }}
-        onClick={() => navigate(`/product/${container.id}`)}
-        className="bg-card border border-border hover:border-primary/30 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row cursor-pointer"
+        initial={{
+          opacity: 0,
+          y: 12,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          delay:
+            index *
+            0.05,
+        }}
+        onClick={
+          openProduct
+        }
+        className="
+          bg-card
+          rounded-[26px]
+          overflow-hidden
+          border
+          border-border
+          hover:border-primary/20
+          cursor-pointer
+        "
       >
         <div
-          className="relative sm:w-[35%] flex-shrink-0 bg-muted overflow-hidden"
-          style={{ minHeight: '220px' }}
+          className="
+            flex
+            flex-col
+            md:flex-row
+          "
         >
-          {container.is_bestseller && (
-            <span className="absolute top-4 left-4 z-10 text-[11px] font-mono font-bold tracking-wider bg-primary text-primary-foreground px-3 py-1 rounded-full shadow-lg">
-              BESTSELLER
-            </span>
-          )}
-
           <img
             src={
-              container.image_url ||
-              'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
+              container.image_url
             }
-            alt={container.name}
-            className="w-full h-full object-cover"
-            style={{ minHeight: '220px' }}
+            alt={
+              container.name
+            }
+            className="
+              md:w-[36%]
+              h-[280px]
+              object-cover
+            "
           />
-        </div>
 
-        <div className="flex-1 p-5 flex flex-col justify-between">
-          <div>
-            <h3 className="font-bold text-foreground text-base leading-snug mb-1">
-              {container.name}
+          <div className="flex-1 p-6">
+            <h3 className="text-2xl font-black">
+              {
+                container.name
+              }
             </h3>
 
-            {container.short_description && (
-              <p className="text-sm text-muted-foreground font-medium mb-3">
-                {container.short_description}
-              </p>
-            )}
+            <p className="text-muted-foreground mt-1">
+              {
+                container.short_description
+              }
+            </p>
 
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-sm font-bold text-foreground">
-                {(container.rating || 5).toFixed(1)}
+            <div className="flex items-center gap-2 mt-4">
+              <span className="font-bold">
+                {(
+                  container.rating ||
+                  4.8
+                ).toFixed(
+                  1
+                )}
               </span>
 
-              <div className="flex">
-                {Array.from({ length: 5 }).map((_, i) => (
+              {[
+                1,
+                2,
+                3,
+                4,
+                5,
+              ].map(
+                (
+                  i
+                ) => (
                   <Star
-                    key={i}
-                    className={`w-3.5 h-3.5 ${
-                      i < stars
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'fill-muted text-muted-foreground'
-                    }`}
+                    key={
+                      i
+                    }
+                    className="
+                    w-4
+                    h-4
+                    fill-yellow-400
+                    text-yellow-400
+                  "
                   />
-                ))}
-              </div>
-
-              <span className="text-xs text-muted-foreground">
-                ({container.review_count || 0})
-              </span>
-            </div>
-
-            <div className="mb-3">
-              {!hasZip && (
-                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-                  Starting From
-                </div>
+                )
               )}
 
-              <p className="text-2xl font-black text-primary">
-                ${Number(displayPrice || 0).toLocaleString()}
-              </p>
+              <span className="text-muted-foreground">
+                (
+                {
+                  container.review_count
+                }
+                )
+              </span>
             </div>
 
-            <div className="space-y-1 text-sm mb-4">
-              {[
-                ['Condition', container.condition],
-                ['Door Type', container.door_type || 'Double Doors at 1 End'],
-                ['Grade', gradeLabel],
-              ].map(([label, value]) => (
-                <div key={label} className="flex gap-2">
-                  <span className="font-semibold text-foreground w-24 flex-shrink-0">
-                    {label}:
-                  </span>
-                  <span className="text-foreground/80">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+            {!hasZip && (
+              <div
+                className="
+                  mt-6
+                  text-[12px]
+                  font-black
+                  uppercase
+                  text-green-500
+                "
+              >
+                STARTING FROM
+              </div>
+            )}
 
-          <div>
-            <Button
-              variant="outline"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowModal(true);
-              }}
-              className="rounded-xl h-10 font-semibold border-2 hover:border-primary hover:text-primary transition-all gap-2"
+            <div
+              className="
+                text-[56px]
+                font-black
+                text-primary
+                leading-none
+                mt-2
+              "
             >
-              <Eye className="w-4 h-4" />
-              Quick View
-            </Button>
+              $
+              {Number(
+                price
+              ).toLocaleString()}
+            </div>
+
+            <div className="mt-6">
+              <Button
+                variant="outline"
+                onClick={(
+                  e
+                ) => {
+                  e.stopPropagation();
+
+                  setShowModal(
+                    true
+                  );
+                }}
+              >
+                <Eye
+                  className="mr-2"
+                />
+
+                Quick
+                View
+              </Button>
+            </div>
           </div>
         </div>
       </motion.div>
 
-      {showModal && (
-        <QuickViewModal
-          container={container}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+      <QuickViewModal
+        open={
+          showModal
+        }
+        onClose={() =>
+          setShowModal(
+            false
+          )
+        }
+        container={
+          container
+        }
+      />
+
+      <ZipRequiredModal
+        open={
+          showZipModal
+        }
+        onClose={() =>
+          setShowZipModal(
+            false
+          )
+        }
+        onSuccess={() => {
+          setShowZipModal(
+            false
+          );
+
+          navigate(
+            `/product/${container.id}`
+          );
+        }}
+      />
     </>
   );
 }
