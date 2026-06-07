@@ -58,17 +58,20 @@ export default function ProductDetail() {
   const { id } = useParams();
 
   const urlParams = new URLSearchParams(window.location.search);
-
   const zipCode = urlParams.get('zip') || '';
 
   const container =
     inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
-
   const [condition, setCondition] = useState('used');
-
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  const [localizedPricing, setLocalizedPricing] = useState({
+    hasLocalPrice: false,
+    price: null,
+    location: null,
+  });
 
   useEffect(() => {
     window.scrollTo({
@@ -78,6 +81,11 @@ export default function ProductDetail() {
     });
 
     setActiveImageIndex(0);
+    setLocalizedPricing({
+      hasLocalPrice: false,
+      price: null,
+      location: null,
+    });
   }, [id]);
 
   useEffect(() => {
@@ -124,7 +132,6 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
 
   const productTitle = container.name;
@@ -132,10 +139,18 @@ export default function ProductDetail() {
   const productImage =
     container.image_url || selectedSize.image;
 
-  const displayPrice =
+  const baseDisplayPrice =
     container.base_price ||
     container.price ||
     0;
+
+  const heroPrice =
+    localizedPricing.hasLocalPrice && localizedPricing.price
+      ? localizedPricing.price
+      : baseDisplayPrice;
+
+  const showStartingFrom =
+    !localizedPricing.hasLocalPrice;
 
   const allImages = [
     productImage,
@@ -150,23 +165,16 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen bg-background">
 
-      {/* Breadcrumb */}
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link
-              to="/"
-              className="hover:text-primary transition-colors"
-            >
+            <Link to="/" className="hover:text-primary transition-colors">
               Home
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <Link
-              to="/inventory"
-              className="hover:text-primary transition-colors"
-            >
+            <Link to="/inventory" className="hover:text-primary transition-colors">
               Inventory
             </Link>
 
@@ -182,10 +190,8 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-          {/* LEFT COLUMN */}
           <div>
 
-            {/* HERO IMAGE */}
             <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
 
               <img
@@ -233,8 +239,7 @@ export default function ProductDetail() {
                           <Star
                             key={i}
                             className={`w-4 h-4 ${
-                              i <
-                              Math.round(container.rating || 5)
+                              i < Math.round(container.rating || 5)
                                 ? 'fill-orange-500 text-orange-500'
                                 : 'text-white/30'
                             }`}
@@ -255,7 +260,6 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* THUMBNAILS */}
             <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {allImages.slice(0, 10).map((image, index) => (
                 <button
@@ -277,23 +281,23 @@ export default function ProductDetail() {
               ))}
             </div>
 
-            {/* PRICE */}
             <div className="mt-6 pb-6">
 
               <div className="mb-8 flex items-center gap-4">
 
-                <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
-                    Starting From
-                  </span>
-                </div>
+                {showStartingFrom && (
+                  <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
+                      Starting From
+                    </span>
+                  </div>
+                )}
 
                 <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
-                  ${Number(displayPrice).toLocaleString()}
+                  ${Number(heroPrice).toLocaleString()}
                 </div>
               </div>
 
-              {/* GRADE */}
               <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
 
                 <p className="text-xs font-mono text-primary tracking-widest mb-2">
@@ -316,14 +320,12 @@ export default function ProductDetail() {
                 </p>
               )}
 
-              {/* FAQ DESKTOP */}
               <div className="hidden lg:block">
                 <ProductFAQ />
               </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
               container={container}
@@ -332,17 +334,16 @@ export default function ProductDetail() {
               onSizeChange={setSelectedSizeIndex}
               condition={condition}
               onConditionChange={setCondition}
+              onPricingChange={setLocalizedPricing}
             />
           </div>
         </div>
       </div>
 
-      {/* RELATED PRODUCTS */}
       <div className="border-t border-border">
         <RelatedProducts zipCode={zipCode} />
       </div>
 
-      {/* FAQ MOBILE */}
       <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
