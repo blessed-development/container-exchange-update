@@ -102,11 +102,18 @@ export default function Inventory() {
           </h1>
 
           {inventoryLocationTitle && (
-            <h2 className="mt-[-2px] text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-              <span className="text-white">{cityPart}</span>
-              <span className="text-primary">,{statePart}</span>
-            </h2>
-          )}
+  <div className="ml-[54%] mt-[-8px]">
+    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+      <span className="text-primary">
+        {cityPart}
+      </span>
+
+      <span className="text-white">
+        ,{statePart}
+      </span>
+    </h2>
+  </div>
+)}
         </div>
       </div>
 
