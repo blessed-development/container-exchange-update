@@ -93,36 +93,38 @@ export default function Inventory() {
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-         
           <div className="inline-block">
-  <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-    <span className="text-white">
-      Shipping Containers{' '}
-    </span>
+            <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+              <span className="text-white">
+                Shipping Containers{' '}
+              </span>
 
-    <span className="text-primary">
-      For Sale Near Me
-    </span>
-  </h1>
+              <span className="text-primary">
+                For Sale Near Me
+              </span>
+            </h1>
 
- {inventoryLocationTitle && (
-  <div
-    className="mt-3"
-    style={{
-      marginLeft: '47%',
-    }}
-  >
-    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
-      <span className="text-white">
-        {cityPart}
-      </span>
+            {inventoryLocationTitle && (
+              <div
+                className="mt-3"
+                style={{
+                  marginLeft: '47%',
+                }}
+              >
+                <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
+                  <span className="text-white">
+                    {cityPart}
+                  </span>
 
-      <span className="text-primary">
-        ,{statePart}
-      </span>
-    </h2>
-  </div>
-)}
+                  <span className="text-primary">
+                    ,{statePart}
+                  </span>
+                </h2>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="flex gap-8">
