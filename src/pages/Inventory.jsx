@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import InventoryListCard from '@/components/inventory/InventoryListCard';
 import FilterSidebar from '@/components/inventory/FilterSidebar';
 import { inventoryProducts } from '@/data/inventoryProducts';
@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { getLocationFromZip } from '@/lib/zipUtils';
+import { getSavedSelectedLocation } from '@/lib/locationEngine';
 
 export default function Inventory() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,11 +15,34 @@ export default function Inventory() {
   const [zipCode, setZipCode] = useState(initialZip);
   const [filters, setFilters] = useState({ size: [], condition: [], grade: [], height: [] });
   const [sortBy, setSortBy] = useState('default');
+  const [savedLocation, setSavedLocation] = useState(() => getSavedSelectedLocation());
 
   const containers = inventoryProducts;
   const isLoading = false;
 
-  const locationInfo = zipCode ? getLocationFromZip(zipCode) : null;
+  useEffect(() => {
+    const syncLocation = (event) => {
+      setSavedLocation(event?.detail || getSavedSelectedLocation());
+    };
+
+    syncLocation();
+
+    window.addEventListener('ce-location-change', syncLocation);
+    window.addEventListener('storage', syncLocation);
+    window.addEventListener('focus', syncLocation);
+    window.addEventListener('pageshow', syncLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncLocation);
+      window.removeEventListener('storage', syncLocation);
+      window.removeEventListener('focus', syncLocation);
+      window.removeEventListener('pageshow', syncLocation);
+    };
+  }, []);
+
+  const inventoryLocationTitle = savedLocation?.postalCode
+    ? `${savedLocation.city}, ${savedLocation.state}`
+    : null;
 
   const filteredContainers = useMemo(() => {
     let result = [...containers];
@@ -65,16 +88,19 @@ export default function Inventory() {
       <div className="bg-accent text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent to-accent/90" />
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
             BROWSE INVENTORY
           </span>
+
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-            Shipping Containers <span className="text-primary">For Sale</span>
+            Shipping Containers <span className="text-primary">For Sale Near Me</span>
           </h1>
-          {locationInfo && (
-            <p className="text-white/50 mt-3 text-base">
-              Showing inventory near <span className="text-primary font-semibold">{locationInfo.city}</span>
+
+          {inventoryLocationTitle && (
+            <p className="mt-3 text-sm sm:text-base font-semibold uppercase tracking-[0.16em] text-white/55">
+              {inventoryLocationTitle}
             </p>
           )}
         </div>
@@ -89,13 +115,20 @@ export default function Inventory() {
                   <Filter className="w-4 h-4" />
                   <span className="font-semibold text-sm">Filters</span>
                 </div>
+
                 {activeFilterCount > 0 && (
                   <button onClick={clearFilters} className="text-xs text-primary hover:underline">
                     Clear all
                   </button>
                 )}
               </div>
-              <FilterSidebar filters={filters} onFilterChange={setFilters} zipCode={zipCode} onZipSubmit={setZipCode} />
+
+              <FilterSidebar
+                filters={filters}
+                onFilterChange={setFilters}
+                zipCode={zipCode}
+                onZipSubmit={setZipCode}
+              />
             </div>
           </aside>
 
@@ -118,12 +151,19 @@ export default function Inventory() {
                       )}
                     </Button>
                   </SheetTrigger>
+
                   <SheetContent side="left" className="w-80">
                     <SheetHeader>
                       <SheetTitle>Filters</SheetTitle>
                     </SheetHeader>
+
                     <div className="mt-6">
-                      <FilterSidebar filters={filters} onFilterChange={setFilters} zipCode={zipCode} onZipSubmit={setZipCode} />
+                      <FilterSidebar
+                        filters={filters}
+                        onFilterChange={setFilters}
+                        zipCode={zipCode}
+                        onZipSubmit={setZipCode}
+                      />
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -132,6 +172,7 @@ export default function Inventory() {
                   <SelectTrigger className="w-44">
                     <SelectValue placeholder="Sort" />
                   </SelectTrigger>
+
                   <SelectContent>
                     <SelectItem value="default">Default</SelectItem>
                     <SelectItem value="price_asc">Price: Low to High</SelectItem>
