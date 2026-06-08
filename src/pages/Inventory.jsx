@@ -97,32 +97,31 @@ export default function Inventory() {
             BROWSE INVENTORY
           </span>
 
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-            Shipping Containers <span className="text-primary">For Sale Near Me</span>
-          </h1>
+          <div className="inline-block">
+  <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+    <span className="text-white">
+      Shipping Containers{' '}
+    </span>
 
-         {inventoryLocationTitle && (
-  <div
-    className="
-      flex
-      justify-center
-      mt-6
-    "
-    style={{
-      paddingLeft: '38rem',
-    }}
-  >
-    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]">
-      <span className="text-white">
-        {cityPart}
-      </span>
+    <span className="text-primary">
+      For Sale Near Me
+    </span>
+  </h1>
 
-      <span className="text-primary">
-        ,{statePart}
-      </span>
-    </h2>
-  </div>
-)}
+  {inventoryLocationTitle && (
+    <div className="ml-[50.5%] mt-3">
+      <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
+        <span className="text-white">
+          {cityPart}
+        </span>
+
+        <span className="text-primary">
+          ,{statePart}
+        </span>
+      </h2>
+    </div>
+  )}
+</div>
         </div>
       </div>
 
