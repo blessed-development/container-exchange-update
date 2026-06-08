@@ -108,7 +108,7 @@ export default function Inventory() {
   <div
     className="mt-4"
     style={{
-      marginLeft: '570px',
+      marginLeft: '670px',
     }}
   >
     <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
