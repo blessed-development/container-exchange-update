@@ -102,8 +102,17 @@ export default function Inventory() {
           </h1>
 
          {inventoryLocationTitle && (
-  <div className="pl-[38.5rem] pt-4">
-    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
+  <div
+    className="
+      flex
+      justify-center
+      mt-6
+    "
+    style={{
+      paddingLeft: '38rem',
+    }}
+  >
+    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]">
       <span className="text-white">
         {cityPart}
       </span>
