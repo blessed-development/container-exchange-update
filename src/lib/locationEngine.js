@@ -77,19 +77,15 @@ export async function lookupPostalCode(value) {
 
 export function saveSelectedLocation(location) {
   try {
-    localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(location));
-    window.dispatchEvent(new Event('ce-location-change'));
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', {
+        detail: location,
+      })
+    );
   } catch {}
 }
 
 export function getSavedSelectedLocation() {
-  try {
-    const saved = localStorage.getItem(LOCATION_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
-  } catch {
-    return null;
-  }
-}
 
 export function getStartingPrice(price) {
   return Math.round(Number(price || 0) * 0.88);
