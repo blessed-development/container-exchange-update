@@ -223,6 +223,19 @@ export default function ContainerConfigurator({
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
 
   const unitPrice = applyLocalPrice(basePrice);
+  useEffect(() => {
+  if (typeof onPricingChange === 'function') {
+    onPricingChange({
+      price: unitPrice,
+      hasLocalPrice: Boolean(location?.postalCode),
+      location,
+    });
+  }
+}, [
+  unitPrice,
+  location?.postalCode,
+  onPricingChange,
+]);
   const totalPrice = unitPrice * qty;
 
   useEffect(() => {
