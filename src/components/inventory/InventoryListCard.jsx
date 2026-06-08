@@ -190,9 +190,15 @@ export default function InventoryListCard({ container, index }) {
           open={true}
           onClose={() => setShowZipModal(false)}
          onSuccess={() => {
-         setShowZipModal(false);
-         setSavedLocation(getSavedSelectedLocation());
-        }}
+      {!hasZip ? (
+  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
+    Starting From
+  </div>
+) : (
+  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
+    {savedLocation?.city}, {savedLocation?.state}
+  </div>
+)}
         />
       )}
     </>
