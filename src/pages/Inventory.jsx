@@ -93,10 +93,7 @@ export default function Inventory() {
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
-            BROWSE INVENTORY
-          </span>
-
+         
           <div className="inline-block">
   <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
     <span className="text-white">
