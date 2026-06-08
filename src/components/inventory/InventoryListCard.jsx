@@ -189,13 +189,10 @@ export default function InventoryListCard({ container, index }) {
         <ZipRequiredModal
           open={true}
           onClose={() => setShowZipModal(false)}
-          onSuccess={() => {
-            setShowZipModal(false);
-
-            setTimeout(() => {
-              navigate(`/product/${container.id}`);
-            }, 120);
-          }}
+         onSuccess={() => {
+         setShowZipModal(false);
+         setSavedLocation(getSavedSelectedLocation());
+        }}
         />
       )}
     </>
