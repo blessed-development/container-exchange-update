@@ -47,7 +47,6 @@ export default function InventoryListCard({ container, index }) {
 
   const stars = Math.round(container.rating || 5);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
-
   const hasZip = Boolean(savedLocation?.postalCode);
 
   const displayPrice = getLocalizedPrice(
@@ -71,10 +70,7 @@ export default function InventoryListCard({ container, index }) {
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: index * 0.04,
-          duration: 0.35,
-        }}
+        transition={{ delay: index * 0.04, duration: 0.35 }}
         onClick={openProduct}
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row cursor-pointer transition-all duration-300"
       >
