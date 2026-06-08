@@ -86,6 +86,8 @@ export function saveSelectedLocation(location) {
 }
 
 export function getSavedSelectedLocation() {
+  return null;
+}
 
 export function getStartingPrice(price) {
   return Math.round(Number(price || 0) * 0.88);
