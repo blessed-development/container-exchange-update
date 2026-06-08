@@ -1,104 +1,378 @@
-export const POSTAL_OVERRIDES = {
-  L4C3Y2: {
-    city: 'Richmond Hill',
-    state: 'ON',
+import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import ContainerConfigurator from '@/components/product/ContainerConfigurator';
+import ProductFAQ from '@/components/product/ProductFAQ';
+import RelatedProducts from '@/components/product/RelatedProducts';
+import { inventoryProducts } from '@/data/inventoryProducts';
+import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
+import { Badge } from '@/components/ui/badge';
+import { Star, ChevronRight, Loader2 } from 'lucide-react';
+
+import {
+  getLocalizedPrice,
+  getSavedSelectedLocation,
+} from '@/lib/locationEngine';
+
+const GRADE_INFO = {
+  AS_IS: {
+    label: 'As-Is',
+    desc: 'Container may have cosmetic and structural issues. Sold as-is with no guarantees.',
   },
-  L0L1P0: {
-    city: 'Springwater',
-    state: 'ON',
+  WWT: {
+    label: 'Wind & Water Tight',
+    desc: 'Guaranteed not to leak. May have dings, dents, and surface rust. Doors in working order.',
+  },
+  CW: {
+    label: 'Cargo Worthy',
+    desc: 'Certified for international shipping. Structurally sound and watertight. Inspected by certified surveyor.',
+  },
+  IICL: {
+    label: 'IICL Certified',
+    desc: 'Meets the highest international standards. Minimal wear, premium condition.',
   },
 };
 
-export const LOCATION_STORAGE_KEY = 'ce_selected_location';
+const SAMPLE_GALLERY_IMAGES = [
+  'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=85',
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=85',
+  'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=85',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=85',
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=85',
+];
 
-export const cleanPostal = (value) =>
-  String(value || '').trim().toUpperCase().replace(/\s+/g, '');
+const normalize = (value) =>
+  String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
-export const formatCanadianPostal = (value) => {
-  const clean = cleanPostal(value);
-  return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
+const getInitialSizeIndex = (container) => {
+  if (!container) return 0;
+
+  const matchIndex = SIZE_OPTIONS.findIndex((option) => {
+    const sameSize = Number(option.size) === Number(container.size);
+
+    const sameHeight =
+      !container.height ||
+      normalize(option.height) === normalize(container.height);
+
+    return sameSize && sameHeight;
+  });
+
+  return matchIndex >= 0 ? matchIndex : 0;
 };
 
-export const isUsZip = (value) => /^\d{5}$/.test(cleanPostal(value));
+export default function ProductDetail() {
+  const { id } = useParams();
 
-export const isCanadianPostal = (value) =>
-  /^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(cleanPostal(value));
+  const urlParams = new URLSearchParams(window.location.search);
+  const zipCode = urlParams.get('zip') || '';
 
-export const getCountryLabel = (country) => {
-  if (country === 'US') return 'USA';
-  if (country === 'CA') return 'CA';
-  return '';
-};
+  const container =
+    inventoryProducts.find((item) => item.id === id) || null;
 
-export async function lookupPostalCode(value) {
-  const clean = cleanPostal(value);
+  const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
+  const [condition, setCondition] = useState('used');
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  if (!isUsZip(clean) && !isCanadianPostal(clean)) {
-    throw new Error('Enter a valid US ZIP or Canadian postal code.');
-  }
-
-  const override = POSTAL_OVERRIDES[clean];
-
-  if (override) {
-    return {
-      city: override.city,
-      state: override.state,
-      postalCode: formatCanadianPostal(clean),
-      country: 'CA',
-    };
-  }
-
-  const isCanada = isCanadianPostal(clean);
-  const country = isCanada ? 'ca' : 'us';
-  const apiPostal = isCanada ? clean.slice(0, 3) : clean;
-
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(apiPostal)}`
+  const [savedLocation, setSavedLocation] = useState(() =>
+    getSavedSelectedLocation()
   );
 
-  if (!response.ok) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
+  const [localizedPricing, setLocalizedPricing] = useState({
+    hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
+    price: null,
+    location: getSavedSelectedLocation(),
+  });
 
-  const data = await response.json();
-  const place = data?.places?.[0];
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
 
-  if (!place) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
+    setActiveImageIndex(0);
 
-  return {
-    city: place['place name'] || '',
-    state: place['state abbreviation'] || place.state || '',
-    postalCode: isCanada ? formatCanadianPostal(clean) : clean,
-    country: isCanada ? 'CA' : 'US',
-  };
-}
+    const syncLocation = () => {
+      const saved = getSavedSelectedLocation();
 
-export function saveSelectedLocation(location) {
-  try {
-    window.dispatchEvent(
-      new CustomEvent('ce-location-change', {
-        detail: location,
-      })
+      setSavedLocation(saved);
+
+      setLocalizedPricing((prev) => ({
+        ...prev,
+        hasLocalPrice: Boolean(saved?.postalCode),
+        location: saved,
+      }));
+    };
+
+    syncLocation();
+
+    window.addEventListener('ce-location-change', syncLocation);
+    window.addEventListener('storage', syncLocation);
+    window.addEventListener('focus', syncLocation);
+    window.addEventListener('pageshow', syncLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncLocation);
+      window.removeEventListener('storage', syncLocation);
+      window.removeEventListener('focus', syncLocation);
+      window.removeEventListener('pageshow', syncLocation);
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (!container) return;
+
+    setSelectedSizeIndex(getInitialSizeIndex(container));
+
+    setCondition(
+      String(container.condition || '')
+        .toLowerCase()
+        .includes('new')
+        ? 'new'
+        : 'used'
     );
-  } catch {}
-}
+  }, [container?.id]);
 
-export function getSavedSelectedLocation() {
-  return null;
-}
+  const isLoading = false;
 
-export function getStartingPrice(price) {
-  return Math.round(Number(price || 0) * 0.88);
-}
-
-export function getLocalizedPrice(price, location) {
-  const original = Number(price || 0);
-
-  if (!location?.postalCode) {
-    return getStartingPrice(original);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
   }
 
-  return original;
+  if (!container) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground mb-4">
+            Container not found.
+          </p>
+
+          <Link
+            to="/inventory"
+            className="text-primary hover:underline"
+          >
+            Browse all containers
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const gradeInfo = GRADE_INFO[container.grade] || {};
+  const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
+
+  const productTitle = container.name;
+
+  const productImage =
+    container.image_url || selectedSize.image;
+
+  const baseDisplayPrice =
+    container.base_price ||
+    container.price ||
+    0;
+
+  const activeLocation =
+    localizedPricing?.location?.postalCode
+      ? localizedPricing.location
+      : savedLocation;
+
+  const hasActiveZip =
+    Boolean(activeLocation?.postalCode);
+
+  const heroPrice =
+    getLocalizedPrice(baseDisplayPrice, activeLocation);
+
+  const showStartingFrom =
+    !hasActiveZip;
+
+  const allImages = [
+    productImage,
+    ...(container.gallery_urls || []),
+    ...SAMPLE_GALLERY_IMAGES,
+  ].filter(Boolean);
+
+  const activeImage = allImages[activeImageIndex] || productImage;
+
+  const showHeroOverlay = activeImageIndex === 0;
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="bg-muted/30 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link to="/" className="hover:text-primary transition-colors">
+              Home
+            </Link>
+
+            <ChevronRight className="w-3 h-3" />
+
+            <Link to="/inventory" className="hover:text-primary transition-colors">
+              Inventory
+            </Link>
+
+            <ChevronRight className="w-3 h-3" />
+
+            <span className="text-foreground font-medium truncate">
+              {productTitle}
+            </span>
+          </nav>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div>
+            <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
+              <img
+                key={activeImage}
+                src={activeImage}
+                alt={productTitle}
+                className="w-full h-[430px] object-cover transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
+              />
+
+              {showHeroOverlay && (
+                <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
+                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
+                    {productTitle}
+                  </h2>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                      {container.size}ft
+                    </Badge>
+
+                    <Badge
+                      variant="outline"
+                      className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                    >
+                      {container.condition}
+                    </Badge>
+
+                    {String(container.height || '')
+                      .toLowerCase()
+                      .includes('high') && (
+                      <Badge
+                        variant="outline"
+                        className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                      >
+                        High Cube
+                      </Badge>
+                    )}
+
+                    <div className="flex items-center gap-1.5 ml-1">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < Math.round(container.rating || 5)
+                                ? 'fill-orange-500 text-orange-500'
+                                : 'text-white/30'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="text-sm font-semibold text-white">
+                        {container.rating || 5}
+                      </span>
+
+                      <span className="text-xs text-white/70">
+                        ({container.review_count || 42} reviews)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {allImages.slice(0, 10).map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  onClick={() => setActiveImageIndex(index)}
+                  className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                    activeImageIndex === index
+                      ? 'border-orange-500 ring-2 ring-orange-500/25'
+                      : 'border-border hover:border-orange-400/50'
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`${productTitle} preview ${index + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-6 pb-6">
+              <div className="mb-8 flex items-center gap-4">
+                {showStartingFrom && (
+                  <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
+                      Starting From
+                    </span>
+                  </div>
+                )}
+
+                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
+                  ${Number(heroPrice).toLocaleString()}
+                </div>
+              </div>
+
+              <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
+                <p className="text-xs font-mono text-primary tracking-widest mb-2">
+                  GRADE CLASSIFICATION
+                </p>
+
+                <p className="font-bold text-base mb-1">
+                  {gradeInfo.label || container.grade}
+                </p>
+
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {gradeInfo.desc ||
+                    'Reliable shipping container condition for storage or delivery use.'}
+                </p>
+              </div>
+
+              {container.short_description && (
+                <p className="text-muted-foreground leading-relaxed text-base mb-10">
+                  {container.short_description}
+                </p>
+              )}
+
+              <div className="hidden lg:block">
+                <ProductFAQ />
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:sticky lg:top-24 self-start">
+            <ContainerConfigurator
+              container={container}
+              initialZip={zipCode}
+              selectedSizeIndex={selectedSizeIndex}
+              onSizeChange={setSelectedSizeIndex}
+              condition={condition}
+              onConditionChange={setCondition}
+              onPricingChange={setLocalizedPricing}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <RelatedProducts zipCode={zipCode} />
+      </div>
+
+      <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
+        <ProductFAQ />
+      </div>
+    </div>
+  );
 }
