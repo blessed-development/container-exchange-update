@@ -28,8 +28,8 @@ export default function InventoryListCard({ container, index }) {
   );
 
   useEffect(() => {
-    const syncLocation = () => {
-      setSavedLocation(getSavedSelectedLocation());
+    const syncLocation = (event) => {
+      setSavedLocation(event?.detail || getSavedSelectedLocation());
     };
 
     window.addEventListener('ce-location-change', syncLocation);
@@ -134,9 +134,13 @@ export default function InventoryListCard({ container, index }) {
             </div>
 
             <div className="mb-[16px]">
-              {!hasZip && (
+              {!hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
                   Starting From
+                </div>
+              ) : (
+                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
+                  {savedLocation?.city}, {savedLocation?.state}
                 </div>
               )}
 
@@ -189,16 +193,10 @@ export default function InventoryListCard({ container, index }) {
         <ZipRequiredModal
           open={true}
           onClose={() => setShowZipModal(false)}
-         onSuccess={() => {
-      {!hasZip ? (
-  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-    Starting From
-  </div>
-) : (
-  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
-    {savedLocation?.city}, {savedLocation?.state}
-  </div>
-)}
+          onSuccess={(location) => {
+            setShowZipModal(false);
+            setSavedLocation(location || getSavedSelectedLocation());
+          }}
         />
       )}
     </>
