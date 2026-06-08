@@ -123,8 +123,6 @@ export default function Inventory() {
     </h2>
   </div>
 )}
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="flex gap-8">
