@@ -101,14 +101,14 @@ export default function Inventory() {
             Shipping Containers <span className="text-primary">For Sale Near Me</span>
           </h1>
 
-          {inventoryLocationTitle && (
-  <div className="ml-[54%] mt-[-8px]">
+         {inventoryLocationTitle && (
+  <div className="pl-[38.5rem] mt-[-12px]">
     <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-      <span className="text-primary">
+      <span className="text-white">
         {cityPart}
       </span>
 
-      <span className="text-white">
+      <span className="text-primary">
         ,{statePart}
       </span>
     </h2>
