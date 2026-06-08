@@ -83,6 +83,9 @@ export default function Inventory() {
     setFilters({ size: [], condition: [], grade: [], height: [] });
   };
 
+  const cityPart = inventoryLocationTitle?.split(',')[0] || '';
+  const statePart = inventoryLocationTitle?.split(',')[1] || '';
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-accent text-white py-16 relative overflow-hidden">
@@ -99,9 +102,10 @@ export default function Inventory() {
           </h1>
 
           {inventoryLocationTitle && (
-            <p className="mt-3 text-sm sm:text-base font-semibold uppercase tracking-[0.16em] text-white/55">
-              {inventoryLocationTitle}
-            </p>
+            <h2 className="mt-[-2px] text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+              <span className="text-white">{cityPart}</span>
+              <span className="text-primary">,{statePart}</span>
+            </h2>
           )}
         </div>
       </div>
