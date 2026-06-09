@@ -104,14 +104,23 @@ export default function Inventory() {
               </span>
             </h1>
 
-           {inventoryLocationTitle && (
+{inventoryLocationTitle && (
   <div
-    className="mt-4"
-    style={{
-      marginLeft: '480px',
-    }}
+    className="
+      mt-4
+      ml-0
+      sm:ml-[480px]
+    "
   >
-    <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-[0.95]">
+    <h2
+      className="
+        text-3xl
+        sm:text-5xl
+        font-black
+        tracking-tight
+        leading-[0.95]
+      "
+    >
       <span className="text-white">
         {cityPart}
       </span>
