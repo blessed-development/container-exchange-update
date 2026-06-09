@@ -141,26 +141,32 @@ export default function Inventory() {
           </aside>
 
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
-              <div className="min-h-[48px] flex items-center">
-                {inventoryLocationTitle && (
-                  <h2
-  className="
-    text-[38px]
-    sm:text-5xl
-    font-black
-    tracking-tight
-    leading-[1]
-    whitespace-nowrap
-  "
->
-  <span className="text-white">{cityPart}</span>
-  <span className="text-primary">,{statePart}</span>
-</h2>
-                )}
-              </div>
+           <div className="mb-6">
 
-               <div className="flex items-center gap-3 mt-6 sm:mt-0">
+  <div className="min-h-[48px] flex items-center">
+    {inventoryLocationTitle && (
+      <h2
+        className="
+          text-[38px]
+          sm:text-5xl
+          font-black
+          tracking-tight
+          leading-[1]
+          whitespace-nowrap
+        "
+      >
+        <span className="text-white">
+          {cityPart}
+        </span>
+
+        <span className="text-primary">
+          ,{statePart}
+        </span>
+      </h2>
+    )}
+  </div>
+
+  <div className="flex items-center gap-3 mt-5">
                    <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="sm" className="lg:hidden">
