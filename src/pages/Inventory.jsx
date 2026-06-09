@@ -141,9 +141,10 @@ export default function Inventory() {
           </aside>
 
           <div className="flex-1">
-           <div className="mb-6">
+           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-6">
 
-  <div className="min-h-[48px] flex items-center">
+  {/* LEFT — CITY */}
+  <div className="min-h-[48px]">
     {inventoryLocationTitle && (
       <h2
         className="
@@ -151,8 +152,8 @@ export default function Inventory() {
           sm:text-5xl
           font-black
           tracking-tight
-          leading-[1]
-          whitespace-nowrap
+          leading-[0.92]
+          break-words
         "
       >
         <span className="text-white">
@@ -166,48 +167,81 @@ export default function Inventory() {
     )}
   </div>
 
-  <div className="flex items-center gap-3 mt-5">
-                   <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
-                      <Filter className="w-4 h-4 mr-2" />
-                      Filter
-                      {activeFilterCount > 0 && (
-                        <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                          {activeFilterCount}
-                        </span>
-                      )}
-                    </Button>
-                  </SheetTrigger>
+  {/* RIGHT — FILTER + SORT */}
+  <div
+    className="
+      flex
+      items-center
+      gap-3
+      mt-6
+      lg:mt-0
+      w-full
+      lg:w-auto
+    "
+  >
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="lg:hidden"
+        >
+          <Filter className="w-4 h-4 mr-2" />
 
-                  <SheetContent side="left" className="w-80">
-                    <SheetHeader>
-                      <SheetTitle>Filters</SheetTitle>
-                    </SheetHeader>
+          Filter
 
-                    <div className="mt-6">
-                      <FilterSidebar
-                        filters={filters}
-                        onFilterChange={setFilters}
-                        zipCode={zipCode}
-                        onZipSubmit={setZipCode}
-                      />
-                    </div>
-                  </SheetContent>
-                </Sheet>
+          {activeFilterCount > 0 && (
+            <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </Button>
+      </SheetTrigger>
 
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-44">
-                    <SelectValue placeholder="Sort" />
-                  </SelectTrigger>
+      <SheetContent side="left" className="w-80">
+        <SheetHeader>
+          <SheetTitle>
+            Filters
+          </SheetTitle>
+        </SheetHeader>
 
-                  <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="price_asc">Price: Low to High</SelectItem>
-                    <SelectItem value="price_desc">Price: High to Low</SelectItem>
-                    <SelectItem value="name_asc">Name: A to Z</SelectItem>
-                  </SelectContent>
-                </Select>
+        <div className="mt-6">
+          <FilterSidebar
+            filters={filters}
+            onFilterChange={setFilters}
+            zipCode={zipCode}
+            onZipSubmit={setZipCode}
+          />
+        </div>
+      </SheetContent>
+    </Sheet>
+
+    <Select value={sortBy} onValueChange={setSortBy}>
+      <SelectTrigger className="w-full sm:w-44">
+        <SelectValue placeholder="Sort" />
+      </SelectTrigger>
+
+      <SelectContent>
+        <SelectItem value="default">
+          Default
+        </SelectItem>
+
+        <SelectItem value="price_asc">
+          Price: Low to High
+        </SelectItem>
+
+        <SelectItem value="price_desc">
+          Price: High to Low
+        </SelectItem>
+
+        <SelectItem value="name_asc">
+          Name: A to Z
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+
+</div>
               </div>
             </div>
 
