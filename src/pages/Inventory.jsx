@@ -44,18 +44,24 @@ export default function Inventory() {
     ? `${savedLocation.city}, ${savedLocation.state}`
     : null;
 
+  const cityPart = inventoryLocationTitle?.split(',')[0] || '';
+  const statePart = inventoryLocationTitle?.split(',')[1] || '';
+
   const filteredContainers = useMemo(() => {
     let result = [...containers];
 
     if (filters.size.length > 0) {
       result = result.filter((c) => filters.size.includes(c.size));
     }
+
     if (filters.condition.length > 0) {
       result = result.filter((c) => filters.condition.includes(c.condition));
     }
+
     if (filters.grade.length > 0) {
       result = result.filter((c) => filters.grade.includes(c.grade));
     }
+
     if (filters.height.length > 0) {
       result = result.filter((c) => filters.height.includes(c.height));
     }
@@ -77,14 +83,14 @@ export default function Inventory() {
     return result;
   }, [containers, filters, sortBy]);
 
-  const activeFilterCount = Object.values(filters).reduce((acc, arr) => acc + arr.length, 0);
+  const activeFilterCount = Object.values(filters).reduce(
+    (acc, arr) => acc + arr.length,
+    0
+  );
 
   const clearFilters = () => {
     setFilters({ size: [], condition: [], grade: [], height: [] });
   };
-
-  const cityPart = inventoryLocationTitle?.split(',')[0] || '';
-  const statePart = inventoryLocationTitle?.split(',')[1] || '';
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,39 +99,15 @@ export default function Inventory() {
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="inline-block">
-            <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-              <span className="text-white">
-                Shipping Containers{' '}
-              </span>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            <span className="text-white">
+              Shipping Containers{' '}
+            </span>
 
-              <span className="text-primary">
-                For Sale Near Me
-              </span>
-            </h1>
-
-{inventoryLocationTitle && (
-  <div className="mt-5 ml-0 sm:ml-[480px]">
-    <h2
-      className="
-        text-[42px]
-        sm:text-5xl
-        font-black
-        tracking-tight
-        leading-[1]
-      "
-    >
-      <span className="text-white">
-        {cityPart}
-      </span>
-
-      <span className="text-primary">
-        ,{statePart}
-      </span>
-    </h2>
-  </div>
-)}
-          </div>
+            <span className="text-primary">
+              For Sale Near Me
+            </span>
+          </h1>
         </div>
       </div>
 
@@ -140,7 +122,10 @@ export default function Inventory() {
                 </div>
 
                 {activeFilterCount > 0 && (
-                  <button onClick={clearFilters} className="text-xs text-primary hover:underline">
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs text-primary hover:underline"
+                  >
                     Clear all
                   </button>
                 )}
@@ -157,26 +142,20 @@ export default function Inventory() {
 
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
-              <div>
-  {inventoryLocationTitle ? (
-    <h2 className="text-[32px] sm:text-[40px] font-black tracking-tight leading-none">
-      <span className="text-white">
-        {cityPart}
-      </span>
+              <div className="min-h-[48px] flex items-center">
+                {inventoryLocationTitle && (
+                  <h2 className="text-[34px] sm:text-[42px] font-black tracking-tight leading-none">
+                    <span className="text-white">
+                      {cityPart}
+                    </span>
 
-      <span className="text-primary">
-        ,{statePart}
-      </span>
-    </h2>
-  ) : (
-    <p className="text-sm text-muted-foreground">
-      <span className="font-mono text-foreground font-semibold">
-        {filteredContainers.length}
-      </span>{' '}
-      containers found
-    </p>
-  )}
-</div>
+                    <span className="text-primary">
+                      ,{statePart}
+                    </span>
+                  </h2>
+                )}
+              </div>
+
               <div className="flex items-center gap-3">
                 <Sheet>
                   <SheetTrigger asChild>
@@ -225,13 +204,23 @@ export default function Inventory() {
             {isLoading ? null : filteredContainers.length > 0 ? (
               <div className="flex flex-col gap-5">
                 {filteredContainers.map((container, i) => (
-                  <InventoryListCard key={container.id} container={container} index={i} />
+                  <InventoryListCard
+                    key={container.id}
+                    container={container}
+                    index={i}
+                  />
                 ))}
               </div>
             ) : (
               <div className="text-center py-20 border border-dashed border-border rounded-2xl">
-                <p className="text-muted-foreground mb-2">No containers match your filters.</p>
-                <button onClick={clearFilters} className="text-primary text-sm hover:underline">
+                <p className="text-muted-foreground mb-2">
+                  No containers match your filters.
+                </p>
+
+                <button
+                  onClick={clearFilters}
+                  className="text-primary text-sm hover:underline"
+                >
                   Clear all filters
                 </button>
               </div>
