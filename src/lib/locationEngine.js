@@ -62,13 +62,27 @@ export async function lookupPostalCode(value) {
 
   const data = await response.json();
   const place = data?.places?.[0];
+  const CANADA_CITY_OVERRIDES = {
+  M9C: 'Toronto',
+  M9V: 'Toronto',
+  M5V: 'Toronto',
+  H3B: 'Montreal',
+  R3C: 'Winnipeg',
+  L4C: 'Richmond Hill',
+  L0L: 'Springwater',
+};
 
+const canadaPrefix = clean.slice(0, 3);
+
+const city = isCanada
+  ? CANADA_CITY_OVERRIDES[canadaPrefix] || place['place name']?.split('(')[0]?.split('/')[0]?.trim()
+  : place['place name'];
   if (!place) {
     throw new Error('ZIP / Postal Code not found.');
   }
 
   return {
-    city: place['place name'] || '',
+    city: city || '',
     state: place['state abbreviation'] || place.state || '',
     postalCode: isCanada ? formatCanadianPostal(clean) : clean,
     country: isCanada ? 'CA' : 'US',
