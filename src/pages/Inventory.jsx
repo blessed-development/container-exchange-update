@@ -116,7 +116,7 @@ export default function Inventory() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 bg-card border border-border rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
+               <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
                   <span className="font-semibold text-sm">Filters</span>
                 </div>
@@ -160,8 +160,8 @@ export default function Inventory() {
                 )}
               </div>
 
-              <div className="flex items-center gap-3">
-                <Sheet>
+               <div className="flex items-center gap-3 mt-6 sm:mt-0">
+                   <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="sm" className="lg:hidden">
                       <Filter className="w-4 h-4 mr-2" />
