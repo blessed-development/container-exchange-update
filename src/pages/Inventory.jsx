@@ -13,16 +13,9 @@ export default function Inventory() {
   const initialZip = urlParams.get('zip') || '';
 
   const [zipCode, setZipCode] = useState(initialZip);
-  const [filters, setFilters] = useState({
-    size: [],
-    condition: [],
-    grade: [],
-    height: [],
-  });
+  const [filters, setFilters] = useState({ size: [], condition: [], grade: [], height: [] });
   const [sortBy, setSortBy] = useState('default');
-  const [savedLocation, setSavedLocation] = useState(() =>
-    getSavedSelectedLocation()
-  );
+  const [savedLocation, setSavedLocation] = useState(() => getSavedSelectedLocation());
 
   const containers = inventoryProducts;
   const isLoading = false;
@@ -115,15 +108,6 @@ export default function Inventory() {
               For Sale Near Me
             </span>
           </h1>
-
-          {inventoryLocationTitle && (
-            <div className="mt-5 ml-0 sm:ml-[480px]">
-              <h2 className="text-[38px] sm:text-5xl font-black tracking-tight leading-[1] whitespace-nowrap">
-                <span className="text-white">{cityPart}</span>
-                <span className="text-primary">,{statePart}</span>
-              </h2>
-            </div>
-          )}
         </div>
       </div>
 
@@ -157,8 +141,26 @@ export default function Inventory() {
           </aside>
 
           <div className="flex-1">
-            <div className="mb-6">
-              <div className="w-full flex gap-3 justify-start">
+            <div className="flex items-center justify-between mb-6">
+              <div className="min-h-[48px] flex items-center">
+                {inventoryLocationTitle && (
+                  <h2
+  className="
+    text-[38px]
+    sm:text-5xl
+    font-black
+    tracking-tight
+    leading-[1]
+    whitespace-nowrap
+  "
+>
+  <span className="text-white">{cityPart}</span>
+  <span className="text-primary">,{statePart}</span>
+</h2>
+                )}
+              </div>
+
+              <div className="flex items-center gap-3">
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="sm" className="lg:hidden">
@@ -189,7 +191,7 @@ export default function Inventory() {
                 </Sheet>
 
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="flex-1 sm:w-44">
+                  <SelectTrigger className="w-44">
                     <SelectValue placeholder="Sort" />
                   </SelectTrigger>
 
