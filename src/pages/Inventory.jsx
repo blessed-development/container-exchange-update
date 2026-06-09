@@ -157,10 +157,26 @@ export default function Inventory() {
 
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-muted-foreground">
-                <span className="font-mono text-foreground font-semibold">{filteredContainers.length}</span> containers found
-              </p>
+              <div>
+  {inventoryLocationTitle ? (
+    <h2 className="text-[32px] sm:text-[40px] font-black tracking-tight leading-none">
+      <span className="text-white">
+        {cityPart}
+      </span>
 
+      <span className="text-primary">
+        ,{statePart}
+      </span>
+    </h2>
+  ) : (
+    <p className="text-sm text-muted-foreground">
+      <span className="font-mono text-foreground font-semibold">
+        {filteredContainers.length}
+      </span>{' '}
+      containers found
+    </p>
+  )}
+</div>
               <div className="flex items-center gap-3">
                 <Sheet>
                   <SheetTrigger asChild>
