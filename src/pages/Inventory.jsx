@@ -144,15 +144,19 @@ export default function Inventory() {
             <div className="flex items-center justify-between mb-6">
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
-                  <h2 className="text-[34px] sm:text-[42px] font-black tracking-tight leading-none">
-                    <span className="text-white">
-                      {cityPart}
-                    </span>
-
-                    <span className="text-primary">
-                      ,{statePart}
-                    </span>
-                  </h2>
+                  <h2
+  className="
+    text-[38px]
+    sm:text-5xl
+    font-black
+    tracking-tight
+    leading-[1]
+    whitespace-nowrap
+  "
+>
+  <span className="text-white">{cityPart}</span>
+  <span className="text-primary">,{statePart}</span>
+</h2>
                 )}
               </div>
 
