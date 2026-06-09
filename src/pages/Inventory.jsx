@@ -105,20 +105,14 @@ export default function Inventory() {
             </h1>
 
 {inventoryLocationTitle && (
-  <div
-    className="
-      mt-4
-      ml-0
-      sm:ml-[480px]
-    "
-  >
+  <div className="mt-5 ml-0 sm:ml-[480px]">
     <h2
       className="
-        text-3xl
+        text-[42px]
         sm:text-5xl
         font-black
         tracking-tight
-        leading-[0.95]
+        leading-[1]
       "
     >
       <span className="text-white">
