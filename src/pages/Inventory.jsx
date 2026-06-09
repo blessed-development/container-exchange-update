@@ -2,10 +2,22 @@ import React, { useEffect, useMemo, useState } from 'react';
 import InventoryListCard from '@/components/inventory/InventoryListCard';
 import FilterSidebar from '@/components/inventory/FilterSidebar';
 import { inventoryProducts } from '@/data/inventoryProducts';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { getSavedSelectedLocation } from '@/lib/locationEngine';
 
 export default function Inventory() {
@@ -13,9 +25,16 @@ export default function Inventory() {
   const initialZip = urlParams.get('zip') || '';
 
   const [zipCode, setZipCode] = useState(initialZip);
-  const [filters, setFilters] = useState({ size: [], condition: [], grade: [], height: [] });
+  const [filters, setFilters] = useState({
+    size: [],
+    condition: [],
+    grade: [],
+    height: [],
+  });
   const [sortBy, setSortBy] = useState('default');
-  const [savedLocation, setSavedLocation] = useState(() => getSavedSelectedLocation());
+  const [savedLocation, setSavedLocation] = useState(() =>
+    getSavedSelectedLocation()
+  );
 
   const containers = inventoryProducts;
   const isLoading = false;
@@ -100,13 +119,8 @@ export default function Inventory() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-            <span className="text-white">
-              Shipping Containers{' '}
-            </span>
-
-            <span className="text-primary">
-              For Sale Near Me
-            </span>
+            <span className="text-white">Shipping Containers </span>
+            <span className="text-primary">For Sale Near Me</span>
           </h1>
         </div>
       </div>
@@ -116,7 +130,7 @@ export default function Inventory() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 bg-card border border-border rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
-               <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
                   <span className="font-semibold text-sm">Filters</span>
                 </div>
@@ -141,107 +155,58 @@ export default function Inventory() {
           </aside>
 
           <div className="flex-1">
-           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-6">
+            <div className="flex flex-col gap-5 mb-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="min-h-[48px] flex items-center">
+                {inventoryLocationTitle && (
+                  <h2 className="text-[38px] sm:text-5xl font-black tracking-tight leading-[1] whitespace-nowrap">
+                    <span className="text-white">{cityPart}</span>
+                    <span className="text-primary">,{statePart}</span>
+                  </h2>
+                )}
+              </div>
 
-  {/* LEFT — CITY */}
-  <div className="min-h-[48px]">
-    {inventoryLocationTitle && (
-      <h2
-        className="
-          text-[38px]
-          sm:text-5xl
-          font-black
-          tracking-tight
-          leading-[0.92]
-          break-words
-        "
-      >
-        <span className="text-white">
-          {cityPart}
-        </span>
+              <div className="flex items-center gap-3 w-full lg:w-auto">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="lg:hidden">
+                      <Filter className="w-4 h-4 mr-2" />
+                      Filter
+                      {activeFilterCount > 0 && (
+                        <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          {activeFilterCount}
+                        </span>
+                      )}
+                    </Button>
+                  </SheetTrigger>
 
-        <span className="text-primary">
-          ,{statePart}
-        </span>
-      </h2>
-    )}
-  </div>
+                  <SheetContent side="left" className="w-80">
+                    <SheetHeader>
+                      <SheetTitle>Filters</SheetTitle>
+                    </SheetHeader>
 
-  {/* RIGHT — FILTER + SORT */}
-  <div
-    className="
-      flex
-      items-center
-      gap-3
-      mt-6
-      lg:mt-0
-      w-full
-      lg:w-auto
-    "
-  >
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="lg:hidden"
-        >
-          <Filter className="w-4 h-4 mr-2" />
+                    <div className="mt-6">
+                      <FilterSidebar
+                        filters={filters}
+                        onFilterChange={setFilters}
+                        zipCode={zipCode}
+                        onZipSubmit={setZipCode}
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
 
-          Filter
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="flex-1 lg:w-44">
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
 
-          {activeFilterCount > 0 && (
-            <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {activeFilterCount}
-            </span>
-          )}
-        </Button>
-      </SheetTrigger>
-
-      <SheetContent side="left" className="w-80">
-        <SheetHeader>
-          <SheetTitle>
-            Filters
-          </SheetTitle>
-        </SheetHeader>
-
-        <div className="mt-6">
-          <FilterSidebar
-            filters={filters}
-            onFilterChange={setFilters}
-            zipCode={zipCode}
-            onZipSubmit={setZipCode}
-          />
-        </div>
-      </SheetContent>
-    </Sheet>
-
-    <Select value={sortBy} onValueChange={setSortBy}>
-      <SelectTrigger className="w-full sm:w-44">
-        <SelectValue placeholder="Sort" />
-      </SelectTrigger>
-
-      <SelectContent>
-        <SelectItem value="default">
-          Default
-        </SelectItem>
-
-        <SelectItem value="price_asc">
-          Price: Low to High
-        </SelectItem>
-
-        <SelectItem value="price_desc">
-          Price: High to Low
-        </SelectItem>
-
-        <SelectItem value="name_asc">
-          Name: A to Z
-        </SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-
-</div>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="price_asc">Price: Low to High</SelectItem>
+                    <SelectItem value="price_desc">Price: High to Low</SelectItem>
+                    <SelectItem value="name_asc">Name: A to Z</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
