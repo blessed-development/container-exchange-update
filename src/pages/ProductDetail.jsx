@@ -8,11 +8,6 @@ import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2 } from 'lucide-react';
 
-import {
-  getLocalizedPrice,
-  getSavedSelectedLocation,
-} from '@/lib/locationEngine';
-
 const GRADE_INFO = {
   AS_IS: {
     label: 'As-Is',
@@ -72,14 +67,10 @@ export default function ProductDetail() {
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const [savedLocation, setSavedLocation] = useState(() =>
-    getSavedSelectedLocation()
-  );
-
   const [localizedPricing, setLocalizedPricing] = useState({
-    hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
+    hasLocalPrice: false,
     price: null,
-    location: getSavedSelectedLocation(),
+    location: null,
   });
 
   useEffect(() => {
@@ -90,32 +81,11 @@ export default function ProductDetail() {
     });
 
     setActiveImageIndex(0);
-
-    const syncLocation = () => {
-      const saved = getSavedSelectedLocation();
-
-      setSavedLocation(saved);
-
-      setLocalizedPricing((prev) => ({
-        ...prev,
-        hasLocalPrice: Boolean(saved?.postalCode),
-        location: saved,
-      }));
-    };
-
-    syncLocation();
-
-    window.addEventListener('ce-location-change', syncLocation);
-    window.addEventListener('storage', syncLocation);
-    window.addEventListener('focus', syncLocation);
-    window.addEventListener('pageshow', syncLocation);
-
-    return () => {
-      window.removeEventListener('ce-location-change', syncLocation);
-      window.removeEventListener('storage', syncLocation);
-      window.removeEventListener('focus', syncLocation);
-      window.removeEventListener('pageshow', syncLocation);
-    };
+    setLocalizedPricing({
+      hasLocalPrice: false,
+      price: null,
+      location: null,
+    });
   }, [id]);
 
   useEffect(() => {
@@ -174,19 +144,13 @@ export default function ProductDetail() {
     container.price ||
     0;
 
-  const activeLocation =
-    localizedPricing?.location?.postalCode
-      ? localizedPricing.location
-      : savedLocation;
-
-  const hasActiveZip =
-    Boolean(activeLocation?.postalCode);
-
   const heroPrice =
-    getLocalizedPrice(baseDisplayPrice, activeLocation);
+    localizedPricing.hasLocalPrice && localizedPricing.price
+      ? localizedPricing.price
+      : baseDisplayPrice;
 
   const showStartingFrom =
-    !hasActiveZip;
+    !localizedPricing.hasLocalPrice;
 
   const allImages = [
     productImage,
@@ -200,10 +164,11 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen bg-background">
+
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-         <nav className="sr-only">
-          <Link to="/" className="hover:text-primary transition-colors">
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link to="/" className="hover:text-primary transition-colors">
               Home
             </Link>
 
@@ -224,8 +189,11 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
           <div>
+
             <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
+
               <img
                 key={activeImage}
                 src={activeImage}
@@ -235,27 +203,13 @@ export default function ProductDetail() {
 
               {showHeroOverlay && (
                 <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
-                 <div className="max-w-3xl mb-5">
-  <h1 className="text-4xl md:text-5xl font-black text-white leading-[0.95] tracking-[-0.04em]">
-    {productTitle}
-  </h1>
 
-  {hasActiveZip && activeLocation?.city && activeLocation?.state && (
-    <div className="mt-4 text-2xl md:text-3xl font-black leading-[1] tracking-[-0.03em]">
-      <span className="text-white">
-        For Sale in{' '}
-      </span>
-
-      <span className="text-primary">
-        {activeLocation.city}, {activeLocation.state}
-      </span>
-    </div>
-  )}
-</div>
-                  {productTitle}
+                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
+                    {productTitle}
                   </h2>
 
                   <div className="flex flex-wrap items-center gap-2">
+
                     <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
                       {container.size}ft
                     </Badge>
@@ -279,6 +233,7 @@ export default function ProductDetail() {
                     )}
 
                     <div className="flex items-center gap-1.5 ml-1">
+
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
@@ -327,7 +282,9 @@ export default function ProductDetail() {
             </div>
 
             <div className="mt-6 pb-6">
+
               <div className="mb-8 flex items-center gap-4">
+
                 {showStartingFrom && (
                   <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
                     <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
@@ -342,6 +299,7 @@ export default function ProductDetail() {
               </div>
 
               <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
+
                 <p className="text-xs font-mono text-primary tracking-widest mb-2">
                   GRADE CLASSIFICATION
                 </p>
