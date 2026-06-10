@@ -29,7 +29,9 @@ const GRADE_INFO = {
   IICL: {
     label: 'IICL Certified',
     desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
-  },
+description:
+    'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
+},
 };
 
 const SAMPLE_GALLERY_IMAGES = [
