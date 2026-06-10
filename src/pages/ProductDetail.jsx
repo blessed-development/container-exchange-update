@@ -6,7 +6,7 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronRight, Loader2 } from 'lucide-react';
+import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
   getLocalizedPrice,
@@ -79,8 +79,8 @@ export default function ProductDetail() {
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
-  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
@@ -371,19 +371,34 @@ export default function ProductDetail() {
                 <button
                   type="button"
                   onClick={() => setDescriptionOpen(!descriptionOpen)}
-                  className="text-left w-full mb-10 group"
+                  aria-expanded={descriptionOpen}
+                  className="group mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
                 >
-                  <p
-                    className={`text-muted-foreground leading-relaxed text-base transition-all ${
-                      descriptionOpen ? '' : 'line-clamp-2'
-                    }`}
-                  >
-                    {container.short_description}
-                  </p>
+                  <div className="relative">
+                    <p
+                      className={`text-[15px] md:text-base leading-8 text-muted-foreground transition-all duration-300 ${
+                        descriptionOpen ? '' : 'line-clamp-2'
+                      }`}
+                    >
+                      {container.short_description}
+                    </p>
 
-                  <span className="mt-2 inline-block text-sm font-semibold text-primary">
-                    {descriptionOpen ? 'Show less' : 'Read more'}
-                  </span>
+                    {!descriptionOpen && (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/95 to-transparent" />
+                    )}
+                  </div>
+
+                  <div className="mt-3 inline-flex items-center gap-2 text-[13px] font-bold text-primary/90 transition-colors group-hover:text-primary">
+                    <span>
+                      {descriptionOpen ? 'Show less' : 'Read more'}
+                    </span>
+
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-300 ${
+                        descriptionOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </div>
                 </button>
               )}
 
