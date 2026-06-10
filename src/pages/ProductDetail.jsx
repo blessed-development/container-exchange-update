@@ -1,6 +1,3 @@
-Replace `src/pages/ProductDetail.jsx` with this full ready version:
-
-```jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
@@ -397,4 +394,3 @@ export default function ProductDetail() {
     </div>
   );
 }
-```
