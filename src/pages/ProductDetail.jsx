@@ -366,7 +366,8 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-            <div className="mb-10">
+            <div className="mb-10 rounded-2xl border border-border/70 bg-card/40 p-5">
+
   <p className="text-muted-foreground leading-relaxed text-base">
     Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion. 
 
