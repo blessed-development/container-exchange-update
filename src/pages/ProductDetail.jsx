@@ -377,11 +377,11 @@ export default function ProductDetail() {
                   type="button"
                   onClick={() => setDescriptionOpen(!descriptionOpen)}
                   aria-expanded={descriptionOpen}
-                  className="group mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
+                  className="group mb-6 md:mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-3 md:py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
                 >
                   <div className="relative">
                     <p
-                      className={`text-[15px] md:text-base leading-8 text-muted-foreground transition-all duration-300 ${
+                      className={`text-[14px] md:text-base leading-6 md:leading-7 text-muted-foreground transition-all duration-300 ${
                         descriptionOpen ? '' : 'line-clamp-2'
                       }`}
                     >
@@ -393,7 +393,7 @@ export default function ProductDetail() {
                     )}
                   </div>
 
-                  <div className="mt-3 inline-flex items-center gap-2 text-[13px] font-bold text-primary/90 transition-colors group-hover:text-primary">
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] md:text-[13px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
                     <span>
                       {descriptionOpen ? 'Show less' : 'Read more'}
                     </span>
