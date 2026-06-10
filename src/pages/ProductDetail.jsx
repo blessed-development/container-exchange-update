@@ -79,6 +79,7 @@ export default function ProductDetail() {
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const [savedLocation, setSavedLocation] = useState(() =>
@@ -366,13 +367,25 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-            <div className="mb-10 rounded-2xl border border-border/70 bg-card/40 p-5">
+              {container.short_description && (
+                <button
+                  type="button"
+                  onClick={() => setDescriptionOpen(!descriptionOpen)}
+                  className="text-left w-full mb-10 group"
+                >
+                  <p
+                    className={`text-muted-foreground leading-relaxed text-base transition-all ${
+                      descriptionOpen ? '' : 'line-clamp-2'
+                    }`}
+                  >
+                    {container.short_description}
+                  </p>
 
-  <p className="text-muted-foreground leading-relaxed text-base">
-    Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion. 
-
-  </p>
-</div>
+                  <span className="mt-2 inline-block text-sm font-semibold text-primary">
+                    {descriptionOpen ? 'Show less' : 'Read more'}
+                  </span>
+                </button>
+              )}
 
               <div className="hidden lg:block">
                 <ProductFAQ />
