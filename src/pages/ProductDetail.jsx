@@ -270,13 +270,13 @@ export default function ProductDetail() {
                     )}
                   </div>
 
-                  <h1 className="text-[34px] md:text-[48px] font-black text-white leading-[0.98] tracking-[-0.055em] max-w-[680px] mb-5">
+                  <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6"
                     {seoHeroTitle}
                   </h1>
 
-                  <div className="text-[21px] md:text-[27px] font-black tracking-[-0.035em] text-white mb-5">
-                    For Sale in{' '}
-                    <span className="text-primary">
+                  <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
+                    For Sale in
+                    <span className="text-primary ml-2">
                       {seoLocation}
                     </span>
                   </div>
