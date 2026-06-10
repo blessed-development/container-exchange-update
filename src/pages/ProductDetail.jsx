@@ -1,3 +1,6 @@
+Replace `src/pages/ProductDetail.jsx` with this full ready version:
+
+```jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
@@ -57,6 +60,15 @@ const getInitialSizeIndex = (container) => {
   });
 
   return matchIndex >= 0 ? matchIndex : 0;
+};
+
+const buildSeoProductTitle = (title) => {
+  return String(title || '')
+    .replace(/\s*\|\s*(WWT|CW|IICL|AS[-_\s]?IS).*$/i, '')
+    .replace(/\bShipping Container\b/i, 'Shipping Containers')
+    .replace(/^Used\b/i, 'USED')
+    .replace(/^New\b/i, 'NEW')
+    .trim();
 };
 
 export default function ProductDetail() {
@@ -198,24 +210,31 @@ export default function ProductDetail() {
 
   const showHeroOverlay = activeImageIndex === 0;
 
+  const seoHeroTitle = buildSeoProductTitle(productTitle);
+
+  const seoLocation =
+    activeLocation?.city && activeLocation?.state
+      ? `${activeLocation.city}, ${activeLocation.state}`
+      : 'Your Area';
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-primary transition-colors">
+          <nav className="sr-only">
+            <Link to="/">
               Home
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <Link to="/inventory" className="hover:text-primary transition-colors">
+            <Link to="/inventory">
               Inventory
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <span className="text-foreground font-medium truncate">
+            <span>
               {productTitle}
             </span>
           </nav>
@@ -234,56 +253,58 @@ export default function ProductDetail() {
               />
 
               {showHeroOverlay && (
-                <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
-                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
-                    {productTitle}
-                  </h2>
+                <div className="absolute inset-0 p-6 md:p-8 bg-gradient-to-r from-black/92 via-black/62 to-transparent flex flex-col justify-end">
+                  <div className="flex flex-wrap items-center gap-2 mb-5">
+                    <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
+                      {String(container.condition || condition).toUpperCase()}
+                    </Badge>
 
-                  <div className="flex flex-wrap items-center gap-2">
                     <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
                       {container.size}ft
                     </Badge>
 
-                    <Badge
-                      variant="outline"
-                      className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                    >
-                      {container.condition}
-                    </Badge>
-
-                    {String(container.height || '')
-                      .toLowerCase()
-                      .includes('high') && (
+                    {String(container.grade || '').toUpperCase() && (
                       <Badge
                         variant="outline"
                         className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
                       >
-                        High Cube
+                        {String(container.grade || '').toUpperCase()}
                       </Badge>
                     )}
+                  </div>
 
-                    <div className="flex items-center gap-1.5 ml-1">
-                      <div className="flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.round(container.rating || 5)
-                                ? 'fill-orange-500 text-orange-500'
-                                : 'text-white/30'
-                            }`}
-                          />
-                        ))}
-                      </div>
+                  <h1 className="text-[34px] md:text-[48px] font-black text-white leading-[0.98] tracking-[-0.055em] max-w-[680px] mb-5">
+                    {seoHeroTitle}
+                  </h1>
 
-                      <span className="text-sm font-semibold text-white">
-                        {container.rating || 5}
-                      </span>
+                  <div className="text-[21px] md:text-[27px] font-black tracking-[-0.035em] text-white mb-5">
+                    For Sale in{' '}
+                    <span className="text-primary">
+                      {seoLocation}
+                    </span>
+                  </div>
 
-                      <span className="text-xs text-white/70">
-                        ({container.review_count || 42} reviews)
-                      </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < Math.round(container.rating || 5)
+                              ? 'fill-orange-500 text-orange-500'
+                              : 'text-white/30'
+                          }`}
+                        />
+                      ))}
                     </div>
+
+                    <span className="text-base font-black text-white">
+                      {container.rating || 5}
+                    </span>
+
+                    <span className="text-sm text-white/80">
+                      ({container.review_count || 42} reviews)
+                    </span>
                   </div>
                 </div>
               )}
@@ -376,3 +397,4 @@ export default function ProductDetail() {
     </div>
   );
 }
+```
