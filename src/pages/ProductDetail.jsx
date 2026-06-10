@@ -28,7 +28,7 @@ const GRADE_INFO = {
   },
   IICL: {
     label: 'IICL Certified',
-    desc: 'Meets the highest international standards. Minimal wear, premium condition.',
+    desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
   },
 };
 
