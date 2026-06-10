@@ -29,9 +29,9 @@ const GRADE_INFO = {
   IICL: {
     label: 'IICL Certified',
     desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
-description:
-    'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
-},
+    description:
+      'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
+  },
 };
 
 const SAMPLE_GALLERY_IMAGES = [
@@ -217,6 +217,9 @@ export default function ProductDetail() {
       ? `${activeLocation.city}, ${activeLocation.state}`
       : 'Your Area';
 
+  const productDescription =
+    gradeInfo.description || container.short_description || '';
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
@@ -369,7 +372,7 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              {container.short_description && (
+              {productDescription && (
                 <button
                   type="button"
                   onClick={() => setDescriptionOpen(!descriptionOpen)}
@@ -382,7 +385,7 @@ export default function ProductDetail() {
                         descriptionOpen ? '' : 'line-clamp-2'
                       }`}
                     >
-                      {container.short_description}
+                      {productDescription}
                     </p>
 
                     {!descriptionOpen && (
