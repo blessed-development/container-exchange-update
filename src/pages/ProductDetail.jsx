@@ -246,64 +246,72 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="w-full h-[430px] object-cover transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
+                className="w-full h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
               />
 
               {showHeroOverlay && (
-                <div className="absolute inset-0 p-6 md:p-8 bg-gradient-to-r from-black/92 via-black/62 to-transparent flex flex-col justify-end">
-                  <div className="flex flex-wrap items-center gap-2 mb-5">
-                    <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
-                      {String(container.condition || condition).toUpperCase()}
-                    </Badge>
+                <>
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/22 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/38 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
+                  </div>
 
-                    <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
-                      {container.size}ft
-                    </Badge>
-
-                    {String(container.grade || '').toUpperCase() && (
-                      <Badge
-                        variant="outline"
-                        className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                      >
-                        {String(container.grade || '').toUpperCase()}
+                  <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
+                    <div className="flex flex-wrap items-center gap-2 mb-5">
+                      <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
+                        {String(container.condition || condition).toUpperCase()}
                       </Badge>
-                    )}
-                  </div>
 
-                  <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6"
-                    {seoHeroTitle}
-                  </h1>
+                      <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                        {container.size}ft
+                      </Badge>
 
-                  <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
-                    For Sale in
-                    <span className="text-primary ml-2">
-                      {seoLocation}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    <div className="flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-5 h-5 ${
-                            i < Math.round(container.rating || 5)
-                              ? 'fill-orange-500 text-orange-500'
-                              : 'text-white/30'
-                          }`}
-                        />
-                      ))}
+                      {String(container.grade || '').toUpperCase() && (
+                        <Badge
+                          variant="outline"
+                          className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                        >
+                          {String(container.grade || '').toUpperCase()}
+                        </Badge>
+                      )}
                     </div>
 
-                    <span className="text-base font-black text-white">
-                      {container.rating || 5}
-                    </span>
+                    <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6">
+                      {seoHeroTitle}
+                    </h1>
 
-                    <span className="text-sm text-white/80">
-                      ({container.review_count || 42} reviews)
-                    </span>
+                    <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
+                      For Sale in
+                      <span className="text-primary ml-2">
+                        {seoLocation}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-5 h-5 ${
+                              i < Math.round(container.rating || 5)
+                                ? 'fill-orange-500 text-orange-500'
+                                : 'text-white/30'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="text-base font-black text-white">
+                        {container.rating || 5}
+                      </span>
+
+                      <span className="text-sm text-white/80">
+                        ({container.review_count || 42} reviews)
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
