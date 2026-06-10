@@ -366,11 +366,19 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              {container.short_description && (
-                <p className="text-muted-foreground leading-relaxed text-base mb-10">
-                  {container.short_description}
-                </p>
-              )}
+             <div className="mb-10 rounded-2xl border border-border/70 bg-card/40 p-5">
+  <p className="text-xs font-mono text-primary tracking-widest mb-3">
+    PRODUCT DETAILS
+  </p>
+
+  <p className="text-muted-foreground leading-relaxed text-base">
+    Measurements are 40ft length × 8ft width × 9 1/2ft height on the exterior.
+    Interior measurements are 39'5" length by 7'9" width by 8'10" height.
+    Each unit comes standard with a lockbox on the door to prevent lock cutting.
+    Forklift pockets on both sides of the container for easy moving.
+    Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.
+  </p>
+</div>
 
               <div className="hidden lg:block">
                 <ProductFAQ />
