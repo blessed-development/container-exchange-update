@@ -192,6 +192,7 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
   const [location, setLocation] = useState(DEFAULT_LOCATION);
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
@@ -244,6 +245,7 @@ export default function ContainerConfigurator({
         saveLocation(resolved);
         setPostalInput('');
         setZipOpen(false);
+        setIsEditingLocation(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
@@ -319,6 +321,7 @@ export default function ContainerConfigurator({
           saveLocation(resolved);
           setPostalInput('');
           setZipOpen(false);
+        setIsEditingLocation(false);
         } catch (error) {
           setZipError(error.message || 'Location unavailable.');
         } finally {
@@ -334,6 +337,20 @@ export default function ContainerConfigurator({
         timeout: 12000,
       }
     );
+  };
+
+  const startLocationEdit = () => {
+    setZipError('');
+    setZipOpen(true);
+    setIsEditingLocation(true);
+    setPostalInput(location?.postalCode || '');
+  };
+
+  const stopLocationEdit = () => {
+    setZipError('');
+    setZipOpen(false);
+    setIsEditingLocation(false);
+    setPostalInput('');
   };
 
   const switchProduct = (nextCondition, nextSizeIndex) => {
@@ -407,46 +424,53 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="step-label">STEP 1 — LOCATION</div>
+        <div className="step-label">STEP 1 — ENTER ZIP / POSTAL CODE</div>
 
-        <div className="zip-bar premium-location-card">
-          <div
-            className={`zip-collapsed premium-location-shell ${zipOpen ? 'editing' : ''}`}
-            onClick={() => {
-              if (zipOpen) {
-                setZipOpen(false);
-                setPostalInput('');
-                setZipError('');
-                return;
-              }
-
-              setPostalInput(location?.postalCode || '');
-              setZipOpen(true);
-            }}
-          >
-            <div className="zip-left premium-location-left">
+        <div className="zip-bar">
+          <div className="zip-collapsed">
+            <div className="zip-left">
               <MapPin size={15} />
 
-              {zipOpen ? (
+              {isEditingLocation ? (
                 <input
-                  autoFocus
-                  className="zip-location-input"
+                  className="zip-input"
+                  style={{
+                    height: 'auto',
+                    minHeight: 0,
+                    padding: 0,
+                    border: 0,
+                    background: 'transparent',
+                    boxShadow: 'none',
+                    color: 'inherit',
+                    fontWeight: 800,
+                    fontSize: 'inherit',
+                    width: '100%',
+                  }}
                   placeholder="Enter ZIP / Postal Code"
                   value={postalInput}
-                  onClick={(e) => e.stopPropagation()}
+                  autoFocus
                   onChange={(e) => setPostalInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      stopLocationEdit();
+                    }
+                  }}
                 />
               ) : (
                 <span className="zip-location-text">{locationLabel}</span>
               )}
             </div>
 
-            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
-              {zipOpen ? 'Close' : 'Change'}
-            </div>
+            <button
+              type="button"
+              className={`zip-action ${isEditingLocation ? 'open' : ''}`}
+              onClick={isEditingLocation ? stopLocationEdit : startLocationEdit}
+            >
+              {isEditingLocation ? 'Done' : location?.postalCode ? 'Change' : 'Enter'}
+            </button>
           </div>
 
-          <div className={`zip-panel use-location-panel ${zipOpen ? 'open' : ''}`}>
+          <div className={`zip-panel ${isEditingLocation ? 'open' : ''}`}>
             {isLookingUp && <div className="zip-status">Detecting location...</div>}
             {zipError && <div className="zip-error">{zipError}</div>}
 
@@ -697,3 +721,4 @@ export default function ContainerConfigurator({
     </>
   );
 }
+s
