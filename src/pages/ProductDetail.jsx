@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
@@ -220,8 +221,52 @@ export default function ProductDetail() {
   const productDescription =
     gradeInfo.description || container.short_description || '';
 
-  return (
-    <div className="min-h-screen bg-background">
+ return (
+<>
+<Helmet>
+
+<title>
+{`${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`}
+</title>
+
+<meta
+name="description"
+content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}. View local pricing, delivery availability, and specifications.`}
+/>
+
+<link
+rel="canonical"
+href={`https://containersexchange.com/product/${container.id}`}
+/>
+
+<meta
+property="og:type"
+content="product"
+/>
+
+<meta
+property="og:title"
+content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+/>
+
+<meta
+property="og:description"
+content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+/>
+
+<meta
+property="og:image"
+content={productImage}
+/>
+
+<meta
+name="twitter:card"
+content="summary_large_image"
+/>
+
+</Helmet>
+
+<div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="sr-only">
@@ -435,5 +480,6 @@ export default function ProductDetail() {
         <ProductFAQ />
       </div>
     </div>
-  );
+</>
+);
 }
