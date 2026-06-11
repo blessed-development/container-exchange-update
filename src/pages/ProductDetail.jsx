@@ -214,6 +214,11 @@ export default function ProductDetail() {
   const seoHeroTitle = buildSeoProductTitle(productTitle);
 
   const seoLocation =
+    useEffect(() => {
+  if (!seoHeroTitle || !seoLocation) return;
+
+  document.title = `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
+}, [seoHeroTitle, seoLocation]);
     activeLocation?.city && activeLocation?.state
       ? `${activeLocation.city}, ${activeLocation.state}`
       : 'Your Area';
