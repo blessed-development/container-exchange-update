@@ -407,9 +407,9 @@ export default function ProductDetail() {
                 </button>
               )}
 
-              <div className="hidden lg:block">
-                <ProductFAQ />
-              </div>
+             <div className="hidden lg:block -mt-4">
+  <ProductFAQ />
+</div>
             </div>
           </div>
 
