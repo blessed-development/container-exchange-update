@@ -217,6 +217,16 @@ export default function ProductDetail() {
     activeLocation?.city && activeLocation?.state
       ? `${activeLocation.city}, ${activeLocation.state}`
       : 'Your Area';
+  useEffect(() => {
+  if (!seoHeroTitle || !seoLocation) return;
+
+  document.title =
+    `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
+
+  return () => {
+    document.title = 'Containers Exchange';
+  };
+}, [seoHeroTitle, seoLocation]);
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
