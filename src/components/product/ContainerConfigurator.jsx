@@ -12,6 +12,17 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
+import {
+  lookupPostalCode,
+  getCountryLabel,
+  cleanPostal,
+  isUsZip,
+  isCanadianPostal,
+  getLocalizedPrice,
+  saveSelectedLocation,
+  getSavedSelectedLocation,
+} from '../../lib/locationEngine';
+
 const USED_GRADES = [
   { key: 'AS_IS', label: 'AS IS', adjust: 0 },
   { key: 'WWT', label: 'Wind & Water Tight', adjust: 0 },
@@ -38,11 +49,28 @@ const PRODUCT_SWITCH_MAP = {
   },
 };
 
-const DEFAULT_LOCATION = {
-  city: 'Fort Lauderdale',
-  state: 'FL',
-  postalCode: '33304',
-  country: 'US',
+const EMPTY_LOCATION = {
+  city: '',
+  state: '',
+  postalCode: '',
+  country: '',
+};
+
+const CA_PROVINCES = {
+  Ontario: 'ON',
+  Quebec: 'QC',
+  Québec: 'QC',
+  Manitoba: 'MB',
+  Alberta: 'AB',
+  'British Columbia': 'BC',
+  Saskatchewan: 'SK',
+  'Nova Scotia': 'NS',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Prince Edward Island': 'PE',
+  Yukon: 'YT',
+  Nunavut: 'NU',
+  'Northwest Territories': 'NT',
 };
 
 const fmt = (num) =>
@@ -50,68 +78,6 @@ const fmt = (num) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-
-const cleanPostal = (value) =>
-  String(value || '').trim().toUpperCase().replace(/\s+/g, '');
-
-const isUsZip = (value) => /^\d{5}$/.test(cleanPostal(value));
-
-const isCanadianPostal = (value) =>
-  /^[A-Z]\d[A-Z]\d[A-Z]\d$/.test(cleanPostal(value));
-
-const formatCanadianPostal = (value) => {
-  const clean = cleanPostal(value);
-  return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
-};
-
-const getCountryLabel = (country) => (country === 'US' ? 'USA' : 'CA');
-
-async function fetchZippopotam(country, postal) {
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(postal)}`
-  );
-
-  if (!response.ok) return null;
-
-  const data = await response.json();
-  const place = data?.places?.[0];
-
-  if (!place) return null;
-
-  return place;
-}
-
-async function lookupPostalCode(value) {
-  const clean = cleanPostal(value);
-
-  if (!isUsZip(clean) && !isCanadianPostal(clean)) {
-    throw new Error('Enter a valid US ZIP or Canadian postal code.');
-  }
-
-  const isCanada = isCanadianPostal(clean);
-  const country = isCanada ? 'ca' : 'us';
-  const displayPostal = isCanada ? formatCanadianPostal(clean) : clean;
-
-  const candidates = isCanada ? [formatCanadianPostal(clean), clean] : [clean];
-
-  let place = null;
-
-  for (const candidate of candidates) {
-    place = await fetchZippopotam(country, candidate);
-    if (place) break;
-  }
-
-  if (!place) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
-  return {
-    city: place['place name'],
-    state: place['state abbreviation'] || place.state || '',
-    postalCode: displayPostal,
-    country: isCanada ? 'CA' : 'US',
-  };
-}
 
 function getRegionAbbreviation(address) {
   const iso =
@@ -124,7 +90,7 @@ function getRegionAbbreviation(address) {
     return iso.split('-').pop();
   }
 
-  return address?.state_code || address?.state || '';
+  return CA_PROVINCES[address?.state] || address?.state_code || address?.state || '';
 }
 
 async function reverseGeocode(latitude, longitude) {
@@ -158,25 +124,13 @@ async function reverseGeocode(latitude, longitude) {
   };
 }
 
-function getSavedLocation() {
-  try {
-    const saved = localStorage.getItem('ce_location');
-    return saved ? JSON.parse(saved) : DEFAULT_LOCATION;
-  } catch {
-    return DEFAULT_LOCATION;
-  }
-}
-
-function saveLocation(location) {
-  localStorage.setItem('ce_location', JSON.stringify(location));
-}
-
 export default function ContainerConfigurator({
   container,
   selectedSizeIndex,
   onSizeChange,
   condition,
   onConditionChange,
+  onPricingChange,
 }) {
   const navigate = useNavigate();
 
@@ -192,8 +146,10 @@ export default function ContainerConfigurator({
   } = useCart();
 
   const [zipOpen, setZipOpen] = useState(false);
-  const [isEditingLocation, setIsEditingLocation] = useState(false);
-  const [location, setLocation] = useState(DEFAULT_LOCATION);
+  const [location, setLocation] = useState(() => {
+    return getSavedSelectedLocation() || EMPTY_LOCATION;
+  });
+
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
@@ -203,14 +159,6 @@ export default function ContainerConfigurator({
   const [gradeOpen, setGradeOpen] = useState(false);
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
-  useEffect(() => {
-  setLocation({
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  });
-}, []);
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'WWT');
   }, [condition]);
@@ -242,10 +190,9 @@ export default function ContainerConfigurator({
       try {
         const resolved = await lookupPostalCode(raw);
         setLocation(resolved);
-        saveLocation(resolved);
+        saveSelectedLocation(resolved);
         setPostalInput('');
         setZipOpen(false);
-        setIsEditingLocation(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
@@ -273,8 +220,40 @@ export default function ContainerConfigurator({
       ? openedProductPrice
       : selectedStandardPrice;
 
-  const unitPrice = basePrice;
+  const applyLocalPrice = (price) => getLocalizedPrice(price, location);
+
+  const unitPrice = applyLocalPrice(basePrice);
+  useEffect(() => {
+  if (typeof onPricingChange === 'function') {
+    onPricingChange({
+      price: unitPrice,
+      hasLocalPrice: Boolean(location?.postalCode),
+      location,
+    });
+  }
+}, [
+  unitPrice,
+  location?.postalCode,
+  onPricingChange,
+]);
   const totalPrice = unitPrice * qty;
+
+  useEffect(() => {
+    if (typeof onPricingChange === 'function') {
+      onPricingChange({
+        price: unitPrice,
+        hasLocalPrice: Boolean(location?.postalCode),
+        location,
+      });
+    }
+  }, [
+    unitPrice,
+    location?.postalCode,
+    location?.city,
+    location?.state,
+    location?.country,
+    onPricingChange,
+  ]);
 
   const currentTitle =
     container?.name ||
@@ -293,12 +272,12 @@ export default function ContainerConfigurator({
   const grandTotal = getGrandTotal();
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
-  const locationLabel =
-  location?.postalCode
+  const locationLabel = location.postalCode
     ? `${location.city}${location.state ? `, ${location.state}` : ''} ${
         location.postalCode
       }, ${getCountryLabel(location.country)}`
     : 'Enter your ZIP / Postal Code';
+
   const useCurrentLocation = () => {
     setZipError('');
 
@@ -318,10 +297,9 @@ export default function ContainerConfigurator({
           );
 
           setLocation(resolved);
-          saveLocation(resolved);
+          saveSelectedLocation(resolved);
           setPostalInput('');
           setZipOpen(false);
-        setIsEditingLocation(false);
         } catch (error) {
           setZipError(error.message || 'Location unavailable.');
         } finally {
@@ -337,20 +315,6 @@ export default function ContainerConfigurator({
         timeout: 12000,
       }
     );
-  };
-
-  const startLocationEdit = () => {
-    setZipError('');
-    setZipOpen(true);
-    setIsEditingLocation(true);
-    setPostalInput(location?.postalCode || '');
-  };
-
-  const stopLocationEdit = () => {
-    setZipError('');
-    setZipOpen(false);
-    setIsEditingLocation(false);
-    setPostalInput('');
   };
 
   const switchProduct = (nextCondition, nextSizeIndex) => {
@@ -427,50 +391,27 @@ export default function ContainerConfigurator({
         <div className="step-label">STEP 1 — ENTER ZIP / POSTAL CODE</div>
 
         <div className="zip-bar">
-          <div className="zip-collapsed">
+          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
             <div className="zip-left">
               <MapPin size={15} />
-
-              {isEditingLocation ? (
-                <input
-                  className="zip-input"
-                  style={{
-                    height: 'auto',
-                    minHeight: 0,
-                    padding: 0,
-                    border: 0,
-                    background: 'transparent',
-                    boxShadow: 'none',
-                    color: 'inherit',
-                    fontWeight: 800,
-                    fontSize: 'inherit',
-                    width: '100%',
-                  }}
-                  placeholder="Enter ZIP / Postal Code"
-                  value={postalInput}
-                  autoFocus
-                  onChange={(e) => setPostalInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Escape') {
-                      stopLocationEdit();
-                    }
-                  }}
-                />
-              ) : (
-                <span className="zip-location-text">{locationLabel}</span>
-              )}
+              <span className="zip-location-text">{locationLabel}</span>
             </div>
 
-            <button
-              type="button"
-              className={`zip-action ${isEditingLocation ? 'open' : ''}`}
-              onClick={isEditingLocation ? stopLocationEdit : startLocationEdit}
-            >
-              {isEditingLocation ? 'Done' : location?.postalCode ? 'Change' : 'Enter'}
-            </button>
+            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
+              {zipOpen ? 'Close' : 'Change'}
+            </div>
           </div>
 
-          <div className={`zip-panel ${isEditingLocation ? 'open' : ''}`}>
+          <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
+            <div className="zip-row zip-row-single">
+              <input
+                className="zip-input"
+                placeholder="Enter your ZIP / Postal Code"
+                value={postalInput}
+                onChange={(e) => setPostalInput(e.target.value)}
+              />
+            </div>
+
             {isLookingUp && <div className="zip-status">Detecting location...</div>}
             {zipError && <div className="zip-error">{zipError}</div>}
 
@@ -506,7 +447,7 @@ export default function ContainerConfigurator({
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                  {isActive ? fmt(basePrice) : fmt(standardPrice)}
+                  {isActive ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                 </span>
               </button>
             );
@@ -534,7 +475,7 @@ export default function ContainerConfigurator({
                   <div className="cc-info">
                     <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
                     <span className="cc-price">
-                      {active ? fmt(basePrice) : fmt(standardPrice)}
+                      {active ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
                     </span>
                   </div>
 
@@ -613,7 +554,20 @@ export default function ContainerConfigurator({
 
             <div className="total-row">
               <span className="total-lbl">Total</span>
-              <span className="total-price">{fmt(totalPrice)}</span>
+
+              <div className="flex flex-col items-end">
+                <span className="total-price">{fmt(totalPrice)}</span>
+
+                {!location?.postalCode ? (
+                  <span className="text-[11px] text-muted-foreground">
+                    Starting From
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-green-600">
+                    Exact local price
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="cart-row">
@@ -721,4 +675,3 @@ export default function ContainerConfigurator({
     </>
   );
 }
-s
