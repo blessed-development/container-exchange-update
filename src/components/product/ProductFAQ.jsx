@@ -40,16 +40,12 @@ export default function ProductFAQ() {
       <div>
         {FAQS.map((item, index) => {
           const isOpen = activeIndex === index;
-          const isLocked = lockedIndex === index;
 
           return (
-            <button
-              key={item.question}
-              type="button"
-              onMouseEnter={() => setHoverIndex(index)}
-              onClick={() =>
-                setLockedIndex(isLocked ? null : index)
-              }
+           <button
+  key={item.question}
+  type="button"
+  onMouseEnter={() => setHoverIndex(index)}
               className={`w-full text-left px-5 py-4 border-t border-border/35 transition-all duration-300 ${
                 isOpen
                   ? 'bg-white/[0.035]'
