@@ -226,42 +226,65 @@ export default function ProductDetail() {
 <Helmet>
 
 <title>
-{`${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`}
+{seoHeroTitle && seoLocation
+  ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
+  : `${productTitle} | Containers Exchange`}
 </title>
 
 <meta
-name="description"
-content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}. View local pricing, delivery availability, and specifications.`}
+  name="description"
+  content={
+    seoHeroTitle && seoLocation
+      ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
+      : `Browse ${productTitle} shipping container pricing and availability.`
+  }
 />
 
 <link
-rel="canonical"
-href={`https://containersexchange.com/product/${container.id}`}
+  rel="canonical"
+  href={window.location.href}
+/>
+
+<meta property="og:type" content="product" />
+
+<meta
+  property="og:title"
+  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
 />
 
 <meta
-property="og:type"
-content="product"
+  property="og:description"
+  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
 />
 
 <meta
-property="og:title"
-content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+  property="og:image"
+  content={productImage}
 />
 
 <meta
-property="og:description"
-content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+  property="og:url"
+  content={window.location.href}
 />
 
 <meta
-property="og:image"
-content={productImage}
+  name="twitter:card"
+  content="summary_large_image"
 />
 
 <meta
-name="twitter:card"
-content="summary_large_image"
+  name="twitter:title"
+  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+/>
+
+<meta
+  name="twitter:description"
+  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+/>
+
+<meta
+  name="twitter:image"
+  content={productImage}
 />
 
 </Helmet>
