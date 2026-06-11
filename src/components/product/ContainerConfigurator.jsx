@@ -292,21 +292,11 @@ export default function ContainerConfigurator({
   const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
 
   const locationLabel =
-    location?.postalCode
-      ? `${location.city}${location.state ? `, ${location.state}` : ''} ${
-          location.postalCode
-        }, ${getCountryLabel(location.country)}`
-      : 'Enter your ZIP / Postal Code';
-
-  const hasLocation = Boolean(location?.postalCode);
-
-  const locationPrimary = hasLocation
-    ? `${location.city}${location.state ? `, ${location.state}` : ''}`
-    : 'Unlock local pricing';
-
-  const locationSub = hasLocation
-    ? `${location.postalCode}, ${getCountryLabel(location.country)}`
-    : 'Enter ZIP / Postal Code to see exact local pricing.';
+  location?.postalCode
+    ? `${location.city}${location.state ? `, ${location.state}` : ''} ${
+        location.postalCode
+      }, ${getCountryLabel(location.country)}`
+    : 'Enter your ZIP / Postal Code';
   const useCurrentLocation = () => {
     setZipError('');
 
@@ -417,89 +407,57 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="mb-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <span className="text-[11px] font-black uppercase tracking-[0.22em] text-muted-foreground">
-              Step 1 — Location
-            </span>
+        <div className="step-label">STEP 1 — LOCATION</div>
 
-            {hasLocation && (
-              <span className="rounded-full border border-green-500/20 bg-green-500/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-green-500">
-                Local pricing unlocked
-              </span>
-            )}
+        <div className="zip-bar premium-location-card">
+          <div
+            className={`zip-collapsed premium-location-shell ${zipOpen ? 'editing' : ''}`}
+            onClick={() => {
+              if (zipOpen) {
+                setZipOpen(false);
+                setPostalInput('');
+                setZipError('');
+                return;
+              }
+
+              setPostalInput(location?.postalCode || '');
+              setZipOpen(true);
+            }}
+          >
+            <div className="zip-left premium-location-left">
+              <MapPin size={15} />
+
+              {zipOpen ? (
+                <input
+                  autoFocus
+                  className="zip-location-input"
+                  placeholder="Enter ZIP / Postal Code"
+                  value={postalInput}
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => setPostalInput(e.target.value)}
+                />
+              ) : (
+                <span className="zip-location-text">{locationLabel}</span>
+              )}
+            </div>
+
+            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
+              {zipOpen ? 'Close' : 'Change'}
+            </div>
           </div>
 
-          <div className="overflow-hidden rounded-[26px] border border-white/10 bg-white/[0.035] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+          <div className={`zip-panel use-location-panel ${zipOpen ? 'open' : ''}`}>
+            {isLookingUp && <div className="zip-status">Detecting location...</div>}
+            {zipError && <div className="zip-error">{zipError}</div>}
+
             <button
               type="button"
-              onClick={() => setZipOpen(!zipOpen)}
-              className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left transition-all duration-300 hover:bg-white/[0.035] sm:px-5"
+              className="zip-loc-btn"
+              onClick={useCurrentLocation}
+              disabled={isLookingUp}
             >
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-black/20 text-green-500 shadow-inner">
-                  <MapPin size={18} />
-                </div>
-
-                <div className="min-w-0">
-                  <div className="truncate text-[17px] font-black tracking-[-0.02em] text-white">
-                    {locationPrimary}
-                  </div>
-
-                  <div className="mt-0.5 truncate text-[12px] font-semibold text-muted-foreground">
-                    {locationSub}
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={`shrink-0 text-[11px] font-black uppercase tracking-[0.18em] transition-colors ${
-                  zipOpen ? 'text-green-500' : 'text-primary'
-                }`}
-              >
-                {zipOpen ? 'Close' : hasLocation ? 'Change' : 'Enter'}
-              </div>
+              Use my current location
             </button>
-
-            <div
-              className={`grid transition-all duration-500 ease-out ${
-                zipOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-              }`}
-            >
-              <div className="overflow-hidden">
-                <div className="border-t border-white/10 px-4 pb-4 pt-4 sm:px-5">
-                  <div className="relative">
-                    <input
-                      className="h-14 w-full rounded-2xl border border-white/10 bg-black/25 px-4 text-[16px] font-semibold text-white outline-none transition-all placeholder:text-muted-foreground focus:border-green-500/60 focus:ring-4 focus:ring-green-500/10"
-                      placeholder="Enter ZIP / Postal Code"
-                      value={postalInput}
-                      onChange={(e) => setPostalInput(e.target.value)}
-                    />
-
-                    {isLookingUp && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[11px] font-black uppercase tracking-[0.14em] text-green-500">
-                        Checking
-                      </div>
-                    )}
-                  </div>
-
-                  {zipError && (
-                    <div className="mt-3 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-[13px] font-semibold text-red-300">
-                      {zipError}
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    className="mt-3 flex h-[52px] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-[15px] font-black text-white transition-all duration-300 hover:bg-white/[0.065] disabled:cursor-not-allowed disabled:opacity-60"
-                    onClick={useCurrentLocation}
-                    disabled={isLookingUp}
-                  >
-                    Use my current location
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
