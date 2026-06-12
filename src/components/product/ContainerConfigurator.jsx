@@ -404,14 +404,16 @@ export default function ContainerConfigurator({
               <MapPin size={15} />
 
               {zipOpen ? (
-                <input
-                  className="zip-input zip-inline-input"
-                  placeholder="Enter ZIP / Postal Code"
-                  value={postalInput}
-                  onChange={(e) => setPostalInput(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  autoFocus
-                />
+               <input
+  className="zip-inline-input"
+  value={postalInput}
+  onChange={(e) => setPostalInput(e.target.value)}
+  onFocus={(e) => {
+    const len = e.target.value.length;
+    e.target.setSelectionRange(len, len);
+  }}
+  placeholder="Enter ZIP / Postal Code"
+/>
               ) : (
                 <span className="zip-location-text">
                   {locationLabel}
