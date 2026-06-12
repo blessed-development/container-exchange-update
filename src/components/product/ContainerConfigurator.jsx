@@ -391,53 +391,75 @@ export default function ContainerConfigurator({
         <div className="step-label">STEP 1 — ENTER ZIP / POSTAL CODE</div>
 
         <div className="zip-bar">
-          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
+          <div
+            className="zip-collapsed"
+            onClick={() => {
+              if (!zipOpen) {
+                setPostalInput(location.postalCode || '');
+                setZipOpen(true);
+              }
+            }}
+          >
             <div className="zip-left">
               <MapPin size={15} />
-              <span className="zip-location-text">{locationLabel}</span>
+
+              {zipOpen ? (
+                <input
+                  className="zip-input zip-inline-input"
+                  placeholder="Enter ZIP / Postal Code"
+                  value={postalInput}
+                  onChange={(e) => setPostalInput(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  autoFocus
+                />
+              ) : (
+                <span className="zip-location-text">
+                  {locationLabel}
+                </span>
+              )}
             </div>
 
-            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
+            <div
+              className={`zip-action ${zipOpen ? 'open' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+
+                if (zipOpen) {
+                  setPostalInput('');
+                  setZipOpen(false);
+                } else {
+                  setPostalInput(location.postalCode || '');
+                  setZipOpen(true);
+                }
+              }}
+            >
               {zipOpen ? 'Close' : 'Change'}
             </div>
           </div>
 
           <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-            <div className="zip-row zip-row-single">
+            {isLookingUp && (
+              <div className="zip-status">
+                Detecting location...
+              </div>
+            )}
 
-  <input
-    className="zip-input"
-    placeholder={location.postalCode || 'Enter ZIP / Postal Code'}
-    value={postalInput}
-    onChange={(e) => setPostalInput(e.target.value)}
-  />
+            {zipError && (
+              <div className="zip-error">
+                {zipError}
+              </div>
+            )}
 
-</div>
-
-{isLookingUp && (
-  <div className="zip-status">
-    Detecting location...
-  </div>
-)}
-
-{zipError && (
-  <div className="zip-error">
-    {zipError}
-  </div>
-)}
-
-<div className="mt-2">
-
-  <button
-    type="button"
-    className="zip-loc-btn"
-    onClick={useCurrentLocation}
-    disabled={isLookingUp}
-  >
-    Use my current location
-  </button>
-
-</div>
+            <div className="mt-2">
+              <button
+                type="button"
+                className="zip-loc-btn"
+                onClick={useCurrentLocation}
+                disabled={isLookingUp}
+              >
+                Use my current location
+              </button>
+            </div>
           </div>
         </div>
 
