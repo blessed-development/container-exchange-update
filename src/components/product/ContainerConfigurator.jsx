@@ -403,45 +403,14 @@ export default function ContainerConfigurator({
           </div>
 
           <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-
-  <div className="zip-row zip-row-single">
-
-    <input
-      className="zip-input"
-      placeholder="Enter ZIP / Postal Code"
-      value={postalInput}
-      onChange={(e) => setPostalInput(e.target.value)}
-      autoFocus
-    />
-
-  </div>
-
-  {isLookingUp && (
-    <div className="zip-status">
-      Detecting location...
-    </div>
-  )}
-
-  {zipError && (
-    <div className="zip-error">
-      {zipError}
-    </div>
-  )}
-
-  <div className="mt-3">
-
-    <button
-      type="button"
-      className="zip-loc-btn"
-      onClick={useCurrentLocation}
-      disabled={isLookingUp}
-    >
-      Use my current location
-    </button>
-
-  </div>
-
-</div>
+            <div className="zip-row zip-row-single">
+              <input
+                className="zip-input"
+                placeholder="Enter your ZIP / Postal Code"
+                value={postalInput}
+                onChange={(e) => setPostalInput(e.target.value)}
+              />
+            </div>
 
             {isLookingUp && <div className="zip-status">Detecting location...</div>}
             {zipError && <div className="zip-error">{zipError}</div>}
