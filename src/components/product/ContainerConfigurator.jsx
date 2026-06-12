@@ -193,39 +193,37 @@ export default function ContainerConfigurator({
               onClick={() => setZipOpen(true)}
               style={{ background: 'transparent', border: 0, padding: 0, textAlign: 'left' }}
             >
-              <MapPin size={15} />
-              <span>Delivering to Fort Lauderdale, FL</span>
+             <MapPin size={15} />
 
-              {zipOpen ? (
-                <input
-                  value={zip}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => setZip(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      setZipOpen(false);
-                    }
-                  }}
-                  placeholder="ZIP"
-                  aria-label="ZIP / Postal Code"
-                  className="zip-val"
-                  style={{
-                    width: `${Math.max(String(zip || '').length, 5)}ch`,
-                    minWidth: '58px',
-                    background: 'transparent',
-                    border: 0,
-                    outline: 'none',
-                    boxShadow: 'none',
-                    padding: 0,
-                    margin: 0,
-                    color: 'inherit',
-                    font: 'inherit',
-                    fontWeight: 800,
-                  }}
-                />
-              ) : (
-                <span className="zip-val">{zip || 'Not set'}</span>
-              )}
+{zipOpen ? (
+  <input
+    value={zip}
+    onClick={(e) => e.stopPropagation()}
+    onChange={(e) => setZip(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter') {
+        setZipOpen(false);
+      }
+    }}
+    placeholder="Enter ZIP / Postal Code"
+    className="zip-val"
+    style={{
+      flex: 1,
+      background: 'transparent',
+      border: 0,
+      outline: 'none',
+      padding: 0,
+      margin: 0,
+      color: 'inherit',
+      font: 'inherit',
+      fontWeight: 800,
+    }}
+  />
+) : (
+  <span className="zip-val">
+    Delivering to Fort Lauderdale, FL {zip}
+  </span>
+)}
             </button>
 
             <button
