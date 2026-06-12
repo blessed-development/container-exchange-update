@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,6 @@ import { motion } from 'framer-motion';
 import {
   lookupPostalCode,
   saveSelectedLocation,
-  getSavedSelectedLocation,
   cleanPostal,
   isUsZip,
   isCanadianPostal,
@@ -19,23 +18,11 @@ export default function ZipCodeSearch({
   onZipSubmit,
   className = '',
 }) {
-  const navigate = useNavigate();
-
   const [zip, setZip] = useState('');
   const [error, setError] = useState('');
   const [locationName, setLocationName] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
-
-  const isHero = variant === 'hero';
-
-  useEffect(() => {
-    const saved = getSavedSelectedLocation?.();
-
-    if (saved?.postalCode) {
-      setZip(saved.postalCode);
-      setLocationName(saved.city || '');
-    }
-  }, []);
+  const navigate = useNavigate();
 
   const handleZipChange = (e) => {
     const value = e.target.value
@@ -46,14 +33,7 @@ export default function ZipCodeSearch({
     setZip(value);
     setError('');
 
-    const clean = cleanPostal(value);
-
-    if (!clean) {
-      setLocationName('');
-      return;
-    }
-
-    if (clean.length < 3) {
+    if (value.length < 3) {
       setLocationName('');
     }
   };
@@ -69,7 +49,6 @@ export default function ZipCodeSearch({
     }
 
     setIsLookingUp(true);
-    setError('');
 
     try {
       const resolved = await lookupPostalCode(zip);
@@ -91,6 +70,8 @@ export default function ZipCodeSearch({
     }
   };
 
+  const isHero = variant === 'hero';
+
   return (
     <form onSubmit={handleSubmit} className={className}>
       <div className={`flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-xl' : ''}`}>
@@ -104,7 +85,7 @@ export default function ZipCodeSearch({
             inputMode="text"
             value={zip}
             onChange={handleZipChange}
-            placeholder="ENTER ZIP / POSTAL CODE"
+            placeholder="ENTER ZIP CODE"
             className={`pl-12 font-mono tracking-wider border-0 rounded-sm ${
               isHero
                 ? 'h-14 text-lg bg-white/10 text-white placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
@@ -143,9 +124,7 @@ export default function ZipCodeSearch({
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm font-mono mt-2">
-          {error}
-        </p>
+        <p className="text-red-400 text-sm font-mono mt-2">{error}</p>
       )}
     </form>
   );
