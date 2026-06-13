@@ -18,7 +18,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { getSavedSelectedLocation } from '@/lib/locationEngine';
+import {
+  getSavedSelectedLocation,
+  lookupPostalCode,
+  saveSelectedLocation,
+} from '@/lib/locationEngine';
 
 export default function Inventory() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -38,6 +42,32 @@ export default function Inventory() {
 
   const containers = inventoryProducts;
   const isLoading = false;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const syncUrlZip = async () => {
+      if (!initialZip) return;
+
+      try {
+        const resolved = await lookupPostalCode(initialZip);
+
+        if (cancelled) return;
+
+        saveSelectedLocation(resolved);
+        setSavedLocation(resolved);
+        setZipCode(resolved.postalCode || initialZip);
+      } catch {
+        setZipCode(initialZip);
+      }
+    };
+
+    syncUrlZip();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialZip]);
 
   useEffect(() => {
     const syncLocation = (event) => {
