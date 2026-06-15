@@ -1,65 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Star, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Star, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ImageSlider from '@/components/shared/ImageSlider';
 
 const PRODUCTS = [
   {
-    id: 'new-20ft-iicl',
-    name: 'New 20 ft Shipping Container Standard 8 ft 6 in High | New IICL',
-    idLine: 'FKLU 212819 | 2261',
-    weightLine: 'MAX GROSS 67,200 lbs | TARE 4,850 lbs | CL CAP 62,350 lbs',
+    id: 'new-20-iicl',
+    badge: 'BEST SELLER',
+    name: 'New 20ft One-Trip Shipping Container | IICL',
+    subtitle: 'IICL Certified • Standard Height',
     rating: 5.0,
-    reviewCount: 1,
-    price: '$2,900.00',
-    condition: 'N/New',
-    doorType: 'Double door at one end',
-    grade: 'IICL',
-    sku: 'N20SDV1DDIICLFONVAB',
+    reviewCount: 184,
+    description:
+      'Unit is in NEW One Trip A Grade condition. Roof, seals, doors, and floors are in smooth working condition as expected of a new unit.',
     images: [
-      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
-      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
-      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
-      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80',
+      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
+      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&q=85',
+      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=900&q=85',
     ],
   },
   {
-    id: 'used-40ft-hc',
-    name: 'Used 40 ft High Cube Shipping Container | Wind & Water Tight',
-    idLine: 'TCKU 384721 | 4001',
-    weightLine: 'MAX GROSS 67,200 lbs | TARE 8,400 lbs | CL CAP 58,800 lbs',
+    id: 'new-40hc-iicl',
+    badge: 'HIGH CUBE',
+    name: 'New 40HC One-Trip Shipping Container | IICL',
+    subtitle: 'IICL Certified • High Cube',
+    rating: 5.0,
+    reviewCount: 124,
+    description:
+      'Extra height one-trip container built for secure storage, commercial use, and projects needing more interior clearance.',
+    images: [
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
+      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
+      'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=900&q=85',
+    ],
+  },
+  {
+    id: 'used-40hc-wwt',
+    badge: 'POPULAR',
+    name: 'Used 40HC Wind & Water Tight Shipping Container | WWT',
+    subtitle: 'Wind & Water Tight • High Cube',
     rating: 4.8,
-    reviewCount: 156,
-    price: '$3,200.00',
-    condition: 'Used',
-    doorType: 'Double Doors at 1 End',
-    grade: 'Wind & Water Tight',
-    sku: 'U40HCDV1DDWWTFONVAB',
+    reviewCount: 198,
+    description:
+      'A dependable used high cube container option for customers who need secure storage with extra vertical space.',
     images: [
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
-      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
-      'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=800&q=80',
-      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
-    ],
-  },
-  {
-    id: 'used-20ft-cw',
-    name: 'Used 20 ft Shipping Container Standard | Cargo Worthy (CW)',
-    idLine: 'MSCU 193847 | 2202',
-    weightLine: 'MAX GROSS 67,200 lbs | TARE 4,960 lbs | CL CAP 62,240 lbs',
-    rating: 4.9,
-    reviewCount: 134,
-    price: '$2,100.00',
-    condition: 'Used',
-    doorType: 'Double Doors at 1 End',
-    grade: 'Cargo Worthy',
-    sku: 'U20SDV1DDCWFONVAB',
-    images: [
-      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
-      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80',
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
+      'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=85',
+      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
+      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=85',
     ],
   },
 ];
@@ -67,19 +55,31 @@ const PRODUCTS = [
 export default function ProductGrid() {
   return (
     <section className="py-24 bg-background">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">FEATURED</span>
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
+            FEATURED
+          </span>
+
           <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight">
-            Popular{' '}
-            <span className="text-primary">Containers</span>
+            Best Selling{' '}
+            <span className="text-primary">
+              Containers
+            </span>
           </h2>
+
+          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+            Explore popular container types customers request most often.
+          </p>
         </div>
 
-        {/* Vertical stack */}
-        <div className="flex flex-col gap-6">
-          {PRODUCTS.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {PRODUCTS.map((product, index) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              index={index}
+            />
           ))}
         </div>
       </div>
@@ -95,64 +95,67 @@ function ProductCard({ product, index }) {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="bg-card border border-border hover:border-primary/30 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden flex flex-col sm:flex-row"
+      transition={{ delay: index * 0.08, duration: 0.45 }}
     >
-      {/* LEFT — Image Slider (38% width) */}
-      <div className="sm:w-[38%] flex-shrink-0 relative bg-muted overflow-hidden" style={{ minHeight: '240px' }}>
-        <ImageSlider images={product.images} className="absolute inset-0" />
-      </div>
+      <Link
+        to={`/product/${product.id}`}
+        className="group block h-full overflow-hidden rounded-[28px] border border-border bg-card hover:border-primary/35 hover:shadow-2xl hover:shadow-black/10 transition-all duration-500"
+      >
+        <div className="relative h-[260px] overflow-hidden bg-muted">
+          <ImageSlider
+            images={product.images}
+            className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]"
+          />
 
-      {/* RIGHT — Text content */}
-      <div className="flex-1 p-6 flex flex-col justify-between">
-        <div>
-          <h3 className="font-bold text-foreground text-base leading-snug mb-1">{product.name}</h3>
-          <p className="text-xs text-muted-foreground font-mono mb-0.5">{product.idLine}</p>
-          <p className="text-xs text-muted-foreground mb-3">{product.weightLine}</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-          {/* Stars */}
-          <div className="flex items-center gap-1.5 mb-3">
-            <span className="text-sm font-bold text-foreground">{product.rating.toFixed(1)}</span>
+          <div className="absolute top-4 left-4 rounded-full bg-primary text-primary-foreground px-3 py-1.5 text-[10px] font-black tracking-[0.14em]">
+            {product.badge}
+          </div>
+        </div>
+
+        <div className="p-6">
+          <div className="flex items-center gap-1.5 mb-4">
+            <span className="text-sm font-black">
+              {product.rating.toFixed(1)}
+            </span>
+
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className={`w-4 h-4 ${i < stars ? 'fill-yellow-400 text-yellow-400' : 'fill-muted text-muted-foreground'}`} />
+                <Star
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i < stars
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-muted-foreground/30'
+                  }`}
+                />
               ))}
             </div>
-            <span className="text-xs text-muted-foreground">({product.reviewCount})</span>
+
+            <span className="text-xs text-muted-foreground">
+              ({product.reviewCount})
+            </span>
           </div>
 
-          <p className="text-3xl font-black text-foreground mb-4">{product.price}</p>
+          <h3 className="text-[25px] font-black leading-[1.05] tracking-tight mb-2 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
 
-          <div className="space-y-1 mb-5 text-sm">
-            {[
-              ['Condition', product.condition],
-              ['Door Type', product.doorType],
-              ['Grade', product.grade],
-              ['SKU', product.sku],
-            ].map(([label, value]) => (
-              <div key={label} className="flex gap-2">
-                <span className="font-semibold text-foreground w-24 flex-shrink-0">{label}:</span>
-                <span className={`text-foreground/80 ${label === 'SKU' ? 'font-mono text-xs' : ''}`}>{value}</span>
-              </div>
-            ))}
+          <p className="text-sm text-muted-foreground mb-4">
+            {product.subtitle}
+          </p>
+
+          <p className="text-[15px] leading-6 text-foreground/70 line-clamp-2 mb-6">
+            {product.description}
+          </p>
+
+          <div className="inline-flex items-center gap-2 text-primary font-bold">
+            View Container
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </div>
-
-        {/* Buttons */}
-        <div className="flex gap-3">
-          <Link to="/inventory" className="flex-1">
-            <Button variant="outline" className="w-full rounded-xl h-11 font-semibold border-2 hover:border-primary hover:text-primary transition-all">
-              Quick View
-            </Button>
-          </Link>
-          <a href="tel:+18889779085" className="flex-1">
-            <Button className="w-full rounded-xl h-11 font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 gap-2">
-              <Phone className="w-4 h-4" />
-              (888) 977-9085
-            </Button>
-          </a>
-        </div>
-      </div>
+      </Link>
     </motion.div>
   );
 }
