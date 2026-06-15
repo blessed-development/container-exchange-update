@@ -166,22 +166,19 @@ export default function ContainerConfigurator({
   useEffect(() => {
     setUserChangedConfig(false);
   }, [container?.id]);
+
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
 
-  const shouldOpen =
-    params.get('openZip') === '1' &&
-    !location?.postalCode;
+    if (params.get('openZip') !== '1') return;
 
-  if (!shouldOpen) return;
+    const timer = setTimeout(() => {
+      setZipOpen(true);
+    }, 1800);
 
-  const timer = setTimeout(() => {
-    setZipOpen(true);
-  }, 1800);
+    return () => clearTimeout(timer);
+  }, [container?.id]);
 
-  return () => clearTimeout(timer);
-
-}, [container?.id, location?.postalCode]);
   useEffect(() => {
     const raw = postalInput.trim().toUpperCase();
     const clean = cleanPostal(raw);
