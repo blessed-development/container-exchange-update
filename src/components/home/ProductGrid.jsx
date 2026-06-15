@@ -99,8 +99,8 @@ function ProductCard({ product, index }) {
         </div>
 
         <div className="absolute left-6 right-6 bottom-6">
-        <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
-             {product.name}
+          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+            {product.name}
           </h3>
 
           <div className="flex items-center gap-2 mb-5">
@@ -117,16 +117,16 @@ function ProductCard({ product, index }) {
               ))}
             </div>
 
-           <span className="text-white font-semibold text-[15px]">
-            {product.rating.toFixed(1)}
+            <span className="text-white font-semibold text-[15px]">
+              {product.rating.toFixed(1)}
             </span>
 
             <span className="text-white/60 text-[13px]">
-            ({product.reviewCount} reviews)
+              ({product.reviewCount} reviews)
             </span>
           </div>
 
-          <div className="h-11 rounded-xl bg-primary text-primary-foreground font-black flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">
+          <div className="h-11 rounded-[14px] bg-primary text-primary-foreground font-extrabold flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">
             View Container
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
