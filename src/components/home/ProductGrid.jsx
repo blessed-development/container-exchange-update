@@ -180,13 +180,13 @@ function ProductCard({ product, index }) {
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
-                    i < stars ? 'fill-primary text-primary' : 'text-white/25'
+                   i < stars ? 'fill-yellow-400 text-yellow-400' : 'text-white/25'
                   }`}
                 />
               ))}
             </div>
 
-            <span className="text-white font-semibold text-[15px]">
+            <span className="text-yellow-400 font-semibold text-[15px]">
               {product.rating.toFixed(1)}
             </span>
 
