@@ -1,49 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
-import ImageSlider from '@/components/shared/ImageSlider';
+import { Star, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const PRODUCTS = [
-  {
-    id: 'new-20-iicl',
-    name: 'New 20ft One-Trip Shipping Container | IICL',
-    rating: 5.0,
-    reviewCount: 184,
-    images: [
-      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
-      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&q=85',
-      'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=900&q=85',
-    ],
-  },
-  {
-    id: 'new-40hc-iicl',
-    name: 'New 40HC One-Trip Shipping Container | IICL',
-    rating: 5.0,
-    reviewCount: 124,
-    images: [
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
-      'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
-      'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=900&q=85',
-    ],
-  },
-  {
-    id: 'used-40hc-wwt',
-    name: 'Used 40HC Wind & Water Tight Shipping Container | WWT',
-    rating: 4.8,
-    reviewCount: 198,
-    images: [
-      'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=85',
-      'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
-      'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=85',
-    ],
-  },
+const PRODUCT_GROUPS = [
+  [
+    {
+      id: 'new-20-iicl',
+      name: 'New 20ft One-Trip Shipping Container | IICL',
+      rating: 5.0,
+      reviewCount: 184,
+      image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
+    },
+    {
+      id: 'new-40-iicl',
+      name: 'New 40ft One-Trip Shipping Container | IICL',
+      rating: 4.9,
+      reviewCount: 102,
+      image: 'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=900&q=85',
+    },
+    {
+      id: 'new-40hc-iicl',
+      name: 'New 40HC One-Trip Shipping Container | IICL',
+      rating: 5.0,
+      reviewCount: 124,
+      image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
+    },
+  ],
+  [
+    {
+      id: 'used-20-cw',
+      name: 'Used 20ft Cargo Worthy Shipping Container | CW',
+      rating: 4.8,
+      reviewCount: 142,
+      image: 'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=85',
+    },
+    {
+      id: 'used-40-cw',
+      name: 'Used 40ft Cargo Worthy Shipping Container | CW',
+      rating: 4.7,
+      reviewCount: 161,
+      image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&q=85',
+    },
+    {
+      id: 'used-40hc-wwt',
+      name: 'Used 40HC Wind & Water Tight Shipping Container | WWT',
+      rating: 4.8,
+      reviewCount: 198,
+      image: 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=85',
+    },
+  ],
 ];
 
 export default function ProductGrid() {
+  const [activeGroup, setActiveGroup] = useState(0);
+
+  const nextGroup = () => {
+    setActiveGroup((current) => (current + 1) % PRODUCT_GROUPS.length);
+  };
+
+  const prevGroup = () => {
+    setActiveGroup((current) =>
+      current === 0 ? PRODUCT_GROUPS.length - 1 : current - 1
+    );
+  };
+
   return (
-    <section className="py-24 bg-background">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section className="py-24 bg-background overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
             FEATURED
@@ -58,14 +82,61 @@ export default function ProductGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {PRODUCTS.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-            />
-          ))}
+        <button
+          type="button"
+          onClick={prevGroup}
+          className="hidden lg:flex absolute left-[-18px] top-[58%] z-20 h-12 w-12 items-center justify-center rounded-full border border-border bg-card/90 backdrop-blur-xl text-foreground hover:border-primary/50 hover:text-primary hover:scale-105 transition-all"
+          aria-label="Previous containers"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={nextGroup}
+          className="hidden lg:flex absolute right-[-18px] top-[58%] z-20 h-12 w-12 items-center justify-center rounded-full border border-border bg-card/90 backdrop-blur-xl text-foreground hover:border-primary/50 hover:text-primary hover:scale-105 transition-all"
+          aria-label="Next containers"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeGroup}
+            initial={{ opacity: 0, x: 28 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -28 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          >
+            {PRODUCT_GROUPS[activeGroup].map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+              />
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="mt-7 flex items-center justify-center gap-3 lg:hidden">
+          <button
+            type="button"
+            onClick={prevGroup}
+            className="h-11 w-11 rounded-full border border-border bg-card text-foreground flex items-center justify-center"
+            aria-label="Previous containers"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={nextGroup}
+            className="h-11 w-11 rounded-full border border-border bg-card text-foreground flex items-center justify-center"
+            aria-label="Next containers"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>
@@ -78,17 +149,17 @@ function ProductCard({ product, index }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.08, duration: 0.45 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.06, duration: 0.35 }}
     >
       <Link
         to={`/product/${product.id}`}
         className="group relative block h-[520px] overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <ImageSlider
-          images={product.images}
-          className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.04]"
+        <img
+          src={product.image}
+          alt={product.name}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
@@ -109,9 +180,7 @@ function ProductCard({ product, index }) {
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
-                    i < stars
-                      ? 'fill-primary text-primary'
-                      : 'text-white/25'
+                    i < stars ? 'fill-primary text-primary' : 'text-white/25'
                   }`}
                 />
               ))}
