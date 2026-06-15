@@ -186,7 +186,7 @@ function ProductCard({ product, index }) {
               ))}
             </div>
 
-            <span className="text-yellow-400 font-semibold text-[15px]">
+              <span className="text-white font-semibold text-[15px]">
               {product.rating.toFixed(1)}
             </span>
 
