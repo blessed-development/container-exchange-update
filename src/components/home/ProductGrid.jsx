@@ -153,7 +153,7 @@ function ProductCard({ product, index }) {
       transition={{ delay: index * 0.06, duration: 0.35 }}
     >
       <Link
-        to={`/product/${product.id}`}
+      to={`/product/${product.id}?openZip=1`}
         className="group relative block h-[520px] overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
         <img
