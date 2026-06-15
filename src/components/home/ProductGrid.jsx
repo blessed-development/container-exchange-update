@@ -99,16 +99,16 @@ function ProductCard({ product, index }) {
         </div>
 
         <div className="absolute left-6 right-6 bottom-6">
-          <h3 className="text-[26px] sm:text-[30px] font-black leading-[1.02] tracking-tight text-white mb-5">
-            {product.name}
+        <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+             {product.name}
           </h3>
 
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-2 mb-5">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-5 h-5 ${
+                  className={`w-4 h-4 ${
                     i < stars
                       ? 'fill-primary text-primary'
                       : 'text-white/25'
@@ -117,12 +117,12 @@ function ProductCard({ product, index }) {
               ))}
             </div>
 
-            <span className="text-white font-bold">
-              {product.rating.toFixed(1)}
+           <span className="text-white font-semibold text-[15px]">
+            {product.rating.toFixed(1)}
             </span>
 
-            <span className="text-white/70 text-sm">
-              ({product.reviewCount} reviews)
+            <span className="text-white/60 text-[13px]">
+            ({product.reviewCount} reviews)
             </span>
           </div>
 
