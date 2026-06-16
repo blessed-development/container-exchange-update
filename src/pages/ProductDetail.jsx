@@ -4,7 +4,6 @@ import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
-import { getSavedSelectedLocation } from '@/lib/locationEngine';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
