@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
@@ -7,7 +8,7 @@ import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronRight, Loader2 } from 'lucide-react';
+import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
   getLocalizedPrice,
@@ -30,6 +31,8 @@ const GRADE_INFO = {
   IICL: {
     label: 'IICL Certified',
     desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
+    description:
+      'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
   },
 };
 
@@ -81,12 +84,12 @@ export default function ProductDetail() {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
   );
-
-  const [showZipModal, setShowZipModal] = useState(false);
 
   const [localizedPricing, setLocalizedPricing] = useState({
     hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
@@ -128,22 +131,6 @@ export default function ProductDetail() {
       window.removeEventListener('focus', syncLocation);
       window.removeEventListener('pageshow', syncLocation);
     };
-  }, [id]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get('openZipModal') !== '1') return;
-
-    const saved = getSavedSelectedLocation();
-
-    if (saved?.postalCode) return;
-
-    const timer = setTimeout(() => {
-      setShowZipModal(true);
-    }, 1800);
-
-    return () => clearTimeout(timer);
   }, [id]);
 
   useEffect(() => {
@@ -232,9 +219,105 @@ export default function ProductDetail() {
     activeLocation?.city && activeLocation?.state
       ? `${activeLocation.city}, ${activeLocation.state}`
       : 'Your Area';
+  useEffect(() => {
+  if (!seoHeroTitle || !seoLocation) return;
 
-  return (
-    <div className="min-h-screen bg-background">
+  document.title =
+    `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
+
+  return () => {
+    document.title = 'Containers Exchange';
+  };
+}, [seoHeroTitle, seoLocation]);
+
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get('openZipModal') !== '1') return;
+
+  const saved = getSavedSelectedLocation();
+
+  if (saved?.postalCode) return;
+
+  const timer = setTimeout(() => {
+    setShowZipModal(true);
+  }, 1800);
+
+  return () => clearTimeout(timer);
+}, [id]);
+
+  const productDescription =
+    gradeInfo.description || container.short_description || '';
+
+ return (
+<>
+<Helmet>
+
+<title>
+{seoHeroTitle && seoLocation
+  ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
+  : `${productTitle} | Containers Exchange`}
+</title>
+
+<meta
+  name="description"
+  content={
+    seoHeroTitle && seoLocation
+      ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
+      : `Browse ${productTitle} shipping container pricing and availability.`
+  }
+/>
+
+<link
+  rel="canonical"
+  href={window.location.href}
+/>
+
+<meta property="og:type" content="product" />
+
+<meta
+  property="og:title"
+  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+/>
+
+<meta
+  property="og:description"
+  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+/>
+
+<meta
+  property="og:image"
+  content={productImage}
+/>
+
+<meta
+  property="og:url"
+  content={window.location.href}
+/>
+
+<meta
+  name="twitter:card"
+  content="summary_large_image"
+/>
+
+<meta
+  name="twitter:title"
+  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+/>
+
+<meta
+  name="twitter:description"
+  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+/>
+
+<meta
+  name="twitter:image"
+  content={productImage}
+/>
+
+</Helmet>
+
+<div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <nav className="sr-only">
@@ -385,28 +468,57 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              {container.short_description && (
-                <p className="text-muted-foreground leading-relaxed text-base mb-10">
-                  {container.short_description}
-                </p>
+              {productDescription && (
+                <button
+                  type="button"
+                  onClick={() => setDescriptionOpen(!descriptionOpen)}
+                  aria-expanded={descriptionOpen}
+                  className="group mb-6 md:mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-3 md:py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
+                >
+                  <div className="relative">
+                    <p
+                      className={`text-[14px] md:text-base leading-6 md:leading-7 text-muted-foreground transition-all duration-300 ${
+                        descriptionOpen ? '' : 'line-clamp-2'
+                      }`}
+                    >
+                      {productDescription}
+                    </p>
+
+                    {!descriptionOpen && (
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/95 to-transparent" />
+                    )}
+                  </div>
+
+                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] md:text-[13px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
+                    <span>
+                      {descriptionOpen ? 'Show less' : 'Read more'}
+                    </span>
+
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-300 ${
+                        descriptionOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </div>
+                </button>
               )}
 
-              <div className="hidden lg:block">
-                <ProductFAQ />
-              </div>
+             <div className="hidden lg:block -mt-4">
+  <ProductFAQ />
+</div>
             </div>
           </div>
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
-              container={container}
-              initialZip={zipCode}
-              selectedSizeIndex={selectedSizeIndex}
-              onSizeChange={setSelectedSizeIndex}
-              condition={condition}
-              onConditionChange={setCondition}
-              onPricingChange={setLocalizedPricing}
-            />
+  container={container}
+  initialZip={zipCode}
+  selectedSizeIndex={selectedSizeIndex}
+  onSizeChange={setSelectedSizeIndex}
+  condition={condition}
+  onConditionChange={setCondition}
+  onPricingChange={setLocalizedPricing}
+/>
           </div>
         </div>
       </div>
@@ -418,25 +530,31 @@ export default function ProductDetail() {
       <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
+
       {showZipModal && (
         <ZipRequiredModal
           open={showZipModal}
           onClose={() => setShowZipModal(false)}
           onSuccess={(location) => {
-            const saved = location || getSavedSelectedLocation();
+            const nextLocation = location || getSavedSelectedLocation();
 
             setShowZipModal(false);
-            setSavedLocation(saved);
-
+            setSavedLocation(nextLocation);
             setLocalizedPricing((prev) => ({
               ...prev,
-              hasLocalPrice: Boolean(saved?.postalCode),
-              location: saved,
+              hasLocalPrice: Boolean(nextLocation?.postalCode),
+              location: nextLocation,
             }));
+
+            window.dispatchEvent(
+              new CustomEvent('ce-location-change', {
+                detail: nextLocation,
+              })
+            );
           }}
         />
       )}
-
     </div>
-  );
+</>
+);
 }
