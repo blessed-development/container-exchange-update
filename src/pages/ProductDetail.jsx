@@ -29,7 +29,7 @@ const GRADE_INFO = {
   },
   IICL: {
     label: 'IICL Certified',
-    desc: 'Meets the highest international standards. Minimal wear, premium condition.',
+    desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
   },
 };
 
@@ -60,6 +60,15 @@ const getInitialSizeIndex = (container) => {
   return matchIndex >= 0 ? matchIndex : 0;
 };
 
+const buildSeoProductTitle = (title) => {
+  return String(title || '')
+    .replace(/\s*\|\s*(WWT|CW|IICL|AS[-_\s]?IS).*$/i, '')
+    .replace(/\bShipping Container\b/i, 'Shipping Containers')
+    .replace(/^Used\b/i, 'USED')
+    .replace(/^New\b/i, 'NEW')
+    .trim();
+};
+
 export default function ProductDetail() {
   const { id } = useParams();
 
@@ -72,11 +81,12 @@ export default function ProductDetail() {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
   );
+
+  const [showZipModal, setShowZipModal] = useState(false);
 
   const [localizedPricing, setLocalizedPricing] = useState({
     hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
@@ -121,21 +131,20 @@ export default function ProductDetail() {
   }, [id]);
 
   useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
 
-  if (params.get('openZipModal') !== '1') return;
+    if (params.get('openZipModal') !== '1') return;
 
-  const saved = getSavedSelectedLocation();
+    const saved = getSavedSelectedLocation();
 
-  if (saved?.postalCode) return;
+    if (saved?.postalCode) return;
 
-  const timer = setTimeout(() => {
-    setShowZipModal(true);
-  }, 1800);
+    const timer = setTimeout(() => {
+      setShowZipModal(true);
+    }, 1800);
 
-  return () => clearTimeout(timer);
-}, []);
-
+    return () => clearTimeout(timer);
+  }, [id]);
 
   useEffect(() => {
     if (!container) return;
@@ -217,24 +226,31 @@ export default function ProductDetail() {
 
   const showHeroOverlay = activeImageIndex === 0;
 
+  const seoHeroTitle = buildSeoProductTitle(productTitle);
+
+  const seoLocation =
+    activeLocation?.city && activeLocation?.state
+      ? `${activeLocation.city}, ${activeLocation.state}`
+      : 'Your Area';
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-primary transition-colors">
+          <nav className="sr-only">
+            <Link to="/">
               Home
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <Link to="/inventory" className="hover:text-primary transition-colors">
+            <Link to="/inventory">
               Inventory
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <span className="text-foreground font-medium truncate">
+            <span>
               {productTitle}
             </span>
           </nav>
@@ -249,44 +265,54 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="w-full h-[430px] object-cover transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
+                className="w-full h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
               />
 
               {showHeroOverlay && (
-                <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
-                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
-                    {productTitle}
-                  </h2>
+                <>
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/22 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/38 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
+                  </div>
 
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
-                      {container.size}ft
-                    </Badge>
-
-                    <Badge
-                      variant="outline"
-                      className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                    >
-                      {container.condition}
-                    </Badge>
-
-                    {String(container.height || '')
-                      .toLowerCase()
-                      .includes('high') && (
-                      <Badge
-                        variant="outline"
-                        className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                      >
-                        High Cube
+                  <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
+                    <div className="flex flex-wrap items-center gap-2 mb-5">
+                      <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
+                        {String(container.condition || condition).toUpperCase()}
                       </Badge>
-                    )}
 
-                    <div className="flex items-center gap-1.5 ml-1">
+                      <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                        {container.size}ft
+                      </Badge>
+
+                      {String(container.grade || '').toUpperCase() && (
+                        <Badge
+                          variant="outline"
+                          className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                        >
+                          {String(container.grade || '').toUpperCase()}
+                        </Badge>
+                      )}
+                    </div>
+
+                    <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6">
+                      {seoHeroTitle}
+                    </h1>
+
+                    <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
+                      For Sale in
+                      <span className="text-primary ml-2">
+                        {seoLocation}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-4 h-4 ${
+                            className={`w-5 h-5 ${
                               i < Math.round(container.rating || 5)
                                 ? 'fill-orange-500 text-orange-500'
                                 : 'text-white/30'
@@ -295,16 +321,16 @@ export default function ProductDetail() {
                         ))}
                       </div>
 
-                      <span className="text-sm font-semibold text-white">
+                      <span className="text-base font-black text-white">
                         {container.rating || 5}
                       </span>
 
-                      <span className="text-xs text-white/70">
+                      <span className="text-sm text-white/80">
                         ({container.review_count || 42} reviews)
                       </span>
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
@@ -392,17 +418,25 @@ export default function ProductDetail() {
       <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
-
       {showZipModal && (
         <ZipRequiredModal
           open={showZipModal}
           onClose={() => setShowZipModal(false)}
           onSuccess={(location) => {
+            const saved = location || getSavedSelectedLocation();
+
             setShowZipModal(false);
-            setSavedLocation(location || getSavedSelectedLocation());
+            setSavedLocation(saved);
+
+            setLocalizedPricing((prev) => ({
+              ...prev,
+              hasLocalPrice: Boolean(saved?.postalCode),
+              location: saved,
+            }));
           }}
         />
       )}
+
     </div>
   );
 }
