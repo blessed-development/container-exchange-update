@@ -156,9 +156,9 @@ export default function Inventory() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div className="flex gap-8">
-          <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24 bg-card border border-border rounded-2xl p-6">
+        <div className="flex gap-4 xl:gap-5">
+          <aside className="hidden lg:block w-[292px] xl:w-[305px] flex-shrink-0">
+            <div className="sticky top-24 bg-card border border-border rounded-[24px] p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4" />
@@ -184,7 +184,7 @@ export default function Inventory() {
             </div>
           </aside>
 
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex flex-col gap-5 mb-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
