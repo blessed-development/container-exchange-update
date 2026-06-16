@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin } from 'lucide-react';
 import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
 import { getSavedSelectedLocation, saveSelectedLocation } from '@/lib/locationEngine';
-import { motion } from 'framer-motion';
 
 const getZipValue = (location) =>
   location?.postalCode || location?.zip || location?.zipCode || '';
@@ -17,10 +16,9 @@ const formatLocationDisplay = (location, fallbackZip = '') => {
   const zip = getZipValue(location) || fallbackZip || '';
   const city = location?.city || '';
   const state = getStateValue(location);
-  const country = 'USA';
 
-  if (city && state && zip) return `${city}, ${state} ${zip}, ${country}`;
-  if (city && zip) return `${city} ${zip}, ${country}`;
+  if (city && state && zip) return `${city}, ${state} ${zip}, USA`;
+  if (city && zip) return `${city} ${zip}, USA`;
   if (zip) return zip;
   return '';
 };
@@ -31,48 +29,19 @@ export default function ZipCodeSearch({
   className = '',
 }) {
   const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const timerRef = useRef(null);
   const isHero = variant === 'hero';
-  const detectTimer = useRef(null);
 
-  const [selectedLocation, setSelectedLocation] = useState(() => {
-    return getSavedSelectedLocation?.() || null;
-  });
+  const saved = getSavedSelectedLocation?.();
 
-  const [zip, setZip] = useState(() => {
-    const saved = getSavedSelectedLocation?.();
-    return getZipValue(saved);
-  });
-
+  const [zip, setZip] = useState(() => getZipValue(saved));
+  const [selectedLocation, setSelectedLocation] = useState(() => saved || null);
+  const [inputValue, setInputValue] = useState(() =>
+    saved ? formatLocationDisplay(saved) : ''
+  );
   const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
-
-  const locationDisplay = useMemo(() => {
-    if (isDetecting) return 'Loading...';
-    return formatLocationDisplay(selectedLocation, zip);
-  }, [isDetecting, selectedLocation, zip]);
-
-  useEffect(() => {
-    const syncSavedLocation = (event) => {
-      const saved = event?.detail || getSavedSelectedLocation?.();
-      const savedZip = getZipValue(saved);
-
-      if (savedZip) {
-        setZip(savedZip);
-        setSelectedLocation(saved);
-      }
-    };
-
-    syncSavedLocation();
-
-    window.addEventListener('ce-location-change', syncSavedLocation);
-    window.addEventListener('storage', syncSavedLocation);
-
-    return () => {
-      window.removeEventListener('ce-location-change', syncSavedLocation);
-      window.removeEventListener('storage', syncSavedLocation);
-      if (detectTimer.current) clearTimeout(detectTimer.current);
-    };
-  }, []);
 
   const buildLocationPayload = (value, loc = null) => {
     const finalLocation = {
@@ -91,31 +60,104 @@ export default function ZipCodeSearch({
     return finalLocation;
   };
 
-  const handleZipChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+  const moveCursorToEnd = () => {
+    requestAnimationFrame(() => {
+      const el = inputRef.current;
+      if (!el) return;
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
+  };
 
-    setZip(value);
-    setError('');
-    setSelectedLocation(null);
+  useEffect(() => {
+    const syncSavedLocation = (event) => {
+      const next = event?.detail || getSavedSelectedLocation?.();
+      const nextZip = getZipValue(next);
 
-    if (detectTimer.current) clearTimeout(detectTimer.current);
+      if (nextZip) {
+        setZip(nextZip);
+        setSelectedLocation(next);
+        setInputValue(formatLocationDisplay(next, nextZip));
+      }
+    };
 
-    if (value.length !== 5) {
-      setIsDetecting(false);
-      return;
-    }
+    syncSavedLocation();
+
+    window.addEventListener('ce-location-change', syncSavedLocation);
+    window.addEventListener('storage', syncSavedLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncSavedLocation);
+      window.removeEventListener('storage', syncSavedLocation);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  const detectZip = (value) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     setIsDetecting(true);
+    setInputValue('Loading...');
 
-    detectTimer.current = setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       const loc = getLocationFromZip(value);
 
-      if (loc) {
-        setSelectedLocation(buildLocationPayload(value, loc));
+      if (!loc) {
+        setIsDetecting(false);
+        setSelectedLocation(null);
+        setInputValue(value);
+        setError('Location not found. Please check ZIP code.');
+        return;
       }
 
+      const finalLocation = buildLocationPayload(value, loc);
+      const display = formatLocationDisplay(finalLocation, value);
+
+      setSelectedLocation(finalLocation);
+      setInputValue(display);
       setIsDetecting(false);
+      setError('');
+      moveCursorToEnd();
     }, 1000);
+  };
+
+  const handleChange = (e) => {
+    const raw = e.target.value;
+
+    setError('');
+
+    const digits = raw.replace(/\D/g, '').slice(0, 5);
+
+    setInputValue(digits);
+    setZip(digits);
+    setSelectedLocation(null);
+
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    if (digits.length === 5) {
+      detectZip(digits);
+    } else {
+      setIsDetecting(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    const isAddressShowing =
+      selectedLocation && inputValue === formatLocationDisplay(selectedLocation, zip);
+
+    if (!isAddressShowing) return;
+
+    if (/^\d$/.test(e.key)) {
+      e.preventDefault();
+      setZip(e.key);
+      setInputValue(e.key);
+      setSelectedLocation(null);
+      setError('');
+    }
+  };
+
+  const handleFocus = () => {
+    moveCursorToEnd();
   };
 
   const handleSubmit = (e) => {
@@ -127,10 +169,9 @@ export default function ZipCodeSearch({
     }
 
     const loc = getLocationFromZip(zip);
-    const finalLocation = buildLocationPayload(zip, loc || selectedLocation);
+    const finalLocation = selectedLocation || buildLocationPayload(zip, loc);
 
     saveSelectedLocation(finalLocation);
-    setSelectedLocation(finalLocation);
 
     window.dispatchEvent(
       new CustomEvent('ce-location-change', {
@@ -154,32 +195,20 @@ export default function ZipCodeSearch({
           </div>
 
           <Input
+            ref={inputRef}
             type="text"
             inputMode="numeric"
-            value={zip}
-            onChange={handleZipChange}
+            value={inputValue}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
             placeholder="ENTER ZIP CODE"
-            className={`pl-12 pr-4 font-mono tracking-wider border-0 rounded-sm ${
-              locationDisplay && zip.length === 5 ? 'text-transparent caret-white' : ''
-            } ${
+            className={`pl-12 pr-4 border-0 rounded-sm ${
               isHero
-                ? 'h-14 text-lg bg-white/10 placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
+                ? 'h-14 text-base bg-white/10 text-white placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
                 : 'h-12 bg-secondary placeholder:text-muted-foreground'
             }`}
           />
-
-          {locationDisplay && zip.length === 5 && (
-            <motion.span
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.18, ease: 'easeOut' }}
-              className={`absolute left-12 right-4 top-1/2 -translate-y-1/2 text-xs font-mono whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none ${
-                isDetecting ? 'text-white/55' : 'text-primary'
-              }`}
-            >
-              {locationDisplay}
-            </motion.span>
-          )}
         </div>
 
         <Button
