@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Star,
@@ -7,6 +7,9 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
+import { getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const PRODUCT_GROUPS = [
   [
@@ -158,68 +161,106 @@ function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
 
+  const [showZipModal, setShowZipModal] = useState(false);
+  const [savedLocation, setSavedLocation] = useState(() =>
+    getSavedSelectedLocation()
+  );
+
+  useEffect(() => {
+    const syncLocation = (event) => {
+      setSavedLocation(event?.detail || getSavedSelectedLocation());
+    };
+
+    window.addEventListener('ce-location-change', syncLocation);
+    window.addEventListener('storage', syncLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncLocation);
+      window.removeEventListener('storage', syncLocation);
+    };
+  }, []);
+
   const handleCardClick = () => {
-    navigate(`/product/${product.id}?openZipModal=1`);
+    if (!savedLocation?.postalCode) {
+      setShowZipModal(true);
+      return;
+    }
+
+    navigate(`/product/${product.id}`);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.35 }}
-    >
-      <button
-        type="button"
-        onClick={handleCardClick}
-        className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.06, duration: 0.35 }}
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-        />
+        <button
+          type="button"
+          onClick={handleCardClick}
+          className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
 
-        <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
-          BEST SELLER
-        </div>
+          <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
+            BEST SELLER
+          </div>
 
-        <div className="absolute left-6 right-6 bottom-6">
-          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
-            {product.name}
-          </h3>
+          <div className="absolute left-6 right-6 bottom-6">
+            <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+              {product.name}
+            </h3>
 
-          <div className="flex items-center gap-2 mb-5">
-            <div className="flex">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className={`w-4 h-4 ${
-                    i < stars
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-white/25'
-                  }`}
-                />
-              ))}
+            <div className="flex items-center gap-2 mb-5">
+              <div className="flex">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < stars
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-white/25'
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <span className="text-white font-semibold text-[15px]">
+                {product.rating.toFixed(1)}
+              </span>
+
+              <span className="text-white/60 text-[13px]">
+                ({product.reviewCount} reviews)
+              </span>
             </div>
 
-            <span className="text-white font-semibold text-[15px]">
-              {product.rating.toFixed(1)}
-            </span>
-
-            <span className="text-white/60 text-[13px]">
-              ({product.reviewCount} reviews)
-            </span>
+            <div className="h-11 rounded-[14px] bg-primary text-primary-foreground font-extrabold flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">
+              View Container
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </div>
           </div>
+        </button>
+      </motion.div>
 
-          <div className="h-11 rounded-[14px] bg-primary text-primary-foreground font-extrabold flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">
-            View Container
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </div>
-        </div>
-      </button>
-    </motion.div>
+      {showZipModal && (
+        <ZipRequiredModal
+          open={showZipModal}
+          onClose={() => setShowZipModal(false)}
+          onSuccess={(location) => {
+            setShowZipModal(false);
+            setSavedLocation(location || getSavedSelectedLocation());
+            navigate(`/product/${product.id}`);
+          }}
+        />
+      )}
+    </>
   );
 }
