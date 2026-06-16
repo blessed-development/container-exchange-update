@@ -140,44 +140,35 @@ export default function ZipCodeSearch({
 
   const handleChange = (e) => {
     const rawValue = e.target.value;
-    const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
+    const pureZip = rawValue.trim();
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
     setError('');
-    setZip(digits);
     setInputValue(rawValue);
 
-    const isFullSavedAddress =
-      selectedLocation &&
-      rawValue === formatLocationDisplay(selectedLocation, zip);
+    const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
+    setZip(digits);
 
-    if (!isFullSavedAddress) {
+    if (selectedLocation) {
       setSelectedLocation(null);
     }
 
-    if (digits.length === 5 && rawValue.replace(/\D/g, '') === digits) {
-      detectZip(digits);
-      return;
-    }
-
     setIsDetecting(false);
+
+    if (/^\d{5}$/.test(pureZip)) {
+      detectZip(pureZip);
+    }
   };
 
-  const handleKeyDown = (e) => {
-    const addressShowing =
-      selectedLocation &&
-      inputValue === formatLocationDisplay(selectedLocation, zip);
+  const handleKeyDown = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
-    if (!addressShowing) return;
-
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-
+    if (selectedLocation) {
       setSelectedLocation(null);
       setIsDetecting(false);
       setError('');
