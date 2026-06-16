@@ -18,11 +18,15 @@ import {
 const GRADE_INFO = {
   AS_IS: {
     label: 'As-Is',
-    desc: 'Container may have cosmetic and structural issues. Sold as-is with no guarantees.',
+    desc: 'The pictured unit is in AS-IS condition. Doors, floors, seals, and roof are functional and the unit is waterproof.',
+    description:
+      'Budget-friendly 20ft shipping containers available in used, as-is condition. Featuring visible exterior wear and prior-use damage, these units are heavily discounted. Recommended for basic storage or temporary shelter where pristine condition is not required.',
   },
   WWT: {
     label: 'Wind & Water Tight',
-    desc: 'Guaranteed not to leak. May have dings, dents, and surface rust. Doors in working order.',
+    desc: 'Each Unit is in Wind & Water Tight condition Doors, floors, seals and roof have been independently inspected and are guaranteed to be fully capable of functional dry storage with a no leak guarantee.',
+    description:
+      'Units passed inspection by the third party repair staff to be in cargo transport condition for dry storage. This means functional doors, floors, seals, locking capability, and no leaks guaranteed.',
   },
   CW: {
     label: 'Cargo Worthy B Grade',
