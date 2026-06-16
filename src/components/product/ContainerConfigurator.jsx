@@ -167,17 +167,17 @@ export default function ContainerConfigurator({
     setUserChangedConfig(false);
   }, [container?.id]);
 
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
 
-  if (params.get('openZipModal') !== '1') return;
+    if (params.get('openZip') !== '1') return;
 
-  const timer = setTimeout(() => {
-    setZipOpen(true);
-  }, 1800);
+    const timer = setTimeout(() => {
+      setZipOpen(true);
+    }, 1800);
 
-  return () => clearTimeout(timer);
-}, [container?.id]);
+    return () => clearTimeout(timer);
+  }, [container?.id]);
 
   useEffect(() => {
     const raw = postalInput.trim().toUpperCase();
