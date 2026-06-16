@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,29 +7,58 @@ import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
 import { getSavedSelectedLocation, saveSelectedLocation } from '@/lib/locationEngine';
 import { motion } from 'framer-motion';
 
+const getZipValue = (location) => {
+  return location?.postalCode || location?.zip || location?.zipCode || '';
+};
+
+const getStateValue = (location) => {
+  return location?.stateCode || location?.state || '';
+};
+
+const formatLocationDisplay = (location, fallbackZip = '') => {
+  const zip = getZipValue(location) || fallbackZip || '';
+  const city = location?.city || '';
+  const state = getStateValue(location);
+  const country = location?.country === 'US' || location?.country === 'USA'
+    ? 'USA'
+    : location?.country || 'USA';
+
+  if (city && state && zip) return `${city}, ${state} ${zip}, ${country}`;
+  if (city && zip) return `${city} ${zip}, ${country}`;
+  if (city && state) return `${city}, ${state}`;
+  if (zip) return zip;
+  return '';
+};
+
 export default function ZipCodeSearch({
   variant = 'hero',
   onZipSubmit,
   className = '',
 }) {
+  const [selectedLocation, setSelectedLocation] = useState(() => {
+    return getSavedSelectedLocation?.() || null;
+  });
+
   const [zip, setZip] = useState(() => {
     const saved = getSavedSelectedLocation?.();
-    return saved?.postalCode || saved?.zip || '';
+    return getZipValue(saved);
   });
+
   const [error, setError] = useState('');
-  const [locationName, setLocationName] = useState(() => {
-    const saved = getSavedSelectedLocation?.();
-    return saved?.city || '';
-  });
   const navigate = useNavigate();
+
+  const locationDisplay = useMemo(() => {
+    return formatLocationDisplay(selectedLocation, zip);
+  }, [selectedLocation, zip]);
 
   useEffect(() => {
     const syncSavedLocation = (event) => {
       const saved = event?.detail || getSavedSelectedLocation?.();
+      const savedZip = getZipValue(saved);
 
-      if (saved?.postalCode || saved?.zip) {
-        setZip(saved.postalCode || saved.zip);
-        setLocationName(saved.city || '');
+      if (savedZip) {
+        setZip(savedZip);
+        setSelectedLocation(saved);
       }
     };
 
@@ -54,10 +83,30 @@ export default function ZipCodeSearch({
       const loc = getLocationFromZip(value);
 
       if (loc) {
-        setLocationName(loc.city);
+        setSelectedLocation({
+          postalCode: value,
+          zip: value,
+          zipCode: value,
+          city: loc.city || '',
+          state: loc.state || loc.stateCode || '',
+          stateCode: loc.stateCode || loc.state || '',
+          country: 'US',
+          formattedAddress: formatLocationDisplay(
+            {
+              postalCode: value,
+              city: loc.city || '',
+              state: loc.state || loc.stateCode || '',
+              stateCode: loc.stateCode || loc.state || '',
+              country: 'US',
+            },
+            value
+          ),
+        });
+      } else {
+        setSelectedLocation(null);
       }
     } else {
-      setLocationName('');
+      setSelectedLocation(null);
     }
   };
 
@@ -71,26 +120,31 @@ export default function ZipCodeSearch({
 
     const loc = getLocationFromZip(zip);
 
-    const selectedLocation = {
+    const finalLocation = {
       postalCode: zip,
       zip,
-      city: loc?.city || locationName || '',
-      state: loc?.state || '',
+      zipCode: zip,
+      city: loc?.city || selectedLocation?.city || '',
+      state: loc?.state || loc?.stateCode || selectedLocation?.state || selectedLocation?.stateCode || '',
+      stateCode: loc?.stateCode || loc?.state || selectedLocation?.stateCode || selectedLocation?.state || '',
       country: 'US',
     };
 
-    saveSelectedLocation(selectedLocation);
-    setZip(selectedLocation.postalCode);
-    setLocationName(selectedLocation.city || '');
+    finalLocation.formattedAddress = formatLocationDisplay(finalLocation, zip);
+    finalLocation.displayName = finalLocation.formattedAddress;
+
+    saveSelectedLocation(finalLocation);
+    setZip(finalLocation.postalCode);
+    setSelectedLocation(finalLocation);
 
     window.dispatchEvent(
       new CustomEvent('ce-location-change', {
-        detail: selectedLocation,
+        detail: finalLocation,
       })
     );
 
     if (onZipSubmit) {
-      onZipSubmit(zip, selectedLocation);
+      onZipSubmit(zip, finalLocation);
     } else {
       navigate(`/inventory?zip=${encodeURIComponent(zip)}`);
     }
@@ -113,20 +167,20 @@ export default function ZipCodeSearch({
             value={zip}
             onChange={handleZipChange}
             placeholder="ENTER ZIP CODE"
-            className={`pl-12 font-mono tracking-wider border-0 rounded-sm ${
+            className={`pl-12 pr-56 font-mono tracking-wider border-0 rounded-sm ${
               isHero
                 ? 'h-14 text-lg bg-white/10 text-white placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
                 : 'h-12 bg-secondary text-secondary-foreground placeholder:text-muted-foreground'
             }`}
           />
 
-          {locationName && zip.length >= 3 && (
+          {locationDisplay && zip.length >= 3 && (
             <motion.span
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-primary"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-primary whitespace-nowrap pointer-events-none"
             >
-              {locationName}
+              {locationDisplay}
             </motion.span>
           )}
 
