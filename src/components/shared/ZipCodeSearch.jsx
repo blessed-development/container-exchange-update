@@ -208,15 +208,15 @@ export default function ZipCodeSearch({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={className}>
+    <form onSubmit={handleSubmit} className={`w-full ${className}`}>
       <div
         className={
           isCompact
-            ? 'flex flex-col gap-2'
+            ? 'flex flex-col gap-3 w-full'
             : `flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-xl' : ''}`
         }
       >
-        <div className="relative min-w-0 flex-1">
+        <div className="relative w-full min-w-0">
           <div
             className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none ${
               isCompact ? 'text-white/25' : 'text-white/30'
@@ -234,9 +234,9 @@ export default function ZipCodeSearch({
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             placeholder={placeholder}
-            className={`border transition-all duration-500 ${
+            className={`w-full border transition-all duration-500 ${
               isCompact
-                ? 'w-full h-12 pl-11 pr-4 rounded-2xl bg-white/[0.06] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.09] focus:border-white/20 focus:ring-0'
+                ? 'h-[58px] pl-12 pr-5 rounded-[18px] bg-white/[0.04] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.08] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
                 : isHero
                   ? 'h-14 pl-12 pr-5 rounded-2xl text-[15px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
                   : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
@@ -249,7 +249,7 @@ export default function ZipCodeSearch({
           disabled={!canSubmit}
           className={`font-medium transition-all duration-500 ${
             isCompact
-              ? 'h-12 w-full px-5 rounded-2xl bg-primary hover:bg-primary/95 text-primary-foreground text-[13px] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed'
+              ? 'h-[54px] w-full px-5 rounded-[18px] bg-primary hover:bg-primary/95 text-primary-foreground text-[13px] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed'
               : isHero
                 ? 'h-14 px-8 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[15px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
                 : 'h-12 px-6 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
