@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin } from 'lucide-react';
 import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
-import { saveSelectedLocation } from '@/lib/locationEngine';
+import { getSavedSelectedLocation, saveSelectedLocation } from '@/lib/locationEngine';
 import { motion } from 'framer-motion';
 
 export default function ZipCodeSearch({
@@ -12,10 +12,37 @@ export default function ZipCodeSearch({
   onZipSubmit,
   className = '',
 }) {
-  const [zip, setZip] = useState('');
+  const [zip, setZip] = useState(() => {
+    const saved = getSavedSelectedLocation?.();
+    return saved?.postalCode || saved?.zip || '';
+  });
   const [error, setError] = useState('');
-  const [locationName, setLocationName] = useState('');
+  const [locationName, setLocationName] = useState(() => {
+    const saved = getSavedSelectedLocation?.();
+    return saved?.city || '';
+  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const syncSavedLocation = (event) => {
+      const saved = event?.detail || getSavedSelectedLocation?.();
+
+      if (saved?.postalCode || saved?.zip) {
+        setZip(saved.postalCode || saved.zip);
+        setLocationName(saved.city || '');
+      }
+    };
+
+    syncSavedLocation();
+
+    window.addEventListener('ce-location-change', syncSavedLocation);
+    window.addEventListener('storage', syncSavedLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncSavedLocation);
+      window.removeEventListener('storage', syncSavedLocation);
+    };
+  }, []);
 
   const handleZipChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 5);
@@ -44,20 +71,28 @@ export default function ZipCodeSearch({
 
     const loc = getLocationFromZip(zip);
 
-    if (loc) {
-      saveSelectedLocation({
-        postalCode: zip,
-        zip,
-        city: loc.city,
-        state: loc.state,
-        country: 'US',
-      });
-    }
+    const selectedLocation = {
+      postalCode: zip,
+      zip,
+      city: loc?.city || locationName || '',
+      state: loc?.state || '',
+      country: 'US',
+    };
+
+    saveSelectedLocation(selectedLocation);
+    setZip(selectedLocation.postalCode);
+    setLocationName(selectedLocation.city || '');
+
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', {
+        detail: selectedLocation,
+      })
+    );
 
     if (onZipSubmit) {
-      onZipSubmit(zip);
+      onZipSubmit(zip, selectedLocation);
     } else {
-      navigate(`/inventory?zip=${zip}`);
+      navigate(`/inventory?zip=${encodeURIComponent(zip)}`);
     }
   };
 
