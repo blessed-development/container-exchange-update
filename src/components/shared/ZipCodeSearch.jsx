@@ -23,7 +23,6 @@ const formatLocationDisplay = (location, fallbackZip = '') => {
   if (city && state && zip) return `${city}, ${state} ${zip}, USA`;
   if (city && zip) return `${city} ${zip}, USA`;
   if (zip) return zip;
-
   return '';
 };
 
@@ -40,12 +39,23 @@ export default function ZipCodeSearch({
   const savedLocation = getSavedSelectedLocation?.();
 
   const [zip, setZip] = useState(() => getZipValue(savedLocation));
-  const [selectedLocation, setSelectedLocation] = useState(() => savedLocation || null);
+  const [selectedLocation, setSelectedLocation] = useState(
+    () => savedLocation || null
+  );
   const [inputValue, setInputValue] = useState(() =>
     savedLocation ? formatLocationDisplay(savedLocation) : ''
   );
   const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
+
+  const moveCursorToEnd = () => {
+    requestAnimationFrame(() => {
+      const el = inputRef.current;
+      if (!el) return;
+      const len = el.value.length;
+      el.setSelectionRange(len, len);
+    });
+  };
 
   const buildLocationPayload = (value, detected = null) => {
     const finalLocation = {
@@ -58,21 +68,13 @@ export default function ZipCodeSearch({
       country: 'US',
     };
 
-    finalLocation.formattedAddress = formatLocationDisplay(finalLocation, value);
+    finalLocation.formattedAddress = formatLocationDisplay(
+      finalLocation,
+      value
+    );
     finalLocation.displayName = finalLocation.formattedAddress;
 
     return finalLocation;
-  };
-
-  const moveCursorToEnd = () => {
-    requestAnimationFrame(() => {
-      const el = inputRef.current;
-      if (!el) return;
-
-      const length = el.value.length;
-      el.focus();
-      el.setSelectionRange(length, length);
-    });
   };
 
   useEffect(() => {
@@ -138,22 +140,30 @@ export default function ZipCodeSearch({
 
   const handleChange = (e) => {
     const rawValue = e.target.value;
-    const digits = rawValue.replace(/\D/g, '').slice(0, 5);
+    const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
     setError('');
-    setSelectedLocation(null);
     setZip(digits);
-    setInputValue(digits);
+    setInputValue(rawValue);
 
-    if (digits.length === 5) {
-      detectZip(digits);
-    } else {
-      setIsDetecting(false);
+    const isFullSavedAddress =
+      selectedLocation &&
+      rawValue === formatLocationDisplay(selectedLocation, zip);
+
+    if (!isFullSavedAddress) {
+      setSelectedLocation(null);
     }
+
+    if (digits.length === 5 && rawValue.replace(/\D/g, '') === digits) {
+      detectZip(digits);
+      return;
+    }
+
+    setIsDetecting(false);
   };
 
   const handleKeyDown = (e) => {
@@ -163,15 +173,11 @@ export default function ZipCodeSearch({
 
     if (!addressShowing) return;
 
-    if (/^\d$/.test(e.key)) {
-      e.preventDefault();
-
+    if (e.key === 'Backspace' || e.key === 'Delete') {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
 
-      setZip(e.key);
-      setInputValue(e.key);
       setSelectedLocation(null);
       setIsDetecting(false);
       setError('');
@@ -184,15 +190,13 @@ export default function ZipCodeSearch({
 
   const canSubmit =
     isValidZipCode(zip) &&
-    selectedLocation &&
+    Boolean(selectedLocation) &&
     !isDetecting;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!canSubmit) {
-      return;
-    }
+    if (!canSubmit) return;
 
     saveSelectedLocation(selectedLocation);
 
@@ -224,7 +228,7 @@ export default function ZipCodeSearch({
           <Input
             ref={inputRef}
             type="text"
-            inputMode="numeric"
+            inputMode="text"
             value={inputValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -248,14 +252,16 @@ export default function ZipCodeSearch({
           }`}
         >
           <Search className="w-5 h-5 mr-2" />
-          {isDetecting ? 'LOADING...' : isHero ? 'LOCATE INVENTORY' : 'FIND PRICING'}
+          {isDetecting
+            ? 'LOADING...'
+            : isHero
+              ? 'LOCATE INVENTORY'
+              : 'FIND PRICING'}
         </Button>
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm font-mono mt-2">
-          {error}
-        </p>
+        <p className="text-red-400 text-sm font-mono mt-2">{error}</p>
       )}
     </form>
   );
