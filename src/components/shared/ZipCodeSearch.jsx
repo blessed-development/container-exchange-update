@@ -167,10 +167,12 @@ export default function ZipCodeSearch({
             value={zip}
             onChange={handleZipChange}
             placeholder="ENTER ZIP CODE"
-            className={`pl-12 pr-56 font-mono tracking-wider border-0 rounded-sm ${
+            className={`pl-12 pr-4 font-mono tracking-wider border-0 rounded-sm ${
+              locationDisplay && zip.length >= 3 ? 'text-transparent caret-white' : ''
+            } ${
               isHero
-                ? 'h-14 text-lg bg-white/10 text-white placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
-                : 'h-12 bg-secondary text-secondary-foreground placeholder:text-muted-foreground'
+                ? 'h-14 text-lg bg-white/10 placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
+                : 'h-12 bg-secondary placeholder:text-muted-foreground'
             }`}
           />
 
@@ -178,7 +180,7 @@ export default function ZipCodeSearch({
             <motion.span
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-primary whitespace-nowrap pointer-events-none"
+              className="absolute left-12 right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-primary whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none"
             >
               {locationDisplay}
             </motion.span>
