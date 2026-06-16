@@ -212,7 +212,7 @@ export default function ZipCodeSearch({
         }`}
       >
         <div className="relative flex-1">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30">
             <MapPin className="w-5 h-5" />
           </div>
 
@@ -224,10 +224,10 @@ export default function ZipCodeSearch({
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
-            placeholder="ENTER ZIP CODE"
-            className={`pl-12 pr-4 border-0 rounded-sm ${
+            placeholder="Enter ZIP code"
+            className={`pl-12 pr-5 border border-white/10 rounded-2xl transition-all duration-500 shadow-[0_6px_30px_rgba(0,0,0,0.12)] ${
               isHero
-                ? 'h-14 text-base bg-white/10 text-white placeholder:text-white/30 focus:bg-white/15 focus:ring-primary'
+                ? 'h-14 text-[15px] font-medium bg-white/[0.07] backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0'
                 : 'h-12 bg-secondary placeholder:text-muted-foreground'
             }`}
           />
@@ -236,23 +236,29 @@ export default function ZipCodeSearch({
         <Button
           type="submit"
           disabled={!canSubmit}
-          className={`font-semibold tracking-wider rounded-sm ${
+          className={`font-medium rounded-2xl transition-all duration-500 ${
             isHero
-              ? 'h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground text-base disabled:opacity-50 disabled:cursor-not-allowed'
+              ? 'h-14 px-8 bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[15px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
               : 'h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
           }`}
         >
           <Search className="w-5 h-5 mr-2" />
           {isDetecting
-            ? 'LOADING...'
+            ? 'Loading...'
             : isHero
-              ? 'LOCATE INVENTORY'
-              : 'FIND PRICING'}
+              ? 'Locate inventory'
+              : 'Find pricing'}
         </Button>
       </div>
 
+      {selectedLocation && !isDetecting && (
+        <p className="mt-2 ml-1 text-[13px] text-white/45">
+          Showing containers near {selectedLocation.city}
+        </p>
+      )}
+
       {error && (
-        <p className="text-red-400 text-sm font-mono mt-2">{error}</p>
+        <p className="text-red-400 text-sm font-medium mt-2">{error}</p>
       )}
     </form>
   );
