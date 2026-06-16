@@ -25,11 +25,13 @@ const GRADE_INFO = {
     desc: 'Guaranteed not to leak. May have dings, dents, and surface rust. Doors in working order.',
   },
   CW: {
-    label: 'Cargo Worthy',
-    desc: 'Certified for international shipping. Structurally sound and watertight. Inspected by certified surveyor.',
+    label: 'Cargo Worthy B Grade',
+    desc: 'Each Unit is in USED Cargo Worthy B Grade condition.  required to be waterproof, have functional doors, weight bearing floors, and have less than 1 inch dents. good functional shape for export, dry storage, or other uses requiring a structurally sound shipping container.',
+   description:
+   'The cargo worthy are 15-19 years old that came into port with goods from overseas. They were inspected prior to the sailing to be in good structure to carry goods across the ocean to the USA offload site. The cargo worthy designation has nothing to do with aesthetics, surface rust content, or any other visual component.', 
   },
   IICL: {
-    label: 'IICL Certified',
+    label: 'NEW IICL',
     desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
     description:
       'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
