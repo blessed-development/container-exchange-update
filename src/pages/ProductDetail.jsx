@@ -81,8 +81,15 @@ const buildSeoProductTitle = (title) => {
 export default function ProductDetail() {
   const { id } = useParams();
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const zipCode = urlParams.get('zip') || '';
+  const [zipCode, setZipCode] = useState(() => {
+    const saved = getSavedSelectedLocation();
+
+    return (
+      saved?.postalCode ||
+      new URLSearchParams(window.location.search).get('zip') ||
+      ''
+    );
+  });
 
   const container =
     inventoryProducts.find((item) => item.id === id) || null;
@@ -116,6 +123,10 @@ export default function ProductDetail() {
       const saved = getSavedSelectedLocation();
 
       setSavedLocation(saved);
+
+      if (saved?.postalCode) {
+        setZipCode(saved.postalCode);
+      }
 
       setLocalizedPricing((prev) => ({
         ...prev,
@@ -517,6 +528,7 @@ useEffect(() => {
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
+  key={`${container.id}-${zipCode || 'no-zip'}`}
   container={container}
   initialZip={zipCode}
   selectedSizeIndex={selectedSizeIndex}
@@ -546,6 +558,11 @@ useEffect(() => {
 
             setShowZipModal(false);
             setSavedLocation(nextLocation);
+
+            if (nextLocation?.postalCode) {
+              setZipCode(nextLocation.postalCode);
+            }
+
             setLocalizedPricing((prev) => ({
               ...prev,
               hasLocalPrice: Boolean(nextLocation?.postalCode),
