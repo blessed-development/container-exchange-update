@@ -20,7 +20,7 @@ const GRADE_INFO = {
     label: 'As-Is',
     desc: 'The pictured unit is in AS-IS condition. Doors, floors, seals, and roof are functional and the unit is waterproof.',
     description:
-      'Budget-friendly 20ft shipping containers available in used, as-is condition. Featuring visible exterior wear and prior-use damage, these units are heavily discounted. Recommended for basic storage or temporary shelter where pristine condition is not required.',
+      'Budget-friendly containers available in used, as-is condition. Featuring visible exterior wear and prior-use damage, these units are heavily discounted. Recommended for basic storage or temporary shelter where pristine condition is not required.',
   },
   WWT: {
     label: 'Wind & Water Tight',
