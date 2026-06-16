@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -41,6 +41,7 @@ export default function ZipCodeSearch({
 }) {
   const navigate = useNavigate();
   const isHero = variant === 'hero';
+  const detectTimer = useRef(null);
 
   const [selectedLocation, setSelectedLocation] = useState(() => {
     return getSavedSelectedLocation?.() || null;
@@ -51,11 +52,13 @@ export default function ZipCodeSearch({
     return getZipValue(saved);
   });
 
+  const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
 
   const locationDisplay = useMemo(() => {
+    if (isDetecting) return 'Loading...';
     return formatLocationDisplay(selectedLocation, zip);
-  }, [selectedLocation, zip]);
+  }, [isDetecting, selectedLocation, zip]);
 
   useEffect(() => {
     const syncSavedLocation = (event) => {
@@ -76,6 +79,10 @@ export default function ZipCodeSearch({
     return () => {
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
+
+      if (detectTimer.current) {
+        clearTimeout(detectTimer.current);
+      }
     };
   }, []);
 
@@ -106,13 +113,20 @@ export default function ZipCodeSearch({
     return finalLocation;
   };
 
-  const handleZipChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+  const detectZipLocation = (value) => {
+    if (detectTimer.current) {
+      clearTimeout(detectTimer.current);
+    }
 
-    setZip(value);
-    setError('');
+    if (value.length < 3) {
+      setIsDetecting(false);
+      setSelectedLocation(null);
+      return;
+    }
 
-    if (value.length >= 3) {
+    setIsDetecting(true);
+
+    detectTimer.current = setTimeout(() => {
       const detectedLocation = getLocationFromZip(value);
 
       if (detectedLocation) {
@@ -120,9 +134,27 @@ export default function ZipCodeSearch({
       } else {
         setSelectedLocation(null);
       }
-    } else {
-      setSelectedLocation(null);
-    }
+
+      setIsDetecting(false);
+    }, 450);
+  };
+
+  const handleZipChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+
+    setZip(value);
+    setError('');
+    detectZipLocation(value);
+  };
+
+  const persistLocation = (location) => {
+    saveSelectedLocation(location);
+
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', {
+        detail: location,
+      })
+    );
   };
 
   const handleSubmit = (e) => {
@@ -136,21 +168,20 @@ export default function ZipCodeSearch({
     const detectedLocation = getLocationFromZip(zip);
     const finalLocation = buildLocationPayload(zip, detectedLocation);
 
-    saveSelectedLocation(finalLocation);
-    setZip(finalLocation.postalCode);
-    setSelectedLocation(finalLocation);
+    setIsDetecting(true);
 
-    window.dispatchEvent(
-      new CustomEvent('ce-location-change', {
-        detail: finalLocation,
-      })
-    );
+    setTimeout(() => {
+      persistLocation(finalLocation);
+      setZip(finalLocation.postalCode);
+      setSelectedLocation(finalLocation);
+      setIsDetecting(false);
 
-    if (onZipSubmit) {
-      onZipSubmit(zip, finalLocation);
-    } else {
-      navigate(`/inventory?zip=${encodeURIComponent(zip)}`);
-    }
+      if (onZipSubmit) {
+        onZipSubmit(zip, finalLocation);
+      } else {
+        navigate(`/inventory?zip=${encodeURIComponent(zip)}`);
+      }
+    }, 350);
   };
 
   return (
@@ -187,7 +218,9 @@ export default function ZipCodeSearch({
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.18, ease: 'easeOut' }}
-              className="absolute left-12 right-5 top-1/2 -translate-y-1/2 text-[14px] font-medium text-white/90 tracking-[-0.01em] whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none"
+              className={`absolute left-12 right-5 top-1/2 -translate-y-1/2 text-[14px] font-medium tracking-[-0.01em] whitespace-nowrap overflow-hidden text-ellipsis pointer-events-none ${
+                isDetecting ? 'text-white/55' : 'text-white/90'
+              }`}
             >
               {locationDisplay}
             </motion.span>
@@ -196,6 +229,7 @@ export default function ZipCodeSearch({
 
         <Button
           type="submit"
+          disabled={isDetecting}
           className={`font-semibold rounded-xl transition-all duration-300 ${
             isHero
               ? 'h-14 px-8 bg-primary hover:bg-primary/95 hover:scale-[1.01] text-primary-foreground text-[15px] tracking-[0.01em] shadow-[0_12px_35px_rgba(255,72,0,0.22)]'
@@ -203,7 +237,7 @@ export default function ZipCodeSearch({
           }`}
         >
           <Search className="w-5 h-5 mr-2" />
-          {isHero ? 'Locate Inventory' : 'Find Pricing'}
+          {isDetecting ? 'Loading...' : isHero ? 'Locate Inventory' : 'Find Pricing'}
         </Button>
       </div>
 
