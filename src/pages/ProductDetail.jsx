@@ -493,14 +493,18 @@ export default function ProductDetail() {
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
-              container={container}
-              initialZip={zipCode}
-              selectedSizeIndex={selectedSizeIndex}
-              onSizeChange={setSelectedSizeIndex}
-              condition={condition}
-              onConditionChange={setCondition}
-              onPricingChange={setLocalizedPricing}
-            />
+  container={container}
+  initialZip={zipCode}
+  selectedSizeIndex={selectedSizeIndex}
+  onSizeChange={setSelectedSizeIndex}
+  condition={condition}
+  onConditionChange={setCondition}
+  onPricingChange={setLocalizedPricing}
+  autoOpenZip={
+    new URLSearchParams(window.location.search)
+      .get('openZipModal') === '1'
+  }
+/>
           </div>
         </div>
       </div>
