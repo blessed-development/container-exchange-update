@@ -4,7 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin } from 'lucide-react';
 import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
-import { getSavedSelectedLocation, saveSelectedLocation } from '@/lib/locationEngine';
+import {
+  getSavedSelectedLocation,
+  saveSelectedLocation,
+} from '@/lib/locationEngine';
 
 const getZipValue = (location) =>
   location?.postalCode || location?.zip || location?.zipCode || '';
@@ -20,6 +23,7 @@ const formatLocationDisplay = (location, fallbackZip = '') => {
   if (city && state && zip) return `${city}, ${state} ${zip}, USA`;
   if (city && zip) return `${city} ${zip}, USA`;
   if (zip) return zip;
+
   return '';
 };
 
@@ -33,24 +37,24 @@ export default function ZipCodeSearch({
   const timerRef = useRef(null);
   const isHero = variant === 'hero';
 
-  const saved = getSavedSelectedLocation?.();
+  const savedLocation = getSavedSelectedLocation?.();
 
-  const [zip, setZip] = useState(() => getZipValue(saved));
-  const [selectedLocation, setSelectedLocation] = useState(() => saved || null);
+  const [zip, setZip] = useState(() => getZipValue(savedLocation));
+  const [selectedLocation, setSelectedLocation] = useState(() => savedLocation || null);
   const [inputValue, setInputValue] = useState(() =>
-    saved ? formatLocationDisplay(saved) : ''
+    savedLocation ? formatLocationDisplay(savedLocation) : ''
   );
   const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
 
-  const buildLocationPayload = (value, loc = null) => {
+  const buildLocationPayload = (value, detected = null) => {
     const finalLocation = {
       postalCode: value,
       zip: value,
       zipCode: value,
-      city: loc?.city || '',
-      state: loc?.state || loc?.stateCode || '',
-      stateCode: loc?.stateCode || loc?.state || '',
+      city: detected?.city || '',
+      state: detected?.state || detected?.stateCode || '',
+      stateCode: detected?.stateCode || detected?.state || '',
       country: 'US',
     };
 
@@ -64,21 +68,23 @@ export default function ZipCodeSearch({
     requestAnimationFrame(() => {
       const el = inputRef.current;
       if (!el) return;
-      const len = el.value.length;
-      el.setSelectionRange(len, len);
+
+      const length = el.value.length;
+      el.focus();
+      el.setSelectionRange(length, length);
     });
   };
 
   useEffect(() => {
     const syncSavedLocation = (event) => {
-      const next = event?.detail || getSavedSelectedLocation?.();
-      const nextZip = getZipValue(next);
+      const nextLocation = event?.detail || getSavedSelectedLocation?.();
+      const nextZip = getZipValue(nextLocation);
 
-      if (nextZip) {
-        setZip(nextZip);
-        setSelectedLocation(next);
-        setInputValue(formatLocationDisplay(next, nextZip));
-      }
+      if (!nextZip) return;
+
+      setZip(nextZip);
+      setSelectedLocation(nextLocation);
+      setInputValue(formatLocationDisplay(nextLocation, nextZip));
     };
 
     syncSavedLocation();
@@ -89,50 +95,59 @@ export default function ZipCodeSearch({
     return () => {
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
-      if (timerRef.current) clearTimeout(timerRef.current);
+
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
 
   const detectZip = (value) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setIsDetecting(true);
+    setSelectedLocation(null);
     setInputValue('Loading...');
 
     timerRef.current = setTimeout(() => {
-      const loc = getLocationFromZip(value);
+      const detected = getLocationFromZip(value);
 
-      if (!loc) {
+      if (!detected) {
         setIsDetecting(false);
-        setSelectedLocation(null);
         setInputValue(value);
+        setSelectedLocation(null);
         setError('Location not found. Please check ZIP code.');
+        moveCursorToEnd();
         return;
       }
 
-      const finalLocation = buildLocationPayload(value, loc);
-      const display = formatLocationDisplay(finalLocation, value);
+      const finalLocation = buildLocationPayload(value, detected);
+      const displayAddress = formatLocationDisplay(finalLocation, value);
 
+      setZip(value);
       setSelectedLocation(finalLocation);
-      setInputValue(display);
+      setInputValue(displayAddress);
       setIsDetecting(false);
       setError('');
+
       moveCursorToEnd();
     }, 1000);
   };
 
   const handleChange = (e) => {
-    const raw = e.target.value;
+    const rawValue = e.target.value;
+    const digits = rawValue.replace(/\D/g, '').slice(0, 5);
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setError('');
-
-    const digits = raw.replace(/\D/g, '').slice(0, 5);
-
-    setInputValue(digits);
-    setZip(digits);
     setSelectedLocation(null);
-
-    if (timerRef.current) clearTimeout(timerRef.current);
+    setZip(digits);
+    setInputValue(digits);
 
     if (digits.length === 5) {
       detectZip(digits);
@@ -142,16 +157,23 @@ export default function ZipCodeSearch({
   };
 
   const handleKeyDown = (e) => {
-    const isAddressShowing =
-      selectedLocation && inputValue === formatLocationDisplay(selectedLocation, zip);
+    const addressShowing =
+      selectedLocation &&
+      inputValue === formatLocationDisplay(selectedLocation, zip);
 
-    if (!isAddressShowing) return;
+    if (!addressShowing) return;
 
     if (/^\d$/.test(e.key)) {
       e.preventDefault();
+
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+
       setZip(e.key);
       setInputValue(e.key);
       setSelectedLocation(null);
+      setIsDetecting(false);
       setError('');
     }
   };
@@ -160,27 +182,28 @@ export default function ZipCodeSearch({
     moveCursorToEnd();
   };
 
+  const canSubmit =
+    isValidZipCode(zip) &&
+    selectedLocation &&
+    !isDetecting;
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!isValidZipCode(zip)) {
-      setError('Enter a valid 5-digit ZIP code');
+    if (!canSubmit) {
       return;
     }
 
-    const loc = getLocationFromZip(zip);
-    const finalLocation = selectedLocation || buildLocationPayload(zip, loc);
-
-    saveSelectedLocation(finalLocation);
+    saveSelectedLocation(selectedLocation);
 
     window.dispatchEvent(
       new CustomEvent('ce-location-change', {
-        detail: finalLocation,
+        detail: selectedLocation,
       })
     );
 
     if (onZipSubmit) {
-      onZipSubmit(zip, finalLocation);
+      onZipSubmit(zip, selectedLocation);
     } else {
       navigate(`/inventory?zip=${encodeURIComponent(zip)}`);
     }
@@ -188,7 +211,11 @@ export default function ZipCodeSearch({
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      <div className={`flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-xl' : ''}`}>
+      <div
+        className={`flex flex-col sm:flex-row gap-3 ${
+          isHero ? 'max-w-xl' : ''
+        }`}
+      >
         <div className="relative flex-1">
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
             <MapPin className="w-5 h-5" />
@@ -213,11 +240,11 @@ export default function ZipCodeSearch({
 
         <Button
           type="submit"
-          disabled={isDetecting}
+          disabled={!canSubmit}
           className={`font-semibold tracking-wider rounded-sm ${
             isHero
-              ? 'h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground text-base'
-              : 'h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground'
+              ? 'h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground text-base disabled:opacity-50 disabled:cursor-not-allowed'
+              : 'h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
           }`}
         >
           <Search className="w-5 h-5 mr-2" />
