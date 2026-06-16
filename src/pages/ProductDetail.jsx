@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
-import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
@@ -85,7 +84,6 @@ export default function ProductDetail() {
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
-  const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
@@ -146,18 +144,6 @@ export default function ProductDetail() {
         : 'used'
     );
   }, [container?.id]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get('openZipModal') !== '1') return;
-
-    const timer = setTimeout(() => {
-      setShowZipModal(true);
-    }, 1800);
-
-    return () => clearTimeout(timer);
-  }, [id]);
 
   const isLoading = false;
 
@@ -507,14 +493,18 @@ export default function ProductDetail() {
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
-              container={container}
-              initialZip={zipCode}
-              selectedSizeIndex={selectedSizeIndex}
-              onSizeChange={setSelectedSizeIndex}
-              condition={condition}
-              onConditionChange={setCondition}
-              onPricingChange={setLocalizedPricing}
-            />
+  container={container}
+  initialZip={zipCode}
+  selectedSizeIndex={selectedSizeIndex}
+  onSizeChange={setSelectedSizeIndex}
+  condition={condition}
+  onConditionChange={setCondition}
+  onPricingChange={setLocalizedPricing}
+  autoOpenZip={
+    new URLSearchParams(window.location.search)
+      .get('openZipModal') === '1'
+  }
+/>
           </div>
         </div>
       </div>
@@ -526,27 +516,7 @@ export default function ProductDetail() {
       <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
-
-      {showZipModal && (
-        <ZipRequiredModal
-          open={showZipModal}
-          onClose={() => setShowZipModal(false)}
-          onSuccess={(location) => {
-            const resolvedLocation = location || getSavedSelectedLocation();
-
-            setShowZipModal(false);
-            setSavedLocation(resolvedLocation);
-
-            setLocalizedPricing((prev) => ({
-              ...prev,
-              hasLocalPrice: Boolean(resolvedLocation?.postalCode),
-              location: resolvedLocation,
-            }));
-          }}
-        />
-      )}
     </div>
 </>
 );
 }
-s
