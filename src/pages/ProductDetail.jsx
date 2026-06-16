@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
+import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Badge } from '@/components/ui/badge';
-import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
+import { Star, ChevronRight, Loader2 } from 'lucide-react';
 
 import {
   getLocalizedPrice,
@@ -29,9 +29,7 @@ const GRADE_INFO = {
   },
   IICL: {
     label: 'IICL Certified',
-    desc: 'Each Unit is in NEW One Trip A Grade condition. Roof, Seals, Doors, & Floors are in smooth working condition as expected of a new unit.',
-    description:
-      'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
+    desc: 'Meets the highest international standards. Minimal wear, premium condition.',
   },
 };
 
@@ -62,15 +60,6 @@ const getInitialSizeIndex = (container) => {
   return matchIndex >= 0 ? matchIndex : 0;
 };
 
-const buildSeoProductTitle = (title) => {
-  return String(title || '')
-    .replace(/\s*\|\s*(WWT|CW|IICL|AS[-_\s]?IS).*$/i, '')
-    .replace(/\bShipping Container\b/i, 'Shipping Containers')
-    .replace(/^Used\b/i, 'USED')
-    .replace(/^New\b/i, 'NEW')
-    .trim();
-};
-
 export default function ProductDetail() {
   const { id } = useParams();
 
@@ -83,7 +72,7 @@ export default function ProductDetail() {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
@@ -130,6 +119,19 @@ export default function ProductDetail() {
       window.removeEventListener('pageshow', syncLocation);
     };
   }, [id]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('openZipModal') !== '1') return;
+
+    const timer = setTimeout(() => {
+      setShowZipModal(true);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
 
   useEffect(() => {
     if (!container) return;
@@ -211,111 +213,24 @@ export default function ProductDetail() {
 
   const showHeroOverlay = activeImageIndex === 0;
 
-  const seoHeroTitle = buildSeoProductTitle(productTitle);
-
-  const seoLocation =
-    activeLocation?.city && activeLocation?.state
-      ? `${activeLocation.city}, ${activeLocation.state}`
-      : 'Your Area';
-  useEffect(() => {
-  if (!seoHeroTitle || !seoLocation) return;
-
-  document.title =
-    `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
-
-  return () => {
-    document.title = 'Containers Exchange';
-  };
-}, [seoHeroTitle, seoLocation]);
-
-  const productDescription =
-    gradeInfo.description || container.short_description || '';
-
- return (
-<>
-<Helmet>
-
-<title>
-{seoHeroTitle && seoLocation
-  ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
-  : `${productTitle} | Containers Exchange`}
-</title>
-
-<meta
-  name="description"
-  content={
-    seoHeroTitle && seoLocation
-      ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
-      : `Browse ${productTitle} shipping container pricing and availability.`
-  }
-/>
-
-<link
-  rel="canonical"
-  href={window.location.href}
-/>
-
-<meta property="og:type" content="product" />
-
-<meta
-  property="og:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
-/>
-
-<meta
-  property="og:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
-/>
-
-<meta
-  property="og:image"
-  content={productImage}
-/>
-
-<meta
-  property="og:url"
-  content={window.location.href}
-/>
-
-<meta
-  name="twitter:card"
-  content="summary_large_image"
-/>
-
-<meta
-  name="twitter:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
-/>
-
-<meta
-  name="twitter:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
-/>
-
-<meta
-  name="twitter:image"
-  content={productImage}
-/>
-
-</Helmet>
-
-<div className="min-h-screen bg-background">
+  return (
+    <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <nav className="sr-only">
-            <Link to="/">
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Link to="/" className="hover:text-primary transition-colors">
               Home
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <Link to="/inventory">
+            <Link to="/inventory" className="hover:text-primary transition-colors">
               Inventory
             </Link>
 
             <ChevronRight className="w-3 h-3" />
 
-            <span>
+            <span className="text-foreground font-medium truncate">
               {productTitle}
             </span>
           </nav>
@@ -330,54 +245,44 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="w-full h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
+                className="w-full h-[430px] object-cover transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
               />
 
               {showHeroOverlay && (
-                <>
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/22 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/38 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
-                  </div>
+                <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/95 via-black/65 to-transparent">
+                  <h2 className="text-3xl font-black text-white leading-[1.08] tracking-tight max-w-3xl mb-4">
+                    {productTitle}
+                  </h2>
 
-                  <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
-                    <div className="flex flex-wrap items-center gap-2 mb-5">
-                      <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
-                        {String(container.condition || condition).toUpperCase()}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
+                      {container.size}ft
+                    </Badge>
+
+                    <Badge
+                      variant="outline"
+                      className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                    >
+                      {container.condition}
+                    </Badge>
+
+                    {String(container.height || '')
+                      .toLowerCase()
+                      .includes('high') && (
+                      <Badge
+                        variant="outline"
+                        className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
+                      >
+                        High Cube
                       </Badge>
+                    )}
 
-                      <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
-                        {container.size}ft
-                      </Badge>
-
-                      {String(container.grade || '').toUpperCase() && (
-                        <Badge
-                          variant="outline"
-                          className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                        >
-                          {String(container.grade || '').toUpperCase()}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6">
-                      {seoHeroTitle}
-                    </h1>
-
-                    <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
-                      For Sale in
-                      <span className="text-primary ml-2">
-                        {seoLocation}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-1.5 ml-1">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-5 h-5 ${
+                            className={`w-4 h-4 ${
                               i < Math.round(container.rating || 5)
                                 ? 'fill-orange-500 text-orange-500'
                                 : 'text-white/30'
@@ -386,16 +291,16 @@ export default function ProductDetail() {
                         ))}
                       </div>
 
-                      <span className="text-base font-black text-white">
+                      <span className="text-sm font-semibold text-white">
                         {container.rating || 5}
                       </span>
 
-                      <span className="text-sm text-white/80">
+                      <span className="text-xs text-white/70">
                         ({container.review_count || 42} reviews)
                       </span>
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
 
@@ -450,61 +355,28 @@ export default function ProductDetail() {
                 </p>
               </div>
 
-              {productDescription && (
-                <button
-                  type="button"
-                  onClick={() => setDescriptionOpen(!descriptionOpen)}
-                  aria-expanded={descriptionOpen}
-                  className="group mb-6 md:mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-3 md:py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
-                >
-                  <div className="relative">
-                    <p
-                      className={`text-[14px] md:text-base leading-6 md:leading-7 text-muted-foreground transition-all duration-300 ${
-                        descriptionOpen ? '' : 'line-clamp-2'
-                      }`}
-                    >
-                      {productDescription}
-                    </p>
-
-                    {!descriptionOpen && (
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/95 to-transparent" />
-                    )}
-                  </div>
-
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] md:text-[13px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
-                    <span>
-                      {descriptionOpen ? 'Show less' : 'Read more'}
-                    </span>
-
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-300 ${
-                        descriptionOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </div>
-                </button>
+              {container.short_description && (
+                <p className="text-muted-foreground leading-relaxed text-base mb-10">
+                  {container.short_description}
+                </p>
               )}
 
-             <div className="hidden lg:block -mt-4">
-  <ProductFAQ />
-</div>
+              <div className="hidden lg:block">
+                <ProductFAQ />
+              </div>
             </div>
           </div>
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
-  container={container}
-  initialZip={zipCode}
-  selectedSizeIndex={selectedSizeIndex}
-  onSizeChange={setSelectedSizeIndex}
-  condition={condition}
-  onConditionChange={setCondition}
-  onPricingChange={setLocalizedPricing}
-  autoOpenZip={
-    new URLSearchParams(window.location.search)
-      .get('openZipModal') === '1'
-  }
-/>
+              container={container}
+              initialZip={zipCode}
+              selectedSizeIndex={selectedSizeIndex}
+              onSizeChange={setSelectedSizeIndex}
+              condition={condition}
+              onConditionChange={setCondition}
+              onPricingChange={setLocalizedPricing}
+            />
           </div>
         </div>
       </div>
@@ -516,7 +388,17 @@ export default function ProductDetail() {
       <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
+
+      {showZipModal && (
+        <ZipRequiredModal
+          open={showZipModal}
+          onClose={() => setShowZipModal(false)}
+          onSuccess={(location) => {
+            setShowZipModal(false);
+            setSavedLocation(location || getSavedSelectedLocation());
+          }}
+        />
+      )}
     </div>
-</>
-);
+  );
 }
