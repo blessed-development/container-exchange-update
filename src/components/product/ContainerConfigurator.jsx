@@ -194,18 +194,6 @@ export default function ContainerConfigurator({
   }, []);
 
   useEffect(() => {
-    if (!location?.postalCode || !location?.city) return;
-
-    setLocationNotice(`Pricing updated for ${location.city}${location.state ? `, ${location.state}` : ''}`);
-
-    const timer = setTimeout(() => {
-      setLocationNotice('');
-    }, 1800);
-
-    return () => clearTimeout(timer);
-  }, [location?.postalCode, location?.city, location?.state]);
-
-  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
 
     if (params.get('openZip') !== '1') return;
