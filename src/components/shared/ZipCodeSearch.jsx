@@ -90,6 +90,22 @@ export default function ZipCodeSearch({
     return finalLocation;
   };
 
+  const completeLocation = (value, location) => {
+    setZip(value);
+    setSelectedLocation(location);
+    setInputValue(formatLocationDisplay(location, value));
+    setIsDetecting(false);
+    setError('');
+
+    persistLocation(location);
+
+    if (onZipSubmit) {
+      onZipSubmit(value, location);
+    }
+
+    moveCursorToEnd();
+  };
+
   useEffect(() => {
     const syncSavedLocation = (event) => {
       const nextLocation = event?.detail || getSavedSelectedLocation?.();
@@ -136,13 +152,7 @@ export default function ZipCodeSearch({
 
       const finalLocation = buildLocationPayload(value, detected);
 
-      setZip(value);
-      setSelectedLocation(finalLocation);
-      setInputValue(formatLocationDisplay(finalLocation, value));
-      setIsDetecting(false);
-      setError('');
-
-      moveCursorToEnd();
+      completeLocation(value, finalLocation);
     }, 1000);
   };
 
@@ -241,18 +251,7 @@ export default function ZipCodeSearch({
           );
           finalLocation.displayName = finalLocation.formattedAddress;
 
-          setZip(detectedZip);
-          setSelectedLocation(finalLocation);
-          setInputValue(finalLocation.formattedAddress);
-          setIsDetecting(false);
-          setError('');
-
-          persistLocation(finalLocation);
-          moveCursorToEnd();
-
-          if (onZipSubmit) {
-            onZipSubmit(detectedZip, finalLocation);
-          }
+          completeLocation(detectedZip, finalLocation);
         } catch {
           setIsDetecting(false);
           setInputValue('');
