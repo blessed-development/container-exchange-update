@@ -1366,3 +1366,59 @@ margin-top:1px !important;
   letter-spacing:-.045em !important;
   line-height:1 !important;
 }
+/* FINAL SOFTER APPLE/TESLA SPEC CARDS */
+
+.main-tabs{
+  gap:10px !important;
+  padding:10px !important;
+  background:rgba(255,255,255,.018) !important;
+  border:1px solid rgba(255,255,255,.045) !important;
+  border-radius:22px !important;
+}
+
+.main-tab{
+  min-height:96px !important;
+  border:1px solid rgba(255,255,255,.07) !important;
+  border-radius:18px !important;
+  background:linear-gradient(
+    180deg,
+    rgba(255,255,255,.04),
+    rgba(255,255,255,.012)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 10px 28px rgba(0,0,0,.10) !important;
+}
+
+.main-tab.active{
+  border-color:rgba(255,90,47,.42) !important;
+  background:linear-gradient(
+    180deg,
+    rgba(255,90,47,.075),
+    rgba(255,255,255,.018)
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 12px 30px rgba(0,0,0,.18) !important;
+}
+
+.tab-title::after{
+  color:rgba(255,255,255,.96) !important;
+  font-size:15px !important;
+  font-weight:850 !important;
+}
+
+.tab-sub{
+  margin-top:5px !important;
+  color:rgba(226,232,240,.72) !important;
+  font-size:10.5px !important;
+  font-weight:700 !important;
+  letter-spacing:.04em !important;
+}
+
+.tab-price{
+  margin-top:9px !important;
+  color:#ff5a2f !important;
+  font-size:17px !important;
+  font-weight:900 !important;
+}
