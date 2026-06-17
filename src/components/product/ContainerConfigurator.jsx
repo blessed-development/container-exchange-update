@@ -7,8 +7,7 @@ import {
   X,
   Lock,
   MapPin,
-  Check,
-  ChevronDown,
+  Check
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
@@ -156,7 +155,6 @@ export default function ContainerConfigurator({
 
   const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'WWT');
   const [qty] = useState(1);
-  const [gradeOpen, setGradeOpen] = useState(false);
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
   const hasCheckoutLocation = Boolean(location?.postalCode);
@@ -522,43 +520,26 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="section-card">
-          <button
-            type="button"
-            className="card-head grade-dropdown-head"
-            onClick={() => setGradeOpen(!gradeOpen)}
-          >
+        <div className="section-card grade-section-card">
+          <div className="card-head grade-static-head">
             <span className="card-lbl">GRADE</span>
+          </div>
 
-            <span className="card-val grade-head-val">
-              {activeGrade.label}
-              <ChevronDown
-                size={15}
-                className={`grade-head-arrow ${gradeOpen ? 'open' : ''}`}
-              />
-            </span>
-          </button>
-
-          {gradeOpen && (
-            <div className="grade-grid">
-              {gradeOptions.map((g) => (
-                <button
-                  key={g.key}
-                  type="button"
-                  className={`grade-btn ${grade === g.key ? 'active' : ''}`}
-                  onClick={() => {
-                    setGrade(g.key);
-                    setGradeOpen(false);
-                  }}
-                >
-                  <span className="grade-check">
-                    <Check size={10} />
-                  </span>
-                  <span>{g.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="grade-grid grade-grid-static">
+            {gradeOptions.map((g) => (
+              <button
+                key={g.key}
+                type="button"
+                className={`grade-btn ${grade === g.key ? 'active' : ''}`}
+                onClick={() => setGrade(g.key)}
+              >
+                <span className="grade-check">
+                  <Check size={10} />
+                </span>
+                <span>{g.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="section-card">
