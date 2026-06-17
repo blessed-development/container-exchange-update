@@ -1808,3 +1808,51 @@ margin-top:1px !important;
 .card-val{
   display:none !important;
 }
+/* FINAL CONDITION IMAGE CROP */
+
+.cond-card{
+  height:96px !important;
+  min-height:96px !important;
+
+  border-radius:18px !important;
+
+  overflow:hidden !important;
+}
+
+.cond-img{
+  width:100% !important;
+
+  height:100% !important;
+
+  object-fit:cover !important;
+
+  object-position:center 42% !important;
+
+  transform:scale(1.01) !important;
+}
+
+.cond-card.active{
+  border-color:rgba(255,90,47,.22) !important;
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.14),
+    0 0 0 1px rgba(255,90,47,.06) !important;
+}
+
+.cc-name{
+  font-size:15px !important;
+
+  font-weight:900 !important;
+
+  bottom:13px !important;
+}
+
+.cc-check{
+  width:20px !important;
+
+  height:20px !important;
+
+  top:10px !important;
+
+  right:10px !important;
+}
