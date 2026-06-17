@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin } from 'lucide-react';
+import { LocateFixed, MapPin, Search } from 'lucide-react';
 import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
 import {
   getSavedSelectedLocation,
@@ -55,7 +55,6 @@ export default function ZipCodeSearch({
     requestAnimationFrame(() => {
       const el = inputRef.current;
       if (!el) return;
-
       const len = el.value.length;
       el.setSelectionRange(len, len);
     });
@@ -81,6 +80,16 @@ export default function ZipCodeSearch({
     return finalLocation;
   };
 
+  const persistLocation = (location) => {
+    saveSelectedLocation(location);
+
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', {
+        detail: location,
+      })
+    );
+  };
+
   useEffect(() => {
     const syncSavedLocation = (event) => {
       const nextLocation = event?.detail || getSavedSelectedLocation?.();
@@ -102,16 +111,12 @@ export default function ZipCodeSearch({
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
 
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
   const detectZip = (value) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     setIsDetecting(true);
     setSelectedLocation(null);
@@ -145,9 +150,7 @@ export default function ZipCodeSearch({
     const rawValue = e.target.value;
     const pureZip = rawValue.trim();
 
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     setError('');
     setInputValue(rawValue);
@@ -155,9 +158,7 @@ export default function ZipCodeSearch({
     const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
     setZip(digits);
 
-    if (selectedLocation) {
-      setSelectedLocation(null);
-    }
+    if (selectedLocation) setSelectedLocation(null);
 
     setIsDetecting(false);
 
@@ -167,9 +168,7 @@ export default function ZipCodeSearch({
   };
 
   const handleKeyDown = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     if (selectedLocation) {
       setSelectedLocation(null);
@@ -182,6 +181,99 @@ export default function ZipCodeSearch({
     moveCursorToEnd();
   };
 
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setError('Location is not supported by this browser.');
+      return;
+    }
+
+    setError('');
+    setIsDetecting(true);
+    setInputValue('Detecting current location...');
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+
+          const data = await response.json();
+
+          const detectedZip =
+            data.postcode ||
+            data.postalCode ||
+            data.localityInfo?.administrative?.find((x) => x.order === 10)
+              ?.name ||
+            '';
+
+          const city =
+            data.city ||
+            data.locality ||
+            data.principalSubdivision ||
+            '';
+
+          const state =
+            data.principalSubdivisionCode?.replace('US-', '') ||
+            data.principalSubdivision ||
+            '';
+
+          if (!detectedZip) {
+            setIsDetecting(false);
+            setInputValue('');
+            setError('Could not detect ZIP code. Please enter it manually.');
+            return;
+          }
+
+          const finalLocation = {
+            postalCode: detectedZip,
+            zip: detectedZip,
+            zipCode: detectedZip,
+            city,
+            state,
+            stateCode: state,
+            country: 'US',
+          };
+
+          finalLocation.formattedAddress = formatLocationDisplay(
+            finalLocation,
+            detectedZip
+          );
+          finalLocation.displayName = finalLocation.formattedAddress;
+
+          setZip(detectedZip);
+          setSelectedLocation(finalLocation);
+          setInputValue(finalLocation.formattedAddress);
+          setIsDetecting(false);
+          setError('');
+
+          persistLocation(finalLocation);
+          moveCursorToEnd();
+
+          if (onZipSubmit) {
+            onZipSubmit(detectedZip, finalLocation);
+          }
+        } catch {
+          setIsDetecting(false);
+          setInputValue('');
+          setError('Could not detect your location. Please enter ZIP manually.');
+        }
+      },
+      () => {
+        setIsDetecting(false);
+        setInputValue('');
+        setError('Location permission was denied.');
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
   const canSubmit =
     isValidZipCode(zip) &&
     Boolean(selectedLocation) &&
@@ -192,13 +284,7 @@ export default function ZipCodeSearch({
 
     if (!canSubmit) return;
 
-    saveSelectedLocation(selectedLocation);
-
-    window.dispatchEvent(
-      new CustomEvent('ce-location-change', {
-        detail: selectedLocation,
-      })
-    );
+    persistLocation(selectedLocation);
 
     if (onZipSubmit) {
       onZipSubmit(zip, selectedLocation);
@@ -244,24 +330,34 @@ export default function ZipCodeSearch({
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={!canSubmit}
-          className={`font-medium transition-all duration-500 ${
-            isCompact
-              ? 'h-[54px] w-full px-5 rounded-[18px] bg-primary hover:bg-primary/95 text-primary-foreground text-[13px] whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed'
-              : isHero
+        {isCompact ? (
+          <Button
+            type="button"
+            onClick={handleUseCurrentLocation}
+            disabled={isDetecting}
+            className="h-[54px] w-full px-5 rounded-[18px] bg-primary hover:bg-primary/95 text-primary-foreground text-[13px] font-medium whitespace-nowrap transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <LocateFixed className="w-4 h-4 mr-2" />
+            {isDetecting ? 'Detecting...' : 'Use my current location'}
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            disabled={!canSubmit}
+            className={`font-medium transition-all duration-500 ${
+              isHero
                 ? 'h-14 px-8 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[15px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
                 : 'h-12 px-6 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
-          }`}
-        >
-          <Search className={isCompact ? 'w-4 h-4 mr-2' : 'w-5 h-5 mr-2'} />
-          {isDetecting
-            ? 'Loading...'
-            : isHero
-              ? 'Locate inventory'
-              : 'Find pricing'}
-        </Button>
+            }`}
+          >
+            <Search className="w-5 h-5 mr-2" />
+            {isDetecting
+              ? 'Loading...'
+              : isHero
+                ? 'Locate inventory'
+                : 'Find pricing'}
+          </Button>
+        )}
       </div>
 
       {selectedLocation && !isDetecting && isHero && (
