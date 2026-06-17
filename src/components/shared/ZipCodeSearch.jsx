@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LocateFixed, MapPin, Search } from 'lucide-react';
-import { isValidZipCode, getLocationFromZip } from '@/lib/zipUtils';
 import {
   getSavedSelectedLocation,
   saveSelectedLocation,
+  lookupPostalCode,
+  isUsZip,
+  isCanadianPostal,
+  getCountryLabel,
 } from '@/lib/locationEngine';
 
 const LOCATION_ERROR =
@@ -18,15 +21,54 @@ const getZipValue = (location) =>
 const getStateValue = (location) =>
   location?.stateCode || location?.state || '';
 
+const isValidPostal = (value) => {
+  return isUsZip(value) || isCanadianPostal(value);
+};
+
+const normalizePostalInput = (value) => {
+  const raw = String(value || '').toUpperCase();
+
+  // US ZIP: keep max 5 digits
+  if (/^\d/.test(raw)) {
+    return raw.replace(/\D/g, '').slice(0, 5);
+  }
+
+  // Canada postal: keep max 6 alphanumeric chars
+  return raw.replace(/[^A-Z0-9]/g, '').slice(0, 6);
+};
+
 const formatLocationDisplay = (location, fallbackZip = '') => {
   const zip = getZipValue(location) || fallbackZip || '';
   const city = location?.city || '';
   const state = getStateValue(location);
+  const country = getCountryLabel(location?.country) || 'USA';
 
-  if (city && state && zip) return `${city}, ${state} ${zip}, USA`;
-  if (city && zip) return `${city} ${zip}, USA`;
+  if (city && state && zip) return `${city}, ${state} ${zip}, ${country}`;
+  if (city && zip) return `${city} ${zip}, ${country}`;
   if (zip) return zip;
+
   return '';
+};
+
+const buildResolvedLocation = (detected) => {
+  const postalCode = detected?.postalCode || '';
+
+  const finalLocation = {
+    ...detected,
+    postalCode,
+    zip: postalCode,
+    zipCode: postalCode,
+    stateCode: detected?.state || detected?.stateCode || '',
+    country: detected?.country || 'US',
+  };
+
+  finalLocation.formattedAddress = formatLocationDisplay(
+    finalLocation,
+    postalCode
+  );
+  finalLocation.displayName = finalLocation.formattedAddress;
+
+  return finalLocation;
 };
 
 export default function ZipCodeSearch({
@@ -58,6 +100,7 @@ export default function ZipCodeSearch({
     requestAnimationFrame(() => {
       const el = inputRef.current;
       if (!el) return;
+
       const len = el.value.length;
       el.setSelectionRange(len, len);
     });
@@ -73,37 +116,25 @@ export default function ZipCodeSearch({
     );
   };
 
-  const buildLocationPayload = (value, detected = null) => {
-    const finalLocation = {
-      postalCode: value,
-      zip: value,
-      zipCode: value,
-      city: detected?.city || '',
-      state: detected?.state || detected?.stateCode || '',
-      stateCode: detected?.stateCode || detected?.state || '',
-      country: 'US',
-    };
+  const completeLocation = (location) => {
+    const finalLocation = buildResolvedLocation(location);
+    const finalZip = getZipValue(finalLocation);
 
-    finalLocation.formattedAddress = formatLocationDisplay(finalLocation, value);
-    finalLocation.displayName = finalLocation.formattedAddress;
-
-    return finalLocation;
-  };
-
-  const completeLocation = (value, location) => {
-    setZip(value);
-    setSelectedLocation(location);
-    setInputValue(formatLocationDisplay(location, value));
+    setZip(finalZip);
+    setSelectedLocation(finalLocation);
+    setInputValue(formatLocationDisplay(finalLocation, finalZip));
     setIsDetecting(false);
     setError('');
 
-    persistLocation(location);
+    persistLocation(finalLocation);
 
     if (onZipSubmit) {
-      onZipSubmit(value, location);
+      onZipSubmit(finalZip, finalLocation);
     }
 
     moveCursorToEnd();
+
+    return finalLocation;
   };
 
   useEffect(() => {
@@ -127,58 +158,64 @@ export default function ZipCodeSearch({
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
 
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
 
-  const detectZip = (value) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+  const detectPostal = (value) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setIsDetecting(true);
     setSelectedLocation(null);
     setInputValue('Loading...');
 
-    timerRef.current = setTimeout(() => {
-      const detected = getLocationFromZip(value);
-
-      if (!detected) {
+    timerRef.current = setTimeout(async () => {
+      try {
+        const detected = await lookupPostalCode(value);
+        completeLocation(detected);
+      } catch {
         setIsDetecting(false);
         setInputValue(value);
         setSelectedLocation(null);
         setError(LOCATION_ERROR);
         moveCursorToEnd();
-        return;
       }
-
-      const finalLocation = buildLocationPayload(value, detected);
-
-      completeLocation(value, finalLocation);
     }, 1000);
   };
 
   const handleChange = (e) => {
     const rawValue = e.target.value;
-    const pureZip = rawValue.trim();
+    const normalized = normalizePostalInput(rawValue);
 
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setError('');
     setInputValue(rawValue);
 
-    const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
-    setZip(digits);
+    const zipCandidate = normalized;
+    setZip(zipCandidate);
 
-    if (selectedLocation) setSelectedLocation(null);
+    if (selectedLocation) {
+      setSelectedLocation(null);
+    }
 
     setIsDetecting(false);
 
-    if (/^\d{5}$/.test(pureZip)) {
-      detectZip(pureZip);
+    if (isValidPostal(zipCandidate)) {
+      detectPostal(zipCandidate);
     }
   };
 
   const handleKeyDown = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     if (selectedLocation) {
       setSelectedLocation(null);
@@ -219,14 +256,6 @@ export default function ZipCodeSearch({
               ?.name ||
             '';
 
-          const city =
-            data.city || data.locality || data.principalSubdivision || '';
-
-          const state =
-            data.principalSubdivisionCode?.replace('US-', '') ||
-            data.principalSubdivision ||
-            '';
-
           if (!detectedZip) {
             setIsDetecting(false);
             setInputValue('');
@@ -235,23 +264,8 @@ export default function ZipCodeSearch({
             return;
           }
 
-          const finalLocation = {
-            postalCode: detectedZip,
-            zip: detectedZip,
-            zipCode: detectedZip,
-            city,
-            state,
-            stateCode: state,
-            country: 'US',
-          };
-
-          finalLocation.formattedAddress = formatLocationDisplay(
-            finalLocation,
-            detectedZip
-          );
-          finalLocation.displayName = finalLocation.formattedAddress;
-
-          completeLocation(detectedZip, finalLocation);
+          const detected = await lookupPostalCode(detectedZip);
+          completeLocation(detected);
         } catch {
           setIsDetecting(false);
           setInputValue('');
@@ -274,7 +288,7 @@ export default function ZipCodeSearch({
   };
 
   const canSubmit =
-    isValidZipCode(zip) &&
+    isValidPostal(zip) &&
     Boolean(selectedLocation) &&
     !isDetecting;
 
