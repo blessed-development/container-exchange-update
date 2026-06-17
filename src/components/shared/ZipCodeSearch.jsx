@@ -9,6 +9,9 @@ import {
   saveSelectedLocation,
 } from '@/lib/locationEngine';
 
+const LOCATION_ERROR =
+  "Couldn't locate your ZIP code in the US or Canada. Try entering it manually or select a nearby ZIP code.";
+
 const getZipValue = (location) =>
   location?.postalCode || location?.zip || location?.zipCode || '';
 
@@ -30,7 +33,7 @@ export default function ZipCodeSearch({
   variant = 'hero',
   onZipSubmit,
   className = '',
-  placeholder = 'Enter ZIP code',
+  placeholder = 'Enter your zipcode',
 }) {
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -55,10 +58,19 @@ export default function ZipCodeSearch({
     requestAnimationFrame(() => {
       const el = inputRef.current;
       if (!el) return;
-
       const len = el.value.length;
       el.setSelectionRange(len, len);
     });
+  };
+
+  const persistLocation = (location) => {
+    saveSelectedLocation(location);
+
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', {
+        detail: location,
+      })
+    );
   };
 
   const buildLocationPayload = (value, detected = null) => {
@@ -72,23 +84,10 @@ export default function ZipCodeSearch({
       country: 'US',
     };
 
-    finalLocation.formattedAddress = formatLocationDisplay(
-      finalLocation,
-      value
-    );
+    finalLocation.formattedAddress = formatLocationDisplay(finalLocation, value);
     finalLocation.displayName = finalLocation.formattedAddress;
 
     return finalLocation;
-  };
-
-  const persistLocation = (location) => {
-    saveSelectedLocation(location);
-
-    window.dispatchEvent(
-      new CustomEvent('ce-location-change', {
-        detail: location,
-      })
-    );
   };
 
   useEffect(() => {
@@ -112,16 +111,12 @@ export default function ZipCodeSearch({
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
 
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
   const detectZip = (value) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     setIsDetecting(true);
     setSelectedLocation(null);
@@ -134,7 +129,7 @@ export default function ZipCodeSearch({
         setIsDetecting(false);
         setInputValue(value);
         setSelectedLocation(null);
-        setError('Location not found. Please check ZIP code.');
+        setError(LOCATION_ERROR);
         moveCursorToEnd();
         return;
       }
@@ -155,9 +150,7 @@ export default function ZipCodeSearch({
     const rawValue = e.target.value;
     const pureZip = rawValue.trim();
 
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     setError('');
     setInputValue(rawValue);
@@ -165,9 +158,7 @@ export default function ZipCodeSearch({
     const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
     setZip(digits);
 
-    if (selectedLocation) {
-      setSelectedLocation(null);
-    }
+    if (selectedLocation) setSelectedLocation(null);
 
     setIsDetecting(false);
 
@@ -177,9 +168,7 @@ export default function ZipCodeSearch({
   };
 
   const handleKeyDown = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    if (timerRef.current) clearTimeout(timerRef.current);
 
     if (selectedLocation) {
       setSelectedLocation(null);
@@ -194,7 +183,7 @@ export default function ZipCodeSearch({
 
   const handleUseCurrentLocation = () => {
     if (!navigator.geolocation) {
-      setError('Location is not supported by this browser.');
+      setError(LOCATION_ERROR);
       return;
     }
 
@@ -232,7 +221,7 @@ export default function ZipCodeSearch({
             setIsDetecting(false);
             setInputValue('');
             setSelectedLocation(null);
-            setError('Could not detect ZIP code. Please enter it manually.');
+            setError(LOCATION_ERROR);
             return;
           }
 
@@ -268,14 +257,14 @@ export default function ZipCodeSearch({
           setIsDetecting(false);
           setInputValue('');
           setSelectedLocation(null);
-          setError('Could not detect your location. Please enter ZIP manually.');
+          setError(LOCATION_ERROR);
         }
       },
       () => {
         setIsDetecting(false);
         setInputValue('');
         setSelectedLocation(null);
-        setError('Location permission was denied. Enter ZIP manually.');
+        setError(LOCATION_ERROR);
       },
       {
         enableHighAccuracy: true,
@@ -316,7 +305,7 @@ export default function ZipCodeSearch({
         <div className="relative w-full min-w-0">
           <div
             className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none ${
-              isCompact ? 'text-white/24' : 'text-white/30'
+              isCompact ? 'text-white/25' : 'text-white/30'
             }`}
           >
             <MapPin className={isCompact ? 'w-4 h-4' : 'w-5 h-5'} />
@@ -333,7 +322,7 @@ export default function ZipCodeSearch({
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
               isCompact
-                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/26 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
+                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
                 : isHero
                   ? 'h-14 pl-12 pr-5 rounded-2xl text-[15px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
                   : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
