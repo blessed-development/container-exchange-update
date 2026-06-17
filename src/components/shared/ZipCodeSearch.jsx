@@ -55,6 +55,7 @@ export default function ZipCodeSearch({
     requestAnimationFrame(() => {
       const el = inputRef.current;
       if (!el) return;
+
       const len = el.value.length;
       el.setSelectionRange(len, len);
     });
@@ -111,12 +112,16 @@ export default function ZipCodeSearch({
       window.removeEventListener('ce-location-change', syncSavedLocation);
       window.removeEventListener('storage', syncSavedLocation);
 
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, []);
 
   const detectZip = (value) => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setIsDetecting(true);
     setSelectedLocation(null);
@@ -150,7 +155,9 @@ export default function ZipCodeSearch({
     const rawValue = e.target.value;
     const pureZip = rawValue.trim();
 
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     setError('');
     setInputValue(rawValue);
@@ -158,7 +165,9 @@ export default function ZipCodeSearch({
     const digits = rawValue.match(/\d/g)?.join('').slice(0, 5) || '';
     setZip(digits);
 
-    if (selectedLocation) setSelectedLocation(null);
+    if (selectedLocation) {
+      setSelectedLocation(null);
+    }
 
     setIsDetecting(false);
 
@@ -168,7 +177,9 @@ export default function ZipCodeSearch({
   };
 
   const handleKeyDown = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
 
     if (selectedLocation) {
       setSelectedLocation(null);
@@ -189,7 +200,7 @@ export default function ZipCodeSearch({
 
     setError('');
     setIsDetecting(true);
-    setInputValue('Detecting current location...');
+    setInputValue('Detecting location…');
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -210,10 +221,7 @@ export default function ZipCodeSearch({
             '';
 
           const city =
-            data.city ||
-            data.locality ||
-            data.principalSubdivision ||
-            '';
+            data.city || data.locality || data.principalSubdivision || '';
 
           const state =
             data.principalSubdivisionCode?.replace('US-', '') ||
@@ -223,6 +231,7 @@ export default function ZipCodeSearch({
           if (!detectedZip) {
             setIsDetecting(false);
             setInputValue('');
+            setSelectedLocation(null);
             setError('Could not detect ZIP code. Please enter it manually.');
             return;
           }
@@ -258,13 +267,15 @@ export default function ZipCodeSearch({
         } catch {
           setIsDetecting(false);
           setInputValue('');
+          setSelectedLocation(null);
           setError('Could not detect your location. Please enter ZIP manually.');
         }
       },
       () => {
         setIsDetecting(false);
         setInputValue('');
-        setError('Location permission was denied.');
+        setSelectedLocation(null);
+        setError('Location permission was denied. Enter ZIP manually.');
       },
       {
         enableHighAccuracy: true,
@@ -298,14 +309,14 @@ export default function ZipCodeSearch({
       <div
         className={
           isCompact
-            ? 'flex flex-col gap-3 w-full'
+            ? 'flex flex-col gap-2.5 w-full'
             : `flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-xl' : ''}`
         }
       >
         <div className="relative w-full min-w-0">
           <div
             className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none ${
-              isCompact ? 'text-white/25' : 'text-white/30'
+              isCompact ? 'text-white/24' : 'text-white/30'
             }`}
           >
             <MapPin className={isCompact ? 'w-4 h-4' : 'w-5 h-5'} />
@@ -322,7 +333,7 @@ export default function ZipCodeSearch({
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
               isCompact
-                ? 'h-[58px] pl-12 pr-5 rounded-[18px] bg-white/[0.04] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.08] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]'
+                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/26 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
                 : isHero
                   ? 'h-14 pl-12 pr-5 rounded-2xl text-[15px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
                   : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
@@ -335,10 +346,10 @@ export default function ZipCodeSearch({
             type="button"
             onClick={handleUseCurrentLocation}
             disabled={isDetecting}
-            className="h-[54px] w-full px-5 rounded-[18px] bg-primary hover:bg-primary/95 text-primary-foreground text-[13px] font-medium whitespace-nowrap transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-[44px] w-full px-4 rounded-[14px] bg-primary/95 hover:bg-primary text-primary-foreground text-[12px] font-medium tracking-[0.01em] whitespace-nowrap transition-all duration-300 shadow-[0_8px_20px_rgba(255,94,20,0.12)] hover:shadow-[0_12px_26px_rgba(255,94,20,0.16)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <LocateFixed className="w-4 h-4 mr-2" />
-            {isDetecting ? 'Detecting...' : 'Use my current location'}
+            <LocateFixed className="w-3.5 h-3.5 mr-2" />
+            {isDetecting ? 'Detecting location…' : 'Use current location'}
           </Button>
         ) : (
           <Button
@@ -367,7 +378,11 @@ export default function ZipCodeSearch({
       )}
 
       {error && (
-        <p className="text-red-400 text-sm font-medium mt-2">{error}</p>
+        <div className="mt-3 rounded-[14px] border border-red-400/15 bg-red-500/[0.08] px-3 py-2">
+          <p className="text-[12px] leading-relaxed font-medium text-red-300">
+            {error}
+          </p>
+        </div>
       )}
     </form>
   );
