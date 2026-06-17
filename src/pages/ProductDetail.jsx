@@ -13,7 +13,51 @@ import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 import {
   getLocalizedPrice,
   getSavedSelectedLocation,
+  lookupPostalCode,
+  saveSelectedLocation,
 } from '@/lib/locationEngine';
+
+
+const getLocationZip = (location) =>
+  location?.postalCode || location?.zip || location?.zipCode || '';
+
+const hasCityState = (location) =>
+  Boolean(location?.city && (location?.state || location?.stateCode));
+
+const normalizeLocation = (location) => {
+  if (!location) return null;
+
+  const zip = getLocationZip(location);
+  const state = location.state || location.stateCode || '';
+  const stateCode = location.stateCode || location.state || '';
+
+  return {
+    ...location,
+    postalCode: zip,
+    zip,
+    zipCode: zip,
+    state,
+    stateCode,
+    country: location.country || 'US',
+  };
+};
+
+const getBestLocation = (...locations) => {
+  const normalized = locations.map(normalizeLocation).filter(Boolean);
+  const rich = normalized.find((location) => getLocationZip(location) && hasCityState(location));
+
+  if (rich) return rich;
+
+  return normalized.find((location) => getLocationZip(location)) || normalized[0] || null;
+};
+
+const formatCityState = (location) => {
+  if (!location?.city) return 'Your Area';
+
+  const state = location.stateCode || location.state;
+
+  return state ? `${location.city}, ${state}` : location.city;
+};
 
 const GRADE_INFO = {
   AS_IS: {
@@ -119,20 +163,48 @@ export default function ProductDetail() {
 
     setActiveImageIndex(0);
 
-    const syncLocation = () => {
-      const saved = getSavedSelectedLocation();
+    let cancelled = false;
 
-      setSavedLocation(saved);
+    const applyLocation = async (incomingLocation = null) => {
+      const urlZip = new URLSearchParams(window.location.search).get('zip') || '';
+      const saved = incomingLocation || getSavedSelectedLocation();
+      const best = getBestLocation(saved, savedLocation);
 
-      if (saved?.postalCode) {
-        setZipCode(saved.postalCode);
+      let nextLocation = best;
+      const nextZip = getLocationZip(best) || urlZip;
+
+      if (nextZip && (!nextLocation || !hasCityState(nextLocation))) {
+        try {
+          const resolved = await lookupPostalCode(nextZip);
+          nextLocation = getBestLocation(resolved, nextLocation);
+          saveSelectedLocation(nextLocation);
+        } catch {
+          nextLocation = normalizeLocation({
+            ...(nextLocation || {}),
+            postalCode: nextZip,
+            zip: nextZip,
+            zipCode: nextZip,
+          });
+        }
+      }
+
+      if (cancelled) return;
+
+      setSavedLocation(nextLocation);
+
+      if (nextZip) {
+        setZipCode(nextZip);
       }
 
       setLocalizedPricing((prev) => ({
         ...prev,
-        hasLocalPrice: Boolean(saved?.postalCode),
-        location: saved,
+        hasLocalPrice: Boolean(nextZip),
+        location: getBestLocation(nextLocation, prev.location),
       }));
+    };
+
+    const syncLocation = (event) => {
+      applyLocation(event?.detail || null);
     };
 
     syncLocation();
@@ -143,6 +215,8 @@ export default function ProductDetail() {
     window.addEventListener('pageshow', syncLocation);
 
     return () => {
+      cancelled = true;
+
       window.removeEventListener('ce-location-change', syncLocation);
       window.removeEventListener('storage', syncLocation);
       window.removeEventListener('focus', syncLocation);
@@ -206,13 +280,14 @@ export default function ProductDetail() {
     container.price ||
     0;
 
-  const activeLocation =
-    localizedPricing?.location?.postalCode
-      ? localizedPricing.location
-      : savedLocation;
+  const activeLocation = getBestLocation(
+    localizedPricing?.location,
+    savedLocation,
+    getSavedSelectedLocation()
+  );
 
   const hasActiveZip =
-    Boolean(activeLocation?.postalCode);
+    Boolean(getLocationZip(activeLocation));
 
   const heroPrice =
     getLocalizedPrice(baseDisplayPrice, activeLocation);
@@ -232,10 +307,7 @@ export default function ProductDetail() {
 
   const seoHeroTitle = buildSeoProductTitle(productTitle);
 
-  const seoLocation =
-    activeLocation?.city && activeLocation?.state
-      ? `${activeLocation.city}, ${activeLocation.state}`
-      : 'Your Area';
+  const seoLocation = formatCityState(activeLocation);
   useEffect(() => {
   if (!seoHeroTitle || !seoLocation) return;
 
@@ -563,15 +635,21 @@ useEffect(() => {
               setZipCode(nextLocation.postalCode);
             }
 
+            const normalizedLocation = getBestLocation(nextLocation, getSavedSelectedLocation());
+
+            if (normalizedLocation?.postalCode) {
+              saveSelectedLocation(normalizedLocation);
+            }
+
             setLocalizedPricing((prev) => ({
               ...prev,
-              hasLocalPrice: Boolean(nextLocation?.postalCode),
-              location: nextLocation,
+              hasLocalPrice: Boolean(getLocationZip(normalizedLocation)),
+              location: normalizedLocation,
             }));
 
             window.dispatchEvent(
               new CustomEvent('ce-location-change', {
-                detail: nextLocation,
+                detail: normalizedLocation,
               })
             );
           }}
