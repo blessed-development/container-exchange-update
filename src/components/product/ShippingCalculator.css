@@ -1295,3 +1295,22 @@ margin-top:1px !important;
     bottom:auto;
   }
 }
+/* Remove specification price collapse / disappear animation */
+.main-tab,
+.main-tab *,
+.tab-price,
+.cond-card,
+.cond-card *,
+.cc-price,
+.grade-btn,
+.grade-btn * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.main-tab.active,
+.cond-card.active,
+.grade-btn.active {
+  transform: none !important;
+}
