@@ -153,6 +153,7 @@ export default function ContainerConfigurator({
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
+  const [locationNotice, setLocationNotice] = useState('');
 
   const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'WWT');
   const [qty] = useState(1);
@@ -192,6 +193,18 @@ export default function ContainerConfigurator({
       window.removeEventListener('pageshow', syncSavedLocation);
     };
   }, []);
+
+  useEffect(() => {
+    if (!location?.postalCode || !location?.city) return;
+
+    setLocationNotice(`Pricing updated for ${location.city}${location.state ? `, ${location.state}` : ''}`);
+
+    const timer = setTimeout(() => {
+      setLocationNotice('');
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, [location?.postalCode, location?.city, location?.state]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -424,7 +437,9 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="step-label">STEP 1 — ENTER ZIP / POSTAL CODE</div>
+        <div className={`step-label ${location?.postalCode ? 'is-complete' : ''}`}>
+          {location?.postalCode ? '✓ Delivery location set' : 'STEP 1 — ENTER ZIP / POSTAL CODE'}
+        </div>
 
         <div className="zip-bar">
           <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
@@ -461,6 +476,10 @@ export default function ContainerConfigurator({
             </button>
           </div>
         </div>
+
+        {locationNotice && (
+          <div className="zip-success-note">{locationNotice}</div>
+        )}
 
         <div className="section-header">
           <span>CONTAINER SPECIFICATIONS</span>
@@ -591,12 +610,12 @@ export default function ContainerConfigurator({
             <div className="total-row">
               <span className="total-lbl">Total</span>
 
-            <div className="flex flex-col items-end">
-  <span className="total-price">{fmt(totalPrice)}</span>
-</div>
+              <div className="flex flex-col items-end">
+                <span className="total-price">{fmt(totalPrice)}</span>
+              </div>
             </div>
 
-            <div className="relative mt-4">
+            <div className="checkout-action-lock relative mt-4">
               {!hasCheckoutLocation && (
                 <div className="absolute inset-0 z-20 rounded-[18px] bg-black/20 backdrop-blur-[9px] flex items-center justify-center border border-white/5">
                   <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 text-primary text-[12px] font-medium tracking-[0.01em] shadow-[0_10px_28px_rgba(0,0,0,0.18)]">
