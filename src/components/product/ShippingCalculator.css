@@ -1104,17 +1104,6 @@ margin-top:1px !important;
   color:rgba(34,197,94,.92);
 }
 
-.zip-success-note{
-  margin:0 2px 2px;
-  padding:8px 10px;
-  border:1px solid rgba(34,197,94,.16);
-  border-radius:14px;
-  background:rgba(34,197,94,.075);
-  color:rgba(187,247,208,.92);
-  font-size:12px;
-  font-weight:700;
-  animation:ceSoftIn .22s ease both;
-}
 
 @keyframes ceSoftIn{
   from{opacity:0; transform:translateY(-4px);}
@@ -1294,37 +1283,4 @@ margin-top:1px !important;
     position:relative;
     bottom:auto;
   }
-}
-//* REMOVE ZIP SUCCESS COLLAPSE MESSAGE */
-
-.zip-success,
-.location-success,
-.location-toast,
-.pricing-updated,
-.location-feedback{
-  display:none !important;
-  opacity:0 !important;
-  visibility:hidden !important;
-  height:0 !important;
-  min-height:0 !important;
-  max-height:0 !important;
-  margin:0 !important;
-  padding:0 !important;
-  overflow:hidden !important;
-}
-
-/* keep only loading + errors */
-
-.zip-status{
-  margin-top:8px;
-  color:#22c55e;
-  font-size:11px;
-  font-weight:800;
-}
-
-.zip-error{
-  margin-top:8px;
-  color:#ff6b6b;
-  font-size:11px;
-  font-weight:800;
 }
