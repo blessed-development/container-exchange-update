@@ -1295,22 +1295,36 @@ margin-top:1px !important;
     bottom:auto;
   }
 }
-/* Remove specification price collapse / disappear animation */
-.main-tab,
-.main-tab *,
-.tab-price,
-.cond-card,
-.cond-card *,
-.cc-price,
-.grade-btn,
-.grade-btn * {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
+//* REMOVE ZIP SUCCESS COLLAPSE MESSAGE */
+
+.zip-success,
+.location-success,
+.location-toast,
+.pricing-updated,
+.location-feedback{
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  height:0 !important;
+  min-height:0 !important;
+  max-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
 }
 
-.main-tab.active,
-.cond-card.active,
-.grade-btn.active {
-  transform: none !important;
+/* keep only loading + errors */
+
+.zip-status{
+  margin-top:8px;
+  color:#22c55e;
+  font-size:11px;
+  font-weight:800;
+}
+
+.zip-error{
+  margin-top:8px;
+  color:#ff6b6b;
+  font-size:11px;
+  font-weight:800;
 }
