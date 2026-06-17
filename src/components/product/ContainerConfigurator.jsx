@@ -591,15 +591,9 @@ export default function ContainerConfigurator({
             <div className="total-row">
               <span className="total-lbl">Total</span>
 
-              <div className="flex flex-col items-end">
-                <span className="total-price">{fmt(totalPrice)}</span>
-
-               {!location?.postalCode && (
-  <span className="text-[11px] text-muted-foreground">
-    Starting From
-  </span>
-)}
-              </div>
+            <div className="flex flex-col items-end">
+  <span className="total-price">{fmt(totalPrice)}</span>
+</div>
             </div>
 
             <div className="relative mt-4">
