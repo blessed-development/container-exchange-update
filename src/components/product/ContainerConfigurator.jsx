@@ -483,7 +483,6 @@ export default function ContainerConfigurator({
 
         <div className="section-header">
           <span>CONTAINER SPECIFICATIONS</span>
-          <strong>{sizeOption.label} Selected</strong>
         </div>
 
         <div className="main-tabs">
@@ -512,9 +511,6 @@ export default function ContainerConfigurator({
         <div className="cond-cards-section">
           <div className="cond-cards-head">
             <span className="card-lbl">CONDITION</span>
-            <span className="card-val">
-              {condition === 'new' ? 'NEW' : 'USED'} — {sizeOption.label}
-            </span>
           </div>
 
           <div className="cond-cards">
@@ -585,7 +581,6 @@ export default function ContainerConfigurator({
         <div className="section-card">
           <div className="card-head">
             <span className="card-lbl">SELECTION TYPE</span>
-            <span className="card-val">First off the Stack</span>
           </div>
 
           <div className="selection-type">
