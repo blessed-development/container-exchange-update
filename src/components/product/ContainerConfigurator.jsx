@@ -153,7 +153,6 @@ export default function ContainerConfigurator({
   const [postalInput, setPostalInput] = useState('');
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
-  const [locationNotice, setLocationNotice] = useState('');
 
   const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'WWT');
   const [qty] = useState(1);
@@ -476,10 +475,6 @@ export default function ContainerConfigurator({
             </button>
           </div>
         </div>
-
-        {locationNotice && (
-          <div className="zip-success-note">{locationNotice}</div>
-        )}
 
         <div className="section-header">
           <span>CONTAINER SPECIFICATIONS</span>
