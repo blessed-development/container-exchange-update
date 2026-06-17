@@ -1425,3 +1425,114 @@ margin-top:1px !important;
 .checkout{
   margin-top:10px !important;
 }
+/* APPLE / TESLA CONDITION CARDS */
+
+.cond-cards{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+}
+
+.cond-card{
+  overflow:hidden !important;
+  min-height:165px !important;
+
+  padding:0 !important;
+
+  border-radius:22px !important;
+
+  border:1px solid rgba(255,255,255,.07) !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      rgba(255,255,255,.01)
+    ) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.03),
+    0 10px 28px rgba(0,0,0,.16) !important;
+
+  position:relative !important;
+}
+
+.cond-card.active{
+  border-color:rgba(255,90,47,.38) !important;
+
+  box-shadow:
+    0 14px 36px rgba(0,0,0,.22),
+    0 0 0 1px rgba(255,90,47,.12) !important;
+}
+
+.cond-img{
+  width:100% !important;
+
+  height:128px !important;
+
+  object-fit:cover !important;
+
+  object-position:center !important;
+
+  border-radius:0 !important;
+
+  display:block !important;
+}
+
+.cc-info{
+  position:absolute !important;
+
+  left:18px !important;
+
+  bottom:16px !important;
+
+  z-index:2 !important;
+
+  display:flex !important;
+
+  flex-direction:column !important;
+
+  gap:4px !important;
+}
+
+/* REMOVE PRICE */
+
+.cc-price{
+  display:none !important;
+}
+
+/* NAME ONLY */
+
+.cc-name{
+  color:white !important;
+
+  font-size:17px !important;
+
+  font-weight:900 !important;
+
+  letter-spacing:-.04em !important;
+
+  text-transform:none !important;
+}
+
+/* REMOVE EXTRA TEXT */
+
+.card-val{
+  display:none !important;
+}
+
+.cc-check{
+  top:14px !important;
+
+  right:14px !important;
+
+  width:24px !important;
+
+  height:24px !important;
+
+  background:rgba(0,0,0,.45) !important;
+
+  backdrop-filter:blur(10px);
+
+  border-radius:999px !important;
+}
