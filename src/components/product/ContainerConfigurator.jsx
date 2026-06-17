@@ -159,6 +159,8 @@ export default function ContainerConfigurator({
   const [gradeOpen, setGradeOpen] = useState(false);
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
+  const hasCheckoutLocation = Boolean(location?.postalCode);
+
   useEffect(() => {
     setGrade(condition === 'new' ? 'IICL' : 'WWT');
   }, [condition]);
@@ -166,6 +168,30 @@ export default function ContainerConfigurator({
   useEffect(() => {
     setUserChangedConfig(false);
   }, [container?.id]);
+
+  useEffect(() => {
+    const syncSavedLocation = (event) => {
+      const nextLocation = event?.detail || getSavedSelectedLocation();
+
+      if (nextLocation?.postalCode) {
+        setLocation(nextLocation);
+      }
+    };
+
+    syncSavedLocation();
+
+    window.addEventListener('ce-location-change', syncSavedLocation);
+    window.addEventListener('storage', syncSavedLocation);
+    window.addEventListener('focus', syncSavedLocation);
+    window.addEventListener('pageshow', syncSavedLocation);
+
+    return () => {
+      window.removeEventListener('ce-location-change', syncSavedLocation);
+      window.removeEventListener('storage', syncSavedLocation);
+      window.removeEventListener('focus', syncSavedLocation);
+      window.removeEventListener('pageshow', syncSavedLocation);
+    };
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -203,6 +229,11 @@ export default function ContainerConfigurator({
         const resolved = await lookupPostalCode(raw);
         setLocation(resolved);
         saveSelectedLocation(resolved);
+        window.dispatchEvent(
+          new CustomEvent('ce-location-change', {
+            detail: resolved,
+          })
+        );
         setPostalInput('');
         setZipOpen(false);
       } catch (error) {
@@ -233,21 +264,7 @@ export default function ContainerConfigurator({
       : selectedStandardPrice;
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
-
   const unitPrice = applyLocalPrice(basePrice);
-  useEffect(() => {
-  if (typeof onPricingChange === 'function') {
-    onPricingChange({
-      price: unitPrice,
-      hasLocalPrice: Boolean(location?.postalCode),
-      location,
-    });
-  }
-}, [
-  unitPrice,
-  location?.postalCode,
-  onPricingChange,
-]);
   const totalPrice = unitPrice * qty;
 
   useEffect(() => {
@@ -310,6 +327,11 @@ export default function ContainerConfigurator({
 
           setLocation(resolved);
           saveSelectedLocation(resolved);
+          window.dispatchEvent(
+            new CustomEvent('ce-location-change', {
+              detail: resolved,
+            })
+          );
           setPostalInput('');
           setZipOpen(false);
         } catch (error) {
@@ -351,6 +373,8 @@ export default function ContainerConfigurator({
   };
 
   const addToCart = () => {
+    if (!hasCheckoutLocation) return;
+
     addCartItem({
       id: `${container?.id || condition}-${safeSizeIndex}-${grade}-${Date.now()}`,
       title: currentTitle,
@@ -582,16 +606,43 @@ export default function ContainerConfigurator({
               </div>
             </div>
 
-            <div className="cart-row">
-              <button type="button" className="add-btn" onClick={addToCart}>
-                <ShoppingCart size={17} />
-                Add to Cart
-              </button>
-            </div>
+            <div className="relative mt-4">
+              {!hasCheckoutLocation && (
+                <div className="absolute inset-0 z-20 rounded-[18px] bg-black/20 backdrop-blur-[9px] flex items-center justify-center border border-white/5">
+                  <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 text-primary text-[12px] font-medium tracking-[0.01em] shadow-[0_10px_28px_rgba(0,0,0,0.18)]">
+                    Enter ZIP to unlock checkout
+                  </div>
+                </div>
+              )}
 
-            <button type="button" className="quote-btn">
-              Request a Quote
-            </button>
+              <div
+                className={`transition-all duration-300 ${
+                  !hasCheckoutLocation
+                    ? 'blur-[5px] pointer-events-none select-none'
+                    : ''
+                }`}
+              >
+                <div className="cart-row">
+                  <button
+                    type="button"
+                    className="add-btn"
+                    disabled={!hasCheckoutLocation}
+                    onClick={addToCart}
+                  >
+                    <ShoppingCart size={17} />
+                    Add to Cart
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="quote-btn"
+                  disabled={!hasCheckoutLocation}
+                >
+                  Request a Quote
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
