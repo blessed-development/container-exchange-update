@@ -584,15 +584,9 @@ useEffect(() => {
                 ref={gradeCardRef}
                 type="button"
                 aria-expanded={gradeOpen}
-                onMouseEnter={() => setGradeOpen(true)}
-                onMouseLeave={() => {
-                  if (!gradeLocked) setGradeOpen(false);
-                }}
                 onClick={() => {
-                  const nextLocked = !gradeLocked;
-
-                  setGradeLocked(nextLocked);
-                  setGradeOpen(nextLocked);
+                  setGradeOpen((open) => !open);
+                  setGradeLocked((locked) => !locked);
                 }}
                 className={`group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                   gradeOpen
@@ -601,12 +595,12 @@ useEffect(() => {
                 }`}
               >
                 <div className="flex items-center justify-between gap-4 px-5 pt-4">
-                  <p className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-white/45">
+                  <p className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-primary">
                     Grade Classification
                   </p>
 
                   <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-white/45 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                    className={`h-4 w-4 shrink-0 text-primary/85 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                       gradeOpen ? 'rotate-180' : ''
                     }`}
                   />
@@ -641,15 +635,9 @@ useEffect(() => {
                   ref={descriptionCardRef}
                   type="button"
                   aria-expanded={descriptionOpen}
-                  onMouseEnter={() => setDescriptionOpen(true)}
-                  onMouseLeave={() => {
-                    if (!descriptionLocked) setDescriptionOpen(false);
-                  }}
                   onClick={() => {
-                    const nextLocked = !descriptionLocked;
-
-                    setDescriptionLocked(nextLocked);
-                    setDescriptionOpen(nextLocked);
+                    setDescriptionOpen((open) => !open);
+                    setDescriptionLocked((locked) => !locked);
                   }}
                   className={`group mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                     descriptionOpen
@@ -657,11 +645,7 @@ useEffect(() => {
                       : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-4 px-5 pt-4">
-                    <p className="text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-white/45">
-                      Description
-                    </p>
-
+                  <div className="flex justify-end px-5 pt-4">
                     <ChevronDown
                       className={`h-4 w-4 shrink-0 text-white/45 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                         descriptionOpen ? 'rotate-180' : ''
@@ -670,7 +654,7 @@ useEffect(() => {
                   </div>
 
                   <div
-                    className={`relative overflow-hidden px-5 pb-4 pt-2 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                    className={`relative overflow-hidden px-5 pb-4 pt-1 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                       descriptionOpen ? 'max-h-[380px]' : 'max-h-[92px]'
                     }`}
                   >
