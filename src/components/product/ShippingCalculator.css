@@ -1858,445 +1858,93 @@ margin-top:1px !important;
 }
 
 
-/* =========================================================
-   FINAL CLEAN OVERRIDES — CONDITION + GRADE
-   Keeps condition compact, fixes image crop, makes grade always visible.
-   ========================================================= */
-
-/* CONDITION — compact wide texture cards */
-.cond-cards{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
-  gap:10px !important;
-  padding:8px !important;
+/* BUY + ZIP FLOAT STACK — isolated experiment */
+.calculator-sticky-stack{
+  position:sticky;
+  top:84px;
+  z-index:18;
+  padding-bottom:6px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(9,11,15,.98) 0%,
+      rgba(9,11,15,.92) 82%,
+      rgba(9,11,15,0) 100%
+    );
+  backdrop-filter:blur(14px);
+  transform:translateY(calc(var(--ce-stack-progress,0) * -8px));
+  transition:background .22s ease, box-shadow .22s ease;
 }
 
-.cond-card{
-  display:block !important;
-  position:relative !important;
-  height:96px !important;
-  min-height:96px !important;
-  padding:0 !important;
-  overflow:hidden !important;
-  border-radius:18px !important;
-  border:1px solid rgba(255,255,255,.075) !important;
-  background:#0f1319 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.03),
-    0 8px 18px rgba(0,0,0,.10) !important;
-  transition:border-color .22s ease, box-shadow .22s ease, background .22s ease !important;
-  transform:none !important;
+.calculator-sticky-stack .buy-header{
+  margin-bottom:calc(12px - (var(--ce-stack-progress,0) * 6px));
+  transition:margin .22s ease;
 }
 
-.cond-card.active{
-  border-color:rgba(255,90,47,.26) !important;
-  background:#10141a !important;
-  box-shadow:
-    0 10px 24px rgba(0,0,0,.14),
-    0 0 0 1px rgba(255,90,47,.055) !important;
-  transform:none !important;
+.calculator-sticky-stack .premium-buy-tabs{
+  height:calc(108px - (var(--ce-stack-progress,0) * 30px));
+  transition:height .28s cubic-bezier(.22,1,.36,1), gap .28s cubic-bezier(.22,1,.36,1);
 }
 
-.cond-img{
-  width:100% !important;
-  height:100% !important;
-  min-height:0 !important;
-  object-fit:cover !important;
-  object-position:center 42% !important;
-  transform:none !important;
-  display:block !important;
-  border-radius:0 !important;
+.calculator-sticky-stack .premium-buy-tab{
+  transform:translateY(calc(var(--ce-stack-progress,0) * -4px));
+  transition:
+    transform .28s cubic-bezier(.22,1,.36,1),
+    border-color .28s ease,
+    background .28s ease,
+    box-shadow .28s ease,
+    flex .28s cubic-bezier(.22,1,.36,1);
 }
 
-.cond-card::after{
-  content:"" !important;
-  position:absolute !important;
-  inset:0 !important;
-  background:linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.14), rgba(0,0,0,.42)) !important;
-  pointer-events:none !important;
+.calculator-sticky-stack .premium-buy-tab strong{
+  font-size:calc(18px - (var(--ce-stack-progress,0) * 3px));
+  transition:font-size .28s cubic-bezier(.22,1,.36,1);
 }
 
-.cc-info{
-  position:absolute !important;
-  left:14px !important;
-  bottom:12px !important;
-  z-index:3 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  gap:0 !important;
+.calculator-sticky-stack .premium-buy-tab.active strong{
+  font-size:calc(24px - (var(--ce-stack-progress,0) * 5px));
 }
 
-.cc-name{
-  display:block !important;
-  color:#fff !important;
-  font-size:15px !important;
-  font-weight:900 !important;
-  letter-spacing:-.03em !important;
-  text-transform:uppercase !important;
-  text-shadow:0 2px 12px rgba(0,0,0,.35) !important;
+.calculator-sticky-stack .premium-buy-tab span{
+  font-size:calc(15px - (var(--ce-stack-progress,0) * 2px));
+  transition:font-size .28s cubic-bezier(.22,1,.36,1);
 }
 
-.cc-price{
-  display:none !important;
+.calculator-sticky-stack .premium-buy-tab.active span{
+  font-size:calc(18px - (var(--ce-stack-progress,0) * 3px));
 }
 
-.cc-check{
-  display:flex !important;
-  position:absolute !important;
-  top:10px !important;
-  right:10px !important;
-  z-index:4 !important;
-  width:20px !important;
-  height:20px !important;
-  align-items:center !important;
-  justify-content:center !important;
-  border-radius:999px !important;
-  background:rgba(0,0,0,.34) !important;
-  color:#fff !important;
-  border:1px solid rgba(255,255,255,.12) !important;
-  backdrop-filter:blur(10px) !important;
+.calculator-sticky-stack .premium-buy-tab small{
+  opacity:calc(.65 - (var(--ce-stack-progress,0) * .22));
+  transition:opacity .28s ease;
 }
 
-.cond-card:not(.active) .cc-check{
-  display:none !important;
+.calculator-sticky-stack .step-label{
+  margin-top:calc(8px - (var(--ce-stack-progress,0) * 4px));
+  margin-bottom:calc(3px - (var(--ce-stack-progress,0) * 1px));
+  opacity:calc(1 - (var(--ce-stack-progress,0) * .18));
+  transition:margin .28s cubic-bezier(.22,1,.36,1), opacity .28s ease;
 }
 
-/* GRADE — always visible premium chip cards */
-.grade-section-card{
-  overflow:visible !important;
+.calculator-sticky-stack .zip-bar{
+  transform:translateY(calc(var(--ce-stack-progress,0) * -2px));
+  box-shadow:0 calc(var(--ce-stack-progress,0) * 14px) calc(var(--ce-stack-progress,0) * 38px) rgba(0,0,0,.22);
+  transition:
+    transform .28s cubic-bezier(.22,1,.36,1),
+    box-shadow .28s ease,
+    border-color .28s ease;
 }
 
-.grade-static-head{
-  min-height:36px !important;
-  padding:9px 12px 2px !important;
-  pointer-events:none !important;
-}
+@media(max-width:900px){
+  .calculator-sticky-stack{
+    position:relative;
+    top:auto;
+    transform:none;
+    background:transparent;
+    backdrop-filter:none;
+  }
 
-.grade-static-head .card-lbl{
-  display:block !important;
-}
-
-.grade-head-val,
-.grade-head-arrow{
-  display:none !important;
-}
-
-.grade-grid,
-.grade-grid-static{
-  display:grid !important;
-  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-  gap:10px !important;
-  padding:8px 10px 10px !important;
-  margin:0 !important;
-  opacity:1 !important;
-  visibility:visible !important;
-  height:auto !important;
-  max-height:none !important;
-  overflow:visible !important;
-}
-
-.grade-btn{
-  min-height:58px !important;
-  height:58px !important;
-  border-radius:17px !important;
-  border:1px solid rgba(255,255,255,.075) !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015)) !important;
-  color:#fff !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.03) !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
-  padding:0 10px !important;
-  transform:none !important;
-  transition:border-color .22s ease, background .22s ease, box-shadow .22s ease !important;
-}
-
-.grade-btn:hover{
-  border-color:rgba(255,255,255,.16) !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02)) !important;
-  transform:none !important;
-}
-
-.grade-btn.active{
-  border-color:rgba(255,90,47,.30) !important;
-  background:linear-gradient(180deg,rgba(255,90,47,.08),rgba(255,255,255,.018)) !important;
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.14),
-    inset 0 1px 0 rgba(255,255,255,.04) !important;
-  transform:none !important;
-}
-
-.grade-btn span:last-child{
-  color:#fff !important;
-  font-size:14px !important;
-  font-weight:850 !important;
-  line-height:1.05 !important;
-  letter-spacing:-.03em !important;
-}
-
-.grade-btn:nth-child(1) span:last-child,
-.grade-btn:nth-child(2) span:last-child,
-.grade-btn:nth-child(3) span:last-child{
-  font-size:0 !important;
-}
-
-.grade-btn:nth-child(1) span:last-child::after{
-  content:"AS IS";
-  font-size:14px;
-}
-
-.grade-btn:nth-child(2) span:last-child::after{
-  content:"WWT";
-  font-size:14px;
-}
-
-.grade-btn:nth-child(3) span:last-child::after{
-  content:"CW";
-  font-size:14px;
-}
-
-.grade-check{
-  display:none !important;
-}
-
-.grade-btn.active .grade-check{
-  display:block !important;
-  position:absolute !important;
-  top:9px !important;
-  right:9px !important;
-  width:8px !important;
-  height:8px !important;
-  border-radius:999px !important;
-  background:#ff5a2f !important;
-  color:transparent !important;
-}
-
-.grade-btn.active .grade-check svg{
-  display:none !important;
-}
-/* GRADE UPGRADE TABLE — FINAL */
-
-.grade-section-card{
-  overflow:hidden !important;
-}
-
-.grade-static-head{
-  min-height:38px !important;
-  padding:10px 14px 4px !important;
-  pointer-events:none !important;
-}
-
-.grade-upgrade-grid{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:8px !important;
-  padding:8px 10px 12px !important;
-}
-
-.grade-upgrade-btn{
-  min-height:68px !important;
-  border-radius:16px !important;
-  border:1px solid rgba(255,255,255,.065) !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)) !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:6px !important;
-}
-
-.grade-upgrade-btn.active{
-  border-color:rgba(255,90,47,.36) !important;
-  background:linear-gradient(180deg,rgba(255,90,47,.07),rgba(255,255,255,.016)) !important;
-}
-
-.grade-upgrade-btn.active::after{
-  content:"";
-  position:absolute;
-  left:14px;
-  right:14px;
-  bottom:7px;
-  height:2px;
-  border-radius:999px;
-  background:#ff5a2f;
-}
-
-.grade-check,
-.grade-head-val,
-.grade-head-arrow{
-  display:none !important;
-}
-
-.grade-name{
-  color:rgba(255,255,255,.94) !important;
-  font-size:12px !important;
-  font-weight:850 !important;
-  text-align:center !important;
-}
-
-.grade-delta{
-  font-size:10px !important;
-  font-weight:900 !important;
-}
-
-.grade-delta.included{
-  color:rgba(255,255,255,.68) !important;
-}
-
-.grade-delta.add{
-  color:#ff6a3d !important;
-}
-
-.grade-delta.save{
-  color:#22c55e !important;
-}
-/* FINAL GRADE UPGRADE SELECTOR */
-
-.grade-section-card{
-  overflow:hidden !important;
-}
-
-.grade-static-head{
-  min-height:38px !important;
-  padding:10px 14px 4px !important;
-}
-
-.grade-upgrade-grid{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:8px !important;
-  padding:8px 10px 12px !important;
-}
-
-.grade-upgrade-btn{
-  position:relative !important;
-  min-height:74px !important;
-  border:1px solid rgba(255,255,255,.07) !important;
-  border-radius:16px !important;
-  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)) !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:7px !important;
-  cursor:pointer !important;
-  transition:border-color .22s ease, background .22s ease, box-shadow .22s ease !important;
-}
-
-.grade-upgrade-btn.active{
-  border-color:rgba(255,90,47,.42) !important;
-  background:linear-gradient(180deg,rgba(255,90,47,.08),rgba(255,255,255,.018)) !important;
-  box-shadow:0 10px 24px rgba(0,0,0,.16) !important;
-}
-
-.grade-upgrade-btn.active::after{
-  content:"";
-  position:absolute;
-  left:16px;
-  right:16px;
-  bottom:8px;
-  height:2px;
-  border-radius:999px;
-  background:#ff5a2f;
-}
-
-.grade-name{
-  color:rgba(255,255,255,.95) !important;
-  font-size:11.5px !important;
-  line-height:1.05 !important;
-  font-weight:900 !important;
-  text-align:center !important;
-  letter-spacing:-.025em !important;
-}
-
-.grade-delta{
-  font-size:10px !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-}
-
-.grade-delta.included{
-  color:rgba(255,255,255,.62) !important;
-}
-
-.grade-delta.add{
-  color:#ff6a3d !important;
-}
-
-.grade-delta.save{
-  color:#22c55e !important;
-}
-/* STOP CALCULATOR SHAKE DURING VARIANT CHANGE */
-
-.widget{
-  contain:layout paint;
-}
-
-.grade-upgrade-grid,
-.main-tabs,
-.cond-cards,
-.checkout{
-  transform:translateZ(0);
-  backface-visibility:hidden;
-}
-
-.grade-upgrade-btn,
-.main-tab,
-.cond-card{
-  min-height:74px;
-}
-
-.grade-upgrade-grid{
-  min-height:90px;
-}
-
-.main-tabs{
-  min-height:116px;
-}
-
-.cond-cards-section{
-  min-height:150px;
-}
-
-.checkout{
-  min-height:168px;
-}
-.grade-classification-card{
-  position:relative;
-  max-height:132px;
-  overflow:hidden;
-  transition:max-height .35s ease;
-}
-
-.grade-classification-card::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:54px;
-  background:linear-gradient(
-    to bottom,
-    rgba(18,21,28,0),
-    rgba(18,21,28,.96)
-  );
-  pointer-events:none;
-}
-
-.grade-classification-card:hover,
-.grade-classification-card.expanded{
-  max-height:360px;
-}
-
-.grade-classification-card:hover::after,
-.grade-classification-card.expanded::after{
-  opacity:0;
-}
-.product-detail-info-card {
-  margin-bottom: 14px !important;
-}
-
-.product-detail-description-card {
-  margin-top: -4px !important;
+  .calculator-sticky-stack .premium-buy-tabs{
+    height:104px;
+  }
 }
