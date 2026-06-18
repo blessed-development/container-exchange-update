@@ -560,8 +560,63 @@ export default function ContainerConfigurator({
                   key={g.key}
                   type="button"
                   className={`grade-upgrade-btn ${active ? 'active' : ''}`}
-                  onClick={() => setGrade(g.key)}
-                >
+                  onClick={() => {
+
+  setGrade(g.key);
+
+  const gradeMap = {
+    'AS_IS':'as-is',
+    'WWT':'wwt',
+    'CW':'cargo-worthy',
+    'IICL':'iicl'
+  };
+
+  const sizeMap = {
+    0:'20',
+    1:'40',
+    2:'40hc'
+  };
+
+  const currentSize =
+    sizeMap[selectedSizeIndex] ||
+    sizeMap[safeSizeIndex] ||
+    '20';
+
+  const currentCondition =
+    condition === 'new'
+      ? 'new'
+      : 'used';
+
+  const targetProduct =
+    window.inventoryProducts?.find((p)=>{
+
+      const title =
+        `${p.title || p.name || ''}`.toLowerCase();
+
+      return (
+        title.includes(currentSize) &&
+        title.includes(currentCondition) &&
+        title.includes(
+          gradeMap[g.key]
+        )
+      );
+
+    });
+
+  if(
+    targetProduct &&
+    targetProduct.id &&
+    targetProduct.id !== container?.id
+  ){
+
+    navigate(
+      `/product/${targetProduct.slug || targetProduct.id}`
+    );
+
+  }
+
+}}
+                  >
                   <span className="grade-name">{g.label}</span>
                   <span className={`grade-delta ${deltaClass(difference)}`}>
                     {fmtDelta(difference)}
