@@ -2227,3 +2227,38 @@ margin-top:1px !important;
 .grade-delta.save{
   color:#22c55e !important;
 }
+/* STOP CALCULATOR SHAKE DURING VARIANT CHANGE */
+
+.widget{
+  contain:layout paint;
+}
+
+.grade-upgrade-grid,
+.main-tabs,
+.cond-cards,
+.checkout{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+}
+
+.grade-upgrade-btn,
+.main-tab,
+.cond-card{
+  min-height:74px;
+}
+
+.grade-upgrade-grid{
+  min-height:90px;
+}
+
+.main-tabs{
+  min-height:116px;
+}
+
+.cond-cards-section{
+  min-height:150px;
+}
+
+.checkout{
+  min-height:168px;
+}
