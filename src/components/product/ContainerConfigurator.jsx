@@ -7,7 +7,7 @@ import {
   X,
   Lock,
   MapPin,
-  Check
+  Check,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
@@ -22,13 +22,17 @@ import {
   getSavedSelectedLocation,
 } from '../../lib/locationEngine';
 
-const USED_GRADES = [
-  { key: 'AS_IS', label: 'AS IS', adjust: 0 },
-  { key: 'WWT', label: 'Wind & Water Tight', adjust: 0 },
-  { key: 'CW', label: 'Cargo Worthy (CW)', adjust: 0 },
+const GRADE_OPTIONS = [
+  { key: 'AS_IS', label: 'AS-IS', shortLabel: 'AS-IS', adjust: 0 },
+  { key: 'WWT', label: 'Wind & Water Tight', shortLabel: 'WWT', adjust: 250 },
+  { key: 'CW', label: 'Cargo Worthy', shortLabel: 'CW', adjust: 550 },
+  { key: 'IICL', label: 'IICL Certified', shortLabel: 'IICL', adjust: 950 },
 ];
 
-const NEW_GRADES = [{ key: 'IICL', label: 'IICL Certified', adjust: 0 }];
+const DEFAULT_GRADE_BY_CONDITION = {
+  used: 'WWT',
+  new: 'IICL',
+};
 
 const CONDITION_IMAGES = {
   used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
@@ -153,14 +157,16 @@ export default function ContainerConfigurator({
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
 
-  const [grade, setGrade] = useState(condition === 'new' ? 'IICL' : 'WWT');
+  const [grade, setGrade] = useState(
+    DEFAULT_GRADE_BY_CONDITION[condition] || 'WWT'
+  );
   const [qty] = useState(1);
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
   const hasCheckoutLocation = Boolean(location?.postalCode);
 
   useEffect(() => {
-    setGrade(condition === 'new' ? 'IICL' : 'WWT');
+    setGrade(DEFAULT_GRADE_BY_CONDITION[condition] || 'WWT');
   }, [condition]);
 
   useEffect(() => {
@@ -247,9 +253,14 @@ export default function ContainerConfigurator({
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
 
-  const gradeOptions = condition === 'new' ? NEW_GRADES : USED_GRADES;
+  const gradeOptions = GRADE_OPTIONS;
+  const referenceGradeKey = DEFAULT_GRADE_BY_CONDITION[condition] || 'WWT';
+  const referenceGrade =
+    gradeOptions.find((g) => g.key === referenceGradeKey) || gradeOptions[1];
   const activeGrade =
-    gradeOptions.find((g) => g.key === grade) || gradeOptions[0];
+    gradeOptions.find((g) => g.key === grade) || referenceGrade;
+  const activeGradeDeltaFromReference =
+    Number(activeGrade.adjust || 0) - Number(referenceGrade.adjust || 0);
 
   const openedProductPrice = Number(container?.base_price ?? container?.price ?? 0);
 
@@ -262,8 +273,25 @@ export default function ContainerConfigurator({
       : selectedStandardPrice;
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
-  const unitPrice = applyLocalPrice(basePrice);
+  const getPriceWithGrade = (price) =>
+    Math.max(0, Number(price || 0) + activeGradeDeltaFromReference);
+
+  const unitPrice = applyLocalPrice(getPriceWithGrade(basePrice));
   const totalPrice = unitPrice * qty;
+
+  const getGradeDisplay = (option) => {
+    const difference = Number(option.adjust || 0) - Number(activeGrade.adjust || 0);
+
+    if (difference === 0) {
+      return { text: 'Included', tone: 'included' };
+    }
+
+    if (difference < 0) {
+      return { text: `Save ${fmt(Math.abs(difference)).replace('.00', '')}`, tone: 'save' };
+    }
+
+    return { text: `+${fmt(difference).replace('.00', '')}`, tone: 'add' };
+  };
 
   useEffect(() => {
     if (typeof onPricingChange === 'function') {
@@ -365,7 +393,7 @@ export default function ContainerConfigurator({
   };
 
   const handleConditionSwitch = (nextCondition) => {
-    setGrade(nextCondition === 'new' ? 'IICL' : 'WWT');
+    setGrade(DEFAULT_GRADE_BY_CONDITION[nextCondition] || 'WWT');
     onConditionChange(nextCondition);
     switchProduct(nextCondition, safeSizeIndex);
   };
@@ -482,7 +510,9 @@ export default function ContainerConfigurator({
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                  {isActive ? fmt(unitPrice) : fmt(applyLocalPrice(standardPrice))}
+                  {isActive
+                    ? fmt(unitPrice)
+                    : fmt(applyLocalPrice(getPriceWithGrade(standardPrice)))}
                 </span>
               </button>
             );
@@ -525,20 +555,27 @@ export default function ContainerConfigurator({
             <span className="card-lbl">GRADE</span>
           </div>
 
-          <div className="grade-grid grade-grid-static">
-            {gradeOptions.map((g) => (
-              <button
-                key={g.key}
-                type="button"
-                className={`grade-btn ${grade === g.key ? 'active' : ''}`}
-                onClick={() => setGrade(g.key)}
-              >
-                <span className="grade-check">
-                  <Check size={10} />
-                </span>
-                <span>{g.label}</span>
-              </button>
-            ))}
+          <div className="grade-grid grade-upgrade-grid">
+            {gradeOptions.map((g) => {
+              const isActive = grade === g.key;
+              const gradeDisplay = getGradeDisplay(g);
+
+              return (
+                <button
+                  key={g.key}
+                  type="button"
+                  className={`grade-btn grade-upgrade-btn ${
+                    isActive ? 'active' : ''
+                  }`}
+                  onClick={() => setGrade(g.key)}
+                >
+                  <span className="grade-name">{g.label}</span>
+                  <span className={`grade-delta ${gradeDisplay.tone}`}>
+                    {gradeDisplay.text}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
