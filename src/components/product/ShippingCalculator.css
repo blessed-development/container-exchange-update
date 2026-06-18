@@ -2293,3 +2293,10 @@ margin-top:1px !important;
 .grade-classification-card.expanded::after{
   opacity:0;
 }
+.product-detail-info-card {
+  margin-bottom: 14px !important;
+}
+
+.product-detail-description-card {
+  margin-top: -4px !important;
+}
