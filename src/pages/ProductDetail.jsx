@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
@@ -136,16 +136,16 @@ export default function ProductDetail() {
     );
   });
 
-  const routeContainer =
+  const container =
     inventoryProducts.find((item) => item.id === id) || null;
-
-  const [activeProduct, setActiveProduct] = useState(null);
-  const container = activeProduct || routeContainer;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [gradeOpen, setGradeOpen] = useState(false);
+  const [gradeLocked, setGradeLocked] = useState(false);
+  const gradeCardRef = useRef(null);
   const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
@@ -157,6 +157,24 @@ export default function ProductDetail() {
     price: null,
     location: getSavedSelectedLocation(),
   });
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!gradeLocked) return;
+      if (gradeCardRef.current?.contains(event.target)) return;
+
+      setGradeLocked(false);
+      setGradeOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [gradeLocked]);
 
   useEffect(() => {
     const shouldPreserveScroll =
@@ -236,14 +254,9 @@ export default function ProductDetail() {
   }, [id]);
 
   useEffect(() => {
-    setActiveProduct(null);
-  }, [id]);
-
-  useEffect(() => {
     if (!container) return;
 
     setSelectedSizeIndex(getInitialSizeIndex(container));
-    setActiveImageIndex(0);
 
     setCondition(
       String(container.condition || '')
@@ -558,20 +571,63 @@ useEffect(() => {
                 </div>
               </div>
 
-              <div className="bg-primary/5 border border-primary/15 rounded-2xl p-5 mb-6">
-                <p className="text-xs font-mono text-primary tracking-widest mb-2">
-                  GRADE CLASSIFICATION
-                </p>
+              <button
+                ref={gradeCardRef}
+                type="button"
+                aria-expanded={gradeOpen}
+                onMouseEnter={() => setGradeOpen(true)}
+                onMouseLeave={() => {
+                  if (!gradeLocked) setGradeOpen(false);
+                }}
+                onClick={() => {
+                  const nextLocked = !gradeLocked;
 
-                <p className="font-bold text-base mb-1">
-                  {gradeInfo.label || container.grade}
-                </p>
+                  setGradeLocked(nextLocked);
+                  setGradeOpen(nextLocked);
+                }}
+                className={`group relative mb-6 w-full overflow-hidden rounded-[22px] border px-5 py-4 text-left transition-all duration-300 ${
+                  gradeOpen
+                    ? 'border-primary/25 bg-primary/[0.045]'
+                    : 'border-white/10 bg-white/[0.025] hover:border-primary/25 hover:bg-white/[0.04]'
+                }`}
+              >
+                <div
+                  className={`relative transition-all duration-300 ${
+                    gradeOpen ? 'max-h-[360px]' : 'max-h-[92px]'
+                  }`}
+                >
+                  <p className="mb-2 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-primary">
+                    GRADE CLASSIFICATION
+                  </p>
 
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {gradeInfo.desc ||
-                    'Reliable shipping container condition for storage or delivery use.'}
-                </p>
-              </div>
+                  <p className="mb-1 text-base font-bold text-white">
+                    {gradeInfo.label || container.grade}
+                  </p>
+
+                  <p
+                    className={`text-[14px] leading-6 text-muted-foreground transition-all duration-300 ${
+                      gradeOpen ? '' : 'line-clamp-2'
+                    }`}
+                  >
+                    {gradeInfo.desc ||
+                      'Reliable shipping container condition for storage or delivery use.'}
+                  </p>
+
+                  {!gradeOpen && (
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background/95 to-transparent" />
+                  )}
+                </div>
+
+                <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
+                  <span>{gradeOpen ? 'Show less' : 'Read more'}</span>
+
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform duration-300 ${
+                      gradeOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+              </button>
 
               {productDescription && (
                 <button
@@ -616,6 +672,7 @@ useEffect(() => {
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
+  key={`${container.id}-${zipCode || 'no-zip'}`}
   container={container}
   initialZip={zipCode}
   selectedSizeIndex={selectedSizeIndex}
@@ -623,7 +680,6 @@ useEffect(() => {
   condition={condition}
   onConditionChange={setCondition}
   onPricingChange={setLocalizedPricing}
-  onProductSwap={setActiveProduct}
 />
           </div>
         </div>
