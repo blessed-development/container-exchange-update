@@ -639,7 +639,7 @@ useEffect(() => {
                     setDescriptionOpen((open) => !open);
                     setDescriptionLocked((locked) => !locked);
                   }}
-                  className={`group mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
+                  className={`group mt-[-8px] mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                     descriptionOpen
                       ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
                       : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
