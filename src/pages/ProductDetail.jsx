@@ -136,7 +136,7 @@ export default function ProductDetail() {
     );
   });
 
-  const container = activeProduct ||
+  const container =
     inventoryProducts.find((item) => item.id === id) || null;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
@@ -616,7 +616,6 @@ useEffect(() => {
   condition={condition}
   onConditionChange={setCondition}
   onPricingChange={setLocalizedPricing}
-              onProductSwap={setActiveProduct}
 />
           </div>
         </div>
