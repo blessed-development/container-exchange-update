@@ -231,7 +231,6 @@ const findMatchingProduct = ({ sizeIndex, conditionKey, gradeKey }) => {
 };
 
 export default function ContainerConfigurator({
-  onProductSwap,
   container,
   selectedSizeIndex,
   onSizeChange,
