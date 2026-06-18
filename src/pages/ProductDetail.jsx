@@ -607,8 +607,7 @@ useEffect(() => {
           </div>
 
           <div className="lg:sticky lg:top-24 self-start">
-            <ContainerConfigurator
-  key={`${container.id}-${zipCode || 'no-zip'}`}
+           <ContainerConfigurator
   container={container}
   initialZip={zipCode}
   selectedSizeIndex={selectedSizeIndex}
