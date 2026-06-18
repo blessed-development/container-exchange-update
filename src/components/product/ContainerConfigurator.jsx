@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
@@ -237,9 +237,10 @@ export default function ContainerConfigurator({
   condition,
   onConditionChange,
   onPricingChange,
-  onProductSwap,
 }) {
   const navigate = useNavigate();
+  const stackRef = useRef(null);
+  const [stackProgress, setStackProgress] = useState(0);
 
   const {
     cart,
@@ -266,6 +267,37 @@ export default function ContainerConfigurator({
   const [userChangedConfig, setUserChangedConfig] = useState(false);
 
   const hasCheckoutLocation = Boolean(location?.postalCode);
+
+  useEffect(() => {
+    let frame = null;
+
+    const updateStackProgress = () => {
+      if (frame) return;
+
+      frame = window.requestAnimationFrame(() => {
+        const top = stackRef.current?.getBoundingClientRect?.().top ?? 0;
+        const start = 150;
+        const end = 40;
+        const raw = (start - top) / (start - end);
+        const next = Math.max(0, Math.min(1, raw));
+
+        setStackProgress(Number(next.toFixed(3)));
+        frame = null;
+      });
+    };
+
+    updateStackProgress();
+
+    window.addEventListener('scroll', updateStackProgress, { passive: true });
+    window.addEventListener('resize', updateStackProgress);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateStackProgress);
+      window.removeEventListener('resize', updateStackProgress);
+    };
+  }, []);
+
 
   useEffect(() => {
     const productGrade = getProductGradeKey(container);
@@ -468,11 +500,6 @@ export default function ContainerConfigurator({
     const targetId = getProductRouteId(targetProduct);
 
     if (targetId && targetId !== container?.id) {
-      if (typeof onProductSwap === 'function') {
-        onProductSwap(targetProduct);
-        return true;
-      }
-
       navigate(`/product/${targetId}`, {
         replace: true,
         state: {
@@ -547,6 +574,11 @@ export default function ContainerConfigurator({
   return (
     <>
       <div className="widget">
+        <div
+          ref={stackRef}
+          className="calculator-sticky-stack"
+          style={{ '--ce-stack-progress': stackProgress }}
+        >
         <div className="buy-header">
           <div className="premium-buy-tabs">
             <button
@@ -609,6 +641,7 @@ export default function ContainerConfigurator({
               Use my current location
             </button>
           </div>
+        </div>
         </div>
 
         <div className="section-header">
