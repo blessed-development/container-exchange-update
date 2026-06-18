@@ -129,13 +129,7 @@ export default function ProductDetail() {
   const [zipCode, setZipCode] = useState(() => {
     const saved = getSavedSelectedLocation();
 
-    
-useEffect(()=>{
- const h=(e)=>setLocalProductId(e.detail?.targetId||null);
- window.addEventListener('ce-product-swap',h);
- return ()=>window.removeEventListener('ce-product-swap',h);
-},[]);
-return (
+    return (
       saved?.postalCode ||
       new URLSearchParams(window.location.search).get('zip') ||
       ''
