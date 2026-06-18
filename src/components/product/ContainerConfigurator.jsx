@@ -467,7 +467,16 @@ export default function ContainerConfigurator({
     const targetId = getProductRouteId(targetProduct);
 
     if (targetId && targetId !== container?.id) {
-      navigate(`/product/${targetId}`);
+navigate(
+  `/product/${targetId}`,
+  {
+    replace:true,
+    state:{
+      preserveScroll:true,
+      source:'calculator-grade'
+    }
+  }
+);
       return true;
     }
 
