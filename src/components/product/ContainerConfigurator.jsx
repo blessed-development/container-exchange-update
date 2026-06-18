@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
+import { inventoryProducts } from '../../data/inventoryProducts';
 import {
   ShoppingCart,
   X,
@@ -32,19 +33,6 @@ const GRADE_OPTIONS = [
 const CONDITION_IMAGES = {
   used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
   new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
-};
-
-const PRODUCT_SWITCH_MAP = {
-  used: {
-    0: 'used-20-wwt',
-    1: 'used-40-wwt',
-    2: 'used-40hc-wwt',
-  },
-  new: {
-    0: 'new-20-iicl',
-    1: 'new-40-iicl',
-    2: 'new-40hc-iicl',
-  },
 };
 
 const EMPTY_LOCATION = {
@@ -144,6 +132,104 @@ function getGradeOption(key) {
   return GRADE_OPTIONS.find((g) => g.key === key) || GRADE_OPTIONS[1];
 }
 
+const normalizeText = (value) =>
+  String(value || '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '');
+
+const getProductTitleText = (product) =>
+  `${product?.name || ''} ${product?.title || ''} ${product?.short_description || ''}`;
+
+const normalizeGradeKey = (value) => {
+  const raw = String(value || '');
+  const text = normalizeText(raw);
+
+  if (text.includes('asis')) return 'AS_IS';
+  if (text.includes('windwatertight') || text.includes('wwt')) return 'WWT';
+  if (text.includes('cargoworthy') || text === 'cw' || text.endsWith('cw')) return 'CW';
+  if (text.includes('iicl')) return 'IICL';
+
+  return '';
+};
+
+const getProductGradeKey = (product) => {
+  const direct = normalizeGradeKey(product?.grade);
+  if (direct) return direct;
+
+  return normalizeGradeKey(getProductTitleText(product));
+};
+
+const getProductConditionKey = (product) => {
+  const direct = normalizeText(product?.condition);
+  const text = normalizeText(getProductTitleText(product));
+
+  if (direct.includes('new') || text.startsWith('new') || text.includes('onetrip')) {
+    return 'new';
+  }
+
+  return 'used';
+};
+
+const getProductSizeIndex = (product) => {
+  const productSize = Number(product?.size);
+  const productHeight = normalizeText(product?.height);
+  const titleText = normalizeText(getProductTitleText(product));
+
+  const exactIndex = SIZE_OPTIONS.findIndex((option) => {
+    const sameSize =
+      productSize > 0
+        ? Number(option.size) === productSize
+        : titleText.includes(`${option.size}ft`) ||
+          titleText.includes(`${option.size}standard`) ||
+          titleText.includes(`${option.size}container`);
+
+    const optionHeight = normalizeText(option.height);
+
+    const sameHeight =
+      !productHeight ||
+      productHeight === optionHeight ||
+      (option.height === 'high_cube'
+        ? titleText.includes('highcube') || titleText.includes('40hc')
+        : !titleText.includes('highcube') && !titleText.includes('40hc'));
+
+    return sameSize && sameHeight;
+  });
+
+  if (exactIndex >= 0) return exactIndex;
+
+  if (titleText.includes('40highcube') || titleText.includes('40hc')) return 2;
+  if (titleText.includes('40')) return 1;
+  if (titleText.includes('20')) return 0;
+
+  return 0;
+};
+
+const getProductPrice = (product) =>
+  Number(product?.base_price ?? product?.price ?? 0);
+
+const getProductRouteId = (product) =>
+  product?.slug || product?.id || '';
+
+const findMatchingProduct = ({ sizeIndex, conditionKey, gradeKey }) => {
+  const exact = inventoryProducts.find((product) => {
+    return (
+      getProductSizeIndex(product) === sizeIndex &&
+      getProductConditionKey(product) === conditionKey &&
+      getProductGradeKey(product) === gradeKey
+    );
+  });
+
+  if (exact) return exact;
+
+  return inventoryProducts.find((product) => {
+    return (
+      getProductSizeIndex(product) === sizeIndex &&
+      getProductGradeKey(product) === gradeKey
+    );
+  });
+};
+
 export default function ContainerConfigurator({
   container,
   selectedSizeIndex,
@@ -181,8 +267,9 @@ export default function ContainerConfigurator({
   const hasCheckoutLocation = Boolean(location?.postalCode);
 
   useEffect(() => {
-    setGrade(getDefaultGrade(condition));
-  }, [condition]);
+    const productGrade = getProductGradeKey(container);
+    setGrade(productGrade || getDefaultGrade(condition));
+  }, [container?.id, condition]);
 
   useEffect(() => {
     setUserChangedConfig(false);
@@ -267,22 +354,14 @@ export default function ContainerConfigurator({
 
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
-
   const activeGrade = getGradeOption(grade);
-  const defaultGrade = getGradeOption(getDefaultGrade(condition));
 
-  const openedProductPrice = Number(container?.base_price ?? container?.price ?? 0);
+  const openedProductPrice = getProductPrice(container);
 
   const selectedStandardPrice =
     condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
-  const referencePrice =
-    !userChangedConfig && openedProductPrice > 0
-      ? openedProductPrice
-      : selectedStandardPrice;
-
-  const baseWithoutGrade = Math.max(referencePrice - defaultGrade.adjust, 0);
-  const rawUnitPrice = baseWithoutGrade + activeGrade.adjust;
+  const rawUnitPrice = openedProductPrice || selectedStandardPrice;
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
   const unitPrice = applyLocalPrice(rawUnitPrice);
@@ -372,25 +451,60 @@ export default function ContainerConfigurator({
     );
   };
 
-  const switchProduct = (nextCondition, nextSizeIndex) => {
+  const navigateToMatchingProduct = ({
+    nextSizeIndex = safeSizeIndex,
+    nextCondition = condition,
+    nextGrade = grade,
+  }) => {
     setUserChangedConfig(true);
 
-    const targetId = PRODUCT_SWITCH_MAP?.[nextCondition]?.[nextSizeIndex];
+    const targetProduct = findMatchingProduct({
+      sizeIndex: nextSizeIndex,
+      conditionKey: nextCondition,
+      gradeKey: nextGrade,
+    });
+
+    const targetId = getProductRouteId(targetProduct);
 
     if (targetId && targetId !== container?.id) {
       navigate(`/product/${targetId}`);
+      return true;
     }
+
+    return false;
   };
 
   const handleSizeSwitch = (index) => {
     onSizeChange(index);
-    switchProduct(condition, index);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: index,
+      nextCondition: condition,
+      nextGrade: grade,
+    });
   };
 
   const handleConditionSwitch = (nextCondition) => {
-    setGrade(getDefaultGrade(nextCondition));
+    const nextGrade = getDefaultGrade(nextCondition);
+
+    setGrade(nextGrade);
     onConditionChange(nextCondition);
-    switchProduct(nextCondition, safeSizeIndex);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition,
+      nextGrade,
+    });
+  };
+
+  const handleGradeSwitch = (nextGrade) => {
+    setGrade(nextGrade);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition: condition,
+      nextGrade,
+    });
   };
 
   const addToCart = () => {
@@ -492,11 +606,20 @@ export default function ContainerConfigurator({
         <div className="main-tabs">
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
+
+            const matchingProduct = findMatchingProduct({
+              sizeIndex: index,
+              conditionKey: condition,
+              gradeKey: grade,
+            });
+
             const standardReference =
               condition === 'new' ? opt.newPrice : opt.usedPrice;
 
-            const optionBase = Math.max(standardReference - defaultGrade.adjust, 0);
-            const optionPrice = applyLocalPrice(optionBase + activeGrade.adjust);
+            const optionRawPrice =
+              getProductPrice(matchingProduct) || standardReference;
+
+            const optionPrice = applyLocalPrice(optionRawPrice);
 
             return (
               <button
@@ -553,70 +676,23 @@ export default function ContainerConfigurator({
           <div className="grade-upgrade-grid">
             {GRADE_OPTIONS.map((g) => {
               const active = grade === g.key;
-              const difference = g.adjust - activeGrade.adjust;
+
+              const matchingProduct = findMatchingProduct({
+                sizeIndex: safeSizeIndex,
+                conditionKey: condition,
+                gradeKey: g.key,
+              });
+
+              const optionPrice = getProductPrice(matchingProduct) || rawUnitPrice;
+              const difference = optionPrice - rawUnitPrice;
 
               return (
                 <button
                   key={g.key}
                   type="button"
                   className={`grade-upgrade-btn ${active ? 'active' : ''}`}
-                  onClick={() => {
-
-  setGrade(g.key);
-
-  const gradeMap = {
-    'AS_IS':'as-is',
-    'WWT':'wwt',
-    'CW':'cargo-worthy',
-    'IICL':'iicl'
-  };
-
-  const sizeMap = {
-    0:'20',
-    1:'40',
-    2:'40hc'
-  };
-
-  const currentSize =
-    sizeMap[selectedSizeIndex] ||
-    sizeMap[safeSizeIndex] ||
-    '20';
-
-  const currentCondition =
-    condition === 'new'
-      ? 'new'
-      : 'used';
-
-  const targetProduct =
-    window.inventoryProducts?.find((p)=>{
-
-      const title =
-        `${p.title || p.name || ''}`.toLowerCase();
-
-      return (
-        title.includes(currentSize) &&
-        title.includes(currentCondition) &&
-        title.includes(
-          gradeMap[g.key]
-        )
-      );
-
-    });
-
-  if(
-    targetProduct &&
-    targetProduct.id &&
-    targetProduct.id !== container?.id
-  ){
-
-    navigate(
-      `/product/${targetProduct.slug || targetProduct.id}`
-    );
-
-  }
-
-}}
-                  >
+                  onClick={() => handleGradeSwitch(g.key)}
+                >
                   <span className="grade-name">{g.label}</span>
                   <span className={`grade-delta ${deltaClass(difference)}`}>
                     {fmtDelta(difference)}
