@@ -237,7 +237,6 @@ export default function ContainerConfigurator({
   condition,
   onConditionChange,
   onPricingChange,
-  onProductSwap,
 }) {
   const navigate = useNavigate();
 
@@ -468,11 +467,6 @@ export default function ContainerConfigurator({
     const targetId = getProductRouteId(targetProduct);
 
     if (targetId && targetId !== container?.id) {
-      if (typeof onProductSwap === 'function') {
-        onProductSwap(targetProduct);
-        return true;
-      }
-
       navigate(`/product/${targetId}`, {
         replace: true,
         state: {
