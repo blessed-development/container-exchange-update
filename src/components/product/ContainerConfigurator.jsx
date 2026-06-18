@@ -873,4 +873,3 @@ export default function ContainerConfigurator({
     </>
   );
 }
-
