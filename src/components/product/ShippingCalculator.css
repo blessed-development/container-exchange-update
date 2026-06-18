@@ -2075,3 +2075,79 @@ margin-top:1px !important;
 .grade-btn.active .grade-check svg{
   display:none !important;
 }
+/* GRADE UPGRADE TABLE — FINAL */
+
+.grade-section-card{
+  overflow:hidden !important;
+}
+
+.grade-static-head{
+  min-height:38px !important;
+  padding:10px 14px 4px !important;
+  pointer-events:none !important;
+}
+
+.grade-upgrade-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:8px !important;
+  padding:8px 10px 12px !important;
+}
+
+.grade-upgrade-btn{
+  min-height:68px !important;
+  border-radius:16px !important;
+  border:1px solid rgba(255,255,255,.065) !important;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)) !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+.grade-upgrade-btn.active{
+  border-color:rgba(255,90,47,.36) !important;
+  background:linear-gradient(180deg,rgba(255,90,47,.07),rgba(255,255,255,.016)) !important;
+}
+
+.grade-upgrade-btn.active::after{
+  content:"";
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:7px;
+  height:2px;
+  border-radius:999px;
+  background:#ff5a2f;
+}
+
+.grade-check,
+.grade-head-val,
+.grade-head-arrow{
+  display:none !important;
+}
+
+.grade-name{
+  color:rgba(255,255,255,.94) !important;
+  font-size:12px !important;
+  font-weight:850 !important;
+  text-align:center !important;
+}
+
+.grade-delta{
+  font-size:10px !important;
+  font-weight:900 !important;
+}
+
+.grade-delta.included{
+  color:rgba(255,255,255,.68) !important;
+}
+
+.grade-delta.add{
+  color:#ff6a3d !important;
+}
+
+.grade-delta.save{
+  color:#22c55e !important;
+}
