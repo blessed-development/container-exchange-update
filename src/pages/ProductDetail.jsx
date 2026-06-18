@@ -154,12 +154,26 @@ export default function ProductDetail() {
     location: getSavedSelectedLocation(),
   });
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+ import { useLocation } from 'react-router-dom';
+
+const location = useLocation();
+
+useEffect(() => {
+
+  const preserve =
+    location?.state?.preserveScroll ||
+    location?.state?.source === 'calculator-grade';
+
+  if (preserve) {
+    return;
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+
+}, [product?.id]);
 
     setActiveImageIndex(0);
 
