@@ -143,6 +143,8 @@ export default function ProductDetail() {
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [descriptionLocked, setDescriptionLocked] = useState(false);
+  const descriptionCardRef = useRef(null);
   const [gradeOpen, setGradeOpen] = useState(false);
   const [gradeLocked, setGradeLocked] = useState(false);
   const gradeCardRef = useRef(null);
@@ -160,11 +162,18 @@ export default function ProductDetail() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!gradeLocked) return;
-      if (gradeCardRef.current?.contains(event.target)) return;
+      const clickedGrade = gradeCardRef.current?.contains(event.target);
+      const clickedDescription = descriptionCardRef.current?.contains(event.target);
 
-      setGradeLocked(false);
-      setGradeOpen(false);
+      if (gradeLocked && !clickedGrade) {
+        setGradeLocked(false);
+        setGradeOpen(false);
+      }
+
+      if (descriptionLocked && !clickedDescription) {
+        setDescriptionLocked(false);
+        setDescriptionOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -174,7 +183,7 @@ export default function ProductDetail() {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [gradeLocked]);
+  }, [gradeLocked, descriptionLocked]);
 
   useEffect(() => {
     const shouldPreserveScroll =
@@ -593,7 +602,7 @@ useEffect(() => {
               >
                 <div
                   className={`relative transition-all duration-300 ${
-                    gradeOpen ? 'max-h-[360px]' : 'max-h-[92px]'
+                    gradeOpen ? 'max-h-[360px]' : 'max-h-[104px]'
                   }`}
                 >
                   <p className="mb-2 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-primary">
@@ -614,29 +623,37 @@ useEffect(() => {
                   </p>
 
                   {!gradeOpen && (
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background/95 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background/95 via-background/70 to-transparent" />
                   )}
-                </div>
-
-                <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
-                  <span>{gradeOpen ? 'Show less' : 'Read more'}</span>
-
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform duration-300 ${
-                      gradeOpen ? 'rotate-180' : ''
-                    }`}
-                  />
                 </div>
               </button>
 
               {productDescription && (
                 <button
+                  ref={descriptionCardRef}
                   type="button"
-                  onClick={() => setDescriptionOpen(!descriptionOpen)}
+                  onMouseEnter={() => setDescriptionOpen(true)}
+                  onMouseLeave={() => {
+                    if (!descriptionLocked) setDescriptionOpen(false);
+                  }}
+                  onClick={() => {
+                    const nextLocked = !descriptionLocked;
+
+                    setDescriptionLocked(nextLocked);
+                    setDescriptionOpen(nextLocked);
+                  }}
                   aria-expanded={descriptionOpen}
-                  className="group mb-6 md:mb-10 w-full rounded-[22px] border border-white/10 bg-white/[0.025] px-5 py-3 md:py-4 text-left transition-all duration-300 hover:border-primary/25 hover:bg-white/[0.04]"
+                  className={`group mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border px-5 py-3 md:py-4 text-left transition-all duration-300 ${
+                    descriptionOpen
+                      ? 'border-primary/25 bg-white/[0.04]'
+                      : 'border-white/10 bg-white/[0.025] hover:border-primary/25 hover:bg-white/[0.04]'
+                  }`}
                 >
-                  <div className="relative">
+                  <div
+                    className={`relative transition-all duration-300 ${
+                      descriptionOpen ? 'max-h-[420px]' : 'max-h-[72px]'
+                    }`}
+                  >
                     <p
                       className={`text-[14px] md:text-base leading-6 md:leading-7 text-muted-foreground transition-all duration-300 ${
                         descriptionOpen ? '' : 'line-clamp-2'
@@ -646,20 +663,8 @@ useEffect(() => {
                     </p>
 
                     {!descriptionOpen && (
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/95 to-transparent" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background/95 via-background/70 to-transparent" />
                     )}
-                  </div>
-
-                  <div className="mt-2 inline-flex items-center gap-1.5 text-[12px] md:text-[13px] font-semibold text-primary/90 transition-colors group-hover:text-primary">
-                    <span>
-                      {descriptionOpen ? 'Show less' : 'Read more'}
-                    </span>
-
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-300 ${
-                        descriptionOpen ? 'rotate-180' : ''
-                      }`}
-                    />
                   </div>
                 </button>
               )}
