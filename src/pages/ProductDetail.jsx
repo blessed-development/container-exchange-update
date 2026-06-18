@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
@@ -124,6 +124,7 @@ const buildSeoProductTitle = (title) => {
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const location = useLocation();
 
   const [zipCode, setZipCode] = useState(() => {
     const saved = getSavedSelectedLocation();
@@ -154,26 +155,19 @@ export default function ProductDetail() {
     location: getSavedSelectedLocation(),
   });
 
- import { useLocation } from 'react-router-dom';
+  useEffect(() => {
+    const shouldPreserveScroll =
+      location?.state?.preserveScroll ||
+      location?.state?.source === 'calculator-configurator' ||
+      location?.state?.source === 'calculator-grade';
 
-const location = useLocation();
-
-useEffect(() => {
-
-  const preserve =
-    location?.state?.preserveScroll ||
-    location?.state?.source === 'calculator-grade';
-
-  if (preserve) {
-    return;
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:'smooth'
-  });
-
-}, [product?.id]);
+    if (!shouldPreserveScroll) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    }
 
     setActiveImageIndex(0);
 
