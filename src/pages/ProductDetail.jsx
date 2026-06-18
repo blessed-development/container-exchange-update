@@ -136,8 +136,11 @@ export default function ProductDetail() {
     );
   });
 
-  const container =
+  const routeContainer =
     inventoryProducts.find((item) => item.id === id) || null;
+
+  const [activeProduct, setActiveProduct] = useState(null);
+  const container = activeProduct || routeContainer;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
@@ -233,9 +236,14 @@ export default function ProductDetail() {
   }, [id]);
 
   useEffect(() => {
+    setActiveProduct(null);
+  }, [id]);
+
+  useEffect(() => {
     if (!container) return;
 
     setSelectedSizeIndex(getInitialSizeIndex(container));
+    setActiveImageIndex(0);
 
     setCondition(
       String(container.condition || '')
@@ -608,7 +616,6 @@ useEffect(() => {
 
           <div className="lg:sticky lg:top-24 self-start">
             <ContainerConfigurator
-  key={`${container.id}-${zipCode || 'no-zip'}`}
   container={container}
   initialZip={zipCode}
   selectedSizeIndex={selectedSizeIndex}
@@ -616,6 +623,7 @@ useEffect(() => {
   condition={condition}
   onConditionChange={setCondition}
   onPricingChange={setLocalizedPricing}
+  onProductSwap={setActiveProduct}
 />
           </div>
         </div>
