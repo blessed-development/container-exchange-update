@@ -594,21 +594,29 @@ useEffect(() => {
                   setGradeLocked(nextLocked);
                   setGradeOpen(nextLocked);
                 }}
-                className={`group relative mb-6 w-full overflow-hidden rounded-[22px] border px-5 py-4 text-left transition-all duration-300 ${
+                className={`group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-all duration-300 ${
                   gradeOpen
-                    ? 'border-primary/25 bg-primary/[0.045]'
+                    ? 'border-primary/25 bg-white/[0.04]'
                     : 'border-white/10 bg-white/[0.025] hover:border-primary/25 hover:bg-white/[0.04]'
                 }`}
               >
-                <div
-                  className={`relative transition-all duration-300 ${
-                    gradeOpen ? 'max-h-[360px]' : 'max-h-[104px]'
-                  }`}
-                >
-                  <p className="mb-2 text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-primary">
-                    GRADE CLASSIFICATION
+                <div className="flex items-center justify-between gap-4 px-5 pt-4">
+                  <p className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-primary">
+                    Grade Classification
                   </p>
 
+                  <ChevronDown
+                    className={`h-4 w-4 shrink-0 text-primary/80 transition-transform duration-300 ${
+                      gradeOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </div>
+
+                <div
+                  className={`relative overflow-hidden px-5 pb-4 pt-2 transition-[max-height] duration-300 ease-out ${
+                    gradeOpen ? 'max-h-[360px]' : 'max-h-[86px]'
+                  }`}
+                >
                   <p className="mb-1 text-base font-bold text-white">
                     {gradeInfo.label || container.grade}
                   </p>
@@ -623,7 +631,7 @@ useEffect(() => {
                   </p>
 
                   {!gradeOpen && (
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background/95 via-background/70 to-transparent" />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background via-background/75 to-transparent" />
                   )}
                 </div>
               </button>
@@ -632,6 +640,7 @@ useEffect(() => {
                 <button
                   ref={descriptionCardRef}
                   type="button"
+                  aria-expanded={descriptionOpen}
                   onMouseEnter={() => setDescriptionOpen(true)}
                   onMouseLeave={() => {
                     if (!descriptionLocked) setDescriptionOpen(false);
@@ -642,16 +651,27 @@ useEffect(() => {
                     setDescriptionLocked(nextLocked);
                     setDescriptionOpen(nextLocked);
                   }}
-                  aria-expanded={descriptionOpen}
-                  className={`group mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border px-5 py-3 md:py-4 text-left transition-all duration-300 ${
+                  className={`group mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-all duration-300 ${
                     descriptionOpen
                       ? 'border-primary/25 bg-white/[0.04]'
                       : 'border-white/10 bg-white/[0.025] hover:border-primary/25 hover:bg-white/[0.04]'
                   }`}
                 >
+                  <div className="flex items-center justify-between gap-4 px-5 pt-4">
+                    <p className="text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-primary">
+                      Description
+                    </p>
+
+                    <ChevronDown
+                      className={`h-4 w-4 shrink-0 text-primary/80 transition-transform duration-300 ${
+                        descriptionOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </div>
+
                   <div
-                    className={`relative transition-all duration-300 ${
-                      descriptionOpen ? 'max-h-[420px]' : 'max-h-[72px]'
+                    className={`relative overflow-hidden px-5 pb-4 pt-2 transition-[max-height] duration-300 ease-out ${
+                      descriptionOpen ? 'max-h-[440px]' : 'max-h-[82px]'
                     }`}
                   >
                     <p
@@ -663,7 +683,7 @@ useEffect(() => {
                     </p>
 
                     {!descriptionOpen && (
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-background/95 via-background/70 to-transparent" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background via-background/75 to-transparent" />
                     )}
                   </div>
                 </button>
