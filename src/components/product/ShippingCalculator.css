@@ -2262,3 +2262,34 @@ margin-top:1px !important;
 .checkout{
   min-height:168px;
 }
+.grade-classification-card{
+  position:relative;
+  max-height:132px;
+  overflow:hidden;
+  transition:max-height .35s ease;
+}
+
+.grade-classification-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:54px;
+  background:linear-gradient(
+    to bottom,
+    rgba(18,21,28,0),
+    rgba(18,21,28,.96)
+  );
+  pointer-events:none;
+}
+
+.grade-classification-card:hover,
+.grade-classification-card.expanded{
+  max-height:360px;
+}
+
+.grade-classification-card:hover::after,
+.grade-classification-card.expanded::after{
+  opacity:0;
+}
