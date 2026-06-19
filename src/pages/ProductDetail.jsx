@@ -271,18 +271,18 @@ export default function ProductDetail() {
   }, [id]);
 
   useEffect(() => {
-    if (!container) return;
+    if (!routeContainer) return;
 
-    setSelectedSizeIndex(getInitialSizeIndex(container));
+    setSelectedSizeIndex(getInitialSizeIndex(routeContainer));
 
     setCondition(
-      String(container.condition || '')
+      String(routeContainer.condition || '')
         .toLowerCase()
         .includes('new')
         ? 'new'
         : 'used'
     );
-  }, [container?.id]);
+  }, [routeContainer?.id]);
 
   const isLoading = false;
 
