@@ -362,12 +362,21 @@ export default function ContainerConfigurator({
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
   const activeGrade = getGradeOption(grade);
 
-  const openedProductPrice = getProductPrice(container);
-
   const selectedStandardPrice =
     condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
-  const rawUnitPrice = openedProductPrice || selectedStandardPrice;
+  const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
+    if (!option) return 0;
+
+    if (conditionKey === 'new') {
+      return Number(option.newPrice || 0);
+    }
+
+    const gradeOption = getGradeOption(gradeKey);
+    return Number(option.usedPrice || 0) + Number(gradeOption.adjust || 0);
+  };
+
+  const rawUnitPrice = getRawPriceFor(sizeOption, grade, condition);
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
   const unitPrice = applyLocalPrice(rawUnitPrice);
@@ -493,12 +502,6 @@ export default function ContainerConfigurator({
 
   const handleSizeSwitch = (index) => {
     onSizeChange(index);
-
-    navigateToMatchingProduct({
-      nextSizeIndex: index,
-      nextCondition: condition,
-      nextGrade: grade,
-    });
   };
 
   const handleConditionSwitch = (nextCondition) => {
@@ -506,12 +509,6 @@ export default function ContainerConfigurator({
 
     setGrade(nextGrade);
     onConditionChange(nextCondition);
-
-    navigateToMatchingProduct({
-      nextSizeIndex: safeSizeIndex,
-      nextCondition,
-      nextGrade,
-    });
   };
 
   const handleGradeSwitch = (nextGrade) => {
@@ -520,12 +517,6 @@ export default function ContainerConfigurator({
     }
 
     setGrade(nextGrade);
-
-    navigateToMatchingProduct({
-      nextSizeIndex: safeSizeIndex,
-      nextCondition: condition,
-      nextGrade,
-    });
   };
 
   const addToCart = () => {
@@ -628,18 +619,7 @@ export default function ContainerConfigurator({
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
 
-            const matchingProduct = findMatchingProduct({
-              sizeIndex: index,
-              conditionKey: condition,
-              gradeKey: grade,
-            });
-
-            const standardReference =
-              condition === 'new' ? opt.newPrice : opt.usedPrice;
-
-            const optionRawPrice =
-              getProductPrice(matchingProduct) || standardReference;
-
+            const optionRawPrice = getRawPriceFor(opt, grade, condition);
             const optionPrice = applyLocalPrice(optionRawPrice);
 
             return (
@@ -699,14 +679,8 @@ export default function ContainerConfigurator({
               const active = grade === g.key;
               const disabled = condition === 'new' && g.key !== 'IICL';
 
-              const matchingProduct = findMatchingProduct({
-                sizeIndex: safeSizeIndex,
-                conditionKey: condition,
-                gradeKey: condition === 'new' ? 'IICL' : g.key,
-              });
-
-              const optionPrice = getProductPrice(matchingProduct) || rawUnitPrice;
-              const difference = optionPrice - rawUnitPrice;
+              const optionRawPrice = getRawPriceFor(sizeOption, g.key, condition);
+              const difference = condition === 'new' ? 0 : optionRawPrice - rawUnitPrice;
 
               return (
                 <button
@@ -727,7 +701,7 @@ export default function ContainerConfigurator({
                     </span>
                   )}
 
-                  {!disabled && (
+                  {!disabled && condition !== 'new' && (
                     <span className={`grade-delta ${deltaClass(difference)}`}>
                       {fmtDelta(difference)}
                     </span>
