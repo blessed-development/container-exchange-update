@@ -2355,3 +2355,35 @@ margin-top:1px !important;
 .grade-delta.save{
   color:#22c55e !important;
 }
+
+
+/* EXACT FINAL GRADE AVAILABILITY
+   USED: all selectable
+   NEW: only IICL active, others disabled/blurry
+*/
+.grade-upgrade-btn.disabled,
+.grade-upgrade-btn:disabled{
+  opacity:.34 !important;
+  filter:grayscale(.65) blur(.25px) !important;
+  cursor:not-allowed !important;
+  pointer-events:none !important;
+}
+
+.grade-upgrade-btn.disabled .grade-name,
+.grade-upgrade-btn:disabled .grade-name{
+  color:rgba(255,255,255,.42) !important;
+}
+
+.grade-active-check{
+  position:absolute !important;
+  top:9px !important;
+  right:9px !important;
+  width:20px !important;
+  height:20px !important;
+  border-radius:999px !important;
+  background:#22c55e !important;
+  color:#06130a !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
