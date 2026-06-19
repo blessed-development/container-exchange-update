@@ -2357,19 +2357,24 @@ margin-top:1px !important;
 }
 
 
-/* HARD LOCK FOR NEW CONTAINERS — only IICL selectable */
+/* EXACT FINAL RULE: USED = all grades, NEW = IICL only */
+.grade-upgrade-btn{
+  position:relative !important;
+}
+
 .grade-upgrade-btn.disabled,
-.grade-upgrade-btn[disabled],
+.grade-upgrade-btn:disabled,
 .grade-upgrade-btn[aria-disabled="true"]{
   opacity:.28 !important;
-  filter:grayscale(.7) blur(.35px) !important;
+  filter:grayscale(.75) blur(.35px) !important;
   cursor:not-allowed !important;
   pointer-events:none !important;
   user-select:none !important;
+  box-shadow:none !important;
 }
 
 .grade-upgrade-btn.disabled .grade-name,
-.grade-upgrade-btn[disabled] .grade-name,
+.grade-upgrade-btn:disabled .grade-name,
 .grade-upgrade-btn[aria-disabled="true"] .grade-name{
   color:rgba(255,255,255,.38) !important;
 }
@@ -2386,5 +2391,9 @@ margin-top:1px !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
-  z-index:4 !important;
+  z-index:5 !important;
+}
+
+.grade-upgrade-btn.active::after{
+  display:none !important;
 }
