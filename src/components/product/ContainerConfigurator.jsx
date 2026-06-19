@@ -365,15 +365,59 @@ export default function ContainerConfigurator({
   const selectedStandardPrice =
     condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
+  const openedProductPrice = getProductPrice(container);
+  const openedProductGradeKey =
+    condition === 'new'
+      ? 'IICL'
+      : getProductGradeKey(container) || getDefaultGrade(condition);
+
+  const openedProductGradeAdjust =
+    condition === 'new'
+      ? 0
+      : Number(getGradeOption(openedProductGradeKey)?.adjust || 0);
+
+  const openedProductBasePrice =
+    openedProductPrice > 0
+      ? Math.max(openedProductPrice - openedProductGradeAdjust, 0)
+      : 0;
+
   const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
     if (!option) return 0;
+
+    const optionIndex = SIZE_OPTIONS.findIndex((item) => item.label === option.label);
+    const nextSizeIndex = optionIndex >= 0 ? optionIndex : safeSizeIndex;
+    const nextGrade = conditionKey === 'new' ? 'IICL' : gradeKey;
+
+    const isCurrentDisplayedProduct =
+      nextSizeIndex === safeSizeIndex &&
+      conditionKey === condition &&
+      openedProductPrice > 0;
+
+    if (isCurrentDisplayedProduct) {
+      if (conditionKey === 'new') {
+        return openedProductPrice;
+      }
+
+      return openedProductBasePrice + Number(getGradeOption(nextGrade)?.adjust || 0);
+    }
+
+    const matchingProduct = findMatchingProduct({
+      sizeIndex: nextSizeIndex,
+      conditionKey,
+      gradeKey: nextGrade,
+    });
+
+    const matchingPrice = getProductPrice(matchingProduct);
+
+    if (matchingPrice > 0) {
+      return matchingPrice;
+    }
 
     if (conditionKey === 'new') {
       return Number(option.newPrice || 0);
     }
 
-    const gradeOption = getGradeOption(gradeKey);
-    return Number(option.usedPrice || 0) + Number(gradeOption.adjust || 0);
+    return Number(option.usedPrice || 0) + Number(getGradeOption(nextGrade)?.adjust || 0);
   };
 
   const rawUnitPrice = getRawPriceFor(sizeOption, grade, condition);
