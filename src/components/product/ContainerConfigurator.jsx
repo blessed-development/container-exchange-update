@@ -368,12 +368,25 @@ export default function ContainerConfigurator({
   const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
     if (!option) return 0;
 
-    if (conditionKey === 'new') {
-      return Number(option.newPrice || 0);
+    const optionIndex = SIZE_OPTIONS.findIndex((item) => item.label === option.label);
+    const sizeIndexForOption = optionIndex >= 0 ? optionIndex : safeSizeIndex;
+    const lockedGrade = conditionKey === 'new' ? 'IICL' : gradeKey;
+
+    const matchingProduct = findMatchingProduct({
+      sizeIndex: sizeIndexForOption,
+      conditionKey,
+      gradeKey: lockedGrade,
+    });
+
+    const realProductPrice = getProductPrice(matchingProduct);
+
+    if (realProductPrice > 0) {
+      return realProductPrice;
     }
 
-    const gradeOption = getGradeOption(gradeKey);
-    return Number(option.usedPrice || 0) + Number(gradeOption.adjust || 0);
+    return conditionKey === 'new'
+      ? Number(option.newPrice || 0)
+      : Number(option.usedPrice || 0);
   };
 
   const rawUnitPrice = getRawPriceFor(sizeOption, grade, condition);
