@@ -362,34 +362,12 @@ export default function ContainerConfigurator({
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
   const activeGrade = getGradeOption(grade);
 
+  const openedProductPrice = getProductPrice(container);
+
   const selectedStandardPrice =
     condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
-  const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
-    if (!option) return 0;
-
-    const optionIndex = SIZE_OPTIONS.findIndex((item) => item.label === option.label);
-    const sizeIndexForOption = optionIndex >= 0 ? optionIndex : safeSizeIndex;
-    const lockedGrade = conditionKey === 'new' ? 'IICL' : gradeKey;
-
-    const matchingProduct = findMatchingProduct({
-      sizeIndex: sizeIndexForOption,
-      conditionKey,
-      gradeKey: lockedGrade,
-    });
-
-    const realProductPrice = getProductPrice(matchingProduct);
-
-    if (realProductPrice > 0) {
-      return realProductPrice;
-    }
-
-    return conditionKey === 'new'
-      ? Number(option.newPrice || 0)
-      : Number(option.usedPrice || 0);
-  };
-
-  const rawUnitPrice = getRawPriceFor(sizeOption, grade, condition);
+  const rawUnitPrice = openedProductPrice || selectedStandardPrice;
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
   const unitPrice = applyLocalPrice(rawUnitPrice);
@@ -515,6 +493,12 @@ export default function ContainerConfigurator({
 
   const handleSizeSwitch = (index) => {
     onSizeChange(index);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: index,
+      nextCondition: condition,
+      nextGrade: grade,
+    });
   };
 
   const handleConditionSwitch = (nextCondition) => {
@@ -522,6 +506,12 @@ export default function ContainerConfigurator({
 
     setGrade(nextGrade);
     onConditionChange(nextCondition);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition,
+      nextGrade,
+    });
   };
 
   const handleGradeSwitch = (nextGrade) => {
@@ -530,6 +520,12 @@ export default function ContainerConfigurator({
     }
 
     setGrade(nextGrade);
+
+    navigateToMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition: condition,
+      nextGrade,
+    });
   };
 
   const addToCart = () => {
@@ -632,7 +628,18 @@ export default function ContainerConfigurator({
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
 
-            const optionRawPrice = getRawPriceFor(opt, grade, condition);
+            const matchingProduct = findMatchingProduct({
+              sizeIndex: index,
+              conditionKey: condition,
+              gradeKey: grade,
+            });
+
+            const standardReference =
+              condition === 'new' ? opt.newPrice : opt.usedPrice;
+
+            const optionRawPrice =
+              getProductPrice(matchingProduct) || standardReference;
+
             const optionPrice = applyLocalPrice(optionRawPrice);
 
             return (
@@ -692,8 +699,14 @@ export default function ContainerConfigurator({
               const active = grade === g.key;
               const disabled = condition === 'new' && g.key !== 'IICL';
 
-              const optionRawPrice = getRawPriceFor(sizeOption, g.key, condition);
-              const difference = condition === 'new' ? 0 : optionRawPrice - rawUnitPrice;
+              const matchingProduct = findMatchingProduct({
+                sizeIndex: safeSizeIndex,
+                conditionKey: condition,
+                gradeKey: condition === 'new' ? 'IICL' : g.key,
+              });
+
+              const optionPrice = getProductPrice(matchingProduct) || rawUnitPrice;
+              const difference = optionPrice - rawUnitPrice;
 
               return (
                 <button
@@ -714,7 +727,7 @@ export default function ContainerConfigurator({
                     </span>
                   )}
 
-                  {!disabled && condition !== 'new' && (
+                  {!disabled && (
                     <span className={`grade-delta ${deltaClass(difference)}`}>
                       {fmtDelta(difference)}
                     </span>
