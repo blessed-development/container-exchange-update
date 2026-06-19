@@ -136,8 +136,12 @@ export default function ProductDetail() {
     );
   });
 
-  const container =
+  const routeContainer =
     inventoryProducts.find((item) => item.id === id) || null;
+
+  const [activeProduct, setActiveProduct] = useState(null);
+
+  const container = activeProduct || routeContainer;
 
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
@@ -159,6 +163,10 @@ export default function ProductDetail() {
     price: null,
     location: getSavedSelectedLocation(),
   });
+
+  useEffect(() => {
+    setActiveProduct(null);
+  }, [id]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -327,7 +335,8 @@ export default function ProductDetail() {
   const hasActiveZip =
     Boolean(getLocationZip(activeLocation));
 
-  const calculatorPrice = Number(localizedPricing?.price || 0);
+  const calculatorPrice =
+    Number(localizedPricing?.price || 0);
 
   const heroPrice =
     calculatorPrice > 0
@@ -692,6 +701,12 @@ useEffect(() => {
   condition={condition}
   onConditionChange={setCondition}
   onPricingChange={setLocalizedPricing}
+  onProductSwap={(nextProduct) => {
+    if (!nextProduct) return;
+
+    setActiveProduct(nextProduct);
+    setActiveImageIndex(0);
+  }}
 />
           </div>
         </div>
