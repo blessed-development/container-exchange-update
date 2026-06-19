@@ -2300,3 +2300,58 @@ margin-top:1px !important;
 .product-detail-description-card {
   margin-top: -4px !important;
 }
+
+
+/* FINAL GRADE LOGIC STATE — NEW locks IICL, USED shows add/save */
+.grade-upgrade-btn{
+  position:relative !important;
+}
+
+.grade-upgrade-btn.disabled,
+.grade-upgrade-btn:disabled{
+  opacity:.34 !important;
+  filter:blur(.2px) grayscale(.45) !important;
+  cursor:not-allowed !important;
+  pointer-events:none !important;
+  box-shadow:none !important;
+}
+
+.grade-upgrade-btn.disabled .grade-name,
+.grade-upgrade-btn:disabled .grade-name{
+  color:rgba(255,255,255,.42) !important;
+}
+
+.grade-active-check{
+  position:absolute !important;
+  top:9px !important;
+  right:9px !important;
+  width:20px !important;
+  height:20px !important;
+  border-radius:999px !important;
+  background:#22c55e !important;
+  color:#06130a !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-shadow:0 8px 20px rgba(34,197,94,.18) !important;
+}
+
+.grade-upgrade-btn.active{
+  border-color:rgba(255,90,47,.42) !important;
+}
+
+.grade-upgrade-btn.active::after{
+  display:none !important;
+}
+
+.grade-delta.included{
+  color:rgba(255,255,255,.68) !important;
+}
+
+.grade-delta.add{
+  color:#ff6a3d !important;
+}
+
+.grade-delta.save{
+  color:#22c55e !important;
+}
