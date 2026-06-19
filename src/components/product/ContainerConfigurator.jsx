@@ -268,6 +268,11 @@ export default function ContainerConfigurator({
   const hasCheckoutLocation = Boolean(location?.postalCode);
 
   useEffect(() => {
+    if (condition === 'new') {
+      setGrade('IICL');
+      return;
+    }
+
     const productGrade = getProductGradeKey(container);
     setGrade(productGrade || getDefaultGrade(condition));
   }, [container?.id, condition]);
@@ -357,12 +362,21 @@ export default function ContainerConfigurator({
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
   const activeGrade = getGradeOption(grade);
 
-  const openedProductPrice = getProductPrice(container);
-
   const selectedStandardPrice =
     condition === 'new' ? sizeOption.newPrice : sizeOption.usedPrice;
 
-  const rawUnitPrice = openedProductPrice || selectedStandardPrice;
+  const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
+    if (!option) return 0;
+
+    if (conditionKey === 'new') {
+      return Number(option.newPrice || 0);
+    }
+
+    const gradeOption = getGradeOption(gradeKey);
+    return Number(option.usedPrice || 0) + Number(gradeOption.adjust || 0);
+  };
+
+  const rawUnitPrice = getRawPriceFor(sizeOption, grade, condition);
 
   const applyLocalPrice = (price) => getLocalizedPrice(price, location);
   const unitPrice = applyLocalPrice(rawUnitPrice);
@@ -488,12 +502,6 @@ export default function ContainerConfigurator({
 
   const handleSizeSwitch = (index) => {
     onSizeChange(index);
-
-    navigateToMatchingProduct({
-      nextSizeIndex: index,
-      nextCondition: condition,
-      nextGrade: grade,
-    });
   };
 
   const handleConditionSwitch = (nextCondition) => {
@@ -501,22 +509,14 @@ export default function ContainerConfigurator({
 
     setGrade(nextGrade);
     onConditionChange(nextCondition);
-
-    navigateToMatchingProduct({
-      nextSizeIndex: safeSizeIndex,
-      nextCondition,
-      nextGrade,
-    });
   };
 
   const handleGradeSwitch = (nextGrade) => {
-    setGrade(nextGrade);
+    if (condition === 'new' && nextGrade !== 'IICL') {
+      return;
+    }
 
-    navigateToMatchingProduct({
-      nextSizeIndex: safeSizeIndex,
-      nextCondition: condition,
-      nextGrade,
-    });
+    setGrade(nextGrade);
   };
 
   const addToCart = () => {
@@ -619,18 +619,7 @@ export default function ContainerConfigurator({
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
 
-            const matchingProduct = findMatchingProduct({
-              sizeIndex: index,
-              conditionKey: condition,
-              gradeKey: grade,
-            });
-
-            const standardReference =
-              condition === 'new' ? opt.newPrice : opt.usedPrice;
-
-            const optionRawPrice =
-              getProductPrice(matchingProduct) || standardReference;
-
+            const optionRawPrice = getRawPriceFor(opt, grade, condition);
             const optionPrice = applyLocalPrice(optionRawPrice);
 
             return (
@@ -688,27 +677,35 @@ export default function ContainerConfigurator({
           <div className="grade-upgrade-grid">
             {GRADE_OPTIONS.map((g) => {
               const active = grade === g.key;
+              const disabled = condition === 'new' && g.key !== 'IICL';
 
-              const matchingProduct = findMatchingProduct({
-                sizeIndex: safeSizeIndex,
-                conditionKey: condition,
-                gradeKey: g.key,
-              });
-
-              const optionPrice = getProductPrice(matchingProduct) || rawUnitPrice;
-              const difference = optionPrice - rawUnitPrice;
+              const optionRawPrice = getRawPriceFor(sizeOption, g.key, condition);
+              const difference = condition === 'new' ? 0 : optionRawPrice - rawUnitPrice;
 
               return (
                 <button
                   key={g.key}
                   type="button"
-                  className={`grade-upgrade-btn ${active ? 'active' : ''}`}
+                  disabled={disabled}
+                  aria-disabled={disabled}
+                  className={`grade-upgrade-btn ${active ? 'active' : ''} ${
+                    disabled ? 'disabled' : ''
+                  }`}
                   onClick={() => handleGradeSwitch(g.key)}
                 >
                   <span className="grade-name">{g.label}</span>
-                  <span className={`grade-delta ${deltaClass(difference)}`}>
-                    {fmtDelta(difference)}
-                  </span>
+
+                  {active && (
+                    <span className="grade-active-check">
+                      <Check size={11} />
+                    </span>
+                  )}
+
+                  {!disabled && condition !== 'new' && (
+                    <span className={`grade-delta ${deltaClass(difference)}`}>
+                      {fmtDelta(difference)}
+                    </span>
+                  )}
                 </button>
               );
             })}
