@@ -368,27 +368,11 @@ export default function ContainerConfigurator({
   const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
     if (!option) return 0;
 
-    const optionIndex = SIZE_OPTIONS.findIndex((item) => item.label === option.label);
-    const sizeIndexForOption = optionIndex >= 0 ? optionIndex : safeSizeIndex;
-    const lockedGrade = conditionKey === 'new' ? 'IICL' : gradeKey;
-
-    const matchingProduct = findMatchingProduct({
-      sizeIndex: sizeIndexForOption,
-      conditionKey,
-      gradeKey: lockedGrade,
-    });
-
-    const productPrice = getProductPrice(matchingProduct);
-
-    if (productPrice > 0) {
-      return productPrice;
-    }
-
     if (conditionKey === 'new') {
       return Number(option.newPrice || 0);
     }
 
-    const gradeOption = getGradeOption(lockedGrade);
+    const gradeOption = getGradeOption(gradeKey);
     return Number(option.usedPrice || 0) + Number(gradeOption.adjust || 0);
   };
 
@@ -516,8 +500,33 @@ export default function ContainerConfigurator({
     return false;
   };
 
+  const syncMatchingProduct = ({
+    nextSizeIndex = safeSizeIndex,
+    nextCondition = condition,
+    nextGrade = grade,
+  }) => {
+    const targetProduct = findMatchingProduct({
+      sizeIndex: nextSizeIndex,
+      conditionKey: nextCondition,
+      gradeKey: nextCondition === 'new' ? 'IICL' : nextGrade,
+    });
+
+    if (targetProduct && typeof onProductSwap === 'function') {
+      onProductSwap(targetProduct);
+      return true;
+    }
+
+    return false;
+  };
+
   const handleSizeSwitch = (index) => {
     onSizeChange(index);
+
+    syncMatchingProduct({
+      nextSizeIndex: index,
+      nextCondition: condition,
+      nextGrade: grade,
+    });
   };
 
   const handleConditionSwitch = (nextCondition) => {
@@ -525,6 +534,12 @@ export default function ContainerConfigurator({
 
     setGrade(nextGrade);
     onConditionChange(nextCondition);
+
+    syncMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition,
+      nextGrade,
+    });
   };
 
   const handleGradeSwitch = (nextGrade) => {
@@ -533,6 +548,12 @@ export default function ContainerConfigurator({
     }
 
     setGrade(nextGrade);
+
+    syncMatchingProduct({
+      nextSizeIndex: safeSizeIndex,
+      nextCondition: condition,
+      nextGrade,
+    });
   };
 
   const addToCart = () => {
