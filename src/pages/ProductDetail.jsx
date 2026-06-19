@@ -327,8 +327,12 @@ export default function ProductDetail() {
   const hasActiveZip =
     Boolean(getLocationZip(activeLocation));
 
+  const calculatorPrice = Number(localizedPricing?.price || 0);
+
   const heroPrice =
-    getLocalizedPrice(baseDisplayPrice, activeLocation);
+    calculatorPrice > 0
+      ? calculatorPrice
+      : getLocalizedPrice(baseDisplayPrice, activeLocation);
 
   const showStartingFrom =
     !hasActiveZip;
