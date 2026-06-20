@@ -21,12 +21,29 @@ const getItemImage = (item) => {
   );
 };
 
+
+
+const cleanSub = (item) => {
+  const sub = item?.sub || '';
+
+  if (sub.includes('High Cube') || sub.includes('9ft 6in') || String(item?.title || '').includes('40HC')) {
+    return 'High Cube • 9ft 6in High';
+  }
+
+  if (sub.includes('Standard Height') || sub.includes('8ft 6in')) {
+    return 'Standard Height • 8ft 6in High';
+  }
+
+  return 'Standard Height • 8ft 6in High';
+};
+
+
 const CheckoutDetails = () => {
   const navigate = useNavigate();
-  const { cart, getSubtotal } = useCart();
+  const { cart, getSubtotal, getGrandTotal } = useCart();
 
   const subtotal = getSubtotal();
-  const total = subtotal;
+  const total = getGrandTotal();
 
   const [sameBilling, setSameBilling] = useState(true);
 
@@ -421,9 +438,29 @@ const CheckoutDetails = () => {
 
                   <div className="os-prod-copy">
                     <div className="os-prod-title">{item.title}</div>
+
                     <div className="os-prod-sub">
-                      {item.sub || item.grade || 'Shipping container'}
+                      {cleanSub(item)}
                     </div>
+
+                    {!!item.rating && (
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          marginTop: '6px',
+                          color: '#fbbf24',
+                          fontSize: '12px',
+                          lineHeight: 1,
+                        }}
+                      >
+                        <span>★★★★★</span>
+                        <span style={{ color: 'rgba(255,255,255,.72)' }}>
+                          ({item.reviewCount || item.review_count || 0})
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
