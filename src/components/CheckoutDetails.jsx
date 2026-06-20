@@ -40,10 +40,10 @@ const cleanSub = (item) => {
 
 const CheckoutDetails = () => {
   const navigate = useNavigate();
-  const { cart, getSubtotal, getGrandTotal } = useCart();
+  const { cart, getSubtotal } = useCart();
 
   const subtotal = getSubtotal();
-  const total = getGrandTotal();
+  const total = subtotal;
 
   const [sameBilling, setSameBilling] = useState(true);
 
@@ -484,7 +484,9 @@ const CheckoutDetails = () => {
               <em>{getShipTo()}</em>
             </div>
 
-            <div className="total-row tax-row">
+            <div className="summary-divider" style={{margin:'12px 0 10px'}} />
+
+            <div className="total-row tax-row" style={{paddingBottom:'6px'}}>
               <span>Sales Tax</span>
               <em>Calculated at checkout</em>
             </div>
