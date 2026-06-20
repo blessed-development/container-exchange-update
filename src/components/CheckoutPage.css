@@ -2239,10 +2239,8 @@
 
 
 /* =========================================================
-   FINAL SOFT MY CART ALIGNMENT — STABLE READY VERSION
-   1) Product title aligns with Unit Price / Qty / Subtotal / Remove.
-   2) Remove button has its own visible edge space.
-   3) My Cart + Shipping pages show tax text only; no tax added until success page.
+   FINAL SOFT MY CART ALIGNMENT
+   Title + Unit Price + Qty + Subtotal + Remove align on same first row.
    ========================================================= */
 
 .checkout-main{
@@ -2264,6 +2262,11 @@
     96px
     28px !important;
   gap:10px !important;
+}
+
+.cart-table-head{
+  padding-bottom:12px !important;
+  border-bottom:1px solid rgba(255,255,255,.055) !important;
 }
 
 .cart-line{
@@ -2292,7 +2295,6 @@
   width:68px !important;
   height:52px !important;
   border-radius:14px !important;
-  object-fit:cover !important;
 }
 
 .cart-product-copy{
@@ -2335,7 +2337,7 @@
   opacity:.96 !important;
 }
 
-/* Align all bright first-row elements with the product title */
+/* align values with first title line */
 .cart-unit-price,
 .cart-qty,
 .cart-line-total,
@@ -2403,10 +2405,8 @@
   line-height:1 !important;
 }
 
-/* Visible remove button at edge, not squeezed into subtotal */
 .cart-remove{
   width:28px !important;
-  min-width:28px !important;
   height:28px !important;
   justify-self:end !important;
   display:flex !important;
@@ -2421,20 +2421,6 @@
   opacity:1 !important;
   color:#ff453a !important;
   transform:scale(1.06) !important;
-}
-
-/* Tax rows are informational before success page */
-.tax-row em{
-  color:rgba(203,213,225,.72) !important;
-  font-style:italic !important;
-}
-
-.total-row,
-.total-row strong,
-.grand-total strong,
-.os-price,
-.os-qty{
-  font-variant-numeric:tabular-nums !important;
 }
 
 @media(max-width:1180px){
