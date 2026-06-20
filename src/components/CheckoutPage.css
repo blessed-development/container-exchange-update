@@ -1834,3 +1834,76 @@
     transform:none !important;
   }
 }
+
+
+/* =========================
+   FINAL CART READABILITY PATCH
+   Rating + title + price polish only.
+========================= */
+
+.cart-product-title{
+  font-weight:760 !important;
+  line-height:1.28 !important;
+  letter-spacing:-.025em !important;
+}
+
+.cart-product-subtitle{
+  margin-top:2px !important;
+  margin-bottom:4px !important;
+  font-size:11px !important;
+  line-height:1.32 !important;
+  color:rgba(163,172,185,.72) !important;
+}
+
+.cart-rating{
+  margin-top:2px !important;
+  color:#fbbf24 !important;
+  font-size:12.4px !important;
+  line-height:1 !important;
+  opacity:.95 !important;
+  letter-spacing:-.015em !important;
+}
+
+.cart-rating span{
+  margin-left:3px !important;
+  color:rgba(203,213,225,.68) !important;
+  font-size:11.5px !important;
+  opacity:1 !important;
+}
+
+.cart-unit-price,
+.cart-line-total{
+  font-size:13.6px !important;
+  font-weight:780 !important;
+  letter-spacing:-.025em !important;
+  font-variant-numeric:tabular-nums !important;
+}
+
+.cart-line-total{
+  font-weight:850 !important;
+}
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:
+    minmax(440px,1fr)
+    88px
+    72px
+    92px
+    16px !important;
+  gap:9px !important;
+}
+
+.cart-line{
+  min-height:80px !important;
+  padding:13px 0 !important;
+}
+
+.cart-product{
+  gap:15px !important;
+}
+
+.cart-product-image{
+  width:66px !important;
+  height:50px !important;
+}
