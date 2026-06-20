@@ -566,7 +566,7 @@ export default function ContainerConfigurator({
     if (!hasCheckoutLocation) return;
 
     addCartItem({
-      id: `${container?.id || condition}-${safeSizeIndex}-${grade}-${Date.now()}`,
+      id: `${container?.id || effectiveCondition}-${safeSizeIndex}-${effectiveGrade}-${Date.now()}`,
       title: currentTitle,
       sub: currentSub,
       condition: effectiveCondition,
@@ -575,8 +575,11 @@ export default function ContainerConfigurator({
       unitPrice,
       qty,
       image: selectedImage,
+      img: selectedImage,
       url: container?.id ? `/product/${container.id}` : '#',
       location,
+      rating: container?.rating || 5,
+      reviewCount: container?.review_count || container?.reviewCount || 0,
     });
 
     setIsDrawerOpen(true);
