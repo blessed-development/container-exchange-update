@@ -28,11 +28,10 @@ const CheckoutPage = () => {
     updateQuantity,
     removeItem,
     getSubtotal,
-    getGrandTotal,
   } = useCart();
 
   const subtotal = getSubtotal();
-  const total = getGrandTotal();
+  const total = subtotal;
 
   const handleBackToStore = () => {
     navigate('/inventory');
