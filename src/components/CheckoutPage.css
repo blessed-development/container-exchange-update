@@ -2116,3 +2116,123 @@
     min-width:0 !important;
   }
 }
+
+
+/* =========================================================
+   FINAL TITLE FULL DISPLAY PATCH
+   Product column gets dominant width, title wraps naturally, no halfway ellipsis.
+   ========================================================= */
+
+.cart-table-head,
+.cart-line{
+  grid-template-columns:
+    minmax(0, 72%)
+    76px
+    56px
+    82px
+    12px !important;
+  gap:5px !important;
+}
+
+.cart-product{
+  min-width:0 !important;
+  padding-right:26px !important;
+  grid-template-columns:68px minmax(0,1fr) !important;
+  gap:16px !important;
+}
+
+.cart-product-copy{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:visible !important;
+}
+
+.cart-product-title{
+  display:-webkit-box !important;
+  -webkit-line-clamp:2 !important;
+  -webkit-box-orient:vertical !important;
+  white-space:normal !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  max-width:100% !important;
+  line-height:1.18 !important;
+  margin-bottom:4px !important;
+}
+
+.cart-table-head span:nth-child(2),
+.cart-unit-price{
+  justify-self:end !important;
+  text-align:right !important;
+}
+
+.cart-table-head span:nth-child(3),
+.cart-qty{
+  justify-self:center !important;
+}
+
+.cart-table-head span:nth-child(4),
+.cart-line-total{
+  justify-self:end !important;
+  text-align:right !important;
+}
+
+.cart-unit-price,
+.cart-line-total{
+  width:76px !important;
+  min-width:76px !important;
+  max-width:76px !important;
+  font-variant-numeric:tabular-nums !important;
+}
+
+.cart-qty{
+  width:56px !important;
+  min-width:56px !important;
+  max-width:56px !important;
+  height:30px !important;
+}
+
+.cart-remove{
+  width:12px !important;
+  min-width:12px !important;
+  justify-self:end !important;
+}
+
+@media(max-width:1180px){
+  .cart-table-head,
+  .cart-line{
+    grid-template-columns:
+      minmax(0, 68%)
+      74px
+      54px
+      80px
+      12px !important;
+    gap:4px !important;
+  }
+
+  .cart-product{
+    padding-right:18px !important;
+  }
+}
+
+@media(max-width:980px){
+  .cart-table-head{
+    display:none !important;
+  }
+
+  .cart-line{
+    grid-template-columns:1fr !important;
+  }
+
+  .cart-product-title{
+    -webkit-line-clamp:2 !important;
+  }
+
+  .cart-unit-price,
+  .cart-line-total,
+  .cart-qty,
+  .cart-remove{
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+  }
+}
