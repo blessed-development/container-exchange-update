@@ -1736,3 +1736,101 @@
     flex-direction:column !important;
   }
 }
+
+
+/* =========================
+   FINAL PREMIUM CART UX PATCH
+   Sticky summary, tabular prices, soft row hover, calmer ratings.
+========================= */
+
+.checkout-sidebar{
+  position:sticky !important;
+  top:72px !important;
+  align-self:start !important;
+}
+
+.cart-unit-price,
+.cart-line-total,
+.total-row,
+.grand-total strong,
+.os-price,
+.os-qty{
+  font-variant-numeric:tabular-nums !important;
+}
+
+.cart-line{
+  border-radius:16px !important;
+  transition:
+    transform .22s ease,
+    background .22s ease,
+    border-color .22s ease !important;
+}
+
+.cart-line:hover{
+  transform:translateY(-1px) !important;
+  background:rgba(255,255,255,.012) !important;
+  border-bottom-color:rgba(255,255,255,.055) !important;
+}
+
+.cart-rating{
+  opacity:.82 !important;
+  letter-spacing:-.02em !important;
+}
+
+.cart-rating span{
+  opacity:.62 !important;
+}
+
+.cart-product-subtitle{
+  font-weight:560 !important;
+  letter-spacing:-.01em !important;
+}
+
+.cart-qty{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 8px 22px rgba(0,0,0,.10) !important;
+}
+
+.cart-qty button{
+  width:22px !important;
+  height:22px !important;
+  border-radius:999px !important;
+  line-height:1 !important;
+  color:rgba(255,255,255,.86) !important;
+}
+
+.cart-qty button:hover{
+  background:rgba(255,255,255,.06) !important;
+}
+
+.total-card{
+  position:relative !important;
+  overflow:hidden !important;
+}
+
+.total-card::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(circle at 80% 0%,rgba(255,255,255,.055),transparent 34%),
+    radial-gradient(circle at 10% 100%,rgba(34,197,94,.055),transparent 34%) !important;
+}
+
+.total-card > *{
+  position:relative !important;
+  z-index:1 !important;
+}
+
+@media(max-width:980px){
+  .checkout-sidebar{
+    position:relative !important;
+    top:auto !important;
+  }
+
+  .cart-line:hover{
+    transform:none !important;
+  }
+}
