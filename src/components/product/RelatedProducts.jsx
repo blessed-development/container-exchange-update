@@ -64,8 +64,16 @@ export default function RelatedProducts() {
                     {product.name}
                   </h3>
 
-                  <p className="text-white/90 text-[12px] leading-snug mb-1">
-                    {product.condition} · {product.size} ft · {product.grade}
+                  <p className="text-white/85 text-[12px] leading-[1.45] font-normal mb-1.5 line-clamp-2">
+                    {[
+                      product.condition,
+                      product.height === 'high_cube'
+                        ? 'High Cube'
+                        : `${product.size} ft`,
+                      product.grade,
+                    ]
+                      .filter(Boolean)
+                      .join(' • ')}
                   </p>
 
                   <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
