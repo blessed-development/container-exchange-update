@@ -10,6 +10,14 @@ const formatMoney = (value) =>
     maximumFractionDigits: 2,
   })}`;
 
+
+const GRADE_LABELS = {
+  AS_IS: 'As-Is',
+  WWT: 'Wind & Water Tight',
+  CW: 'Cargo Worthy',
+  IICL: 'IICL Certified',
+};
+
 const fallbackImage =
   'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85';
 
@@ -64,17 +72,18 @@ export default function RelatedProducts() {
                     {product.name}
                   </h3>
 
-                  <p className="text-white/85 text-[12px] leading-[1.45] font-normal mb-1.5 line-clamp-2">
-                    {[
-                      product.condition,
-                      product.height === 'high_cube'
-                        ? 'High Cube'
-                        : `${product.size} ft`,
-                      product.grade,
-                    ]
-                      .filter(Boolean)
-                      .join(' • ')}
-                  </p>
+                  <div className="text-[13px] leading-[1.35] text-white/72 mb-2">
+                    {product.short_description ? (
+                      product.short_description
+                    ) : (
+                      <>
+                        {product.condition} • {product.size}
+                        {product.height === 'high_cube' ? ' High Cube' : ' ft'}
+                        {' • '}
+                        {GRADE_LABELS[product.grade] || product.grade}
+                      </>
+                    )}
+                  </div>
 
                   <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
                     <span className="tracking-tight">★★★★★</span>
