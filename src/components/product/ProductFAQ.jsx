@@ -28,7 +28,7 @@ export default function ProductFAQ() {
 
   return (
     <section
-      className="mt-10 rounded-[28px] border border-border/50 bg-card/35 backdrop-blur-xl overflow-hidden"
+      className="product-faq-section mt-10 rounded-[28px] border border-border/50 bg-card/35 backdrop-blur-xl overflow-hidden"
       onMouseLeave={() => setHoverIndex(null)}
     >
       <div className="px-5 pt-5 pb-3">

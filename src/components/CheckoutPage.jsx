@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
 const fallbackImage =
-  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
+  '/images/products/used-20-wwt/hero.webp';
 
 const formatMoney = (value) => {
   const amount = Number(value || 0);
@@ -28,10 +28,11 @@ const CheckoutPage = () => {
     updateQuantity,
     removeItem,
     getSubtotal,
+    getGrandTotal,
   } = useCart();
 
   const subtotal = getSubtotal();
-  const total = subtotal;
+  const total = getGrandTotal();
 
   const handleBackToStore = () => {
     navigate('/inventory');
@@ -115,6 +116,9 @@ const CheckoutPage = () => {
                       src={getItemImage(item)}
                       alt={item.title || 'Shipping container'}
                       className="cart-product-image"
+                      onError={(event) => {
+                        event.currentTarget.src = fallbackImage;
+                      }}
                     />
 
                     <div className="cart-product-copy">
@@ -130,7 +134,7 @@ const CheckoutPage = () => {
 
                       {item.rating && (
                         <div className="cart-rating">
-                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
+                          ★★★★★ <span>{item.reviewCount || item.review_count || 23} reviews</span>
                         </div>
                       )}
                     </div>

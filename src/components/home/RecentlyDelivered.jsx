@@ -35,11 +35,11 @@ const DELIVERIES = [
 ];
 
 const IMAGES = [
-  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&q=80',
-  'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=1000&q=80',
-  'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=1000&q=80',
-  'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=1000&q=80',
-  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1000&q=80',
+  '/images/products/new-40hc-iicl/hero.webp',
+  '/images/products/used-20-iicl/hero.webp',
+  '/images/products/new-40-iicl/hero.webp',
+  '/images/products/used-40-cw/hero.webp',
+  '/images/products/used-40-as-is/hero.webp',
 ];
 
 const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
