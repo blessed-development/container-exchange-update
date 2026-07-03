@@ -18,8 +18,7 @@ const GRADE_LABELS = {
   IICL: 'IICL Certified',
 };
 
-const fallbackImage =
-  '/images/products/used-20-wwt/hero.webp';
+const fallbackImage = '/images/products/used-20-wwt/hero.webp';
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();
@@ -62,7 +61,7 @@ export default function RelatedProducts() {
                   onError={(e) => {
                     e.currentTarget.src = fallbackImage;
                   }}
-                  className="absolute inset-0 w-full h-full object-contain object-center bg-muted transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  className="absolute inset-0 w-full h-full object-contain object-center p-3 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />

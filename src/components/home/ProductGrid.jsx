@@ -7,6 +7,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 const PRODUCT_GROUPS = [
   [
@@ -173,14 +174,16 @@ function ProductCard({ product, index }) {
         onClick={handleCardClick}
         className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <img
+        <PremiumContainerImage
           src={product.image}
           alt={product.name}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+          variant="gallery"
+          className="absolute inset-0 h-full w-full rounded-none shadow-none"
+          imageClassName="transition-transform duration-700 group-hover:scale-[1.02]"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/5" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER

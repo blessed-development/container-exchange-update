@@ -11,7 +11,7 @@ const OPTIONS = [
     desc: 'Flexible monthly rentals with same-week delivery. Perfect for temporary storage, job sites, or seasonal needs.',
     bullets: ['1 Month Free Rent', 'Flexible Rental Terms', 'Same Week Delivery', 'Easy Pickup When Done'],
     cta: 'Claim Your Free Month',
-    image: '/images/products/new-40hc-iicl/hero.webp',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
     highlight: false,
   },
   {
@@ -29,7 +29,7 @@ const OPTIONS = [
     desc: 'Start with just $1 your first month. No credit check required — everyone qualifies. Own it with early payoff discounts.',
     bullets: ['Everyone Qualifies', 'No Credit Check Required', 'Early Payoff Discounts', '$1 First Month Special'],
     cta: 'Start for $1',
-    image: '/images/products/used-40hc-wwt/hero.webp',
+    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
     highlight: false,
   },
 ];

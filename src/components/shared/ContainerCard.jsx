@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -30,11 +31,13 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
       <Link to={`/product/${container.id}${zipCode ? `?zip=${zipCode}` : ''}`}>
         <div className="group bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 rounded-2xl overflow-hidden flex flex-col">
           {/* Rectangular Image — 16:9 */}
-          <div className="relative aspect-video overflow-hidden bg-muted flex-shrink-0">
-            <img
-              src={container.image_url}
+          <div className="relative flex-shrink-0">
+            <PremiumContainerImage
+              src={container.inventory_image_url || container.image_url}
               alt={container.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              variant="card"
+              className="rounded-none"
+              imageClassName="transition-transform duration-500 group-hover:scale-[1.02]"
             />
             {/* Badges */}
             <div className="absolute top-3 left-3 flex gap-1.5">

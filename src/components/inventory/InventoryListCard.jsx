@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
+import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 import {
   getSavedSelectedLocation,
@@ -73,23 +74,19 @@ export default function InventoryListCard({ container, index }) {
         onClick={openProduct}
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
-        <div
-          className="relative h-[280px] sm:h-full sm:w-[38%] overflow-hidden bg-muted"
-        >
+        <div className="relative h-[260px] sm:h-full sm:w-[38%] overflow-hidden bg-muted">
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
               BESTSELLER
             </div>
           )}
 
-          <img
-            src={
-              container.inventory_image_url ||
-              container.image_url ||
-              '/images/products/new-20-iicl/hero.webp'
-            }
+          <PremiumContainerImage
+            src={container.inventory_image_url || container.image_url}
             alt={container.name}
-            className="w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
+            variant="list"
+            className="w-full h-full"
+            imageClassName="hover:scale-[1.01] transition-transform duration-500"
           />
         </div>
 

@@ -85,6 +85,8 @@ const GRADE_INFO = {
   },
 };
 
+
+
 const normalize = (value) =>
   String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
@@ -477,7 +479,7 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center brightness-[0.92] contrast-[1.04] transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
+                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center transition-all duration-700 ease-out group-hover:scale-[1.01] animate-in fade-in"
               />
 
               {showHeroOverlay && (
@@ -543,7 +545,7 @@ export default function ProductDetail() {
                     <img
                       src={image}
                       alt={`${productTitle} preview ${index + 1}`}
-                      className="w-full h-full object-contain object-center transition-transform duration-500 hover:scale-105"
+                      className="w-full h-full object-contain object-center transition-transform duration-500 hover:scale-[1.03]"
                     />
                   </button>
                 ))}

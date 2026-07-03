@@ -20,10 +20,12 @@ export default function QuickViewModal({ container, onClose }) {
     ...(container.gallery_urls || []),
   ].filter(Boolean);
 
-  const displayImages =
-    images.length > 0
-      ? images
-      : ['/images/products/used-20-wwt/hero.webp'];
+  // Fallback images if none stored
+  const displayImages = images.length > 0 ? images : [
+    '/images/products/new-20-iicl/hero.webp',
+    '/images/products/used-20-wwt/hero.webp',
+    '/images/products/used-40-wwt/hero.webp',
+  ];
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const stars = Math.round(container.rating || 5);

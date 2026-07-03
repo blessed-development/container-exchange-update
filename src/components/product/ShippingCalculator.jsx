@@ -197,7 +197,7 @@ export default function ShippingCalculator({
                 <img
                   src={CONDITION_IMAGES[cond]}
                   alt={cond}
-                  className="w-[68px] h-[52px] object-contain object-center rounded-lg flex-shrink-0 bg-muted"
+                  className="w-[68px] h-[52px] object-contain object-center p-1.5 rounded-lg flex-shrink-0 bg-muted"
                 />
 
                 <div>
