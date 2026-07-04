@@ -2,24 +2,31 @@ import React from 'react';
 
 const VARIANT_CLASSES = {
   card: {
-    frame: 'aspect-video rounded-2xl shadow-sm bg-white',
-    image: 'object-cover object-center p-0',
+    // Inventory card/grid image: original Unsplash-style 1200x800 frame
+    frame: 'aspect-[3/2] rounded-2xl shadow-sm bg-white',
+    image: 'object-contain object-center p-0',
   },
+
   list: {
-    frame: 'h-[260px] sm:h-full rounded-none shadow-none bg-white',
-    image: 'object-cover object-center p-0',
+    // Inventory list view image
+    frame: 'aspect-[3/2] sm:h-full rounded-none shadow-none bg-white',
+    image: 'object-contain object-center p-0',
   },
+
   gallery: {
+    // Product detail gallery: 1448x1086 style, close to 4:3
     frame: 'aspect-[4/3] rounded-2xl shadow-xl bg-white',
-    image: 'object-contain object-center p-0 scale-[1.04]',
+    image: 'object-contain object-center p-0',
   },
+
   thumbnail: {
     frame: 'w-16 h-16 rounded-xl shadow-none bg-white',
-    image: 'object-cover object-center p-0',
+    image: 'object-contain object-center p-0',
   },
+
   feature: {
-    frame: 'aspect-video rounded-2xl shadow-sm bg-white',
-    image: 'object-cover object-center p-0',
+    frame: 'aspect-[3/2] rounded-2xl shadow-sm bg-white',
+    image: 'object-contain object-center p-0',
   },
 };
 
@@ -29,27 +36,16 @@ export default function PremiumContainerImage({
   variant = 'card',
   className = '',
   imageClassName = '',
-  loading = 'lazy',
 }) {
-  const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.card;
-
-  if (!src) {
-    return (
-      <div
-        className={`relative overflow-hidden bg-white flex items-center justify-center ${variantClasses.frame} ${className}`}
-      >
-        <span className="text-muted-foreground font-mono text-sm">NO IMAGE</span>
-      </div>
-    );
-  }
+  const classes = VARIANT_CLASSES[variant] || VARIANT_CLASSES.card;
 
   return (
-    <div className={`relative overflow-hidden ${variantClasses.frame} ${className}`}>
+    <div className={`relative overflow-hidden ${classes.frame} ${className}`}>
       <img
         src={src}
         alt={alt}
-        className={`w-full h-full select-none ${variantClasses.image} ${imageClassName}`}
-        loading={loading}
+        className={`w-full h-full ${classes.image} ${imageClassName}`}
+        loading="lazy"
       />
     </div>
   );
