@@ -2,14 +2,17 @@ import React from 'react';
 
 const VARIANT_CLASSES = {
   card: {
-    frame: 'aspect-[3/2] rounded-2xl shadow-sm bg-white',
+    // Inventory grid/card frame: 1200 x 1166 vertical premium frame
+    frame: 'aspect-[1200/1166] rounded-2xl shadow-sm bg-white',
     image: '!object-contain !object-center !p-0 !scale-100',
   },
   list: {
-    frame: 'h-[260px] sm:h-full rounded-none shadow-none bg-white',
+    // Inventory list frame: 1200 x 1166 image behavior inside the list card
+    frame: 'aspect-[1200/1166] sm:h-full rounded-none shadow-none bg-white',
     image: '!object-contain !object-center !p-0 !scale-100',
   },
   gallery: {
+    // Product detail gallery keeps wider inspection frame
     frame: 'aspect-[4/3] rounded-2xl shadow-xl bg-white',
     image: '!object-contain !object-center !p-0 !scale-100',
   },
@@ -18,7 +21,7 @@ const VARIANT_CLASSES = {
     image: '!object-contain !object-center !p-0 !scale-100',
   },
   feature: {
-    frame: 'aspect-[3/2] rounded-2xl shadow-sm bg-white',
+    frame: 'aspect-[1200/1166] rounded-2xl shadow-sm bg-white',
     image: '!object-contain !object-center !p-0 !scale-100',
   },
 };
