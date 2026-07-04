@@ -74,7 +74,7 @@ export default function InventoryListCard({ container, index }) {
         onClick={openProduct}
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
-        <div className="relative h-[260px] sm:h-full sm:w-[38%] overflow-hidden bg-muted">
+        <div className="relative h-[260px] sm:h-full sm:w-[42%] lg:w-[40%] xl:w-[38%] overflow-hidden bg-white">
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
               BESTSELLER
@@ -82,11 +82,14 @@ export default function InventoryListCard({ container, index }) {
           )}
 
           <PremiumContainerImage
-            src={container.inventory_image_url || container.image_url}
+            src={
+              container.inventory_image_url ||
+              container.image_url ||
+              '/images/products/used-40hc-wwt/hero.webp'
+            }
             alt={container.name}
             variant="list"
             className="w-full h-full"
-            imageClassName="hover:scale-[1.01] transition-transform duration-500"
           />
         </div>
 
