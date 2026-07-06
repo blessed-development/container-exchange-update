@@ -7,7 +7,6 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
-import { Badge } from '@/components/ui/badge';
 import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
@@ -164,6 +163,78 @@ export default function ProductDetail() {
     location: getSavedSelectedLocation(),
   });
 
+  const selectedSize = SIZE_OPTIONS[selectedSizeIndex] || SIZE_OPTIONS[0];
+  const productTitle = container?.name || '';
+  const productImage = container?.image_url || selectedSize.image;
+
+  const baseDisplayPrice =
+    container?.base_price ||
+    container?.price ||
+    0;
+
+  const activeLocation = getBestLocation(
+    localizedPricing?.location,
+    savedLocation,
+    getSavedSelectedLocation()
+  );
+
+  const hasActiveZip =
+    Boolean(getLocationZip(activeLocation));
+
+  const calculatorPrice =
+    Number(localizedPricing?.price || 0);
+
+  const heroPrice =
+    calculatorPrice > 0
+      ? calculatorPrice
+      : getLocalizedPrice(baseDisplayPrice, activeLocation);
+
+  const showStartingFrom =
+    !hasActiveZip;
+
+  const productsWithDedicatedGallery = ['used-40-wwt', 'used-40hc-wwt'];
+  const shouldUseSampleGallery = !productsWithDedicatedGallery.includes(container?.id);
+  const allImages = [
+    productImage,
+    ...(container?.gallery_urls || []),
+    ...(shouldUseSampleGallery ? SAMPLE_GALLERY_IMAGES : []),
+  ].filter(Boolean);
+
+  const activeImage = allImages[activeImageIndex] || productImage;
+
+  const showHeroOverlay = activeImageIndex === 0;
+
+  const seoHeroTitle = buildSeoProductTitle(productTitle);
+
+  const seoLocation = formatCityState(activeLocation);
+
+  useEffect(() => {
+    if (!seoHeroTitle || !seoLocation) return;
+
+    document.title =
+      `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
+
+    return () => {
+      document.title = 'Containers Exchange';
+    };
+  }, [seoHeroTitle, seoLocation]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('openZipModal') !== '1') return;
+
+    const saved = getSavedSelectedLocation();
+
+    if (saved?.postalCode) return;
+
+    const timer = setTimeout(() => {
+      setShowZipModal(true);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
   useEffect(() => {
     setActiveProduct(null);
   }, [id]);
@@ -314,77 +385,6 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-  const selectedSize = SIZE_OPTIONS[selectedSizeIndex];
-
-  const productTitle = container.name;
-
-  const productImage =
-    container.image_url || selectedSize.image;
-
-  const baseDisplayPrice =
-    container.base_price ||
-    container.price ||
-    0;
-
-  const activeLocation = getBestLocation(
-    localizedPricing?.location,
-    savedLocation,
-    getSavedSelectedLocation()
-  );
-
-  const hasActiveZip =
-    Boolean(getLocationZip(activeLocation));
-
-  const calculatorPrice =
-    Number(localizedPricing?.price || 0);
-
-  const heroPrice =
-    calculatorPrice > 0
-      ? calculatorPrice
-      : getLocalizedPrice(baseDisplayPrice, activeLocation);
-
-  const showStartingFrom =
-    !hasActiveZip;
-
-  const allImages = [
-    productImage,
-    ...(container.gallery_urls || []),
-    ...SAMPLE_GALLERY_IMAGES,
-  ].filter(Boolean);
-
-  const activeImage = allImages[activeImageIndex] || productImage;
-
-  const showHeroOverlay = activeImageIndex === 0;
-
-  const seoHeroTitle = buildSeoProductTitle(productTitle);
-
-  const seoLocation = formatCityState(activeLocation);
-  useEffect(() => {
-  if (!seoHeroTitle || !seoLocation) return;
-
-  document.title =
-    `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`;
-
-  return () => {
-    document.title = 'Containers Exchange';
-  };
-}, [seoHeroTitle, seoLocation]);
-
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-
-  if (params.get('openZipModal') !== '1') return;
-
-  const saved = getSavedSelectedLocation();
-
-  if (saved?.postalCode) return;
-
-  const timer = setTimeout(() => {
-    setShowZipModal(true);
-  }, 1800);
-
-  return () => clearTimeout(timer);
-}, [id]);
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
@@ -483,12 +483,12 @@ useEffect(() => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div>
-            <div className="relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
+            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
               <img
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="w-full h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in"
+                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
               />
 
               {showHeroOverlay && (
@@ -500,30 +500,11 @@ useEffect(() => {
                   </div>
 
                   <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
-                    <div className="flex flex-wrap items-center gap-2 mb-5">
-                      <Badge className="bg-orange-500/15 text-orange-500 border border-orange-500/30 font-mono rounded-full px-3">
-                        {String(container.condition || condition).toUpperCase()}
-                      </Badge>
-
-                      <Badge className="bg-white/12 backdrop-blur-md text-white border border-white/10 font-mono rounded-full px-3">
-                        {container.size}ft
-                      </Badge>
-
-                      {String(container.grade || '').toUpperCase() && (
-                        <Badge
-                          variant="outline"
-                          className="bg-white/10 backdrop-blur-md text-white border-white/10 font-mono rounded-full px-3"
-                        >
-                          {String(container.grade || '').toUpperCase()}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <h1 className="text-[32px] md:text-[44px] font-black text-white leading-[1.02] tracking-[-0.045em] max-w-[640px] mb-6">
+                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-5">
                       {seoHeroTitle}
                     </h1>
 
-                    <div className="text-[19px] md:text-[24px] font-bold tracking-[-0.02em] text-white mb-6">
+                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white mb-5">
                       For Sale in
                       <span className="text-primary ml-2">
                         {seoLocation}
@@ -537,7 +518,7 @@ useEffect(() => {
                             key={i}
                             className={`w-5 h-5 ${
                               i < Math.round(container.rating || 5)
-                                ? 'fill-orange-500 text-orange-500'
+                                ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-white/30'
                             }`}
                           />
@@ -557,26 +538,28 @@ useEffect(() => {
               )}
             </div>
 
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {allImages.slice(0, 10).map((image, index) => (
-                <button
-                  key={`${image}-${index}`}
-                  type="button"
-                  onClick={() => setActiveImageIndex(index)}
-                  className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
-                    activeImageIndex === index
-                      ? 'border-orange-500 ring-2 ring-orange-500/25'
-                      : 'border-border hover:border-orange-400/50'
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`${productTitle} preview ${index + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                  />
-                </button>
-              ))}
-            </div>
+            {allImages.length > 1 && (
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {allImages.slice(0, 10).map((image, index) => (
+                  <button
+                    key={`${image}-${index}`}
+                    type="button"
+                    onClick={() => setActiveImageIndex(index)}
+                    className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
+                      activeImageIndex === index
+                        ? 'border-orange-500 ring-2 ring-orange-500/25'
+                        : 'border-border hover:border-orange-400/50'
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${productTitle} preview ${index + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
@@ -601,7 +584,7 @@ useEffect(() => {
                   setGradeOpen((open) => !open);
                   setGradeLocked((locked) => !locked);
                 }}
-                className={`group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
+                className={`product-grade-card group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                   gradeOpen
                     ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
                     : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
@@ -620,7 +603,7 @@ useEffect(() => {
                 </div>
 
                 <div
-                  className={`relative overflow-hidden px-5 pb-4 pt-2 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                  className={`product-grade-body relative overflow-hidden px-5 pb-4 pt-2 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                     gradeOpen ? 'max-h-[330px]' : 'max-h-[92px]'
                   }`}
                 >
@@ -652,7 +635,7 @@ useEffect(() => {
                     setDescriptionOpen((open) => !open);
                     setDescriptionLocked((locked) => !locked);
                   }}
-                  className={`group mt-[-8px] mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
+                  className={`product-description-card group mt-[-8px] mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                     descriptionOpen
                       ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
                       : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
@@ -667,7 +650,7 @@ useEffect(() => {
                   </div>
 
                   <div
-                    className={`relative overflow-hidden px-5 pb-4 pt-1 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                    className={`product-description-body relative overflow-hidden px-5 pb-4 pt-1 transition-[max-height,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                       descriptionOpen ? 'max-h-[380px]' : 'max-h-[92px]'
                     }`}
                   >
@@ -716,7 +699,7 @@ useEffect(() => {
         <RelatedProducts zipCode={zipCode} />
       </div>
 
-      <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
+      <div className="mobile-product-faq-wrap lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
         <ProductFAQ />
       </div>
 

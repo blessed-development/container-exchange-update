@@ -558,9 +558,10 @@
   display:block;
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.6);
-  z-index:50;
-  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.66);
+  z-index:9998;
+  backdrop-filter:blur(10px) saturate(115%);
+  pointer-events:auto;
 }
 
 .cart-drawer{
@@ -571,7 +572,7 @@
   width:400px;
   background:#05070b;
   color:#fff;
-  z-index:60;
+  z-index:9999;
   transform:translateX(100%);
   transition:.3s;
   border-left:1px solid #171b22;
@@ -2342,6 +2343,448 @@ margin-top:1px !important;
 
 .grade-upgrade-btn.active::after{
   display:none !important;
+}
+
+/* Product photo framing */
+.product-hero-image{
+  object-position:center center;
+}
+
+.product-hero-image-new20{
+  object-position:58% 50%;
+}
+
+.product-hero-image-used20wwt{
+  object-position:54% 50%;
+}
+
+@media(max-width:640px){
+  .product-hero-card{
+    border-radius:24px !important;
+  }
+
+  .product-hero-image-new20{
+    object-position:61% 50% !important;
+  }
+
+  .product-hero-image-used20wwt{
+    object-position:58% 50% !important;
+  }
+}
+
+@media(max-width:420px){
+  .product-hero-image-new20{
+    object-position:63% 50% !important;
+  }
+
+  .product-hero-image-used20wwt{
+    object-position:60% 50% !important;
+  }
+}
+
+/* FINAL MOBILE ACCORDION COMPACTION */
+@media(max-width:980px){
+  .product-grade-card,
+  .product-description-card,
+  .product-faq-section,
+  .product-faq-section button{
+    min-height:0 !important;
+    height:auto !important;
+  }
+
+  .product-grade-card{
+    margin:0 0 8px !important;
+    border-radius:18px !important;
+  }
+
+  .product-grade-card > div:first-child{
+    min-height:0 !important;
+    padding:12px 16px 0 !important;
+  }
+
+  .product-grade-body{
+    max-height:66px !important;
+    min-height:0 !important;
+    padding:6px 16px 11px !important;
+  }
+
+  .product-grade-card[aria-expanded="true"] .product-grade-body{
+    max-height:220px !important;
+  }
+
+  .product-grade-body p:first-child{
+    margin:0 0 2px !important;
+    font-size:14.5px !important;
+    line-height:1.18 !important;
+  }
+
+  .product-grade-body p{
+    font-size:12.75px !important;
+    line-height:1.45 !important;
+  }
+
+  .product-description-card{
+    margin:0 0 14px !important;
+    border-radius:18px !important;
+  }
+
+  .product-description-card > div:first-child{
+    min-height:0 !important;
+    padding:10px 16px 0 !important;
+  }
+
+  .product-description-body{
+    max-height:66px !important;
+    min-height:0 !important;
+    padding:2px 16px 11px !important;
+  }
+
+  .product-description-card[aria-expanded="true"] .product-description-body{
+    max-height:280px !important;
+  }
+
+  .product-description-body p{
+    font-size:12.75px !important;
+    line-height:1.45 !important;
+  }
+
+  .mobile-product-faq-wrap{
+    padding-top:10px !important;
+    padding-bottom:22px !important;
+  }
+
+  .mobile-product-faq-wrap .product-faq-section{
+    margin-top:0 !important;
+    border-radius:20px !important;
+  }
+
+  .product-faq-section > div:first-child{
+    min-height:0 !important;
+    padding:14px 16px 8px !important;
+  }
+
+  .product-faq-section button{
+    display:block !important;
+    padding:14px 16px !important;
+  }
+
+  .product-faq-section button > div:first-child{
+    min-height:0 !important;
+  }
+
+  .product-faq-section button span{
+    font-size:14px !important;
+    line-height:1.22 !important;
+  }
+
+  .product-faq-section button p{
+    font-size:12.75px !important;
+    line-height:1.45 !important;
+  }
+
+  .product-faq-section > div:last-child{
+    padding:12px 16px 14px !important;
+  }
+}
+
+/* FINAL TASTE REFINEMENTS */
+.zip-action,
+.step-label.is-complete,
+.section-header span{
+  text-shadow:none !important;
+}
+
+.card-lbl,
+.section-header span,
+.step-label,
+.tax-note{
+  color:rgba(226,232,240,.56) !important;
+}
+
+.main-tab,
+.grade-upgrade-btn,
+.cond-card,
+.selection-btn{
+  transition:
+    border-color .22s ease,
+    background .22s ease,
+    box-shadow .22s ease,
+    color .22s ease !important;
+}
+
+.main-tab:hover,
+.grade-upgrade-btn:not(:disabled):hover,
+.cond-card:hover{
+  border-color:rgba(255,255,255,.14) !important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.060),rgba(255,255,255,.020)) !important;
+}
+
+.checkout-action-lock .add-btn{
+  background:
+    linear-gradient(180deg,#ffffff,#e8edf2) !important;
+}
+
+.checkout-action-lock .add-btn svg{
+  color:#0b0d10 !important;
+}
+
+.checkout-action-lock .quote-btn:hover{
+  color:#fff !important;
+  background:rgba(255,255,255,.055) !important;
+  border-color:rgba(255,255,255,.12) !important;
+}
+
+.product-detail-info-card h2,
+.product-detail-description-card h2,
+.grade-classification-card h2{
+  color:rgba(255,255,255,.94) !important;
+}
+
+.product-detail-info-card a,
+.product-detail-description-card a,
+.grade-classification-card a{
+  color:#22c55e !important;
+}
+
+@media(max-width:980px){
+  .checkout-action-lock .add-btn{
+    height:52px !important;
+  }
+
+  .checkout-action-lock .quote-btn{
+    height:42px !important;
+  }
+}
+
+/* MOBILE PRODUCT DETAIL GAP FIX */
+@media(max-width:980px){
+  .product-grade-card{
+    margin-bottom:10px !important;
+    border-radius:18px !important;
+  }
+
+  .product-grade-card > div:first-child{
+    padding:13px 16px 0 !important;
+  }
+
+  .product-grade-card > div:first-child p{
+    font-size:10px !important;
+    letter-spacing:.15em !important;
+  }
+
+  .product-grade-body{
+    max-height:76px !important;
+    padding:7px 16px 13px !important;
+  }
+
+  .product-grade-card[aria-expanded="true"] .product-grade-body{
+    max-height:240px !important;
+  }
+
+  .product-grade-body p:first-child{
+    margin-bottom:2px !important;
+    font-size:15px !important;
+    line-height:1.25 !important;
+  }
+
+  .product-grade-body p{
+    font-size:13px !important;
+    line-height:1.55 !important;
+  }
+
+  .product-description-card{
+    margin-top:0 !important;
+    margin-bottom:16px !important;
+    border-radius:18px !important;
+  }
+
+  .product-description-card > div:first-child{
+    padding:12px 16px 0 !important;
+  }
+
+  .product-description-body{
+    max-height:78px !important;
+    padding:3px 16px 13px !important;
+  }
+
+  .product-description-card[aria-expanded="true"] .product-description-body{
+    max-height:300px !important;
+  }
+
+  .product-description-body p{
+    font-size:13px !important;
+    line-height:1.55 !important;
+  }
+
+  .mobile-product-faq-wrap{
+    padding-top:12px !important;
+    padding-bottom:24px !important;
+  }
+
+  .mobile-product-faq-wrap .product-faq-section{
+    margin-top:0 !important;
+    border-radius:20px !important;
+  }
+
+  .product-faq-section > div:first-child{
+    padding:15px 16px 8px !important;
+  }
+
+  .product-faq-section > div:first-child p{
+    font-size:10px !important;
+    letter-spacing:.16em !important;
+  }
+
+  .product-faq-section button{
+    padding:13px 16px !important;
+  }
+
+  .product-faq-section button span{
+    font-size:14px !important;
+    line-height:1.25 !important;
+  }
+
+  .product-faq-section button p{
+    font-size:13px !important;
+    line-height:1.55 !important;
+  }
+
+  .product-faq-section > div:last-child{
+    padding:12px 16px 14px !important;
+  }
+}
+
+/* PRODUCT DETAIL 10/10 POLISH PASS */
+.widget{
+  padding-bottom:18px !important;
+}
+
+.product-detail-info-card,
+.product-detail-description-card,
+.grade-classification-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)) !important;
+  border:1px solid rgba(255,255,255,.085) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 18px 44px rgba(0,0,0,.18) !important;
+}
+
+.product-detail-info-card p,
+.product-detail-description-card p,
+.grade-classification-card p{
+  color:rgba(226,232,240,.70) !important;
+}
+
+.zip-bar,
+.main-tabs,
+.cond-cards-section,
+.section-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.018)) !important;
+  border-color:rgba(255,255,255,.085) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+.checkout{
+  position:sticky !important;
+  bottom:12px !important;
+  z-index:8 !important;
+  min-height:0 !important;
+  margin-top:14px !important;
+  padding:0 !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.055),transparent 42%),
+    linear-gradient(180deg,rgba(15,18,25,.96),rgba(6,8,12,.98)) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 26px 72px rgba(0,0,0,.38) !important;
+}
+
+.checkout-inner{
+  padding:18px 20px 20px !important;
+}
+
+.tax-note{
+  color:rgba(226,232,240,.55) !important;
+  font-size:10px !important;
+  letter-spacing:.12em !important;
+}
+
+.total-row{
+  align-items:flex-end !important;
+  min-height:48px !important;
+}
+
+.total-lbl{
+  color:rgba(226,232,240,.52) !important;
+  font-size:12px !important;
+  font-weight:850 !important;
+  letter-spacing:.10em !important;
+  text-transform:uppercase !important;
+}
+
+.total-price{
+  color:#f8fafc !important;
+  font-size:34px !important;
+  font-weight:780 !important;
+  letter-spacing:-.06em !important;
+  text-shadow:none !important;
+}
+
+.checkout-action-lock .add-btn{
+  height:54px !important;
+  border-radius:999px !important;
+  background:linear-gradient(180deg,#ffffff,#dfe4ea) !important;
+  color:#050607 !important;
+  border:0 !important;
+  font-size:14px !important;
+  font-weight:850 !important;
+  box-shadow:
+    0 20px 42px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+.checkout-action-lock .add-btn:hover{
+  transform:translateY(-1px) !important;
+  background:linear-gradient(180deg,#ffffff,#eef2f6) !important;
+  box-shadow:
+    0 24px 48px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.95) !important;
+}
+
+.checkout-action-lock .quote-btn{
+  height:44px !important;
+  border-radius:999px !important;
+  color:rgba(248,250,252,.82) !important;
+  background:rgba(255,255,255,.035) !important;
+  border:1px solid rgba(255,255,255,.07) !important;
+  font-size:13px !important;
+  font-weight:780 !important;
+}
+
+.selection-type{
+  margin-bottom:12px !important;
+}
+
+@media(min-width:1024px){
+  .widget{
+    padding-bottom:14px !important;
+  }
+}
+
+@media(max-width:980px){
+  .checkout{
+    position:relative !important;
+    bottom:auto !important;
+  }
+
+  .total-price{
+    font-size:30px !important;
+  }
 }
 
 .grade-delta.included{

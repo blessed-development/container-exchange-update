@@ -116,6 +116,9 @@ const CheckoutPage = () => {
                       src={getItemImage(item)}
                       alt={item.title || 'Shipping container'}
                       className="cart-product-image"
+                      onError={(event) => {
+                        event.currentTarget.src = fallbackImage;
+                      }}
                     />
 
                     <div className="cart-product-copy">
@@ -131,7 +134,7 @@ const CheckoutPage = () => {
 
                       {item.rating && (
                         <div className="cart-rating">
-                          ★★★★★ <span>({item.reviewCount || item.review_count || 23})</span>
+                          ★★★★★ <span>{item.reviewCount || item.review_count || 23} reviews</span>
                         </div>
                       )}
                     </div>

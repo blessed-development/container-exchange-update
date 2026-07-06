@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,23 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const container = params.get('container');
+    const zip = params.get('zip');
+    const notes = params.get('notes');
+
+    if (!container && !zip && !notes) return;
+
+    setForm((prev) => ({
+      ...prev,
+      container_name: container || prev.container_name,
+      zip_code: zip || prev.zip_code,
+      notes: notes || prev.notes,
+    }));
+  }, []);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -26,12 +43,21 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await base44.entities.Quote.create({
-      ...form,
-      status: 'pending',
-    });
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    setSubmitError('');
+
+    try {
+      await base44.entities.Quote.create({
+        ...form,
+        status: 'pending',
+      });
+      setIsSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error?.message || 'Quote request failed. Please call us or try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -154,10 +180,9 @@ export default function Contact() {
                     <Input
                       required
                       value={form.zip_code}
-                      onChange={(e) => handleChange('zip_code', e.target.value.replace(/\D/g, '').slice(0, 5))}
-                      placeholder="90210"
+                      onChange={(e) => handleChange('zip_code', e.target.value.toUpperCase().slice(0, 7))}
+                      placeholder="90210 or M5V 2T6"
                       className="h-11 font-mono"
-                      inputMode="numeric"
                     />
                   </div>
                 </div>
@@ -195,6 +220,12 @@ export default function Contact() {
                     className="min-h-[120px]"
                   />
                 </div>
+
+                {submitError && (
+                  <p className="text-sm font-medium text-destructive">
+                    {submitError}
+                  </p>
+                )}
 
                 <Button
                   type="submit"

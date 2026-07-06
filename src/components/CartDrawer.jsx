@@ -26,7 +26,35 @@ const CartDrawer = ({ onCheckout }) => {
     'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
 
   const cleanSub = (item) => {
-    const sub = item?.sub || '';
+    if (item) {
+      const dot = String.fromCharCode(8226);
+      const highCubeSub = `High Cube ${dot} 9ft 6in High`;
+      const standardSub = `Standard Height ${dot} 8ft 6in High`;
+      const rawSub = String(item.sub || '');
+
+      if (rawSub.includes('High Cube') || rawSub.includes('9ft 6in')) {
+        return highCubeSub;
+      }
+
+      if (rawSub.includes('Standard Height') || rawSub.includes('8ft 6in')) {
+        return standardSub;
+      }
+
+      if (String(item.title || '').includes('40HC')) {
+        return highCubeSub;
+      }
+
+      return standardSub;
+    }
+
+    const highCubeSub = 'High Cube • 9ft 6in High';
+    const standardSub = 'Standard Height • 8ft 6in High';
+    const sub = String(item?.sub || '')
+      .replace(/â€¢/g, '•')
+      .replace(/Â·/g, '•')
+      .replace(/·/g, '•')
+      .replace(/\s*•\s*/g, ' • ')
+      .trim();
 
     if (sub.includes('High Cube') || sub.includes('9ft 6in')) {
       return 'High Cube • 9ft 6in High';

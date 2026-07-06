@@ -29,9 +29,9 @@ export default function RelatedProducts() {
     e.stopPropagation();
 
     addToCart({
-      id: product.id,
+      productId: product.id,
       title: product.name,
-      sub: `${product.condition} · ${product.size} ft · ${product.grade}`,
+      sub: product.short_description,
       unitPrice: Number(product.base_price || product.price || 0),
       qty: 1,
       img: product.image_url || fallbackImage,
@@ -43,7 +43,7 @@ export default function RelatedProducts() {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
+    <section className="related-products-section max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
       <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-5">
         Related Products
       </h2>

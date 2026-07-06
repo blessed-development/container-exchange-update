@@ -16,7 +16,7 @@ const PRODUCT_GROUPS = [
       rating: 5.0,
       reviewCount: 184,
       image:
-        'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
+        '/images/products/new-20-iicl/hero.webp',
     },
     {
       id: 'new-40-iicl',
@@ -24,7 +24,7 @@ const PRODUCT_GROUPS = [
       rating: 4.9,
       reviewCount: 102,
       image:
-        'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=900&q=85',
+        '/images/products/new-40-iicl/hero.webp',
     },
     {
       id: 'new-40hc-iicl',
@@ -32,7 +32,7 @@ const PRODUCT_GROUPS = [
       rating: 5.0,
       reviewCount: 124,
       image:
-        'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
+        '/images/products/new-40hc-iicl/hero.webp',
     },
   ],
   [
@@ -42,7 +42,7 @@ const PRODUCT_GROUPS = [
       rating: 4.8,
       reviewCount: 142,
       image:
-        'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=85',
+        '/images/products/used-20-cw/hero.webp',
     },
     {
       id: 'used-40-cw',
@@ -50,7 +50,7 @@ const PRODUCT_GROUPS = [
       rating: 4.7,
       reviewCount: 161,
       image:
-        'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&q=85',
+        '/images/products/used-40-cw/hero.webp',
     },
     {
       id: 'used-40hc-wwt',
@@ -58,7 +58,7 @@ const PRODUCT_GROUPS = [
       rating: 4.8,
       reviewCount: 198,
       image:
-        'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=85',
+        '/images/products/used-40hc-wwt/hero.webp',
     },
   ],
 ];
