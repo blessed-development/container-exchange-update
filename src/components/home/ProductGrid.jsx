@@ -7,7 +7,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 const PRODUCT_GROUPS = [
   [
@@ -17,7 +16,7 @@ const PRODUCT_GROUPS = [
       rating: 5.0,
       reviewCount: 184,
       image:
-        '/images/products/new-20-iicl/hero.webp',
+        'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=900&q=85',
     },
     {
       id: 'new-40-iicl',
@@ -25,7 +24,7 @@ const PRODUCT_GROUPS = [
       rating: 4.9,
       reviewCount: 102,
       image:
-        '/images/products/new-40-iicl/hero.webp',
+        'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=900&q=85',
     },
     {
       id: 'new-40hc-iicl',
@@ -33,7 +32,7 @@ const PRODUCT_GROUPS = [
       rating: 5.0,
       reviewCount: 124,
       image:
-        '/images/products/new-40hc-iicl/hero.webp',
+        'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85',
     },
   ],
   [
@@ -43,7 +42,7 @@ const PRODUCT_GROUPS = [
       rating: 4.8,
       reviewCount: 142,
       image:
-        '/images/products/used-20-cw/hero.webp',
+        'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=900&q=85',
     },
     {
       id: 'used-40-cw',
@@ -51,7 +50,7 @@ const PRODUCT_GROUPS = [
       rating: 4.7,
       reviewCount: 161,
       image:
-        '/images/products/used-40-cw/hero.webp',
+        'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900&q=85',
     },
     {
       id: 'used-40hc-wwt',
@@ -59,7 +58,7 @@ const PRODUCT_GROUPS = [
       rating: 4.8,
       reviewCount: 198,
       image:
-        '/images/products/used-40hc-wwt/hero.webp',
+        'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=900&q=85',
     },
   ],
 ];
@@ -174,16 +173,14 @@ function ProductCard({ product, index }) {
         onClick={handleCardClick}
         className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <PremiumContainerImage
+        <img
           src={product.image}
           alt={product.name}
-          variant="gallery"
-          className="absolute inset-0 h-full w-full rounded-none shadow-none"
-          imageClassName="transition-transform duration-700 group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/5" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER

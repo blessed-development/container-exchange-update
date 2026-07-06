@@ -1,112 +1,6 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import { inventoryProducts } from '../data/inventoryProducts';
+import React, { createContext, useState, useContext, useCallback } from 'react';
 
-const CartContext = createContext(null);
-const CART_STORAGE_KEY = 'ce_cart';
-const DISCOUNT_STORAGE_KEY = 'ce_cart_discount';
-
-const cleanText = (value) =>
-  String(value || '')
-    .replace(/â€¢/g, '•')
-    .replace(/Â·/g, '•')
-    .replace(/·/g, '•')
-    .replace(/\s*•\s*/g, ' • ')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const normalizeKey = (value) =>
-  cleanText(value)
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '');
-
-const getRouteProductId = (item) => {
-  const url = String(item?.url || '');
-  const match = url.match(/\/product\/([^/?#]+)/);
-  return match?.[1] || '';
-};
-
-const getCanonicalSubtitle = (product, item) => {
-  const knownSub = cleanText(product?.short_description || item?.sub);
-
-  if (knownSub.includes('High Cube') || knownSub.includes('9ft 6in')) {
-    return 'High Cube • 9ft 6in High';
-  }
-
-  return 'Standard Height • 8ft 6in High';
-};
-
-const findInventoryProduct = (item) => {
-  const itemProductId =
-    item?.productId ||
-    item?.inventoryId ||
-    getRouteProductId(item) ||
-    (inventoryProducts.some((product) => product.id === item?.id) ? item?.id : '');
-
-  if (itemProductId) {
-    const byId = inventoryProducts.find((product) => product.id === itemProductId);
-    if (byId) return byId;
-  }
-
-  const titleKey = normalizeKey(item?.title || item?.name);
-  if (!titleKey) return null;
-
-  return (
-    inventoryProducts.find((product) => normalizeKey(product.name) === titleKey) ||
-    inventoryProducts.find((product) => {
-      const productKey = normalizeKey(product.name);
-      return productKey.includes(titleKey) || titleKey.includes(productKey);
-    }) ||
-    null
-  );
-};
-
-const normalizeCartItem = (item) => {
-  const product = findInventoryProduct(item);
-
-  if (!product) {
-    return {
-      ...item,
-      sub: cleanText(item?.sub),
-      title: cleanText(item?.title || item?.name),
-      qty: Number(item?.qty || 1),
-      unitPrice: Number(item?.unitPrice || item?.price || 0),
-    };
-  }
-
-  const image = product.image_url || item.image || item.img;
-
-  return {
-    ...item,
-    productId: product.id,
-    title: product.name,
-    sub: getCanonicalSubtitle(product, item),
-    img: image,
-    image,
-    url: `/product/${product.id}`,
-    rating: product.rating ?? item.rating,
-    reviewCount: product.review_count ?? item.reviewCount,
-    qty: Number(item?.qty || 1),
-    unitPrice: Number(item?.unitPrice || item?.price || product.base_price || 0),
-  };
-};
-
-const readStoredCart = () => {
-  try {
-    const stored = localStorage.getItem(CART_STORAGE_KEY);
-    return stored ? JSON.parse(stored).map(normalizeCartItem) : [];
-  } catch {
-    return [];
-  }
-};
-
-const readStoredDiscount = () => {
-  try {
-    return Number(localStorage.getItem(DISCOUNT_STORAGE_KEY) || 0);
-  } catch {
-    return 0;
-  }
-};
+const CartContext = createContext();
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -117,46 +11,29 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState(readStoredCart);
+  const [cart, setCart] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [discount, setDiscount] = useState(readStoredDiscount);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-    } catch {}
-  }, [cart]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(DISCOUNT_STORAGE_KEY, String(discount));
-    } catch {}
-  }, [discount]);
+  const [discount, setDiscount] = useState(0);
 
   const addToCart = useCallback((item) => {
-    const nextItem = normalizeCartItem(item);
-
     setCart(prev => {
       const existingIndex = prev.findIndex(i => 
-        (i.productId && i.productId === nextItem.productId) ||
-        (
-          i.title === nextItem.title &&
-          i.sub === nextItem.sub &&
-          i.unitPrice === nextItem.unitPrice
-        )
+        i.title === item.title && 
+        i.sub === item.sub && 
+        i.unitPrice === item.unitPrice
       );
       
       if (existingIndex !== -1) {
         const updated = [...prev];
         updated[existingIndex] = {
-          ...normalizeCartItem(updated[existingIndex]),
-          qty: Number(updated[existingIndex].qty || 1) + Number(nextItem.qty || 1)
+          ...updated[existingIndex],
+          qty: updated[existingIndex].qty + item.qty
         };
         return updated;
       }
       
-      return [...prev, { ...nextItem, id: Date.now() + Math.random() }];
+      return [...prev, { ...item, id: Date.now() + Math.random() }];
     });
     setIsDrawerOpen(true);
   }, []);
@@ -190,7 +67,8 @@ export const CartProvider = ({ children }) => {
   }, [getSubtotal, discount]);
 
   const getGrandTotal = useCallback(() => {
-    return getAfterDiscount();
+    const afterDiscount = getAfterDiscount();
+    return afterDiscount + (afterDiscount * 0.09);
   }, [getAfterDiscount]);
 
   const applyCoupon = useCallback((code) => {

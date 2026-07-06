@@ -13,8 +13,8 @@ const USED_GRADES = [
 const NEW_GRADES = [{ key: 'IICL', label: 'IICL', adjust: 0 }];
 
 const CONDITION_IMAGES = {
-  used: '/images/products/used-20-wwt/hero.webp',
-  new: '/images/products/new-20-iicl/hero.webp',
+  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80',
+  new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=300&q=80',
 };
 
 export default function ShippingCalculator({
@@ -197,7 +197,7 @@ export default function ShippingCalculator({
                 <img
                   src={CONDITION_IMAGES[cond]}
                   alt={cond}
-                  className="w-[68px] h-[52px] object-contain object-center p-1.5 rounded-lg flex-shrink-0 bg-muted"
+                  className="w-[68px] h-[52px] object-cover rounded-lg flex-shrink-0 bg-muted"
                 />
 
                 <div>

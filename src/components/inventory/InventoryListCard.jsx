@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Eye, Phone } from 'lucide-react';
+import { Star, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
-import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 import {
   getSavedSelectedLocation,
@@ -49,6 +48,7 @@ export default function InventoryListCard({ container, index }) {
   const stars = Math.round(container.rating || 5);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const hasZip = Boolean(savedLocation?.postalCode);
+
   const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
     savedLocation
@@ -72,28 +72,29 @@ export default function InventoryListCard({ container, index }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.04, duration: 0.35 }}
         onClick={openProduct}
-        className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
+        className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row cursor-pointer transition-all duration-300"
       >
-        <div className="relative h-[260px] sm:h-full sm:w-[42%] lg:w-[40%] xl:w-[38%] overflow-hidden bg-white">
+        <div
+          className="relative sm:w-[34%] overflow-hidden bg-muted"
+          style={{ minHeight: '228px' }}
+        >
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
               BESTSELLER
             </div>
           )}
 
-          <PremiumContainerImage
+          <img
             src={
-              container.inventory_image_url ||
               container.image_url ||
-              '/images/products/used-40hc-wwt/hero.webp'
+              'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
             }
             alt={container.name}
-            variant="list"
-            className="w-full h-full"
+            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 
-        <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
+        <div className="flex-1 px-6 pt-5 pb-5 flex flex-col justify-between">
           <div>
             <h3 className="text-[18px] leading-[1.14] font-[820] tracking-[-0.03em] text-foreground mb-[8px]">
               {container.name}
@@ -161,7 +162,7 @@ export default function InventoryListCard({ container, index }) {
             </div>
           </div>
 
-          <div className="pt-5 flex flex-wrap gap-3">
+          <div className="pt-5">
             <Button
               variant="outline"
               onClick={(e) => {
@@ -173,15 +174,6 @@ export default function InventoryListCard({ container, index }) {
               <Eye className="w-4 h-4" />
               Quick View
             </Button>
-
-            <a
-              href="tel:+18005551234"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex h-[42px] items-center justify-center gap-2 rounded-[14px] border border-primary/30 bg-primary/10 px-4 text-sm font-[760] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
-            >
-              <Phone className="w-4 h-4" />
-              (800) 555-1234
-            </a>
           </div>
         </div>
       </motion.div>

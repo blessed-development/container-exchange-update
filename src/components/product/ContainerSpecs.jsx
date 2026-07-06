@@ -1,4 +1,5 @@
 import React from 'react';
+import { Separator } from '@/components/ui/separator';
 
 const DEFAULT_SPECS = {
   '10': {

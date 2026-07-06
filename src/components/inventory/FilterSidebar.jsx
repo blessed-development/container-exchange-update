@@ -1,7 +1,9 @@
 import React from 'react';
+import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
+import { Filter } from 'lucide-react';
 
 const SIZE_OPTIONS = [
   { value: '10', label: "10' Container" },

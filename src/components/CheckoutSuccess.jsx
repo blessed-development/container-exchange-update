@@ -1,31 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Clock3, MessageCircle, Phone, ShieldCheck, Truck } from 'lucide-react';
+import { CheckCircle, Phone, ShieldCheck } from 'lucide-react';
 import './CheckoutPage.css';
 
 const CheckoutSuccess = () => {
-  const orderRef = useMemo(
-    () => `CE-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
-    []
-  );
-
-  const nextSteps = [
-    {
-      icon: Clock3,
-      title: 'Fast confirmation',
-      copy: 'A container specialist reviews your request and availability shortly.',
-    },
-    {
-      icon: Truck,
-      title: 'Delivery matched',
-      copy: 'We confirm the best local delivery option before finalizing shipping.',
-    },
-    {
-      icon: MessageCircle,
-      title: 'Clear follow-up',
-      copy: 'You receive pricing, timing, and any final details before dispatch.',
-    },
-  ];
+  const orderRef = `CE-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
 
   return (
     <main className="checkout-container">
@@ -46,43 +25,19 @@ const CheckoutSuccess = () => {
 
       <section className="success-page">
         <div className="success-card">
-          <div className="success-hero">
-            <div className="success-icon">
-              <CheckCircle size={54} />
-            </div>
-
-            <div className="success-kicker">Request received</div>
-
-            <h1>Reservation Confirmed</h1>
-
-            <p>
-              Thank you. Your container request is in. Our team will confirm availability,
-              delivery details, and final shipping cost before anything moves forward.
-            </p>
+          <div className="success-icon">
+            <CheckCircle size={52} />
           </div>
+
+          <h1>Reservation Confirmed</h1>
+
+          <p>
+            Thank you. Your container request has been received. Our team will contact you shortly to confirm delivery details, availability, and final shipping cost.
+          </p>
 
           <div className="success-ref">
             <span>Order Reference</span>
             <strong>{orderRef}</strong>
-          </div>
-
-          <div className="success-next">
-            {nextSteps.map((step) => {
-              const StepIcon = step.icon;
-
-              return (
-                <article className="success-step" key={step.title}>
-                  <div className="success-step-icon">
-                    <StepIcon size={17} />
-                  </div>
-
-                  <div>
-                    <h2>{step.title}</h2>
-                    <p>{step.copy}</p>
-                  </div>
-                </article>
-              );
-            })}
           </div>
 
           <div className="success-actions">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const NAV_LINKS = [

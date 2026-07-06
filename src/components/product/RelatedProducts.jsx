@@ -18,7 +18,8 @@ const GRADE_LABELS = {
   IICL: 'IICL Certified',
 };
 
-const fallbackImage = '/images/products/used-20-wwt/hero.webp';
+const fallbackImage =
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85';
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();
@@ -28,9 +29,9 @@ export default function RelatedProducts() {
     e.stopPropagation();
 
     addToCart({
-      productId: product.id,
+      id: product.id,
       title: product.name,
-      sub: product.short_description,
+      sub: `${product.condition} · ${product.size} ft · ${product.grade}`,
       unitPrice: Number(product.base_price || product.price || 0),
       qty: 1,
       img: product.image_url || fallbackImage,
@@ -42,7 +43,7 @@ export default function RelatedProducts() {
   };
 
   return (
-    <section className="related-products-section max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
       <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-5">
         Related Products
       </h2>
@@ -61,7 +62,7 @@ export default function RelatedProducts() {
                   onError={(e) => {
                     e.currentTarget.src = fallbackImage;
                   }}
-                  className="absolute inset-0 w-full h-full object-contain object-center p-3 transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />

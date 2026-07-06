@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Star, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
-import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -33,14 +32,19 @@ export default function FeaturedCard({ container, index = 0 }) {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className="bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 rounded-2xl overflow-hidden"
     >
-      {/* 16:9 Premium Image */}
-      <div className="relative">
-        <PremiumContainerImage
-          src={container.inventory_image_url || container.image_url}
-          alt={container.name}
-          variant="feature"
-          className="rounded-none"
-        />
+      {/* 16:9 Image */}
+      <div className="relative aspect-video overflow-hidden bg-muted">
+        {container.image_url ? (
+          <img
+            src={container.image_url}
+            alt={container.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <span className="text-muted-foreground font-mono text-sm">NO IMAGE</span>
+          </div>
+        )}
         {container.is_bestseller && (
           <div className="absolute top-3 left-3">
             <span className="text-xs font-mono font-bold tracking-widest bg-primary text-primary-foreground px-3 py-1.5 rounded-full shadow-lg shadow-primary/30">

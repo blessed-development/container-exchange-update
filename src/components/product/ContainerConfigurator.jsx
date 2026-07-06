@@ -31,8 +31,8 @@ const GRADE_OPTIONS = [
 ];
 
 const CONDITION_IMAGES = {
-  used: '/images/products/used-20-wwt/hero.webp',
-  new: '/images/products/new-20-iicl/hero.webp',
+  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
+  new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
 };
 
 const EMPTY_LOCATION = {
@@ -567,7 +567,6 @@ export default function ContainerConfigurator({
 
     addCartItem({
       id: `${container?.id || effectiveCondition}-${safeSizeIndex}-${effectiveGrade}-${Date.now()}`,
-      productId: container?.id,
       title: currentTitle,
       sub: currentSub,
       condition: effectiveCondition,
@@ -589,24 +588,6 @@ export default function ContainerConfigurator({
   const openCheckout = () => {
     setIsDrawerOpen(false);
     navigate('/checkout');
-  };
-
-  const requestQuote = () => {
-    if (!hasCheckoutLocation) return;
-
-    const params = new URLSearchParams({
-      container: currentTitle,
-      zip: location.postalCode,
-      notes: [
-        `Container: ${currentTitle}`,
-        `Size: ${sizeOption.label}`,
-        `Condition: ${effectiveCondition}`,
-        `Grade: ${activeGrade.label}`,
-        `Estimated unit price: ${fmt(unitPrice)}`,
-      ].join('\n'),
-    });
-
-    navigate(`/contact?${params.toString()}`);
   };
 
   return (
@@ -846,7 +827,6 @@ export default function ContainerConfigurator({
                   type="button"
                   className="quote-btn"
                   disabled={!hasCheckoutLocation}
-                  onClick={requestQuote}
                 >
                   Request a Quote
                 </button>
@@ -883,7 +863,7 @@ export default function ContainerConfigurator({
           ) : (
             cart.map((item) => (
               <div className="cart-item" key={item.id}>
-                <img src={item.image || item.img} className="ci-img" alt={item.title} />
+                <img src={item.image} className="ci-img" alt={item.title} />
 
                 <div className="ci-info">
                   <button
