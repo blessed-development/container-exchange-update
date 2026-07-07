@@ -20,7 +20,7 @@ const GRADE_LABELS = {
 };
 
 const FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80';
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80';
 
 export default function InventoryListCard({ container, index }) {
   const navigate = useNavigate();
@@ -59,7 +59,11 @@ export default function InventoryListCard({ container, index }) {
   );
 
   const imageSrc =
-    container.inventory_image_url || container.image_url || FALLBACK_IMAGE;
+    container.inventory_image_url ||
+    container.image_url ||
+    container.image ||
+    container.img ||
+    FALLBACK_IMAGE;
 
   const openProduct = (e) => {
     e.stopPropagation();
@@ -88,12 +92,17 @@ export default function InventoryListCard({ container, index }) {
             </div>
           )}
 
-         <img
-  src={imageSrc}
-  alt={container.name}
-  loading="lazy"
-  className="w-full h-full object-contain object-center p-4 hover:scale-[1.02] transition-transform duration-500"
-/>
+          <img
+            src={imageSrc}
+            alt={container.name || 'Shipping container'}
+            loading="lazy"
+            decoding="async"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = FALLBACK_IMAGE;
+            }}
+            className="block w-full h-full object-contain object-center bg-white hover:scale-[1.02] transition-transform duration-500"
+          />
         </div>
 
         <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
