@@ -3,7 +3,6 @@ import { Star, Eye, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
 import QuickViewModal from '@/components/shared/QuickViewModal';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 
@@ -18,9 +17,6 @@ const GRADE_LABELS = {
   CW: 'Cargo Worthy',
   IICL: 'IICL Certified',
 };
-
-const FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80';
 
 export default function InventoryListCard({ container, index }) {
   const navigate = useNavigate();
@@ -58,13 +54,6 @@ export default function InventoryListCard({ container, index }) {
     savedLocation
   );
 
-  const imageSrc =
-    container.inventory_image_url ||
-    container.image_url ||
-    container.image ||
-    container.img ||
-    FALLBACK_IMAGE;
-
   const openProduct = (e) => {
     e.stopPropagation();
 
@@ -85,7 +74,7 @@ export default function InventoryListCard({ container, index }) {
         onClick={openProduct}
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
-        <div className="relative h-[260px] sm:h-full sm:w-[38%] flex-shrink-0 overflow-hidden bg-white">
+        <div className="relative h-[260px] sm:h-full sm:w-[38%] overflow-hidden bg-muted">
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
               BESTSELLER
@@ -93,15 +82,13 @@ export default function InventoryListCard({ container, index }) {
           )}
 
           <img
-            src={imageSrc}
-            alt={container.name || 'Shipping container'}
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = FALLBACK_IMAGE;
-            }}
-            className="block w-full h-full object-contain object-center bg-white hover:scale-[1.02] transition-transform duration-500"
+            src={
+              container.inventory_image_url ||
+              container.image_url ||
+              'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
+            }
+            alt={container.name}
+            className="w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 
