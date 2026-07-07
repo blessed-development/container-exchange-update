@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 import QuickViewModal from '@/components/shared/QuickViewModal';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
-import PremiumContainerImage from '@/components/shared/PremiumContainerImage';
 
 import {
   getSavedSelectedLocation,
@@ -89,13 +88,12 @@ export default function InventoryListCard({ container, index }) {
             </div>
           )}
 
-          <PremiumContainerImage
-            src={imageSrc}
-            alt={container.name}
-            variant="list"
-            className="w-full h-full bg-white"
-            imageClassName="hover:scale-[1.02] transition-transform duration-500"
-          />
+         <img
+  src={imageSrc}
+  alt={container.name}
+  loading="lazy"
+  className="w-full h-full object-contain object-center p-4 hover:scale-[1.02] transition-transform duration-500"
+/>
         </div>
 
         <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
