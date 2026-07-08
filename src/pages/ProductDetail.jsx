@@ -85,6 +85,14 @@ const GRADE_INFO = {
   },
 };
 
+const SAMPLE_GALLERY_IMAGES = [
+  'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=85',
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=85',
+  'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=85',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=85',
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=85',
+];
+
 const normalize = (value) =>
   String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
@@ -184,9 +192,12 @@ export default function ProductDetail() {
   const showStartingFrom =
     !hasActiveZip;
 
+  const productsWithDedicatedGallery = ['used-40-wwt', 'used-40hc-wwt'];
+  const shouldUseSampleGallery = !productsWithDedicatedGallery.includes(container?.id);
   const allImages = [
     productImage,
     ...(container?.gallery_urls || []),
+    ...(shouldUseSampleGallery ? SAMPLE_GALLERY_IMAGES : []),
   ].filter(Boolean);
 
   const activeImage = allImages[activeImageIndex] || productImage;
@@ -477,7 +488,7 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center bg-white brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
+                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
               />
 
               {showHeroOverlay && (
@@ -543,7 +554,7 @@ export default function ProductDetail() {
                     <img
                       src={image}
                       alt={`${productTitle} preview ${index + 1}`}
-                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                   </button>
                 ))}

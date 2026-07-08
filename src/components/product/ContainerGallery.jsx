@@ -16,11 +16,11 @@ export default function ContainerGallery({ images }) {
   return (
     <div>
       {/* Main Image */}
-      <div className="relative aspect-[4/3] bg-white rounded-2xl overflow-hidden mb-3 shadow-xl">
+      <div className="relative aspect-[4/3] bg-muted rounded-2xl overflow-hidden mb-3 shadow-xl">
         <img
           src={allImages[activeIndex]}
           alt="Container"
-          className="w-full h-full object-contain object-center bg-white"
+          className="w-full h-full object-contain object-center"
         />
         {allImages.length > 1 && (
           <>
@@ -51,7 +51,7 @@ export default function ContainerGallery({ images }) {
                 i === activeIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
               }`}
             >
-              <img src={img} alt="" className="w-full h-full object-contain object-center bg-white" />
+              <img src={img} alt="" className="w-full h-full object-contain object-center" />
             </button>
           ))}
         </div>

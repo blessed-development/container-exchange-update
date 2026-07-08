@@ -19,7 +19,7 @@ const GRADE_LABELS = {
 };
 
 const fallbackImage =
-  '/images/products/used-20-wwt/hero.webp';
+  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85';
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();
@@ -62,7 +62,7 @@ export default function RelatedProducts() {
                   onError={(e) => {
                     e.currentTarget.src = fallbackImage;
                   }}
-                  className="absolute inset-0 w-full h-full object-contain object-center bg-white transition-transform duration-700 ease-out group-hover:scale-[1.045]"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />

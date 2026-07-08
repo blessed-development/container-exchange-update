@@ -29,7 +29,17 @@ const galleries = {
   'used-40hc-cw': standardGallery('used-40hc-cw', { extras: 1 }),
 
   'used-20-wwt': standardGallery('used-20-wwt', { interior: false }),
-  'used-40-wwt': standardGallery('used-40-wwt', { extras: 3 }),
+  'used-40-wwt': gallery('used-40-wwt', [
+    'hero.webp',
+    'front-view.webp',
+    'side-angle.webp',
+    'blind-end-angle.webp',
+    'representative-1.webp',
+    'interior-1.webp',
+    'extra-01.webp',
+    'extra-02.webp',
+    'extra-03.webp',
+  ]),
   'used-40hc-wwt': standardGallery('used-40hc-wwt'),
 
   'used-20-as-is': gallery('used-20-as-is', [
@@ -62,7 +72,6 @@ const product = ({
   base_price,
   rating = 4.8,
   review_count = 100,
-  short_description,
   is_bestseller = false,
 }) => ({
   id,
@@ -78,14 +87,14 @@ const product = ({
   inventory_image_url: galleries[id][0],
   gallery_urls: galleries[id].slice(1),
   short_description:
-    short_description ||
-    (height === 'high_cube' ? 'High Cube • 9ft 6in High' : 'Standard Height • 8ft 6in High'),
+    height === 'high_cube'
+      ? 'High Cube • 9ft 6in High'
+      : 'Standard Height • 8ft 6in High',
   is_available: true,
   is_bestseller,
 });
 
 export const inventoryProducts = [
-  // One Trip
   product({
     id: 'new-20-iicl',
     name: 'New 20ft One-Trip Shipping Container | IICL',
@@ -119,7 +128,6 @@ export const inventoryProducts = [
     is_bestseller: true,
   }),
 
-  // Used IICL
   product({
     id: 'used-20-iicl',
     name: 'Used 20ft IICL Shipping Container | IICL',
@@ -152,7 +160,6 @@ export const inventoryProducts = [
     review_count: 94,
   }),
 
-  // Cargo Worthy
   product({
     id: 'used-20-cw',
     name: 'Used 20ft Cargo Worthy Shipping Container | CW',
@@ -185,10 +192,9 @@ export const inventoryProducts = [
     review_count: 117,
   }),
 
-  // Wind & Watertight
   product({
     id: 'used-20-wwt',
-    name: 'Used 20ft Wind & Watertight Shipping Container | WWT',
+    name: 'Used 20ft Wind & Water Tight Shipping Container | WWT',
     condition: 'Used',
     size: 20,
     grade: 'WWT',
@@ -199,7 +205,7 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40-wwt',
-    name: 'Used 40ft Wind & Watertight Shipping Container | WWT',
+    name: 'Used 40ft Wind & Water Tight Shipping Container | WWT',
     condition: 'Used',
     size: 40,
     grade: 'WWT',
@@ -210,7 +216,7 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40hc-wwt',
-    name: 'Used 40ft High Cube Wind & Watertight Shipping Container | WWT',
+    name: 'Used 40ft High Cube Wind & Water Tight Shipping Container | WWT',
     condition: 'Used',
     size: 40,
     height: 'high_cube',
@@ -221,7 +227,6 @@ export const inventoryProducts = [
     is_bestseller: true,
   }),
 
-  // As-Is
   product({
     id: 'used-20-as-is',
     name: 'Used 20ft As-Is Shipping Container | AS-IS',
@@ -250,7 +255,7 @@ export const inventoryProducts = [
     height: 'high_cube',
     grade: 'AS_IS',
     base_price: 1750,
-    rating: 4.5,
+    rating: 4.4,
     review_count: 58,
   }),
 ];
