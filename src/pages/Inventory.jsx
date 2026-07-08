@@ -35,7 +35,8 @@ export default function Inventory() {
     grade: [],
     height: [],
   });
-  const [sortBy, setSortBy] = useState('default');
+
+  const [sortBy, setSortBy] = useState('rating_desc');
   const [savedLocation, setSavedLocation] = useState(() =>
     getSavedSelectedLocation()
   );
@@ -116,15 +117,30 @@ export default function Inventory() {
     }
 
     switch (sortBy) {
+      case 'rating_desc':
+        result.sort((a, b) => {
+          const ratingDiff = (b.rating || 0) - (a.rating || 0);
+          if (ratingDiff !== 0) return ratingDiff;
+
+          const reviewDiff = (b.review_count || 0) - (a.review_count || 0);
+          if (reviewDiff !== 0) return reviewDiff;
+
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        break;
+
       case 'price_asc':
         result.sort((a, b) => (a.base_price || 0) - (b.base_price || 0));
         break;
+
       case 'price_desc':
         result.sort((a, b) => (b.base_price || 0) - (a.base_price || 0));
         break;
+
       case 'name_asc':
         result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
+
       default:
         break;
     }
@@ -231,7 +247,7 @@ export default function Inventory() {
                   </SelectTrigger>
 
                   <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="rating_desc">Top Rated</SelectItem>
                     <SelectItem value="price_asc">Price: Low to High</SelectItem>
                     <SelectItem value="price_desc">Price: High to Low</SelectItem>
                     <SelectItem value="name_asc">Name: A to Z</SelectItem>
