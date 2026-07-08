@@ -81,12 +81,13 @@ export default function InventoryListCard({ container, index }) {
           )}
 
           <img
-            src={container.inventory_image_url || container.image_url || '/images/products/used-20-wwt/hero.webp'}
+            src={
+              container.inventory_image_url ||
+              container.image_url ||
+              '/images/products/used-20-wwt/hero.webp'
+            }
             alt={container.name}
-            onError={(e) => {
-              e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
-            }}
-            className="block w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
+            className="w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 

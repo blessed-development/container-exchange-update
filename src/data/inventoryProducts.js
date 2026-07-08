@@ -60,8 +60,9 @@ const product = ({
   height = 'standard',
   grade,
   base_price,
-  rating,
-  review_count,
+  rating = 4.8,
+  review_count = 100,
+  short_description,
   is_bestseller = false,
 }) => ({
   id,
@@ -77,10 +78,8 @@ const product = ({
   inventory_image_url: galleries[id][0],
   gallery_urls: galleries[id].slice(1),
   short_description:
-    height === 'high_cube'
-      ? 'High Cube • 9ft 6in High'
-      : 'Standard Height • 8ft 6in High',
-  door_type: 'Double Doors at 1 End',
+    short_description ||
+    (height === 'high_cube' ? 'High Cube • 9ft 6in High' : 'Standard Height • 8ft 6in High'),
   is_available: true,
   is_bestseller,
 });

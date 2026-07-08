@@ -7,7 +7,7 @@ export default function ContainerGallery({ images }) {
 
   if (allImages.length === 0) {
     return (
-      <div className="aspect-[4/3] bg-white rounded-sm flex items-center justify-center">
+      <div className="aspect-[4/3] bg-muted rounded-sm flex items-center justify-center">
         <span className="text-muted-foreground font-mono text-sm">NO IMAGE</span>
       </div>
     );
@@ -20,7 +20,7 @@ export default function ContainerGallery({ images }) {
         <img
           src={allImages[activeIndex]}
           alt="Container"
-          className="w-full h-full object-contain object-center"
+          className="w-full h-full object-contain object-center bg-white"
         />
         {allImages.length > 1 && (
           <>
@@ -51,7 +51,7 @@ export default function ContainerGallery({ images }) {
                 i === activeIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
               }`}
             >
-              <img src={img} alt="" className="w-full h-full object-contain object-center" />
+              <img src={img} alt="" className="w-full h-full object-contain object-center bg-white" />
             </button>
           ))}
         </div>

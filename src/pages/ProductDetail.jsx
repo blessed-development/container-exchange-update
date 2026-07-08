@@ -85,8 +85,6 @@ const GRADE_INFO = {
   },
 };
 
-const SAMPLE_GALLERY_IMAGES = [];
-
 const normalize = (value) =>
   String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
@@ -186,11 +184,9 @@ export default function ProductDetail() {
   const showStartingFrom =
     !hasActiveZip;
 
-  const shouldUseSampleGallery = false;
   const allImages = [
     productImage,
     ...(container?.gallery_urls || []),
-    ...(shouldUseSampleGallery ? SAMPLE_GALLERY_IMAGES : []),
   ].filter(Boolean);
 
   const activeImage = allImages[activeImageIndex] || productImage;
@@ -476,15 +472,12 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div>
-            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-white shadow-2xl group">
+            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
               <img
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                onError={(e) => {
-                  e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
-                }}
-                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center brightness-[0.94] contrast-[1.04] transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
+                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center bg-white brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
               />
 
               {showHeroOverlay && (
@@ -550,10 +543,7 @@ export default function ProductDetail() {
                     <img
                       src={image}
                       alt={`${productTitle} preview ${index + 1}`}
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
-                      }}
-                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-[1.04]"
+                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-105"
                     />
                   </button>
                 ))}

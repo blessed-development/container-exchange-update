@@ -34,7 +34,7 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
             <img
               src={container.image_url}
               alt={container.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-contain object-center bg-white transition-transform duration-500 group-hover:scale-105"
             />
             {/* Badges */}
             <div className="absolute top-3 left-3 flex gap-1.5">

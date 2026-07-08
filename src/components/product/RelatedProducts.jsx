@@ -18,7 +18,8 @@ const GRADE_LABELS = {
   IICL: 'IICL Certified',
 };
 
-const fallbackImage = '/images/products/used-20-wwt/hero.webp';
+const fallbackImage =
+  '/images/products/used-20-wwt/hero.webp';
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();
@@ -54,14 +55,14 @@ export default function RelatedProducts() {
             className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
           >
             <Link to={`/product/${product.id}`} className="block">
-              <div className="relative h-[300px] overflow-hidden bg-white group">
+              <div className="relative h-[300px] overflow-hidden bg-muted group">
                 <img
                   src={product.image_url || fallbackImage}
                   alt={product.name}
                   onError={(e) => {
                     e.currentTarget.src = fallbackImage;
                   }}
-                  className="absolute inset-0 w-full h-full object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                  className="absolute inset-0 w-full h-full object-contain object-center bg-white transition-transform duration-700 ease-out group-hover:scale-[1.045]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
