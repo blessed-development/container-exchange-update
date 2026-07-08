@@ -118,16 +118,16 @@ export default function Inventory() {
 
     switch (sortBy) {
       case 'rating_desc':
-        result.sort((a, b) => {
-          const ratingDiff = (b.rating || 0) - (a.rating || 0);
-          if (ratingDiff !== 0) return ratingDiff;
+  result.sort((a, b) => {
+    const reviewDiff = (b.review_count || 0) - (a.review_count || 0);
+    if (reviewDiff !== 0) return reviewDiff;
 
-          const reviewDiff = (b.review_count || 0) - (a.review_count || 0);
-          if (reviewDiff !== 0) return reviewDiff;
+    const ratingDiff = (b.rating || 0) - (a.rating || 0);
+    if (ratingDiff !== 0) return ratingDiff;
 
-          return (a.name || '').localeCompare(b.name || '');
-        });
-        break;
+    return (a.name || '').localeCompare(b.name || '');
+  });
+  break;
 
       case 'price_asc':
         result.sort((a, b) => (a.base_price || 0) - (b.base_price || 0));
