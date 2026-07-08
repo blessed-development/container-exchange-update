@@ -1,0 +1,247 @@
+import React, { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { base44 } from '@/api/base44Client';
+import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+export default function Contact() {
+  const [form, setForm] = useState({
+    customer_name: '',
+    customer_email: '',
+    customer_phone: '',
+    zip_code: '',
+    container_name: '',
+    notes: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const container = params.get('container');
+    const zip = params.get('zip');
+    const notes = params.get('notes');
+
+    if (!container && !zip && !notes) return;
+
+    setForm((prev) => ({
+      ...prev,
+      container_name: container || prev.container_name,
+      zip_code: zip || prev.zip_code,
+      notes: notes || prev.notes,
+    }));
+  }, []);
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      await base44.entities.Quote.create({
+        ...form,
+        status: 'pending',
+      });
+      setIsSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error?.message || 'Quote request failed. Please call us or try again.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <div className="bg-accent text-white py-20 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">GET IN TOUCH</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight">
+            Request a{' '}
+            <span className="text-primary">Quote</span>
+          </h1>
+          <p className="text-white/50 mt-5 max-w-lg mx-auto text-lg">
+            Tell us what you need and we'll get back to you with the best pricing and delivery options for your location.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Contact Info */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
+              <div className="space-y-4">
+                <a href="tel:+18005551234" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Phone className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-mono font-semibold text-sm">(800) 555-1234</p>
+                    <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
+                  </div>
+                </a>
+                <a href="mailto:info@containersexchange.com" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <Mail className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">info@containersexchange.com</p>
+                    <p className="text-xs text-muted-foreground">Response within 24 hours</p>
+                  </div>
+                </a>
+                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">60+ Depot Locations</p>
+                    <p className="text-xs text-muted-foreground">Nationwide USA Coverage</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="lg:col-span-2">
+            {isSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20 border border-border rounded-2xl bg-card shadow-lg"
+              >
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <CheckCircle2 className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Quote Request Submitted!</h3>
+                <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
+                  Our team will review your request and contact you within 24 hours with pricing details.
+                </p>
+                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
+                  Submit Another Request
+                </Button>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                      FULL NAME *
+                    </label>
+                    <Input
+                      required
+                      value={form.customer_name}
+                      onChange={(e) => handleChange('customer_name', e.target.value)}
+                      placeholder="John Doe"
+                      className="h-11"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                      EMAIL *
+                    </label>
+                    <Input
+                      required
+                      type="email"
+                      value={form.customer_email}
+                      onChange={(e) => handleChange('customer_email', e.target.value)}
+                      placeholder="john@example.com"
+                      className="h-11"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                      PHONE
+                    </label>
+                    <Input
+                      value={form.customer_phone}
+                      onChange={(e) => handleChange('customer_phone', e.target.value)}
+                      placeholder="(555) 123-4567"
+                      className="h-11"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                      ZIP CODE *
+                    </label>
+                    <Input
+                      required
+                      value={form.zip_code}
+                      onChange={(e) => handleChange('zip_code', e.target.value.toUpperCase().slice(0, 7))}
+                      placeholder="90210 or M5V 2T6"
+                      className="h-11 font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                    CONTAINER INTEREST
+                  </label>
+                  <Select
+                    value={form.container_name}
+                    onValueChange={(val) => handleChange('container_name', val)}
+                  >
+                    <SelectTrigger className="h-11">
+                      <SelectValue placeholder="Select container type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="20ft Standard">20ft Standard Container</SelectItem>
+                      <SelectItem value="20ft High Cube">20ft High Cube Container</SelectItem>
+                      <SelectItem value="40ft Standard">40ft Standard Container</SelectItem>
+                      <SelectItem value="40ft High Cube">40ft High Cube Container</SelectItem>
+                      <SelectItem value="10ft Mini">10ft Mini Container</SelectItem>
+                      <SelectItem value="Other">Other / Not Sure</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
+                    MESSAGE
+                  </label>
+                  <Textarea
+                    value={form.notes}
+                    onChange={(e) => handleChange('notes', e.target.value)}
+                    placeholder="Tell us about your project or any specific requirements..."
+                    className="min-h-[120px]"
+                  />
+                </div>
+
+                {submitError && (
+                  <p className="text-sm font-medium text-destructive">
+                    {submitError}
+                  </p>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : null}
+                  SUBMIT QUOTE REQUEST
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
