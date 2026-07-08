@@ -84,7 +84,7 @@ export default function InventoryListCard({ container, index }) {
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
         <div
-          className={`relative h-[260px] sm:h-full ${hasWideCatalogImage ? 'sm:w-[38%]' : 'sm:w-[38%]'} overflow-hidden bg-muted`}
+          className={`relative h-[260px] sm:h-full ${hasWideCatalogImage ? 'sm:w-[40%]' : 'sm:w-[40%]'} overflow-hidden bg-muted`}
         >
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
