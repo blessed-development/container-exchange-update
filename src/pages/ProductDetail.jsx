@@ -159,7 +159,7 @@ export default function ProductDetail() {
 
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex] || SIZE_OPTIONS[0];
   const productTitle = container?.name || '';
-  const productImage = container?.image_url || container?.inventory_image_url || selectedSize.image;
+  const productImage = container?.image_url || selectedSize.image;
 
   const baseDisplayPrice =
     container?.base_price ||
@@ -481,7 +481,10 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center bg-white transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
+                onError={(e) => {
+                  e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
+                }}
+                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center brightness-[0.94] contrast-[1.04] transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
               />
 
               {showHeroOverlay && (
@@ -547,7 +550,10 @@ export default function ProductDetail() {
                     <img
                       src={image}
                       alt={`${productTitle} preview ${index + 1}`}
-                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-[1.03]"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
+                      }}
+                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-[1.04]"
                     />
                   </button>
                 ))}

@@ -1,162 +1,67 @@
 const gallery = (folder, files) =>
   files.map((file) => `/images/products/${folder}/${file}`);
 
-const galleryFilesByProduct = {
-  'new-20-iicl': [
+const standardGallery = (folder, { interior = true, extras = 0 } = {}) =>
+  gallery(folder, [
     'hero.webp',
     'front-view.webp',
     'side-angle.webp',
     'blind-end-angle.webp',
     'representative-1.webp',
     'representative-2.webp',
-    'interior-1.webp',
-  ],
-  'new-40-iicl': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-  ],
-  'new-40hc-iicl': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-  ],
-  'used-20-iicl': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-  ],
-  'used-40-iicl': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-  ],
-  'used-40hc-iicl': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-  ],
-  'used-20-cw': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-  ],
-  'used-40-cw': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-  ],
-  'used-40hc-cw': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-  ],
-  'used-20-wwt': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-  ],
-  'used-40-wwt': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-    'extra-02.webp',
-    'extra-03.webp',
-  ],
-  'used-40hc-wwt': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-  ],
-  'used-20-as-is': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'representative-1.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-  ],
-  'used-40-as-is': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'interior-1.webp',
-    'extra-01.webp',
-  ],
-  'used-40hc-as-is': [
-    'hero.webp',
-    'front-view.webp',
-    'side-angle.webp',
-    'blind-end-angle.webp',
-    'representative-1.webp',
-    'representative-2.webp',
-    'interior-1.webp',
-  ],
-};
+    ...(interior ? ['interior-1.webp'] : []),
+    ...Array.from({ length: extras }, (_, index) =>
+      `extra-${String(index + 1).padStart(2, '0')}.webp`
+    ),
+  ]);
 
-const galleries = Object.fromEntries(
-  Object.entries(galleryFilesByProduct).map(([folder, files]) => [
-    folder,
-    gallery(folder, files),
-  ])
-);
+const galleries = {
+  'new-20-iicl': standardGallery('new-20-iicl'),
+  'new-40-iicl': standardGallery('new-40-iicl', { interior: false }),
+  'new-40hc-iicl': standardGallery('new-40hc-iicl', { interior: false }),
+
+  'used-20-iicl': standardGallery('used-20-iicl', { extras: 1 }),
+  'used-40-iicl': standardGallery('used-40-iicl'),
+  'used-40hc-iicl': standardGallery('used-40hc-iicl'),
+
+  'used-20-cw': standardGallery('used-20-cw', { extras: 1 }),
+  'used-40-cw': standardGallery('used-40-cw', { interior: false }),
+  'used-40hc-cw': standardGallery('used-40hc-cw', { extras: 1 }),
+
+  'used-20-wwt': standardGallery('used-20-wwt', { interior: false }),
+  'used-40-wwt': standardGallery('used-40-wwt', { extras: 3 }),
+  'used-40hc-wwt': standardGallery('used-40hc-wwt'),
+
+  'used-20-as-is': gallery('used-20-as-is', [
+    'hero.webp',
+    'front-view.webp',
+    'side-angle.webp',
+    'representative-1.webp',
+    'interior-1.webp',
+    'extra-01.webp',
+  ]),
+  'used-40-as-is': gallery('used-40-as-is', [
+    'hero.webp',
+    'front-view.webp',
+    'side-angle.webp',
+    'blind-end-angle.webp',
+    'representative-1.webp',
+    'interior-1.webp',
+    'extra-01.webp',
+  ]),
+  'used-40hc-as-is': standardGallery('used-40hc-as-is'),
+};
 
 const product = ({
   id,
   name,
-  condition = 'Used',
+  condition,
   size,
   height = 'standard',
   grade,
   base_price,
-  rating = 4.8,
-  review_count = 80,
-  short_description,
+  rating,
+  review_count,
   is_bestseller = false,
 }) => ({
   id,
@@ -170,18 +75,18 @@ const product = ({
   review_count,
   image_url: galleries[id][0],
   inventory_image_url: galleries[id][0],
-  image: galleries[id][0],
   gallery_urls: galleries[id].slice(1),
   short_description:
-    short_description ||
-    (height === 'high_cube'
-      ? '40ft High Cube • 9ft 6in High'
-      : `${size}ft Standard • 8ft 6in High`),
+    height === 'high_cube'
+      ? 'High Cube • 9ft 6in High'
+      : 'Standard Height • 8ft 6in High',
+  door_type: 'Double Doors at 1 End',
   is_available: true,
   is_bestseller,
 });
 
 export const inventoryProducts = [
+  // One Trip
   product({
     id: 'new-20-iicl',
     name: 'New 20ft One-Trip Shipping Container | IICL',
@@ -215,9 +120,11 @@ export const inventoryProducts = [
     is_bestseller: true,
   }),
 
+  // Used IICL
   product({
     id: 'used-20-iicl',
-    name: 'Used 20ft IICL Shipping Container',
+    name: 'Used 20ft IICL Shipping Container | IICL',
+    condition: 'Used',
     size: 20,
     grade: 'IICL',
     base_price: 2350,
@@ -226,7 +133,8 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40-iicl',
-    name: 'Used 40ft IICL Shipping Container',
+    name: 'Used 40ft IICL Shipping Container | IICL',
+    condition: 'Used',
     size: 40,
     grade: 'IICL',
     base_price: 3350,
@@ -235,7 +143,8 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40hc-iicl',
-    name: 'Used 40ft High Cube IICL Shipping Container',
+    name: 'Used 40ft High Cube IICL Shipping Container | IICL',
+    condition: 'Used',
     size: 40,
     height: 'high_cube',
     grade: 'IICL',
@@ -244,9 +153,11 @@ export const inventoryProducts = [
     review_count: 94,
   }),
 
+  // Cargo Worthy
   product({
     id: 'used-20-cw',
     name: 'Used 20ft Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
     size: 20,
     grade: 'CW',
     base_price: 1650,
@@ -256,6 +167,7 @@ export const inventoryProducts = [
   product({
     id: 'used-40-cw',
     name: 'Used 40ft Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
     size: 40,
     grade: 'CW',
     base_price: 2450,
@@ -265,6 +177,7 @@ export const inventoryProducts = [
   product({
     id: 'used-40hc-cw',
     name: 'Used 40ft High Cube Cargo Worthy Shipping Container | CW',
+    condition: 'Used',
     size: 40,
     height: 'high_cube',
     grade: 'CW',
@@ -273,9 +186,11 @@ export const inventoryProducts = [
     review_count: 117,
   }),
 
+  // Wind & Watertight
   product({
     id: 'used-20-wwt',
     name: 'Used 20ft Wind & Watertight Shipping Container | WWT',
+    condition: 'Used',
     size: 20,
     grade: 'WWT',
     base_price: 1350,
@@ -286,6 +201,7 @@ export const inventoryProducts = [
   product({
     id: 'used-40-wwt',
     name: 'Used 40ft Wind & Watertight Shipping Container | WWT',
+    condition: 'Used',
     size: 40,
     grade: 'WWT',
     base_price: 1800,
@@ -296,6 +212,7 @@ export const inventoryProducts = [
   product({
     id: 'used-40hc-wwt',
     name: 'Used 40ft High Cube Wind & Watertight Shipping Container | WWT',
+    condition: 'Used',
     size: 40,
     height: 'high_cube',
     grade: 'WWT',
@@ -305,9 +222,11 @@ export const inventoryProducts = [
     is_bestseller: true,
   }),
 
+  // As-Is
   product({
     id: 'used-20-as-is',
-    name: 'Used 20ft As-Is Shipping Container',
+    name: 'Used 20ft As-Is Shipping Container | AS-IS',
+    condition: 'Used',
     size: 20,
     grade: 'AS_IS',
     base_price: 1150,
@@ -316,7 +235,8 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40-as-is',
-    name: 'Used 40ft As-Is Shipping Container',
+    name: 'Used 40ft As-Is Shipping Container | AS-IS',
+    condition: 'Used',
     size: 40,
     grade: 'AS_IS',
     base_price: 1450,
@@ -325,12 +245,13 @@ export const inventoryProducts = [
   }),
   product({
     id: 'used-40hc-as-is',
-    name: 'Used 40ft High Cube As-Is Shipping Container',
+    name: 'Used 40ft High Cube As-Is Shipping Container | AS-IS',
+    condition: 'Used',
     size: 40,
     height: 'high_cube',
     grade: 'AS_IS',
-    base_price: 1650,
-    rating: 4.4,
+    base_price: 1750,
+    rating: 4.5,
     review_count: 58,
   }),
 ];

@@ -7,7 +7,7 @@ export default function ContainerGallery({ images }) {
 
   if (allImages.length === 0) {
     return (
-      <div className="aspect-[4/3] bg-muted rounded-sm flex items-center justify-center">
+      <div className="aspect-[4/3] bg-white rounded-sm flex items-center justify-center">
         <span className="text-muted-foreground font-mono text-sm">NO IMAGE</span>
       </div>
     );
@@ -16,7 +16,7 @@ export default function ContainerGallery({ images }) {
   return (
     <div>
       {/* Main Image */}
-      <div className="relative aspect-[4/3] bg-muted rounded-2xl overflow-hidden mb-3 shadow-xl">
+      <div className="relative aspect-[4/3] bg-white rounded-2xl overflow-hidden mb-3 shadow-xl">
         <img
           src={allImages[activeIndex]}
           alt="Container"

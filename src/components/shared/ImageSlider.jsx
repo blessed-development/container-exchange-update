@@ -46,7 +46,7 @@ export default function ImageSlider({ images, className = '' }) {
           animate="center"
           exit="exit"
           transition={{ duration: 0.35, ease: 'easeInOut' }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-contain object-center bg-white"
         />
       </AnimatePresence>
 

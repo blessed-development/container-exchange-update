@@ -20,11 +20,8 @@ export default function QuickViewModal({ container, onClose }) {
     ...(container.gallery_urls || []),
   ].filter(Boolean);
 
-  // Fallback images if none stored
   const displayImages = images.length > 0 ? images : [
-    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80',
-    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=80',
-    'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
+    '/images/products/used-20-wwt/hero.webp',
   ];
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
@@ -58,7 +55,7 @@ export default function QuickViewModal({ container, onClose }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left — Large Slider */}
-            <div className="relative bg-muted rounded-tl-2xl rounded-bl-2xl overflow-hidden" style={{ minHeight: '360px' }}>
+            <div className="relative bg-white rounded-tl-2xl rounded-bl-2xl overflow-hidden" style={{ minHeight: '360px' }}>
               <ImageSlider images={displayImages} className="absolute inset-0" />
             </div>
 

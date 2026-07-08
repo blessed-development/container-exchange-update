@@ -73,9 +73,7 @@ export default function InventoryListCard({ container, index }) {
         onClick={openProduct}
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
-        <div
-          className="relative h-[260px] sm:h-full sm:w-[38%] overflow-hidden bg-white"
-        >
+        <div className="relative h-[260px] sm:h-full sm:w-[38%] flex-shrink-0 overflow-hidden bg-white">
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
               BESTSELLER
@@ -83,18 +81,12 @@ export default function InventoryListCard({ container, index }) {
           )}
 
           <img
-            src={
-              container.inventory_image_url ||
-              container.image_url ||
-              container.gallery_urls?.[0] ||
-              '/images/products/used-20-wwt/hero.webp'
-            }
+            src={container.inventory_image_url || container.image_url || '/images/products/used-20-wwt/hero.webp'}
             alt={container.name}
             onError={(e) => {
-              e.currentTarget.onerror = null;
               e.currentTarget.src = '/images/products/used-20-wwt/hero.webp';
             }}
-            className="block w-full h-full object-contain object-center bg-white hover:scale-[1.02] transition-transform duration-500"
+            className="block w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
           />
         </div>
 
