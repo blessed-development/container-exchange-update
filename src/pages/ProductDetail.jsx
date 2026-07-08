@@ -85,13 +85,7 @@ const GRADE_INFO = {
   },
 };
 
-const SAMPLE_GALLERY_IMAGES = [
-  'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=85',
-  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=85',
-  'https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&q=85',
-  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=85',
-  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=85',
-];
+const SAMPLE_GALLERY_IMAGES = [];
 
 const normalize = (value) =>
   String(value || '').toLowerCase().replace(/[\s_-]/g, '');
@@ -165,7 +159,7 @@ export default function ProductDetail() {
 
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex] || SIZE_OPTIONS[0];
   const productTitle = container?.name || '';
-  const productImage = container?.image_url || selectedSize.image;
+  const productImage = container?.image_url || container?.inventory_image_url || selectedSize.image;
 
   const baseDisplayPrice =
     container?.base_price ||
@@ -192,8 +186,7 @@ export default function ProductDetail() {
   const showStartingFrom =
     !hasActiveZip;
 
-  const productsWithDedicatedGallery = ['used-40-wwt', 'used-40hc-wwt'];
-  const shouldUseSampleGallery = !productsWithDedicatedGallery.includes(container?.id);
+  const shouldUseSampleGallery = false;
   const allImages = [
     productImage,
     ...(container?.gallery_urls || []),
@@ -483,12 +476,12 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div>
-            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
+            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-white shadow-2xl group">
               <img
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
+                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center bg-white transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
               />
 
               {showHeroOverlay && (
@@ -554,7 +547,7 @@ export default function ProductDetail() {
                     <img
                       src={image}
                       alt={`${productTitle} preview ${index + 1}`}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      className="w-full h-full object-contain object-center bg-white transition-transform duration-500 hover:scale-[1.03]"
                     />
                   </button>
                 ))}

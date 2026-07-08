@@ -30,11 +30,11 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
       <Link to={`/product/${container.id}${zipCode ? `?zip=${zipCode}` : ''}`}>
         <div className="group bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 rounded-2xl overflow-hidden flex flex-col">
           {/* Rectangular Image — 16:9 */}
-          <div className="relative aspect-video overflow-hidden bg-muted flex-shrink-0">
+          <div className="relative aspect-[1200/1166] overflow-hidden bg-white flex-shrink-0">
             <img
               src={container.image_url}
               alt={container.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-contain object-center bg-white transition-transform duration-500 group-hover:scale-[1.02]"
             />
             {/* Badges */}
             <div className="absolute top-3 left-3 flex gap-1.5">
