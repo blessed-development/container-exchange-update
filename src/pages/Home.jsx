@@ -1,5 +1,6 @@
 import React from 'react';
 import HeroSection from '@/components/home/HeroSection';
+import LogoWall from '@/components/home/LogoWall';
 import RentRTOSection from '@/components/home/RentRTOSection';
 import HowItWorks from '@/components/home/HowItWorks';
 import TrustSection from '@/components/home/TrustSection';
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
+      <LogoWall />
       <RentRTOSection />
       <HowItWorks />
       <TrustSection />

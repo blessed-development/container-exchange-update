@@ -1,0 +1,141 @@
+.logo-wall {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #07111f;
+  padding: 6.5rem 1.25rem;
+}
+
+.logo-wall::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  background: linear-gradient(180deg, rgba(7, 17, 31, 0.98), rgba(7, 17, 31, 1));
+}
+
+.logo-wall__glow {
+  position: absolute;
+  z-index: -1;
+  width: 38rem;
+  height: 38rem;
+  border-radius: 999px;
+  filter: blur(100px);
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.logo-wall__glow--blue {
+  top: -26rem;
+  left: -20rem;
+  background: #1c7ed6;
+}
+
+.logo-wall__glow--orange {
+  right: -23rem;
+  bottom: -30rem;
+  background: #f97316;
+}
+
+.logo-wall__content {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+}
+
+.logo-wall__header {
+  max-width: 45rem;
+  margin: 0 auto 3.25rem;
+  text-align: center;
+}
+
+.logo-wall__eyebrow {
+  margin: 0 0 0.875rem;
+  color: rgba(255, 255, 255, 0.44);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.logo-wall h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.logo-wall__header > p:last-child {
+  max-width: 39rem;
+  margin: 1rem auto 0;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.logo-wall__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1rem;
+}
+
+.logo-wall__slot {
+  display: flex;
+  min-height: 90px;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.logo-wall__image {
+  display: block;
+  width: min(220px, 100%);
+  height: 90px;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.72;
+  filter: grayscale(1) brightness(1.75) contrast(0.72);
+  transform-origin: center;
+  transition: filter 220ms ease, opacity 220ms ease, transform 220ms ease;
+  will-change: transform, opacity;
+}
+
+.logo-wall__slot:hover .logo-wall__image {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.03);
+}
+
+@media (min-width: 640px) {
+  .logo-wall {
+    padding: 7.5rem 2rem;
+  }
+
+  .logo-wall__header {
+    margin-bottom: 4rem;
+  }
+
+  .logo-wall__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.4rem 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-wall {
+    padding: 8.5rem 2.5rem;
+  }
+
+  .logo-wall__grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.7rem 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-wall__image {
+    transition: none;
+  }
+}
