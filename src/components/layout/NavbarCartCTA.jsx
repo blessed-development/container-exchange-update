@@ -12,13 +12,13 @@ const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US', {
 
 function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
-  const fontSize = label.length > 2 ? 8.3 : label.length > 1 ? 10 : 12;
+  const fontSize = label.length > 2 ? 9 : label.length > 1 ? 11 : 13;
 
   return (
-    <span className="inline-flex h-9 w-11 shrink-0" aria-hidden="true">
+    <span className="inline-flex shrink-0" style={{ width: 46, height: 38 }} aria-hidden="true">
       <svg viewBox="0 0 44 34" fill="none" className="h-full w-full">
-        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
         <text
           x="22"
           y="20.2"
@@ -99,7 +99,7 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
           {hasItems ? (
             <motion.span
               key="cart-content"
-              className="flex items-center justify-center gap-1 whitespace-nowrap"
+              className="flex items-center justify-center gap-1.5 whitespace-nowrap"
               initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
