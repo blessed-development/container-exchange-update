@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import '@/styles/logo-wall.css';
 
@@ -55,30 +55,22 @@ function useSlotCount() {
   return slotCount;
 }
 
-const LogoSlot = memo(function LogoSlot({ slot, reducedMotion }) {
-  const [logoIndex, setLogoIndex] = useState(slot % LOGOS.length);
-
-  useEffect(() => {
-    setLogoIndex(slot % LOGOS.length);
-  }, [slot]);
-
+const LogoSlot = memo(function LogoSlot({ logo, reducedMotion, slot, onRotate }) {
   useEffect(() => {
     if (reducedMotion) return undefined;
 
     let timeoutId;
     const scheduleNext = () => {
-      const delay = 1800 + Math.round(Math.random() * 1400);
+      const delay = 4800 + Math.round(Math.random() * 2400);
       timeoutId = window.setTimeout(() => {
-        setLogoIndex((current) => (current + 1 + Math.floor(Math.random() * 5)) % LOGOS.length);
+        onRotate(slot);
         scheduleNext();
       }, delay);
     };
 
     scheduleNext();
     return () => window.clearTimeout(timeoutId);
-  }, [reducedMotion]);
-
-  const logo = LOGOS[logoIndex];
+  }, [onRotate, reducedMotion, slot]);
 
   return (
     <div className="logo-wall__slot" aria-live="off">
@@ -96,7 +88,7 @@ const LogoSlot = memo(function LogoSlot({ slot, reducedMotion }) {
           initial={reducedMotion ? false : { opacity: 0, rotateX: -78, scale: 0.96 }}
           animate={{ opacity: 1, rotateX: 0, scale: 1 }}
           exit={reducedMotion ? { opacity: 0 } : { opacity: 0, rotateX: 78, scale: 0.96 }}
-          transition={{ duration: reducedMotion ? 0.15 : 0.46, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: reducedMotion ? 0.15 : 0.62, ease: [0.22, 1, 0.36, 1] }}
         />
       </AnimatePresence>
     </div>
@@ -107,6 +99,28 @@ export default function LogoWall() {
   const reducedMotion = useReducedMotion();
   const slotCount = useSlotCount();
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
+  const [visibleIndexes, setVisibleIndexes] = useState(() => slots);
+
+  useEffect(() => {
+    setVisibleIndexes(slots);
+  }, [slots]);
+
+  const rotateSlot = useCallback((slot) => {
+    setVisibleIndexes((current) => {
+      const activeIndexes = new Set(current);
+      activeIndexes.delete(current[slot]);
+      const available = LOGOS
+        .map((_, index) => index)
+        .filter((index) => !activeIndexes.has(index) && index !== current[slot]);
+
+      if (!available.length) return current;
+
+      const next = available[Math.floor(Math.random() * available.length)];
+      const updated = [...current];
+      updated[slot] = next;
+      return updated;
+    });
+  }, []);
 
   return (
     <section className="logo-wall" aria-label="Serving businesses nationwide">
@@ -125,7 +139,13 @@ export default function LogoWall() {
 
         <div className="logo-wall__grid">
           {slots.map((slot) => (
-            <LogoSlot key={slot} slot={slot} reducedMotion={reducedMotion} />
+            <LogoSlot
+              key={slot}
+              logo={LOGOS[visibleIndexes[slot]]}
+              onRotate={rotateSlot}
+              reducedMotion={reducedMotion}
+              slot={slot}
+            />
           ))}
         </div>
       </div>
