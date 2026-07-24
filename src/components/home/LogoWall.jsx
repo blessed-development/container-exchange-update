@@ -97,8 +97,30 @@ export default function LogoWall() {
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
   const [visibleIndexes, setVisibleIndexes] = useState(() => createUniqueIndexes(getSlotCount()));
   const visibleIndexesRef = useRef(visibleIndexes);
-  const rotationCursorRef = useRef(0);
+  const sectionRef = useRef(null);
+  const hasStartedRef = useRef(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || typeof IntersectionObserver === 'undefined') {
+      setIsInView(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.35 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) hasStartedRef.current = false;
+  }, [isInView]);
 
   useEffect(() => {
     setVisibleIndexes((current) => {
@@ -124,9 +146,7 @@ export default function LogoWall() {
 
       if (!available.length) return repaired;
 
-      const nextPosition = available.findIndex((index) => index >= rotationCursorRef.current);
-      const next = available[nextPosition === -1 ? 0 : nextPosition];
-      rotationCursorRef.current = (next + 1) % LOGOS.length;
+      const next = available[Math.floor(Math.random() * available.length)];
       const updated = [...repaired];
       updated[slot] = next;
       visibleIndexesRef.current = updated;
@@ -135,20 +155,25 @@ export default function LogoWall() {
   }, []);
 
   useEffect(() => {
-    if (reducedMotion || isPaused) return undefined;
+    if (reducedMotion || isPaused || !isInView) return undefined;
 
-    const delay = 2200 + Math.round(Math.random() * 800);
-    const timeoutId = window.setTimeout(() => {
+    let timeoutId;
+    const rotate = () => {
       const activeSlotCount = visibleIndexesRef.current.length || slotCount;
       rotateSlot(Math.floor(Math.random() * activeSlotCount));
-    }, delay);
+      timeoutId = window.setTimeout(rotate, 2200 + Math.round(Math.random() * 800));
+    };
+
+    timeoutId = window.setTimeout(rotate, hasStartedRef.current ? 2200 : 0);
+    hasStartedRef.current = true;
 
     return () => window.clearTimeout(timeoutId);
-  }, [isPaused, reducedMotion, rotateSlot, slotCount]);
+  }, [isInView, isPaused, reducedMotion, rotateSlot, slotCount]);
 
   return (
     <section
       className="logo-wall"
+      ref={sectionRef}
       aria-label="Serving businesses nationwide"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
