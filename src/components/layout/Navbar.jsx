@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import NavbarCartCTA from './NavbarCartCTA';
 
 const NAV_LINKS = [
   { label: 'Buy Containers', path: '/inventory' },
@@ -52,11 +52,7 @@ export default function Navbar() {
               <Phone className="w-4 h-4" />
               <span className="font-mono">(800) 555-1234</span>
             </a>
-            <Link to="/inventory">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-0.5 text-sm px-5">
-                Get Pricing
-              </Button>
-            </Link>
+            <NavbarCartCTA />
           </div>
 
           {/* Mobile toggle */}
@@ -88,11 +84,7 @@ export default function Navbar() {
                 <Phone className="w-4 h-4" />
                 (800) 555-1234
               </a>
-              <Link to="/inventory" onClick={() => setIsOpen(false)}>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg h-12">
-                  Get Pricing
-                </Button>
-              </Link>
+              <NavbarCartCTA mobile onNavigate={() => setIsOpen(false)} />
             </div>
           </div>
         </div>
