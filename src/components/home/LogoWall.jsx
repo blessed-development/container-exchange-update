@@ -55,23 +55,7 @@ function useSlotCount() {
   return slotCount;
 }
 
-const LogoSlot = memo(function LogoSlot({ logo, reducedMotion, slot, onRotate }) {
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-
-    let timeoutId;
-    const scheduleNext = () => {
-      const delay = 4800 + Math.round(Math.random() * 2400);
-      timeoutId = window.setTimeout(() => {
-        onRotate(slot);
-        scheduleNext();
-      }, delay);
-    };
-
-    scheduleNext();
-    return () => window.clearTimeout(timeoutId);
-  }, [onRotate, reducedMotion, slot]);
-
+const LogoSlot = memo(function LogoSlot({ logo, reducedMotion }) {
   return (
     <div className="logo-wall__slot" aria-live="off">
       <AnimatePresence initial={false} mode="wait">
@@ -85,10 +69,10 @@ const LogoSlot = memo(function LogoSlot({ logo, reducedMotion, slot, onRotate })
           loading="lazy"
           decoding="async"
           draggable="false"
-          initial={reducedMotion ? false : { opacity: 0, rotateX: -78, scale: 0.96 }}
-          animate={{ opacity: 1, rotateX: 0, scale: 1 }}
-          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, rotateX: 78, scale: 0.96 }}
-          transition={{ duration: reducedMotion ? 0.15 : 0.62, ease: [0.22, 1, 0.36, 1] }}
+          initial={reducedMotion ? false : { opacity: 0, scale: 0.985, y: 5 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: -5 }}
+          transition={{ duration: reducedMotion ? 0.15 : 0.5, ease: [0.22, 1, 0.36, 1] }}
         />
       </AnimatePresence>
     </div>
@@ -100,6 +84,7 @@ export default function LogoWall() {
   const slotCount = useSlotCount();
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
   const [visibleIndexes, setVisibleIndexes] = useState(() => slots);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     setVisibleIndexes(slots);
@@ -122,8 +107,26 @@ export default function LogoWall() {
     });
   }, []);
 
+  useEffect(() => {
+    if (reducedMotion || isPaused) return undefined;
+
+    const delay = 6500 + Math.round(Math.random() * 2500);
+    const timeoutId = window.setTimeout(() => {
+      rotateSlot(Math.floor(Math.random() * slotCount));
+    }, delay);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isPaused, reducedMotion, rotateSlot, slotCount, visibleIndexes]);
+
   return (
-    <section className="logo-wall" aria-label="Serving businesses nationwide">
+    <section
+      className="logo-wall"
+      aria-label="Serving businesses nationwide"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={() => setIsPaused(false)}
+    >
       <div className="logo-wall__glow logo-wall__glow--blue" aria-hidden="true" />
       <div className="logo-wall__glow logo-wall__glow--orange" aria-hidden="true" />
 
@@ -142,9 +145,7 @@ export default function LogoWall() {
             <LogoSlot
               key={slot}
               logo={LOGOS[visibleIndexes[slot]]}
-              onRotate={rotateSlot}
               reducedMotion={reducedMotion}
-              slot={slot}
             />
           ))}
         </div>

@@ -86,7 +86,6 @@
   min-height: 90px;
   align-items: center;
   justify-content: center;
-  perspective: 900px;
 }
 
 .logo-wall__image {
@@ -95,7 +94,7 @@
   height: 90px;
   object-fit: contain;
   object-position: center;
-  opacity: 0.82;
+  opacity: 0.85;
   transform-origin: center;
   transition: opacity 220ms ease, transform 220ms ease;
   will-change: transform, opacity;
