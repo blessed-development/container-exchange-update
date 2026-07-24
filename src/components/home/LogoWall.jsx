@@ -70,7 +70,7 @@ function useSlotCount() {
 const LogoSlot = memo(function LogoSlot({ logo, reducedMotion }) {
   return (
     <div className="logo-wall__slot" aria-live="off">
-      <AnimatePresence initial={false} mode="wait">
+      <AnimatePresence initial={false}>
         <motion.img
           key={logo.src}
           className="logo-wall__image"
@@ -81,10 +81,10 @@ const LogoSlot = memo(function LogoSlot({ logo, reducedMotion }) {
           loading="lazy"
           decoding="async"
           draggable="false"
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.985, y: 5 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: -5 }}
-          transition={{ duration: reducedMotion ? 0.15 : 0.42, ease: [0.22, 1, 0.36, 1] }}
+          initial={reducedMotion ? false : { opacity: 0, scale: 0.975 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.015 }}
+          transition={{ duration: reducedMotion ? 0.15 : 0.7, ease: [0.22, 1, 0.36, 1] }}
         />
       </AnimatePresence>
     </div>
@@ -97,6 +97,7 @@ export default function LogoWall() {
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
   const [visibleIndexes, setVisibleIndexes] = useState(() => createUniqueIndexes(getSlotCount()));
   const visibleIndexesRef = useRef(visibleIndexes);
+  const rotationCursorRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
@@ -123,7 +124,9 @@ export default function LogoWall() {
 
       if (!available.length) return repaired;
 
-      const next = available[Math.floor(Math.random() * available.length)];
+      const nextPosition = available.findIndex((index) => index >= rotationCursorRef.current);
+      const next = available[nextPosition === -1 ? 0 : nextPosition];
+      rotationCursorRef.current = (next + 1) % LOGOS.length;
       const updated = [...repaired];
       updated[slot] = next;
       visibleIndexesRef.current = updated;
@@ -134,7 +137,7 @@ export default function LogoWall() {
   useEffect(() => {
     if (reducedMotion || isPaused) return undefined;
 
-    const delay = 1600 + Math.round(Math.random() * 800);
+    const delay = 2200 + Math.round(Math.random() * 800);
     const timeoutId = window.setTimeout(() => {
       const activeSlotCount = visibleIndexesRef.current.length || slotCount;
       rotateSlot(Math.floor(Math.random() * activeSlotCount));
