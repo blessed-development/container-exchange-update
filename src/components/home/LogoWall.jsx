@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import '@/styles/logo-wall.css';
 
@@ -43,6 +43,18 @@ function getSlotCount() {
   return 10;
 }
 
+function createUniqueIndexes(count, existing = []) {
+  const available = LOGOS.map((_, index) => index).filter((index) => !existing.includes(index));
+  const selected = [...existing].slice(0, count);
+
+  while (selected.length < count && available.length) {
+    const position = Math.floor(Math.random() * available.length);
+    selected.push(available.splice(position, 1)[0]);
+  }
+
+  return selected;
+}
+
 function useSlotCount() {
   const [slotCount, setSlotCount] = useState(getSlotCount);
 
@@ -83,26 +95,38 @@ export default function LogoWall() {
   const reducedMotion = useReducedMotion();
   const slotCount = useSlotCount();
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
-  const [visibleIndexes, setVisibleIndexes] = useState(() => slots);
+  const [visibleIndexes, setVisibleIndexes] = useState(() => createUniqueIndexes(getSlotCount()));
+  const visibleIndexesRef = useRef(visibleIndexes);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
-    setVisibleIndexes(slots);
-  }, [slots]);
+    setVisibleIndexes((current) => {
+      const uniqueCurrent = [...new Set(current)].slice(0, slotCount);
+      const next = createUniqueIndexes(slotCount, uniqueCurrent);
+      visibleIndexesRef.current = next;
+      return next;
+    });
+  }, [slotCount]);
+
+  useEffect(() => {
+    visibleIndexesRef.current = visibleIndexes;
+  }, [visibleIndexes]);
 
   const rotateSlot = useCallback((slot) => {
     setVisibleIndexes((current) => {
-      const activeIndexes = new Set(current);
-      activeIndexes.delete(current[slot]);
+      const repaired = createUniqueIndexes(current.length, [...new Set(current)].slice(0, current.length));
+      const activeIndexes = new Set(repaired);
+      activeIndexes.delete(repaired[slot]);
       const available = LOGOS
         .map((_, index) => index)
-        .filter((index) => !activeIndexes.has(index) && index !== current[slot]);
+        .filter((index) => !activeIndexes.has(index) && index !== repaired[slot]);
 
-      if (!available.length) return current;
+      if (!available.length) return repaired;
 
       const next = available[Math.floor(Math.random() * available.length)];
-      const updated = [...current];
+      const updated = [...repaired];
       updated[slot] = next;
+      visibleIndexesRef.current = updated;
       return updated;
     });
   }, []);
@@ -110,13 +134,14 @@ export default function LogoWall() {
   useEffect(() => {
     if (reducedMotion || isPaused) return undefined;
 
-    const delay = 2200 + Math.round(Math.random() * 1200);
+    const delay = 1600 + Math.round(Math.random() * 800);
     const timeoutId = window.setTimeout(() => {
-      rotateSlot(Math.floor(Math.random() * slotCount));
+      const activeSlotCount = visibleIndexesRef.current.length || slotCount;
+      rotateSlot(Math.floor(Math.random() * activeSlotCount));
     }, delay);
 
     return () => window.clearTimeout(timeoutId);
-  }, [isPaused, reducedMotion, rotateSlot, slotCount, visibleIndexes]);
+  }, [isPaused, reducedMotion, rotateSlot, slotCount]);
 
   return (
     <section
