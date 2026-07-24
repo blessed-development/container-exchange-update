@@ -110,7 +110,7 @@ export default function LogoWall() {
   useEffect(() => {
     if (reducedMotion || isPaused) return undefined;
 
-    const delay = 3800 + Math.round(Math.random() * 1400);
+    const delay = 2200 + Math.round(Math.random() * 1200);
     const timeoutId = window.setTimeout(() => {
       rotateSlot(Math.floor(Math.random() * slotCount));
     }, delay);

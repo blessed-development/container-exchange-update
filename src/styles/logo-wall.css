@@ -149,6 +149,12 @@
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.7rem 1.5rem;
   }
+
+  /* Keep the final logo clear of the hosted accessibility control. */
+  .logo-wall__content {
+    width: min(calc(100% - 4.5rem), 76rem);
+    margin-right: 4.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
