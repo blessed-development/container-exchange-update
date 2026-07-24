@@ -83,7 +83,7 @@ const Logo = memo(function Logo({ logo, reducedMotion }) {
         initial={reducedMotion ? false : { opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 1.025 }}
-        transition={{ duration: reducedMotion ? 0.1 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: reducedMotion ? 0.1 : 0.46, ease: [0.22, 1, 0.36, 1] }}
       />
     </AnimatePresence>
   );
@@ -141,7 +141,7 @@ export default function LogoWall() {
     const scheduleNext = (delay) => {
       timeoutId = window.setTimeout(() => {
         rotateOne();
-        scheduleNext(2100 + Math.round(Math.random() * 900));
+        scheduleNext(1150 + Math.round(Math.random() * 500));
       }, delay);
     };
 

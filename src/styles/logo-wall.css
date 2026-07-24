@@ -129,8 +129,8 @@
   }
 
   .logo-wall__content {
-    width: min(calc(100% - 6.5rem), 76rem);
-    margin-right: 6.5rem;
+    width: min(100%, 76rem);
+    margin: 0 auto;
   }
 
   .logo-wall__grid {
