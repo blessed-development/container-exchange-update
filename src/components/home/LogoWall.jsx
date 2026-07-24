@@ -72,7 +72,7 @@ const LogoSlot = memo(function LogoSlot({ logo, reducedMotion }) {
           initial={reducedMotion ? false : { opacity: 0, scale: 0.985, y: 5 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.985, y: -5 }}
-          transition={{ duration: reducedMotion ? 0.15 : 0.5, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: reducedMotion ? 0.15 : 0.42, ease: [0.22, 1, 0.36, 1] }}
         />
       </AnimatePresence>
     </div>
@@ -110,7 +110,7 @@ export default function LogoWall() {
   useEffect(() => {
     if (reducedMotion || isPaused) return undefined;
 
-    const delay = 6500 + Math.round(Math.random() * 2500);
+    const delay = 3800 + Math.round(Math.random() * 1400);
     const timeoutId = window.setTimeout(() => {
       rotateSlot(Math.floor(Math.random() * slotCount));
     }, delay);
