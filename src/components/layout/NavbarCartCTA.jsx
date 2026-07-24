@@ -15,13 +15,12 @@ function BasketCountIcon({ count }) {
   const countClass = label.length > 2 ? 'text-[7px]' : label.length > 1 ? 'text-[8px]' : 'text-[10px]';
 
   return (
-    <span className="relative grid h-7 w-8 shrink-0 place-items-center" aria-hidden="true">
-      <svg viewBox="0 0 32 28" fill="none" className="absolute inset-0 h-full w-full">
-        <path d="M10.25 8.75 12.8 4h6.4l2.55 4.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M5.1 9.1h21.8l-2.08 13.2H7.18L5.1 9.1Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M9.4 12.7h13.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.55" />
+    <span className="relative grid h-8 w-9 shrink-0 place-items-center" aria-hidden="true">
+      <svg viewBox="0 0 36 30" fill="none" className="absolute inset-0 h-full w-full">
+        <path d="M11.5 9.25 14.1 4.5h7.8l2.6 4.75" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4.75 9.8h26.5l-2.55 14H7.3l-2.55-14Z" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
-      <span className={`relative mt-1 font-black leading-none tracking-[-0.06em] ${countClass}`}>{label}</span>
+      <span className={`relative translate-y-px font-black leading-none tracking-[-0.06em] ${countClass}`}>{label}</span>
     </span>
   );
 }
@@ -90,14 +89,14 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
           {hasItems ? (
             <motion.span
               key="cart-content"
-              className="flex items-center justify-center gap-1.5 whitespace-nowrap"
+              className="flex items-center justify-center gap-1 whitespace-nowrap"
               initial={reducedMotion ? false : { opacity: 0, scale: 0.94 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
               transition={motionTransition}
             >
               <BasketCountIcon count={itemCount} />
-              {!mobile && <span className="text-sm leading-none">{formatMoney(subtotal)}</span>}
+              {!mobile && <span className="text-sm font-bold leading-none tracking-[-0.02em]">{formatMoney(subtotal)}</span>}
             </motion.span>
           ) : (
             <motion.span
