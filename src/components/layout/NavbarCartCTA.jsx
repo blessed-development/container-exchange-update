@@ -12,16 +12,16 @@ const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US', {
 
 function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
-  const fontSize = label.length > 2 ? 6.7 : label.length > 1 ? 8 : 9.5;
+  const fontSize = label.length > 2 ? 8.3 : label.length > 1 ? 10 : 12;
 
   return (
-    <span className="inline-flex h-8 w-9 shrink-0" aria-hidden="true">
-      <svg viewBox="0 0 36 30" fill="none" className="h-full w-full">
-        <path d="M11.5 9.25 14.1 4.5h7.8l2.6 4.75" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M4.75 9.8h26.5l-2.55 14H7.3l-2.55-14Z" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
+    <span className="inline-flex h-9 w-11 shrink-0" aria-hidden="true">
+      <svg viewBox="0 0 44 34" fill="none" className="h-full w-full">
+        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         <text
-          x="18"
-          y="17.4"
+          x="22"
+          y="20.2"
           fill="currentColor"
           fontSize={fontSize}
           fontWeight="800"
