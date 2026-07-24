@@ -12,15 +12,25 @@ const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US', {
 
 function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
-  const countClass = label.length > 2 ? 'text-[7px]' : label.length > 1 ? 'text-[8px]' : 'text-[10px]';
+  const fontSize = label.length > 2 ? 6.7 : label.length > 1 ? 8 : 9.5;
 
   return (
-    <span className="relative grid h-8 w-9 shrink-0 place-items-center" aria-hidden="true">
-      <svg viewBox="0 0 36 30" fill="none" className="absolute inset-0 h-full w-full">
+    <span className="inline-flex h-8 w-9 shrink-0" aria-hidden="true">
+      <svg viewBox="0 0 36 30" fill="none" className="h-full w-full">
         <path d="M11.5 9.25 14.1 4.5h7.8l2.6 4.75" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
         <path d="M4.75 9.8h26.5l-2.55 14H7.3l-2.55-14Z" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round" />
+        <text
+          x="18"
+          y="17.4"
+          fill="currentColor"
+          fontSize={fontSize}
+          fontWeight="800"
+          textAnchor="middle"
+          dominantBaseline="middle"
+        >
+          {label}
+        </text>
       </svg>
-      <span className={`relative translate-y-px font-black leading-none tracking-[-0.06em] ${countClass}`}>{label}</span>
     </span>
   );
 }
