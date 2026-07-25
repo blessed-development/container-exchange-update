@@ -64,12 +64,12 @@ const PRODUCT_GROUPS = [
 ];
 
 const HERO_COMPOSITIONS = {
-  'new-20-iicl': { transform: 'scale(1.12) translate(-1%, -2%)', position: '52% 46%' },
-  'new-40-iicl': { transform: 'scale(1.18) translate(-2%, 0%)', position: '58% 50%' },
-  'new-40hc-iicl': { transform: 'scale(1.17) translate(-2%, -1%)', position: '58% 48%' },
-  'used-20-cw': { transform: 'scale(1.12) translate(-1%, -2%)', position: '52% 46%' },
-  'used-40-cw': { transform: 'scale(1.18) translate(-2%, 0%)', position: '58% 50%' },
-  'used-40hc-wwt': { transform: 'scale(1.17) translate(-2%, -1%)', position: '58% 48%' },
+  'new-20-iicl': { transform: 'translateY(-4%) scale(1.04)', position: '50% 43%' },
+  'new-40-iicl': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'new-40hc-iicl': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'used-20-cw': { transform: 'translateY(-4%) scale(1.04)', position: '50% 43%' },
+  'used-40-cw': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'used-40hc-wwt': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
 };
 
 export default function ProductGrid() {
@@ -167,8 +167,8 @@ function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
   const composition = HERO_COMPOSITIONS[product.id] || {
-    transform: 'scale(1.15) translate(-1%, -1%)',
-    position: '55% 48%',
+    transform: 'translateY(-3%) scale(1.02)',
+    position: '50% 43%',
   };
 
   const handleCardClick = () => {
@@ -195,7 +195,7 @@ function ProductCard({ product, index }) {
           <img
             src={product.image}
             alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out"
+          className="h-full w-full object-contain transition-transform duration-700 ease-out"
             style={{
               objectPosition: composition.position,
               transform: composition.transform,
@@ -204,7 +204,7 @@ function ProductCard({ product, index }) {
           <div className="pointer-events-none absolute bottom-[24%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
         </div>
 
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_42%,rgba(0,0,0,.12)_56%,rgba(0,0,0,.62)_76%,rgba(0,0,0,.96)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_48%,rgba(0,0,0,.18)_62%,rgba(0,0,0,.68)_82%,rgba(0,0,0,.94)_100%)]" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER
