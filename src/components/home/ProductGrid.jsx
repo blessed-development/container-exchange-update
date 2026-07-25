@@ -63,6 +63,15 @@ const PRODUCT_GROUPS = [
   ],
 ];
 
+const HERO_COMPOSITIONS = {
+  'new-20-iicl': { scale: 1.08, translateY: '-5%' },
+  'new-40-iicl': { scale: 1.04, translateY: '-4%' },
+  'new-40hc-iicl': { scale: 1.06, translateY: '-5%' },
+  'used-20-cw': { scale: 1.08, translateY: '-4%' },
+  'used-40-cw': { scale: 1.04, translateY: '-4%' },
+  'used-40hc-wwt': { scale: 1.06, translateY: '-5%' },
+};
+
 export default function ProductGrid() {
   const [activeGroup, setActiveGroup] = useState(0);
 
@@ -157,6 +166,7 @@ export default function ProductGrid() {
 function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
+  const composition = HERO_COMPOSITIONS[product.id] || { scale: 1.04, translateY: '-4%' };
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}?openZipModal=1`);
@@ -173,14 +183,20 @@ function ProductCard({ product, index }) {
         onClick={handleCardClick}
         className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-[#d9d7d1] hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          className="absolute inset-0 h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.025]"
-        />
+        <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_50%_28%,#eeeae1_0%,#d8d4ca_58%,#aaa69f_100%)]">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+            style={{
+              objectPosition: '50% 44%',
+              transform: `translateY(${composition.translateY}) scale(${composition.scale})`,
+            }}
+          />
+          <div className="pointer-events-none absolute bottom-[28%] left-1/2 h-5 w-[62%] -translate-x-1/2 rounded-[100%] bg-black/20 blur-xl" />
+        </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,.30)_40%,rgba(0,0,0,.78)_72%,rgba(0,0,0,.96)_100%)]" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER
