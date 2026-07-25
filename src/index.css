@@ -81,13 +81,6 @@
 }
 
 @layer base {
-  html,
-  body,
-  #root {
-    max-width: 100%;
-    overflow-x: clip;
-  }
-
   html {
     background: #07111f;
   }
@@ -98,7 +91,6 @@
 
   body {
     @apply bg-background text-foreground font-inter;
-    overflow-x: hidden;
   }
 }
 
