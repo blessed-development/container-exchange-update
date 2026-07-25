@@ -183,7 +183,12 @@ function ProductCard({ product, index }) {
         onClick={handleCardClick}
         className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-[#d9d7d1] hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_50%_28%,#eeeae1_0%,#d8d4ca_58%,#aaa69f_100%)]">
+        <div
+          className="absolute inset-0 overflow-hidden bg-[#eeece7]"
+          style={{
+            background: 'linear-gradient(180deg, #f7f6f2 0%, #ebe9e2 58%, #d8d4ca 100%)',
+          }}
+        >
           <img
             src={product.image}
             alt={product.name}
