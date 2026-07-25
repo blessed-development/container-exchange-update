@@ -64,12 +64,12 @@ const PRODUCT_GROUPS = [
 ];
 
 const HERO_COMPOSITIONS = {
-  'new-20-iicl': { scale: 1.08, translateY: '-5%' },
-  'new-40-iicl': { scale: 1.04, translateY: '-4%' },
-  'new-40hc-iicl': { scale: 1.06, translateY: '-5%' },
-  'used-20-cw': { scale: 1.08, translateY: '-4%' },
-  'used-40-cw': { scale: 1.04, translateY: '-4%' },
-  'used-40hc-wwt': { scale: 1.06, translateY: '-5%' },
+  'new-20-iicl': { scale: 1.08, translateY: '-12px' },
+  'new-40-iicl': { scale: 1.04, translateY: '-11px' },
+  'new-40hc-iicl': { scale: 1.06, translateY: '-12px' },
+  'used-20-cw': { scale: 1.08, translateY: '-11px' },
+  'used-40-cw': { scale: 1.04, translateY: '-11px' },
+  'used-40hc-wwt': { scale: 1.06, translateY: '-12px' },
 };
 
 export default function ProductGrid() {
@@ -166,7 +166,7 @@ export default function ProductGrid() {
 function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
-  const composition = HERO_COMPOSITIONS[product.id] || { scale: 1.04, translateY: '-4%' };
+  const composition = HERO_COMPOSITIONS[product.id] || { scale: 1.04, translateY: '-11px' };
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}?openZipModal=1`);
@@ -194,14 +194,14 @@ function ProductCard({ product, index }) {
             alt={product.name}
             className="h-full w-full object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.015]"
             style={{
-              objectPosition: '50% 44%',
+              objectPosition: '50% 43%',
               transform: `translateY(${composition.translateY}) scale(${composition.scale})`,
             }}
           />
-          <div className="pointer-events-none absolute bottom-[28%] left-1/2 h-5 w-[62%] -translate-x-1/2 rounded-[100%] bg-black/20 blur-xl" />
+          <div className="pointer-events-none absolute bottom-[27%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
         </div>
 
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,.30)_40%,rgba(0,0,0,.78)_72%,rgba(0,0,0,.96)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,.10)_52%,rgba(0,0,0,.66)_75%,rgba(0,0,0,.96)_100%)]" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER
