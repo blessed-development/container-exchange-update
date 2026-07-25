@@ -194,25 +194,25 @@ function ProductCard({ product, index }) {
             alt={product.name}
             className="h-full w-full object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.015]"
             style={{
-              objectPosition: '50% 43%',
+              objectPosition: '50% 42%',
               transform: `translateY(${composition.translateY}) scale(${composition.scale})`,
             }}
           />
-          <div className="pointer-events-none absolute bottom-[27%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
+          <div className="pointer-events-none absolute bottom-[24%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
         </div>
 
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,.10)_52%,rgba(0,0,0,.66)_75%,rgba(0,0,0,.96)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,transparent_55%,rgba(0,0,0,.22)_68%,rgba(0,0,0,.72)_84%,rgba(0,0,0,.96)_100%)]" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER
         </div>
 
-        <div className="absolute left-6 right-6 bottom-6">
-          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+        <div className="absolute left-6 right-6 bottom-3">
+          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-2">
             {product.name}
           </h3>
 
-          <div className="flex items-center gap-2 mb-5">
+          <div className="flex items-center gap-2 mb-3">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
