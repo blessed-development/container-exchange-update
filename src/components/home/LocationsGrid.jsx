@@ -1,81 +1,112 @@
-import React from 'react';
-import { ArrowUpRight, MapPin } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { MapPin } from 'lucide-react';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
 
-const locations = [
-  { city: 'Dallas', region: 'Texas, USA', country: 'USA', image: '/images/locations/dallas-tx.png' },
-  { city: 'Houston', region: 'Texas, USA', country: 'USA', image: '/images/locations/houston-tx.png' },
-  { city: 'Atlanta', region: 'Georgia, USA', country: 'USA', image: '/images/locations/atlanta-ga.png' },
-  { city: 'Chicago', region: 'Illinois, USA', country: 'USA', image: '/images/locations/chicago-il.png' },
-  { city: 'Los Angeles / Long Beach', region: 'California, USA', country: 'USA', image: '/images/locations/los-angeles-long-beach-ca.png' },
-  { city: 'Miami', region: 'Florida, USA', country: 'USA', image: '/images/locations/miami-fl.png' },
-  { city: 'New York / Newark', region: 'New York & New Jersey, USA', country: 'USA', image: '/images/locations/new-york-newark-ny.png' },
-  { city: 'Seattle', region: 'Washington, USA', country: 'USA', image: '/images/locations/seattle-wa.png' },
-  { city: 'Toronto', region: 'Ontario, Canada', country: 'Canada', image: '/images/locations/toronto-on.png' },
-  { city: 'Vancouver / Delta', region: 'British Columbia, Canada', country: 'Canada', image: '/images/locations/vancouver-delta-bc.png' },
-  { city: 'Montreal', region: 'Quebec, Canada', country: 'Canada', image: '/images/locations/montreal-qc.png' },
-  { city: 'Calgary', region: 'Alberta, Canada', country: 'Canada', image: '/images/locations/calgary-ab.png' },
+const chipGroups = [
+  ['Atlanta, GA', 'Charlotte, NC', 'Columbus, OH', 'El Paso, TX', 'Kansas City, KS', 'Louisville, KY', 'Mobile, AL', 'Norfolk, VA', 'Raleigh, NC', 'Savannah, GA', 'Tampa, FL', 'Halifax / Dartmouth, NS', 'Toronto, ON', 'Saskatoon, SK'],
+  ['Bakersfield, CA', 'Chicago, IL', 'Dallas, TX', 'Houston, TX', 'Laredo, TX', 'Memphis, TN', 'Nashville, TN', 'Omaha, NE', 'Salt Lake City, UT', 'Seattle, WA', 'Temecula, CA', 'Calgary, AB', 'Vancouver, BC / Delta, BC'],
+  ['Baltimore, MD', 'Cincinnati, OH', 'Denver, CO', 'Indianapolis, IN', 'Las Vegas, NV', 'Miami, FL', 'New Orleans, LA', 'Phoenix, AZ', 'San Antonio, TX', 'St. Louis, MO', 'Wilmington, NC', 'Edmonton, AB', 'Winnipeg, MB'],
+  ['Charleston, SC', 'Cleveland, OH', 'Detroit, MI', 'Jacksonville, FL', 'Los Angeles / Long Beach, CA', 'Minneapolis, MN', 'New York, NY / Newark, NJ', 'Portland, OR', 'San Francisco / Oakland, CA', 'Tacoma, WA', 'Worcester / Boston, MA', 'Montreal, QC', 'Regina, SK'],
+];
+
+const slides = [
+  { city: 'Dallas', region: 'TX, USA', offers: 14, available: '557 containers available', price: 'from $975 to $12,575', image: '/images/locations/dallas-tx.webp' },
+  { city: 'Houston', region: 'TX, USA', offers: 29, available: '1681 containers available', price: 'from $600 to $17,650', image: '/images/locations/houston-tx.webp' },
+  { city: 'Atlanta', region: 'GA, USA', offers: 22, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/atlanta-ga.webp' },
+  { city: 'Chicago', region: 'IL, USA', offers: 28, available: '1929 containers available', price: 'from $475 to $21,925', image: '/images/locations/chicago-il.webp' },
+  { city: 'Los Angeles / Long Beach', region: 'CA, USA', offers: 24, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/los-angeles-long-beach-ca.webp' },
+  { city: 'Miami', region: 'FL, USA', offers: 20, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/miami-fl.webp' },
+  { city: 'New York / Newark', region: 'NY / NJ, USA', offers: 25, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/new-york-newark-ny.webp' },
+  { city: 'Seattle', region: 'WA, USA', offers: 18, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/seattle-wa.webp' },
+  { city: 'Toronto', region: 'ON, Canada', offers: 26, available: '2511 containers available', price: 'from $500 to $6,340', image: '/images/locations/toronto-on.webp' },
+  { city: 'Vancouver / Delta', region: 'BC, Canada', offers: 19, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/vancouver-delta-bc.webp' },
+  { city: 'Montreal', region: 'QC, Canada', offers: 17, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/montreal-qc.webp' },
+  { city: 'Calgary', region: 'AB, Canada', offers: 16, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/calgary-ab.webp' },
 ];
 
 export default function LocationsGrid() {
-  return (
-    <section className="w-full overflow-hidden bg-[#080808] px-5 py-20 text-white sm:py-24">
-      <div className="mx-auto max-w-[1680px]">
-        <div className="mb-10 flex flex-col justify-between gap-5 lg:mb-12 lg:flex-row lg:items-end">
-          <div>
-            <div className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-[#58beb7]">
-              Our most popular locations
-            </div>
+  const [active, setActive] = useState([0, 1, 2, 3]);
 
-            <h2 className="max-w-5xl text-[clamp(38px,4.2vw,64px)] font-extrabold leading-[0.94] tracking-[-0.06em]">
-              Where to Buy <span className="text-[#ff5a12]">Shipping Containers?</span>
-            </h2>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((previous) => previous.map((index) => (index + 4) % slides.length));
+    }, 4200);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="w-full bg-[#080808] text-white py-12 px-5 overflow-hidden">
+      <div className="max-w-[1680px] mx-auto">
+        <div className="mb-6">
+          <div className="text-[11px] font-extrabold tracking-[0.16em] uppercase text-[#58beb7] mb-3">
+            Our most popular locations
           </div>
 
-          <p className="max-w-md text-sm font-medium leading-relaxed text-[#8fa1b6] lg:pb-1">
-            Explore inventory near the container markets customers rely on most across the United States and Canada.
-          </p>
+          <h2 className="text-[clamp(36px,4.2vw,64px)] font-extrabold leading-[0.94] tracking-[-0.06em]">
+            Where to Buy <span className="text-[#ff5a12]">Shipping Containers?</span>
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {locations.map((location) => (
-            <a
-              key={location.city}
-              href={pinLink(location.city)}
-              className="group relative isolate min-h-[310px] overflow-hidden rounded-[28px] border border-[#2b3036] bg-[#111111] shadow-[0_22px_60px_rgba(0,0,0,.3)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-[#ff6a2b]/55 hover:shadow-[0_32px_80px_rgba(0,0,0,.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a2b] focus-visible:ring-offset-4 focus-visible:ring-offset-[#080808]"
-            >
-              <img
-                src={location.image}
-                alt={`${location.city} container market`}
-                loading="lazy"
-                className="absolute inset-0 -z-10 h-full w-full object-cover brightness-[.72] saturate-[.84] transition-transform duration-700 ease-out group-hover:scale-[1.045]"
-              />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {chipGroups.map((group, index) => {
+            const slide = slides[active[index]];
 
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,10,16,.03)_14%,rgba(4,10,16,.34)_50%,rgba(4,10,16,.96)_100%)]" />
+            return (
+              <article
+                key={index}
+                className="bg-[#111111] border border-[#2b3036] rounded-[28px] overflow-hidden min-h-[670px] shadow-[0_28px_80px_rgba(0,0,0,.38)] transition-all duration-300 hover:-translate-y-1 hover:border-[#008f7d]/55 hover:shadow-[0_36px_100px_rgba(0,0,0,.48)]"
+              >
+                <div className="relative h-[258px] overflow-hidden bg-[#1b1b1b]">
+                  <img
+                    src={slide.image}
+                    alt={slide.city}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover brightness-[.60] saturate-[.82] contrast-[1.08] scale-[1.04] transition-all duration-700"
+                  />
 
-              <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-black/25 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.13em] text-white backdrop-blur-md">
-                {location.country}
-              </div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/35 to-black/85" />
 
-              <div className="absolute inset-x-0 bottom-0 p-6">
-                <div className="mb-3 flex items-center gap-2 text-[#ff6a2b]">
-                  <MapPin className="h-4 w-4" aria-hidden="true" />
-                  <span className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-white/70">Popular market</span>
+                  <div className="absolute top-4 right-4 bg-gradient-to-br from-[#ff8b13] to-[#e5351f] text-white text-[11px] font-extrabold px-3.5 py-2.5 rounded-full shadow-lg">
+                    {slide.offers} Special Offers
+                  </div>
+
+                  <div className="absolute left-7 right-6 bottom-6">
+                    <h3 className="text-[32px] font-extrabold tracking-[-0.055em] leading-none">
+                      {slide.city}
+                    </h3>
+                    <p className="mt-2 text-white/75 text-[13px] font-semibold">
+                      {slide.region}
+                    </p>
+                  </div>
                 </div>
 
-                <h3 className="max-w-[18rem] text-[30px] font-extrabold leading-[.98] tracking-[-0.055em] text-white">
-                  {location.city}
-                </h3>
-                <p className="mt-2 text-[13px] font-semibold text-white/70">{location.region}</p>
+                <div className="p-6 flex flex-col">
+                  <div className="text-[16px] font-extrabold tracking-[-0.038em] leading-tight mb-2">
+                    {slide.available}
+                  </div>
 
-                <div className="mt-5 flex items-center gap-2 text-[13px] font-extrabold text-white transition-colors group-hover:text-[#ff8b60]">
-                  View local inventory
-                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+                  <div className="text-[13px] text-[#8fa1b6] font-medium mb-4">
+                    {slide.price}
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    {group.map((city) => (
+                      <a
+                        key={city}
+                        href={pinLink(city)}
+                        className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[14px] font-semibold text-[#e6f5f2] border border-transparent hover:bg-[#ff6a2b]/10 hover:border-[#ff6a2b]/30 hover:text-white hover:pl-4 transition-all duration-200"
+                      >
+                        <MapPin className="w-3.5 h-3.5 text-[#ff6a2b] flex-shrink-0" />
+                        <span>{city}</span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
