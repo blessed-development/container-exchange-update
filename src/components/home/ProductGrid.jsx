@@ -157,7 +157,6 @@ export default function ProductGrid() {
 function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
-  const isFeatured = index === 1;
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}?openZipModal=1`);
@@ -168,55 +167,50 @@ function ProductCard({ product, index }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.35 }}
-      className={isFeatured ? 'lg:-translate-y-3' : ''}
     >
       <button
         type="button"
         onClick={handleCardClick}
-        className={`group block h-[530px] w-full overflow-hidden rounded-[28px] border text-left transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/20 ${
-          isFeatured ? 'border-primary/35 bg-card shadow-xl shadow-black/15' : 'border-border bg-card hover:border-primary/40'
-        }`}
+        className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-[#d9d7d1] hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <div className="relative flex h-[58%] items-center justify-center overflow-hidden bg-[#e8e6e0] p-4 sm:p-5">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="h-full w-full object-contain object-center transition-transform duration-700 ease-out group-hover:scale-[1.035]"
-          />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/15 to-transparent" />
-          <div className="absolute left-5 top-5 rounded-full bg-primary px-3 py-1.5 text-[10px] font-black tracking-[0.14em] text-primary-foreground shadow-lg shadow-primary/25">
-            BEST SELLER
-          </div>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="absolute inset-0 h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.025]"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
+
+        <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
+          BEST SELLER
         </div>
 
-        <div className="flex h-[42%] flex-col justify-between bg-[#111214] px-6 py-5 text-white">
-          <div>
-            <p className="mb-2 text-[10px] font-black tracking-[0.15em] text-primary">READY FOR DELIVERY</p>
-            <h3 className="line-clamp-2 text-[23px] font-black leading-[1.08] tracking-[-0.035em] text-white">
-              {product.name}
-            </h3>
+        <div className="absolute left-6 right-6 bottom-6">
+          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+            {product.name}
+          </h3>
+
+          <div className="flex items-center gap-2 mb-5">
+            <div className="flex">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i < stars
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-white/25'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-white font-semibold text-[15px]">{product.rating.toFixed(1)}</span>
+            <span className="text-white/60 text-[13px]">({product.reviewCount} reviews)</span>
           </div>
 
-          <div>
-            <div className="mb-4 flex items-center gap-2">
-              <div className="flex">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-3.5 w-3.5 ${
-                      i < stars ? 'fill-yellow-400 text-yellow-400' : 'text-white/20'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-sm font-semibold text-white">{product.rating.toFixed(1)}</span>
-              <span className="text-xs text-white/50">{product.reviewCount} reviews</span>
-            </div>
-
-            <div className="flex h-11 items-center justify-center gap-2 rounded-[13px] bg-primary text-sm font-extrabold text-primary-foreground transition-all duration-300 group-hover:bg-primary/90 group-hover:shadow-lg group-hover:shadow-primary/25">
-              View Container
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </div>
+          <div className="h-11 rounded-[14px] bg-primary text-primary-foreground font-extrabold flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">
+            View Container
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </div>
         </div>
       </button>
