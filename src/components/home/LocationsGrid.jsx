@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { MapPin } from 'lucide-react';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
+const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
+const formatPrice = (value) => `$${formatNumber(value)}`;
 
 const chipGroups = [
   ['Atlanta, GA', 'Charlotte, NC', 'Columbus, OH', 'El Paso, TX', 'Kansas City, KS', 'Louisville, KY', 'Mobile, AL', 'Norfolk, VA', 'Raleigh, NC', 'Savannah, GA', 'Tampa, FL', 'Halifax / Dartmouth, NS', 'Toronto, ON', 'Saskatoon, SK'],
@@ -11,18 +13,18 @@ const chipGroups = [
 ];
 
 const slides = [
-  { city: 'Dallas', region: 'TX, USA', offers: 14, available: '557 containers available', price: 'from $975 to $12,575', image: '/images/locations/dallas-tx.webp' },
-  { city: 'Houston', region: 'TX, USA', offers: 29, available: '1681 containers available', price: 'from $600 to $17,650', image: '/images/locations/houston-tx.webp' },
+  { city: 'Dallas', region: 'TX, USA', offers: 14, inventory: { containers: 844, priceFrom: 950, priceTo: 9175, rating: 4.9 }, image: '/images/locations/dallas-tx.webp' },
+  { city: 'Houston', region: 'TX, USA', offers: 29, inventory: { containers: 2145, priceFrom: 550, priceTo: 8675, rating: 4.9 }, image: '/images/locations/houston-tx.webp' },
   { city: 'Atlanta', region: 'GA, USA', offers: 22, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/atlanta-ga.webp' },
-  { city: 'Chicago', region: 'IL, USA', offers: 28, available: '1929 containers available', price: 'from $475 to $21,925', image: '/images/locations/chicago-il.webp' },
-  { city: 'Los Angeles / Long Beach', region: 'CA, USA', offers: 24, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/los-angeles-long-beach-ca.webp' },
+  { city: 'Chicago', region: 'IL, USA', offers: 28, inventory: { containers: 2106, priceFrom: 550, priceTo: 18965, rating: 4.9 }, image: '/images/locations/chicago-il.webp' },
+  { city: 'Los Angeles / Long Beach', region: 'CA, USA', offers: 24, inventory: { containers: 905, priceFrom: 725, priceTo: 17975, rating: 4.9 }, image: '/images/locations/los-angeles-long-beach-ca.webp' },
   { city: 'Miami', region: 'FL, USA', offers: 20, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/miami-fl.webp' },
   { city: 'New York / Newark', region: 'NY / NJ, USA', offers: 25, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/new-york-newark-ny.webp' },
   { city: 'Seattle', region: 'WA, USA', offers: 18, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/seattle-wa.webp' },
-  { city: 'Toronto', region: 'ON, Canada', offers: 26, available: '2511 containers available', price: 'from $500 to $6,340', image: '/images/locations/toronto-on.webp' },
-  { city: 'Vancouver / Delta', region: 'BC, Canada', offers: 19, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/vancouver-delta-bc.webp' },
-  { city: 'Montreal', region: 'QC, Canada', offers: 17, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/montreal-qc.webp' },
-  { city: 'Calgary', region: 'AB, Canada', offers: 16, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/calgary-ab.webp' },
+  { city: 'Toronto', region: 'ON, Canada', offers: 26, inventory: { containers: 2162, priceFrom: 475, priceTo: 16675, rating: 4.9 }, image: '/images/locations/toronto-on.webp' },
+  { city: 'Vancouver / Delta', region: 'BC, Canada', offers: 19, inventory: { containers: 1884, priceFrom: 675, priceTo: 5847, rating: 4.9 }, image: '/images/locations/vancouver-delta-bc.webp' },
+  { city: 'Montreal', region: 'QC, Canada', offers: 17, inventory: { containers: 1492, priceFrom: 575, priceTo: 8075, rating: 4.9 }, image: '/images/locations/montreal-qc.webp' },
+  { city: 'Calgary', region: 'AB, Canada', offers: 16, inventory: { containers: 900, priceFrom: 950, priceTo: 5575, rating: 4.9 }, image: '/images/locations/calgary-ab.webp' },
 ];
 
 export default function LocationsGrid() {
@@ -83,13 +85,32 @@ export default function LocationsGrid() {
                 </div>
 
                 <div className="p-6 flex flex-col">
-                  <div className="text-[16px] font-extrabold tracking-[-0.038em] leading-tight mb-2">
-                    {slide.available}
-                  </div>
+                  {slide.inventory ? (
+                    <div className="mb-4">
+                      <div className="text-[16px] font-extrabold tracking-[-0.038em] leading-tight mb-2">
+                        {formatNumber(slide.inventory.containers)} Containers Available
+                      </div>
 
-                  <div className="text-[13px] text-[#8fa1b6] font-medium mb-4">
-                    {slide.price}
-                  </div>
+                      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[13px] font-medium text-[#8fa1b6]">
+                        <span>
+                          From {formatPrice(slide.inventory.priceFrom)}–{formatPrice(slide.inventory.priceTo)}
+                        </span>
+                        <span className="whitespace-nowrap text-[#ff6a2b]" aria-label={`${slide.inventory.rating} out of 5 stars`}>
+                          ★★★★★ <span className="text-white/85">{slide.inventory.rating.toFixed(1)}</span>
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-[16px] font-extrabold tracking-[-0.038em] leading-tight mb-2">
+                        {slide.available}
+                      </div>
+
+                      <div className="text-[13px] text-[#8fa1b6] font-medium mb-4">
+                        {slide.price}
+                      </div>
+                    </>
+                  )}
 
                   <div className="flex flex-col gap-1">
                     {group.map((city) => (
