@@ -13,18 +13,16 @@ const chipGroups = [
 ];
 
 const slides = [
-  { city: 'Dallas', region: 'TX, USA', offers: 14, inventory: { containers: 844, priceFrom: 950, priceTo: 9175, rating: 4.9 }, image: '/images/locations/dallas-tx.webp' },
   { city: 'Houston', region: 'TX, USA', offers: 29, inventory: { containers: 2145, priceFrom: 550, priceTo: 8675, rating: 4.9 }, image: '/images/locations/houston-tx.webp' },
-  { city: 'Atlanta', region: 'GA, USA', offers: 22, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/atlanta-ga.webp' },
   { city: 'Chicago', region: 'IL, USA', offers: 28, inventory: { containers: 2106, priceFrom: 550, priceTo: 18965, rating: 4.9 }, image: '/images/locations/chicago-il.webp' },
-  { city: 'Los Angeles / Long Beach', region: 'CA, USA', offers: 24, inventory: { containers: 905, priceFrom: 725, priceTo: 17975, rating: 4.9 }, image: '/images/locations/los-angeles-long-beach-ca.webp' },
-  { city: 'Miami', region: 'FL, USA', offers: 20, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/miami-fl.webp' },
-  { city: 'New York / Newark', region: 'NY / NJ, USA', offers: 25, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/new-york-newark-ny.webp' },
-  { city: 'Seattle', region: 'WA, USA', offers: 18, available: 'Local inventory available', price: 'Request local pricing', image: '/images/locations/seattle-wa.webp' },
   { city: 'Toronto', region: 'ON, Canada', offers: 26, inventory: { containers: 2162, priceFrom: 475, priceTo: 16675, rating: 4.9 }, image: '/images/locations/toronto-on.webp' },
-  { city: 'Vancouver / Delta', region: 'BC, Canada', offers: 19, inventory: { containers: 1884, priceFrom: 675, priceTo: 5847, rating: 4.9 }, image: '/images/locations/vancouver-delta-bc.webp' },
+  { city: 'Dallas', region: 'TX, USA', offers: 14, inventory: { containers: 844, priceFrom: 950, priceTo: 9175, rating: 4.9 }, image: '/images/locations/dallas-tx.webp' },
   { city: 'Montreal', region: 'QC, Canada', offers: 17, inventory: { containers: 1492, priceFrom: 575, priceTo: 8075, rating: 4.9 }, image: '/images/locations/montreal-qc.webp' },
+  { city: 'Savannah', region: 'GA, USA', offers: 14, inventory: { containers: 1187, priceFrom: 525, priceTo: 6175, rating: 4.9 }, image: '/images/locations/savannah-ga.webp' },
+  { city: 'Vancouver / Delta', region: 'BC, Canada', offers: 19, inventory: { containers: 1884, priceFrom: 675, priceTo: 5847, rating: 4.9 }, image: '/images/locations/vancouver-delta-bc.webp' },
+  { city: 'Los Angeles / Long Beach', region: 'CA, USA', offers: 24, inventory: { containers: 905, priceFrom: 725, priceTo: 17975, rating: 4.9 }, image: '/images/locations/los-angeles-long-beach-ca.webp' },
   { city: 'Calgary', region: 'AB, Canada', offers: 16, inventory: { containers: 900, priceFrom: 950, priceTo: 5575, rating: 4.9 }, image: '/images/locations/calgary-ab.webp' },
+  { city: 'Halifax', region: 'NS, Canada', offers: 14, inventory: { containers: 269, priceFrom: 1437, priceTo: 7250, rating: 4.9 }, image: '/images/locations/halifax-ns.webp' },
 ];
 
 export default function LocationsGrid() {
