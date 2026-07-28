@@ -22,8 +22,9 @@ export default function LocationLandingPage({ location }) {
       <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#07111f]">
         <img
           src={location.heroImage}
-          alt={`Shipping container logistics at ${location.location}`}
-          className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+          alt={location.heroAlt}
+          className="absolute inset-0 -z-20 h-full w-full object-cover"
+          style={{ objectPosition: location.heroPosition }}
           fetchPriority="high"
         />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,10,20,0.95)_0%,rgba(3,10,20,0.78)_39%,rgba(3,10,20,0.34)_68%,rgba(3,10,20,0.54)_100%)]" />
@@ -40,7 +41,7 @@ export default function LocationLandingPage({ location }) {
             <p className="mb-7 font-mono text-xs font-semibold tracking-[0.22em] text-primary sm:text-sm">
               {location.eyebrow}
             </p>
-            <h1 className="max-w-4xl text-5xl font-black leading-[0.94] tracking-[-0.055em] text-white sm:text-6xl md:text-7xl lg:text-8xl">
+            <h1 className={`max-w-4xl font-black leading-[0.94] tracking-[-0.055em] text-white ${location.headingSize}`}>
               <span className="block">Buy Shipping Containers in</span>
               <span className="mt-2 block text-primary">{location.location}</span>
             </h1>
