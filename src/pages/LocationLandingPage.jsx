@@ -6,7 +6,7 @@ const containerConditions = ['New', 'IICL / Multi-Trip', 'CW', 'WWT', 'AS IS'];
 
 export default function LocationLandingPage({ location }) {
   const reduceMotion = useReducedMotion();
-  const subtitle = `New and used shipping containers for sale in ${location.subtitleLocation}, with unbeatable pricing and fast delivery across ${location.deliveryArea}.`;
+  const subtitle = location.subtitle;
 
   return (
     <>
@@ -42,11 +42,11 @@ export default function LocationLandingPage({ location }) {
             className="max-w-4xl"
           >
             <p className="mb-7 font-mono text-xs font-semibold tracking-[0.22em] text-primary sm:text-sm">
-              {location.eyebrow}
+              {location.regionLabel}
             </p>
             <h1 className={`max-w-4xl font-black leading-[0.94] tracking-[-0.055em] text-white ${location.headingSize}`}>
               <span className="block">Buy Shipping Containers in</span>
-              <span className="mt-2 block text-primary">{location.location}</span>
+              <span className="mt-2 block text-primary">{location.displayName}</span>
             </h1>
             <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:text-xl">
               {subtitle}

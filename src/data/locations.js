@@ -12,27 +12,37 @@ const createLocation = ({
   heroImage,
   heroAlt,
   heroPosition = 'center 45%',
+  headingSize = 'text-[clamp(2.65rem,5.25vw,6.1rem)]',
   featured = false,
   imageReady = false,
   directoryNames = [],
-}) => ({
-  slug,
-  city,
-  displayName,
-  stateCode,
-  stateName,
-  country,
-  deliveryRegion,
-  regionLabel,
-  subtitle: `New and used shipping containers for sale in ${stateName ? `${city}, ${stateName}` : city}, with unbeatable pricing and fast delivery across ${stateName}.`,
-  heroImage: heroImage || `/images/locations/${slug}-hero.webp`,
-  heroAlt: heroAlt || `${city} skyline representing the local shipping container market`,
-  heroPosition,
-  rating: 4.9,
-  featured,
-  imageReady: imageReady || locationImageStatus[slug] === true,
-  directoryNames: [displayName, city, ...directoryNames],
-});
+}) => {
+  const subtitle = `New and used shipping containers for sale in ${stateName ? `${city}, ${stateName}` : city}, with unbeatable pricing and fast delivery across ${deliveryRegion}.`;
+
+  return {
+    slug,
+    city,
+    displayName,
+    stateCode,
+    stateName,
+    country,
+    deliveryRegion,
+    regionLabel,
+    subtitle,
+    heroImage: heroImage || `/images/locations/${slug}-hero.webp`,
+    heroAlt: heroAlt || `${city} skyline representing the local shipping container market`,
+    heroPosition,
+    headingSize,
+    seo: {
+      title: `Buy Shipping Containers in ${displayName} | Container Exchange`,
+      description: subtitle,
+    },
+    rating: 4.9,
+    featured,
+    imageReady: imageReady || locationImageStatus[slug] === true,
+    directoryNames: [displayName, city, ...directoryNames],
+  };
+};
 
 export const locations = [
   createLocation({ slug: 'houston-tx', city: 'Houston', displayName: 'Houston, TX', stateCode: 'TX', stateName: 'Texas', country: 'USA', regionLabel: 'GULF COAST CONTAINER DEPOT', heroPosition: 'center 46%', featured: true, imageReady: true }),
@@ -40,7 +50,7 @@ export const locations = [
   createLocation({ slug: 'toronto-on', city: 'Toronto', displayName: 'Toronto, ON', stateCode: 'ON', stateName: 'Ontario', country: 'Canada', deliveryRegion: 'Ontario', regionLabel: 'GREATER TORONTO CONTAINER DEPOT', heroImage: '/images/locations/canada/toronto-on-hero.webp', heroAlt: 'Toronto skyline with the CN Tower representing the local shipping container market', heroPosition: 'center 42%', featured: true }),
   createLocation({ slug: 'dallas-tx', city: 'Dallas', displayName: 'Dallas, TX', stateCode: 'TX', stateName: 'Texas', country: 'USA', deliveryRegion: 'Texas', regionLabel: 'NORTH TEXAS CONTAINER DEPOT', heroImage: '/images/locations/us/dallas-tx-hero.webp', heroAlt: 'Dallas skyline representing the local shipping container market', heroPosition: 'center 43%', featured: true }),
   createLocation({ slug: 'montreal-qc', city: 'Montreal', displayName: 'Montreal, QC', stateCode: 'QC', stateName: 'Quebec', country: 'Canada', deliveryRegion: 'Quebec', regionLabel: 'QUEBEC CONTAINER DEPOT', heroImage: '/images/locations/canada/montreal-qc-hero.webp', heroAlt: 'Montreal skyline and waterfront representing the local shipping container market', heroPosition: 'center 46%', featured: true }),
-  createLocation({ slug: 'savannah-ga', city: 'Savannah', displayName: 'Savannah, GA', stateCode: 'GA', stateName: 'Georgia', country: 'USA', deliveryRegion: 'Georgia', regionLabel: 'SOUTHEAST PORT CONTAINER DEPOT', heroImage: '/images/locations/us/savannah-ga-hero.webp', heroAlt: 'Savannah riverfront representing the local shipping container market', heroPosition: 'center 45%', featured: true }),
+  createLocation({ slug: 'savannah-ga', city: 'Savannah', displayName: 'Savannah, GA', stateCode: 'GA', stateName: 'Georgia', country: 'USA', deliveryRegion: 'Georgia', regionLabel: 'SOUTHEAST CONTAINER DEPOT', heroImage: '/images/locations/us/savannah-ga-hero.webp', heroAlt: 'Savannah riverfront representing the local shipping container market', heroPosition: 'center 45%', featured: true }),
   createLocation({ slug: 'vancouver-delta-bc', city: 'Vancouver', displayName: 'Vancouver / Delta, BC', stateCode: 'BC', stateName: 'British Columbia', country: 'Canada', regionLabel: 'PACIFIC COAST CONTAINER DEPOT', featured: true, directoryNames: ['Vancouver, BC / Delta, BC', 'Vancouver / Delta'] }),
   createLocation({ slug: 'los-angeles-long-beach-ca', city: 'Los Angeles / Long Beach', displayName: 'Los Angeles / Long Beach, CA', stateCode: 'CA', stateName: 'California', country: 'USA', regionLabel: 'SOUTHERN CALIFORNIA CONTAINER DEPOT', heroPosition: 'center 43%', featured: true, imageReady: true }),
   createLocation({ slug: 'calgary-ab', city: 'Calgary', displayName: 'Calgary, AB', stateCode: 'AB', stateName: 'Alberta', country: 'Canada', regionLabel: 'ALBERTA CONTAINER DEPOT', featured: true }),
