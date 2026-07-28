@@ -13,8 +13,7 @@ import Contact from '@/pages/Contact';
 import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
-import LocationLandingPage from '@/pages/LocationLandingPage';
-import { locationPages } from '@/data/locationPages';
+import LocationPageRoute from '@/pages/LocationPageRoute';
 
 import { CartProvider } from './context/CartContext';
 import CheckoutPage from './components/CheckoutPage';
@@ -51,14 +50,7 @@ const AuthenticatedApp = () => {
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/delivery" element={<Delivery />} />
-        <Route
-          path={`/${locationPages.losAngelesLongBeach.slug}`}
-          element={<LocationLandingPage location={locationPages.losAngelesLongBeach} />}
-        />
-        <Route
-          path={`/${locationPages.houston.slug}`}
-          element={<LocationLandingPage location={locationPages.houston} />}
-        />
+        <Route path="/:locationPath" element={<LocationPageRoute />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Routes>

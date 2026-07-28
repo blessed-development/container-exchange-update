@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getLocationByDirectoryName, getLocationPath } from '@/data/locations';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
-const locationPageLinks = {
-  'Houston, TX': '/buy-shipping-containers-houston-tx',
-  'Los Angeles / Long Beach, CA': '/buy-shipping-containers-los-angeles-long-beach-ca',
-};
-const featuredLocationLinks = {
-  Houston: locationPageLinks['Houston, TX'],
-  'Los Angeles / Long Beach': locationPageLinks['Los Angeles / Long Beach, CA'],
-};
 const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
 const formatPrice = (value) => `$${formatNumber(value)}`;
 
@@ -61,7 +54,8 @@ export default function LocationsGrid() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {chipGroups.map((group, index) => {
             const slide = slides[active[index]];
-            const slideLink = featuredLocationLinks[slide.city];
+            const featuredLocation = getLocationByDirectoryName(slide.city);
+            const slideLink = featuredLocation?.imageReady ? getLocationPath(featuredLocation) : null;
             const cardHero = <>
               <img
                 src={slide.image}
@@ -129,7 +123,8 @@ export default function LocationsGrid() {
 
                   <div className="flex flex-col gap-1">
                     {group.map((city) => {
-                      const cityPageLink = locationPageLinks[city];
+                      const cityLocation = getLocationByDirectoryName(city);
+                      const cityPageLink = cityLocation?.imageReady ? getLocationPath(cityLocation) : null;
                       const className = 'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[14px] font-semibold text-[#e6f5f2] border border-transparent hover:bg-[#ff6a2b]/10 hover:border-[#ff6a2b]/30 hover:text-white hover:pl-4 transition-all duration-200';
                       const content = <><MapPin className="w-3.5 h-3.5 text-[#ff6a2b] flex-shrink-0" /><span>{city}</span></>;
 
