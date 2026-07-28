@@ -4,5 +4,10 @@ export default {
   "toronto-on": true,
   "dallas-tx": true,
   "montreal-qc": true,
-  "savannah-ga": true
+  "savannah-ga": true,
+  "vancouver-delta-bc": true,
+  "calgary-ab": true,
+  "halifax-dartmouth-ns": true,
+  "atlanta-ga": true,
+  "charlotte-nc": true
 };
