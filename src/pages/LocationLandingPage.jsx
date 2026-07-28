@@ -27,8 +27,8 @@ export default function LocationLandingPage({ location }) {
           style={{ objectPosition: location.heroPosition }}
           fetchPriority="high"
         />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,10,20,0.95)_0%,rgba(3,10,20,0.78)_39%,rgba(3,10,20,0.34)_68%,rgba(3,10,20,0.54)_100%)]" />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgba(3,10,20,0.9)_0%,transparent_46%,rgba(3,10,20,0.18)_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,10,20,0.94)_0%,rgba(3,10,20,0.75)_38%,rgba(3,10,20,0.24)_68%,rgba(3,10,20,0.32)_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgba(3,10,20,0.78)_0%,transparent_46%,rgba(3,10,20,0.12)_100%)]" />
         <div className="pointer-events-none absolute -left-40 top-1/2 -z-10 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-primary/10 blur-[150px]" />
 
         <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl items-center px-5 py-28 sm:px-8 lg:px-10">
@@ -49,6 +49,11 @@ export default function LocationLandingPage({ location }) {
               {location.description}
             </p>
           </motion.div>
+        </div>
+
+        <div className="absolute bottom-6 right-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-3 py-2 text-xs font-semibold tracking-wide text-white/90 backdrop-blur-sm sm:bottom-8 sm:right-8 sm:px-3.5 sm:text-sm lg:right-10">
+          <span className="text-[#facc15]" aria-hidden="true">★★★★★</span>
+          <span>4.9</span>
         </div>
       </section>
     </>
