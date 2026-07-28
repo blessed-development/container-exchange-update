@@ -30,7 +30,7 @@ const createLocation = ({
   heroPosition,
   rating: 4.9,
   featured,
-  imageReady,
+  imageReady: imageReady || locationImageStatus[slug] === true,
   directoryNames: [displayName, city, ...directoryNames],
 });
 
@@ -109,3 +109,4 @@ export const duplicateHeroImages = findDuplicateHeroImages();
 if (typeof import.meta.env !== 'undefined' && import.meta.env.DEV && duplicateHeroImages.length) {
   console.warn('Duplicate location hero image paths detected:', duplicateHeroImages);
 }
+import locationImageStatus from './locationImageStatus.js';

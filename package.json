@@ -9,7 +9,9 @@
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "locations:check": "node scripts/check-location-images.mjs",
+    "locations:activate": "node scripts/activate-location-images.mjs"
   },
   "dependencies": {
     "@base44/sdk": "^0.8.27",
