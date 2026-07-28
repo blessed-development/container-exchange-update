@@ -7,12 +7,12 @@ export const locationPages = {
     heroPosition: 'center 43%',
     heroAlt: 'Los Angeles skyline representing the Los Angeles and Long Beach shipping container market',
     headingSize: 'text-[clamp(2.65rem,5.25vw,6.1rem)]',
-    description:
-      'New and used shipping containers in Los Angeles / Long Beach, California, with unbeatable pricing, fast delivery, and dedicated support from Container Exchange.',
+    subtitleLocation: 'Los Angeles / Long Beach, California',
+    deliveryArea: 'California',
     seo: {
       title: 'Buy Shipping Containers in Los Angeles / Long Beach, CA | Container Exchange',
       description:
-        'New and used shipping containers in Los Angeles / Long Beach, California, with unbeatable pricing, fast delivery, and dedicated support from Container Exchange.',
+        'New and used shipping containers for sale in Los Angeles / Long Beach, California, with unbeatable pricing and fast delivery across California.',
     },
   },
   houston: {
@@ -23,12 +23,12 @@ export const locationPages = {
     heroPosition: 'center 46%',
     heroAlt: 'Houston skyline representing the local shipping container market',
     headingSize: 'text-[clamp(2.65rem,5.25vw,6.1rem)]',
-    description:
-      'New and used shipping containers in Houston, Texas, with unbeatable pricing, fast delivery, and dedicated support from Container Exchange.',
+    subtitleLocation: 'Houston, Texas',
+    deliveryArea: 'Texas',
     seo: {
       title: 'Buy Shipping Containers in Houston, TX | Container Exchange',
       description:
-        'New and used shipping containers in Houston, Texas, with unbeatable pricing, fast delivery, and dedicated support from Container Exchange.',
+        'New and used shipping containers for sale in Houston, Texas, with unbeatable pricing and fast delivery across Texas.',
     },
   },
 };
