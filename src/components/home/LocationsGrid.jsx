@@ -38,7 +38,7 @@ export default function LocationsGrid() {
 
   const searchResults = useMemo(() => {
     const query = normalizeLocationSearch(searchQuery);
-    if (!query) return [];
+    if (!query || /\d/.test(searchQuery)) return [];
 
     const getRank = (name, fields) => {
       const normalizedName = normalizeLocationSearch(name);
@@ -61,7 +61,7 @@ export default function LocationsGrid() {
           city: location.city,
           displayName: location.displayName,
           stateCode: location.stateCode,
-          country: location.country,
+          country: location.country === 'USA' ? 'United States' : location.country,
           route: getLocationPath(location),
           rank: getRank(location.city, fields),
         } : null;
@@ -79,8 +79,7 @@ export default function LocationsGrid() {
           city: area.name,
           displayName: area.displayName,
           stateCode: area.abbreviation,
-          country: area.country,
-          parentDisplayName: parent.displayName,
+          country: area.country === 'USA' ? 'United States' : area.country,
           route: getLocationPath(parent),
           rank: getRank(area.name, fields),
         } : null;
@@ -191,15 +190,10 @@ export default function LocationsGrid() {
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <MapPin className="h-4 w-4 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
-                      <span className="min-w-0">
-                        <span className="block truncate text-[15px] font-bold">{location.displayName}</span>
-                        <span className="mt-0.5 block truncate text-[12px] font-semibold text-white/55">
-                          {location.type === 'primary' ? 'Primary Container Exchange location' : `Served through ${location.parentDisplayName}`}
-                        </span>
-                      </span>
+                      <span className="truncate text-[15px] font-bold">{location.displayName}</span>
                     </span>
-                    <span className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-bold ${location.type === 'primary' ? 'bg-white/8 text-white/60' : 'bg-[#ff6a2b]/12 text-[#ffb11a]'}`}>
-                      {location.type === 'primary' ? 'Primary' : 'Nearby'}
+                    <span className="shrink-0 text-[13px] font-semibold text-white/60">
+                      {location.country}
                     </span>
                   </button>
                 )) : (
