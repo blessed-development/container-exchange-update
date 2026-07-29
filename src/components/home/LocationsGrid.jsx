@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, MapPin, Search } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getLocationByDirectoryName, getLocationPath, locations } from '@/data/locations';
+import { normalizeLocationSearch, serviceAreas } from '@/data/serviceAreas';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
 const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
@@ -36,20 +37,58 @@ export default function LocationsGrid() {
   const navigate = useNavigate();
 
   const searchResults = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query = normalizeLocationSearch(searchQuery);
     if (!query) return [];
 
-    return locations
+    const getRank = (name, fields) => {
+      const normalizedName = normalizeLocationSearch(name);
+      const normalizedFields = fields.map(normalizeLocationSearch);
+      if (normalizedName === query) return 0;
+      if (normalizedFields.some((field) => field === query)) return 1;
+      if (normalizedName.startsWith(query)) return 2;
+      if (normalizedFields.some((field) => field.startsWith(query))) return 3;
+      return 4;
+    };
+
+    const primaryResults = locations
       .filter((location) => location.imageReady)
-      .filter((location) => [
-        location.city,
-        location.displayName,
-        location.stateCode,
-        location.stateName,
-        location.country,
-        location.slug,
-        ...location.directoryNames,
-      ].some((field) => field.toLowerCase().includes(query)))
+      .map((location) => {
+        const fields = [location.displayName, location.stateCode, location.stateName, location.country, location.slug, ...location.directoryNames];
+        const matches = fields.some((field) => normalizeLocationSearch(field).includes(query));
+        return matches ? {
+          key: `primary-${location.slug}`,
+          type: 'primary',
+          city: location.city,
+          displayName: location.displayName,
+          stateCode: location.stateCode,
+          country: location.country,
+          route: getLocationPath(location),
+          rank: getRank(location.city, fields),
+        } : null;
+      })
+      .filter(Boolean);
+
+    const serviceResults = serviceAreas
+      .map((area) => {
+        const fields = [area.displayName, area.name, area.abbreviation, area.stateOrProvince, area.country, ...area.aliases];
+        const parent = locations.find((location) => location.slug === area.parentLocationId);
+        const matches = parent && fields.some((field) => normalizeLocationSearch(field).includes(query));
+        return matches ? {
+          key: `service-${area.name}-${area.abbreviation}`,
+          type: 'service',
+          city: area.name,
+          displayName: area.displayName,
+          stateCode: area.abbreviation,
+          country: area.country,
+          parentDisplayName: parent.displayName,
+          route: getLocationPath(parent),
+          rank: getRank(area.name, fields),
+        } : null;
+      })
+      .filter(Boolean);
+
+    return [...primaryResults, ...serviceResults]
+      .sort((left, right) => left.rank - right.rank || (left.type === right.type ? 0 : left.type === 'primary' ? -1 : 1) || left.displayName.localeCompare(right.displayName))
       .slice(0, 7);
   }, [searchQuery]);
 
@@ -76,7 +115,7 @@ export default function LocationsGrid() {
   const openLocation = (location) => {
     setIsSearchOpen(false);
     setActiveResult(-1);
-    navigate(getLocationPath(location));
+    navigate(location.route);
   };
 
   const handleSearchKeyDown = (event) => {
@@ -142,7 +181,7 @@ export default function LocationsGrid() {
               <div id="location-search-results" role="listbox" className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111315] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,.5)]">
                 {searchResults.length ? searchResults.map((location, resultIndex) => (
                   <button
-                    key={location.slug}
+                    key={location.key}
                     type="button"
                     role="option"
                     aria-selected={activeResult === resultIndex}
@@ -152,9 +191,16 @@ export default function LocationsGrid() {
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <MapPin className="h-4 w-4 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
-                      <span className="truncate text-[15px] font-bold">{location.city}</span>
+                      <span className="min-w-0">
+                        <span className="block truncate text-[15px] font-bold">{location.displayName}</span>
+                        <span className="mt-0.5 block truncate text-[12px] font-semibold text-white/55">
+                          {location.type === 'primary' ? 'Primary Container Exchange location' : `Served through ${location.parentDisplayName}`}
+                        </span>
+                      </span>
                     </span>
-                    <span className="shrink-0 text-[13px] font-semibold text-white/60">{location.stateCode}, {location.country}</span>
+                    <span className={`shrink-0 rounded-full px-2 py-1 text-[11px] font-bold ${location.type === 'primary' ? 'bg-white/8 text-white/60' : 'bg-[#ff6a2b]/12 text-[#ffb11a]'}`}>
+                      {location.type === 'primary' ? 'Primary' : 'Nearby'}
+                    </span>
                   </button>
                 )) : (
                   <p className="px-4 py-4 text-[14px] font-medium text-white/60">No matching locations</p>
