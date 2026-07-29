@@ -25,9 +25,14 @@ export default {
   "nashville-tn": true,
   "omaha-ne": true,
   "salt-lake-city-ut": true,
+  "seattle-wa": true,
+  "temecula-ca": true,
   "baltimore-md": true,
   "cincinnati-oh": true,
   "denver-co": true,
+  "indianapolis-in": true,
   "las-vegas-nv": true,
-  "miami-fl": true
+  "miami-fl": true,
+  "new-orleans-la": true,
+  "phoenix-az": true
 };
