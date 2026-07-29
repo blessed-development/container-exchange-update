@@ -28,7 +28,6 @@ export default function LocationLandingPage({ location }) {
           alt={location.heroAlt}
           className="absolute inset-0 -z-20 h-full w-full object-cover"
           style={{ objectPosition: location.heroPosition }}
-          fetchPriority="high"
         />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,10,20,0.94)_0%,rgba(3,10,20,0.72)_38%,rgba(3,10,20,0.2)_68%,rgba(3,10,20,0.28)_100%)]" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgba(3,10,20,0.74)_0%,transparent_46%,rgba(3,10,20,0.1)_100%)]" />
