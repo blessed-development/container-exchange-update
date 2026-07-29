@@ -39,5 +39,10 @@ export default {
   "st-louis-mo": true,
   "wilmington-nc": true,
   "edmonton-ab": true,
-  "winnipeg-mb": true
+  "winnipeg-mb": true,
+  "charleston-sc": true,
+  "cleveland-oh": true,
+  "detroit-mi": true,
+  "jacksonville-fl": true,
+  "minneapolis-mn": true
 };
