@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { getLocationByDirectoryName, getLocationPath } from '@/data/locations';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowRight, MapPin, Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getLocationByDirectoryName, getLocationPath, locations } from '@/data/locations';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
 const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
@@ -29,6 +29,29 @@ const slides = [
 
 export default function LocationsGrid() {
   const [active, setActive] = useState([0, 1, 2, 3]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeResult, setActiveResult] = useState(-1);
+  const searchRef = useRef(null);
+  const navigate = useNavigate();
+
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return [];
+
+    return locations
+      .filter((location) => location.imageReady)
+      .filter((location) => [
+        location.city,
+        location.displayName,
+        location.stateCode,
+        location.stateName,
+        location.country,
+        location.slug,
+        ...location.directoryNames,
+      ].some((field) => field.toLowerCase().includes(query)))
+      .slice(0, 7);
+  }, [searchQuery]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,10 +61,51 @@ export default function LocationsGrid() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchOpen(false);
+        setActiveResult(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => document.removeEventListener('mousedown', handlePointerDown);
+  }, []);
+
+  const openLocation = (location) => {
+    setIsSearchOpen(false);
+    setActiveResult(-1);
+    navigate(getLocationPath(location));
+  };
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setIsSearchOpen(true);
+      setActiveResult((current) => Math.min(current + 1, searchResults.length - 1));
+    }
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActiveResult((current) => Math.max(current - 1, 0));
+    }
+
+    if (event.key === 'Enter' && searchResults.length) {
+      event.preventDefault();
+      openLocation(searchResults[activeResult >= 0 ? activeResult : 0]);
+    }
+
+    if (event.key === 'Escape') {
+      setIsSearchOpen(false);
+      setActiveResult(-1);
+    }
+  };
+
   return (
     <section className="w-full bg-[#080808] text-white py-12 px-5 overflow-hidden">
       <div className="max-w-[1680px] mx-auto">
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="text-[11px] font-extrabold tracking-[0.16em] uppercase text-[#58beb7] mb-3">
             Our most popular locations
           </div>
@@ -49,6 +113,55 @@ export default function LocationsGrid() {
           <h2 className="text-[clamp(36px,4.2vw,64px)] font-extrabold leading-[0.94] tracking-[-0.06em]">
             Where to Buy <span className="text-[#ff5a12]">Shipping Containers?</span>
           </h2>
+
+          <div ref={searchRef} className="relative mt-7 ml-auto w-full max-w-[640px]">
+            <label htmlFor="location-search" className="sr-only">Search a city, state, or province</label>
+            <div className="flex items-center rounded-2xl border border-white/15 bg-[#111315] px-4 shadow-[0_16px_40px_rgba(0,0,0,.24)] transition-colors focus-within:border-[#ff6a2b]/80 focus-within:ring-2 focus-within:ring-[#ff6a2b]/20">
+              <Search className="h-5 w-5 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
+              <input
+                id="location-search"
+                type="search"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setIsSearchOpen(true);
+                  setActiveResult(-1);
+                }}
+                onFocus={() => setIsSearchOpen(true)}
+                onKeyDown={handleSearchKeyDown}
+                placeholder="Search city, state, or province..."
+                aria-autocomplete="list"
+                aria-controls="location-search-results"
+                aria-expanded={isSearchOpen}
+                className="h-14 min-w-0 flex-1 bg-transparent px-3 text-[15px] font-medium text-white outline-none placeholder:text-[#87919c]"
+              />
+              <ArrowRight className="h-5 w-5 shrink-0 text-white/70" aria-hidden="true" />
+            </div>
+
+            {isSearchOpen && searchQuery.trim() && (
+              <div id="location-search-results" role="listbox" className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111315] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,.5)]">
+                {searchResults.length ? searchResults.map((location, resultIndex) => (
+                  <button
+                    key={location.slug}
+                    type="button"
+                    role="option"
+                    aria-selected={activeResult === resultIndex}
+                    onMouseEnter={() => setActiveResult(resultIndex)}
+                    onClick={() => openLocation(location)}
+                    className={`flex w-full items-center justify-between gap-4 rounded-xl px-4 py-3 text-left transition-colors ${activeResult === resultIndex ? 'bg-[#ff6a2b]/15 text-white' : 'text-white hover:bg-white/5'}`}
+                  >
+                    <span className="flex min-w-0 items-center gap-3">
+                      <MapPin className="h-4 w-4 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
+                      <span className="truncate text-[15px] font-bold">{location.city}</span>
+                    </span>
+                    <span className="shrink-0 text-[13px] font-semibold text-white/60">{location.stateCode}, {location.country}</span>
+                  </button>
+                )) : (
+                  <p className="px-4 py-4 text-[14px] font-medium text-white/60">No matching locations</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -74,9 +187,12 @@ export default function LocationsGrid() {
                 <h3 className="text-[32px] font-extrabold tracking-[-0.055em] leading-none">
                   {slide.city}
                 </h3>
-                <p className="mt-2 text-white/75 text-[13px] font-semibold">
-                  {slide.region}
-                </p>
+                <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[13px] font-semibold">
+                  <p className="text-white/75">{slide.region}</p>
+                  <span className="whitespace-nowrap text-[#ffb11a]" aria-label={`${slide.inventory.rating} out of 5 stars`}>
+                    ★★★★★ <span className="text-white/90">{slide.inventory.rating.toFixed(1)}</span>
+                  </span>
+                </div>
               </div>
             </>;
 
@@ -100,11 +216,11 @@ export default function LocationsGrid() {
                         {formatNumber(slide.inventory.containers)} Containers Available
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[13px] font-medium text-[#8fa1b6]">
+                      <div className="text-[13px] font-medium text-[#8fa1b6]">
                         <span>
                           From {formatPrice(slide.inventory.priceFrom)}–{formatPrice(slide.inventory.priceTo)}
                         </span>
-                        <span className="whitespace-nowrap text-[#ff6a2b]" aria-label={`${slide.inventory.rating} out of 5 stars`}>
+                        <span className="hidden" aria-hidden="true">
                           ★★★★★ <span className="text-white/85">{slide.inventory.rating.toFixed(1)}</span>
                         </span>
                       </div>
