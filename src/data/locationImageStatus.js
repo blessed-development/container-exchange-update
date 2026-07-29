@@ -9,5 +9,10 @@ export default {
   "calgary-ab": true,
   "halifax-dartmouth-ns": true,
   "atlanta-ga": true,
-  "charlotte-nc": true
+  "charlotte-nc": true,
+  "baltimore-md": true,
+  "cincinnati-oh": true,
+  "denver-co": true,
+  "las-vegas-nv": true,
+  "miami-fl": true
 };
