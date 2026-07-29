@@ -34,5 +34,10 @@ export default {
   "las-vegas-nv": true,
   "miami-fl": true,
   "new-orleans-la": true,
-  "phoenix-az": true
+  "phoenix-az": true,
+  "san-antonio-tx": true,
+  "st-louis-mo": true,
+  "wilmington-nc": true,
+  "edmonton-ab": true,
+  "winnipeg-mb": true
 };
