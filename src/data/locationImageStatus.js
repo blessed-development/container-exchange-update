@@ -44,5 +44,11 @@ export default {
   "cleveland-oh": true,
   "detroit-mi": true,
   "jacksonville-fl": true,
-  "minneapolis-mn": true
+  "minneapolis-mn": true,
+  "new-york-newark-ny-nj": true,
+  "portland-or": true,
+  "san-francisco-oakland-ca": true,
+  "tacoma-wa": true,
+  "worcester-boston-ma": true,
+  "regina-sk": true
 };
