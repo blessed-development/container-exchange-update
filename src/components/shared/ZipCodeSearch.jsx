@@ -312,16 +312,16 @@ export default function ZipCodeSearch({
         className={
           isCompact
             ? 'flex flex-col gap-2.5 w-full'
-            : `flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-xl' : ''}`
+            : `flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-[720px]' : ''}`
         }
       >
         <div className="relative w-full min-w-0">
           <div
-            className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none ${
+            className={`absolute ${isHero ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
               isCompact ? 'text-white/25' : 'text-white/30'
             }`}
           >
-            <MapPin className={isCompact ? 'w-4 h-4' : 'w-5 h-5'} />
+            <MapPin className={isCompact ? 'w-4 h-4' : isHero ? 'w-6 h-6' : 'w-5 h-5'} />
           </div>
 
           <Input
@@ -337,7 +337,7 @@ export default function ZipCodeSearch({
               isCompact
                 ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
                 : isHero
-                  ? 'h-14 pl-12 pr-5 rounded-2xl text-[15px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
+                  ? 'h-[68px] pl-14 pr-6 rounded-2xl text-[18px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
                   : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
             }`}
           />
@@ -359,11 +359,11 @@ export default function ZipCodeSearch({
             disabled={!canSubmit}
             className={`font-medium transition-all duration-500 ${
               isHero
-                ? 'h-14 px-8 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[15px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
+                ? 'h-[68px] px-10 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[18px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
                 : 'h-12 px-6 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
             }`}
           >
-            <Search className="w-5 h-5 mr-2" />
+            <Search className={isHero ? 'w-6 h-6 mr-2.5' : 'w-5 h-5 mr-2'} />
             {isDetecting
               ? 'Loading...'
               : isHero
