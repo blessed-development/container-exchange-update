@@ -3,6 +3,7 @@ import { ArrowRight, MapPin, Search } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getLocationByDirectoryName, getLocationPath, locations } from '@/data/locations';
 import { normalizeLocationSearch, serviceAreas } from '@/data/serviceAreas';
+import { isGeographicNameQuery, searchNorthAmericanGeography } from '@/lib/locationEngine';
 
 const pinLink = (city) => `/inventory?location=${encodeURIComponent(city)}`;
 const formatNumber = (value) => new Intl.NumberFormat('en-US').format(value);
@@ -33,6 +34,7 @@ export default function LocationsGrid() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeResult, setActiveResult] = useState(-1);
+  const [geographicResults, setGeographicResults] = useState([]);
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
@@ -86,9 +88,43 @@ export default function LocationsGrid() {
       })
       .filter(Boolean);
 
-    return [...primaryResults, ...serviceResults]
+    const localResults = [...primaryResults, ...serviceResults]
       .sort((left, right) => left.rank - right.rank || (left.type === right.type ? 0 : left.type === 'primary' ? -1 : 1) || left.displayName.localeCompare(right.displayName))
       .slice(0, 7);
+
+    const routedGeography = geographicResults
+      .map((place) => {
+        const market = locations.find((location) => location.imageReady && (location.stateCode === place.stateCode || location.stateName === place.stateName));
+        return market ? { ...place, route: getLocationPath(market), rank: getRank(place.city, [place.displayName, place.stateCode, place.stateName, place.country]) } : null;
+      })
+      .filter(Boolean)
+      .filter((place) => !localResults.some((location) => location.displayName === place.displayName));
+
+    return [...localResults, ...routedGeography]
+      .sort((left, right) => left.rank - right.rank || (left.type === 'primary' ? -1 : 1) || left.displayName.localeCompare(right.displayName))
+      .slice(0, 7);
+  }, [geographicResults, searchQuery]);
+
+  useEffect(() => {
+    if (!isGeographicNameQuery(searchQuery)) {
+      setGeographicResults([]);
+      return undefined;
+    }
+
+    let cancelled = false;
+    const timer = window.setTimeout(async () => {
+      try {
+        const results = await searchNorthAmericanGeography(searchQuery);
+        if (!cancelled) setGeographicResults(results);
+      } catch {
+        if (!cancelled) setGeographicResults([]);
+      }
+    }, 180);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [searchQuery]);
 
   useEffect(() => {

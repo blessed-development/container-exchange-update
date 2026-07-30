@@ -60,6 +60,10 @@ export const serviceAreas = [
     aliases: ['Santa Clara', 'Santa Clara CA', 'Santa Clara California', 'Santa Clara USA'],
   },
   {
+    name: 'Santa Rosa', displayName: 'Santa Rosa, CA', stateOrProvince: 'California', abbreviation: 'CA', country: 'USA', parentLocationId: 'san-francisco-oakland-ca',
+    aliases: ['Santa Rosa', 'Santa Rosa CA', 'Santa Rosa California', 'Santa Rosa USA'],
+  },
+  {
     name: 'San Jose', displayName: 'San Jose, CA', stateOrProvince: 'California', abbreviation: 'CA', country: 'USA', parentLocationId: 'san-francisco-oakland-ca',
     aliases: ['San Jose', 'San Jose CA', 'San Jose California', 'San Jose USA'],
   },
@@ -74,6 +78,10 @@ export const serviceAreas = [
   {
     name: 'Anaheim', displayName: 'Anaheim, CA', stateOrProvince: 'California', abbreviation: 'CA', country: 'USA', parentLocationId: 'los-angeles-long-beach-ca',
     aliases: ['Anaheim', 'Anaheim CA', 'Anaheim California', 'Anaheim USA'],
+  },
+  {
+    name: 'San Diego', displayName: 'San Diego, CA', stateOrProvince: 'California', abbreviation: 'CA', country: 'USA', parentLocationId: 'los-angeles-long-beach-ca',
+    aliases: ['San Diego', 'San Diego CA', 'San Diego California', 'San Diego USA'],
   },
   {
     name: 'Santa Ana', displayName: 'Santa Ana, CA', stateOrProvince: 'California', abbreviation: 'CA', country: 'USA', parentLocationId: 'los-angeles-long-beach-ca',

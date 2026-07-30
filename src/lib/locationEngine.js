@@ -117,3 +117,47 @@ export function getLocalizedPrice(price, location) {
 
   return original;
 }
+
+// Geographic autocomplete shares the existing location-engine module but keeps
+// postal lookup entirely separate. Open-Meteo supplies an up-to-date, public
+// North American place index without exposing ZIP/postal searching here.
+const GEOGRAPHIC_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
+
+const REGION_CODES = {
+  Alabama: 'AL', Alaska: 'AK', Arizona: 'AZ', Arkansas: 'AR', California: 'CA', Colorado: 'CO', Connecticut: 'CT', Delaware: 'DE', Florida: 'FL', Georgia: 'GA', Hawaii: 'HI', Idaho: 'ID', Illinois: 'IL', Indiana: 'IN', Iowa: 'IA', Kansas: 'KS', Kentucky: 'KY', Louisiana: 'LA', Maine: 'ME', Maryland: 'MD', Massachusetts: 'MA', Michigan: 'MI', Minnesota: 'MN', Mississippi: 'MS', Missouri: 'MO', Montana: 'MT', Nebraska: 'NE', Nevada: 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ', 'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', Ohio: 'OH', Oklahoma: 'OK', Oregon: 'OR', Pennsylvania: 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC', 'South Dakota': 'SD', Tennessee: 'TN', Texas: 'TX', Utah: 'UT', Vermont: 'VT', Virginia: 'VA', Washington: 'WA', 'West Virginia': 'WV', Wisconsin: 'WI', Wyoming: 'WY',
+  Alberta: 'AB', 'British Columbia': 'BC', Manitoba: 'MB', 'New Brunswick': 'NB', 'Newfoundland and Labrador': 'NL', 'Nova Scotia': 'NS', Nunavut: 'NU', Ontario: 'ON', 'Prince Edward Island': 'PE', Quebec: 'QC', Saskatchewan: 'SK', Yukon: 'YT', 'Northwest Territories': 'NT',
+};
+
+export const isGeographicNameQuery = (value) => {
+  const query = String(value || '').trim();
+  return Boolean(query) && !/\d/.test(query) && /[a-z]/i.test(query);
+};
+
+export async function searchNorthAmericanGeography(value) {
+  if (!isGeographicNameQuery(value)) return [];
+
+  const params = new URLSearchParams({
+    name: String(value).trim(),
+    count: '10',
+    language: 'en',
+    format: 'json',
+  });
+  const response = await fetch(`${GEOGRAPHIC_ENDPOINT}?${params.toString()}`);
+  if (!response.ok) throw new Error('Geographic lookup is unavailable.');
+
+  const payload = await response.json();
+  const results = Array.isArray(payload?.results) ? payload.results : [];
+  return results
+    .filter((place) => place.country_code === 'US' || place.country_code === 'CA')
+    .map((place) => ({
+      key: `geography-${place.id}`,
+      type: 'geography',
+      city: place.name,
+      displayName: `${place.name}, ${REGION_CODES[place.admin1] || place.admin1 || place.country_code}`,
+      stateCode: REGION_CODES[place.admin1] || place.admin1 || '',
+      stateName: place.admin1 || '',
+      country: place.country_code === 'US' ? 'United States' : 'Canada',
+      latitude: place.latitude,
+      longitude: place.longitude,
+    }));
+}
