@@ -42,12 +42,25 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1000&q=80',
 ];
 
+// Local delivery-style photos are matched to the exact unit specification in
+// each card. Remaining cards retain their existing visuals until their own
+// matched WebP asset is installed.
+const LOCAL_IMAGES = [
+  '/images/recent-deliveries/los-angeles-ca-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/arlington-tn-used-20ft-wwt.webp',
+  '/images/recent-deliveries/houston-tx-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/dallas-tx-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/phoenix-az-used-40hc-wwt.webp',
+  '/images/recent-deliveries/miami-fl-new-40hc.webp',
+  '/images/recent-deliveries/nashville-tn-used-20ft-cargo-worthy.webp',
+];
+
 const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
   id: index + 1,
   headline,
   city,
   date,
-  image: IMAGES[index % IMAGES.length],
+  image: LOCAL_IMAGES[index] ?? IMAGES[index % IMAGES.length],
 }));
 
 export default function RecentlyDelivered() {
