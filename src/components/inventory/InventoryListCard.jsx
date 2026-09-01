@@ -62,6 +62,10 @@ export default function InventoryListCard({ container, index }) {
     container.base_price || container.price || 0,
     savedLocation
   );
+  const imageScaleClass =
+    container?.size === 40
+      ? 'scale-[1.075] sm:scale-[1.10]'
+      : 'scale-[1.025] sm:scale-[1.045]';
 
   const openProduct = (e) => {
     e.stopPropagation();
@@ -99,7 +103,7 @@ export default function InventoryListCard({ container, index }) {
               'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
             }
             alt={container.name}
-            className="w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
+            className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
           />
         </div>
 
