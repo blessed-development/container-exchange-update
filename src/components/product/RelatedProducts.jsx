@@ -67,49 +67,43 @@ export default function RelatedProducts() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
 
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <h3 className="font-black text-white text-[16px] leading-tight mb-1 line-clamp-2 drop-shadow">
-                    {product.name}
-                  </h3>
-
-                  <div className="text-[13px] leading-[1.35] text-white/72 mb-2">
-                    {product.short_description ? (
-                      product.short_description
-                    ) : (
-                      <>
-                        {product.condition} • {product.size}
-                        {product.height === 'high_cube' ? ' High Cube' : ' ft'}
-                        {' • '}
-                        {GRADE_LABELS[product.grade] || product.grade}
-                      </>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-[14px] text-amber-400">
-                    <span className="tracking-tight">★★★★★</span>
-                    <span className="text-white/90 text-[13px]">
-                      ({product.review_count || 42})
-                    </span>
-                  </div>
-                </div>
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
               </div>
             </Link>
 
-            <div className="p-4 flex flex-col min-h-[170px]">
-              <div className="mt-auto">
-                <p className="text-xl font-black text-orange-500 tracking-tight mb-3">
-                  {formatMoney(product.base_price || product.price)}
-                </p>
+            <div className="p-4 flex flex-col min-h-[198px]">
+              <Link to={`/product/${product.id}`} className="block">
+                <h3 className="font-black text-foreground text-[16px] leading-tight mb-1.5 line-clamp-2">
+                  {product.name}
+                </h3>
 
-                <Link to={`/product/${product.id}`} className="block mb-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full h-10 rounded-xl font-bold text-sm border-orange-500/30 text-orange-500 hover:bg-orange-500/10 hover:text-orange-500 transition-all duration-300"
-                  >
-                    Quick View
-                  </Button>
-                </Link>
+                <div className="text-[13px] leading-[1.35] text-muted-foreground mb-2 line-clamp-1">
+                  {product.short_description ? (
+                    product.short_description
+                  ) : (
+                    <>
+                      {product.condition} • {product.size}
+                      {product.height === 'high_cube' ? ' High Cube' : ' ft'}
+                      {' • '}
+                      {GRADE_LABELS[product.grade] || product.grade}
+                    </>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 text-[14px] text-amber-400 mb-3">
+                  <span className="tracking-tight">★★★★★</span>
+                  <span className="text-muted-foreground text-[13px]">
+                    ({product.review_count || 42})
+                  </span>
+                </div>
+              </Link>
+
+              <div className="mt-auto">
+                <div className="w-full h-10 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 flex items-center justify-center mb-3">
+                  <span className="text-lg font-black text-orange-500 tracking-tight">
+                    {formatMoney(product.base_price || product.price)}
+                  </span>
+                </div>
 
                 <Button
                   type="button"
