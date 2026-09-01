@@ -53,6 +53,14 @@ const LOCAL_IMAGES = [
   '/images/recent-deliveries/phoenix-az-used-40hc-wwt.webp',
   '/images/recent-deliveries/miami-fl-new-40hc.webp',
   '/images/recent-deliveries/nashville-tn-used-20ft-cargo-worthy.webp',
+  '/images/recent-deliveries/portland-or-used-40ft-storage.webp',
+  '/images/recent-deliveries/long-beach-ca-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/memphis-tn-used-20ft-wwt.webp',
+  '/images/recent-deliveries/tampa-fl-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/jacksonville-fl-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/charlotte-nc-new-40ft-standard.webp',
+  '/images/recent-deliveries/cleveland-oh-used-20ft-storage.webp',
+  '/images/recent-deliveries/las-vegas-nv-used-40hc-wwt.webp',
 ];
 
 const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
