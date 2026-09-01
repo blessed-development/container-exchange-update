@@ -34,17 +34,7 @@ const DELIVERIES = [
   ['Used 40HC Cargo Worthy Container Delivered Chicago, IL', 'Chicago, IL', 'December 03, 2025'],
 ];
 
-const IMAGES = [
-  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&q=80',
-  'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=1000&q=80',
-  'https://images.unsplash.com/photo-1566228015668-4c45dbc4e2f5?w=1000&q=80',
-  'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=1000&q=80',
-  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1000&q=80',
-];
-
-// Local delivery-style photos are matched to the exact unit specification in
-// each card. Remaining cards retain their existing visuals until their own
-// matched WebP asset is installed.
+// Each delivery card has a dedicated local WebP matched to its unit size and condition.
 const LOCAL_IMAGES = [
   '/images/recent-deliveries/los-angeles-ca-new-40hc-one-trip.webp',
   '/images/recent-deliveries/arlington-tn-used-20ft-wwt.webp',
@@ -61,6 +51,21 @@ const LOCAL_IMAGES = [
   '/images/recent-deliveries/charlotte-nc-new-40ft-standard.webp',
   '/images/recent-deliveries/cleveland-oh-used-20ft-storage.webp',
   '/images/recent-deliveries/las-vegas-nv-used-40hc-wwt.webp',
+  '/images/recent-deliveries/seattle-wa-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/st-louis-mo-used-20ft-wwt.webp',
+  '/images/recent-deliveries/san-antonio-tx-new-20ft.webp',
+  '/images/recent-deliveries/kansas-city-ks-used-40ft-wwt.webp',
+  '/images/recent-deliveries/detroit-mi-new-40hc.webp',
+  '/images/recent-deliveries/norfolk-va-used-20ft-cargo-worthy.webp',
+  '/images/recent-deliveries/cincinnati-oh-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/salt-lake-city-ut-used-40ft-wwt.webp',
+  '/images/recent-deliveries/raleigh-nc-used-20ft-wwt.webp',
+  '/images/recent-deliveries/savannah-ga-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/atlanta-ga-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/columbus-oh-new-20ft-standard.webp',
+  '/images/recent-deliveries/mobile-al-used-20ft-wwt.webp',
+  '/images/recent-deliveries/denver-co-new-40ft-one-trip.webp',
+  '/images/recent-deliveries/chicago-il-used-40hc-cargo-worthy.webp',
 ];
 
 const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
@@ -68,7 +73,7 @@ const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
   headline,
   city,
   date,
-  image: LOCAL_IMAGES[index] ?? IMAGES[index % IMAGES.length],
+  image: LOCAL_IMAGES[index],
 }));
 
 export default function RecentlyDelivered() {
