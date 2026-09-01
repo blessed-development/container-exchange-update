@@ -1,3 +1,6 @@
+import { locations } from '@/data/locations';
+import { normalizeLocationSearch, serviceAreas } from '@/data/serviceAreas';
+
 export const POSTAL_OVERRIDES = {
   L4C3Y2: {
     city: 'Richmond Hill',
@@ -30,6 +33,67 @@ export const getCountryLabel = (country) => {
   return '';
 };
 
+const sameText = (left, right) =>
+  normalizeLocationSearch(left) === normalizeLocationSearch(right);
+
+const marketIncludesState = (market, state) => {
+  if (!state) return true;
+
+  return String(market.stateCode || '')
+    .split('/')
+    .map((code) => code.trim())
+    .some((code) => sameText(code, state));
+};
+
+// Some depots operate as one shared market. A customer can enter a ZIP/postal
+// code from either city (or a mapped nearby service city) and still see the
+// combined market everywhere inventory is displayed.
+export const getSharedMarket = ({ city = '', state = '' } = {}) => {
+  if (!city) return null;
+
+  const pairedMarkets = locations.filter(
+    (location) => (location.marketAliases || []).length > 1
+  );
+
+  const directMarket = pairedMarkets.find(
+    (location) =>
+      marketIncludesState(location, state) &&
+      (location.marketAliases || []).some((alias) => sameText(alias, city))
+  );
+
+  if (directMarket) return directMarket;
+
+  const serviceArea = serviceAreas.find(
+    (area) => sameText(area.name, city) && sameText(area.abbreviation, state)
+  );
+
+  if (!serviceArea) return null;
+
+  const parentMarket = locations.find(
+    (location) => location.slug === serviceArea.parentLocationId
+  );
+
+  return (parentMarket?.marketAliases || []).length > 1 ? parentMarket : null;
+};
+
+export const resolveSharedMarketLocation = (location) => {
+  if (!location) return location;
+
+  const market = getSharedMarket(location);
+  if (!market) return location;
+
+  return {
+    ...location,
+    detectedCity: location.detectedCity || location.city,
+    detectedState: location.detectedState || location.state || location.stateCode,
+    city: market.city,
+    state: market.stateCode,
+    stateCode: market.stateCode,
+    marketId: market.slug,
+    marketDisplayName: market.displayName,
+  };
+};
+
 export async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
 
@@ -40,12 +104,12 @@ export async function lookupPostalCode(value) {
   const override = POSTAL_OVERRIDES[clean];
 
   if (override) {
-    return {
+    return resolveSharedMarketLocation({
       city: override.city,
       state: override.state,
       postalCode: formatCanadianPostal(clean),
       country: 'CA',
-    };
+    });
   }
 
   const isCanada = isCanadianPostal(clean);
@@ -81,12 +145,12 @@ const city = isCanada
     throw new Error('ZIP / Postal Code not found.');
   }
 
-  return {
+  return resolveSharedMarketLocation({
     city: city || '',
     state: place['state abbreviation'] || place.state || '',
     postalCode: isCanada ? formatCanadianPostal(clean) : clean,
     country: isCanada ? 'CA' : 'US',
-  };
+  });
 }
 
 export function saveSelectedLocation(location) {
