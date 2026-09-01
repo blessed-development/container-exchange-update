@@ -1,5 +1,5 @@
 import { locations } from '@/data/locations';
-import { normalizeLocationSearch, serviceAreas } from '@/data/serviceAreas';
+import { normalizeLocationSearch } from '@/data/serviceAreas';
 
 export const POSTAL_OVERRIDES = {
   L4C3Y2: {
@@ -45,9 +45,8 @@ const marketIncludesState = (market, state) => {
     .some((code) => sameText(code, state));
 };
 
-// Some depots operate as one shared market. A customer can enter a ZIP/postal
-// code from either city (or a mapped nearby service city) and still see the
-// combined market everywhere inventory is displayed.
+// Some homepage markets intentionally pair two named cities. A ZIP/postal code
+// that resolves to either exact city uses the pair's shared display name.
 export const getSharedMarket = ({ city = '', state = '' } = {}) => {
   if (!city) return null;
 
@@ -63,17 +62,7 @@ export const getSharedMarket = ({ city = '', state = '' } = {}) => {
 
   if (directMarket) return directMarket;
 
-  const serviceArea = serviceAreas.find(
-    (area) => sameText(area.name, city) && sameText(area.abbreviation, state)
-  );
-
-  if (!serviceArea) return null;
-
-  const parentMarket = locations.find(
-    (location) => location.slug === serviceArea.parentLocationId
-  );
-
-  return (parentMarket?.marketAliases || []).length > 1 ? parentMarket : null;
+  return null;
 };
 
 export const resolveSharedMarketLocation = (location) => {
