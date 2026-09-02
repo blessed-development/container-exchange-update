@@ -240,7 +240,7 @@ export default function LocationsGrid() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {chipGroups.map((group, index) => {
             const slide = slides[active[index]];
             const featuredLocation = getLocationByDirectoryName(slide.city);
