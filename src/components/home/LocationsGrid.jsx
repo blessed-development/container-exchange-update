@@ -240,7 +240,7 @@ export default function LocationsGrid() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {chipGroups.map((group, index) => {
             const slide = slides[active[index]];
             const featuredLocation = getLocationByDirectoryName(slide.city);
@@ -275,19 +275,19 @@ export default function LocationsGrid() {
             return (
               <article
                 key={index}
-                className="bg-[#111111] border border-[#2b3036] rounded-[28px] overflow-hidden flex flex-col lg:flex-row min-h-[272px] shadow-[0_28px_80px_rgba(0,0,0,.38)] transition-all duration-300 hover:-translate-y-1 hover:border-[#008f7d]/55 hover:shadow-[0_36px_100px_rgba(0,0,0,.48)]"
+                className="bg-[#111111] border border-[#2b3036] rounded-[28px] overflow-hidden min-h-[670px] shadow-[0_28px_80px_rgba(0,0,0,.38)] transition-all duration-300 hover:-translate-y-1 hover:border-[#008f7d]/55 hover:shadow-[0_36px_100px_rgba(0,0,0,.48)]"
               >
                 {slideLink ? (
-                  <Link to={slideLink} className="relative block h-[250px] lg:h-auto lg:w-[31%] xl:w-[28%] shrink-0 overflow-hidden bg-[#1b1b1b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a2b] focus-visible:ring-inset" aria-label={`View containers in ${slide.city}`}>
+                  <Link to={slideLink} className="relative block h-[258px] overflow-hidden bg-[#1b1b1b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a2b] focus-visible:ring-inset" aria-label={`View containers in ${slide.city}`}>
                     {cardHero}
                   </Link>
                 ) : (
-                  <div className="relative h-[250px] lg:h-auto lg:w-[31%] xl:w-[28%] shrink-0 overflow-hidden bg-[#1b1b1b]">{cardHero}</div>
+                  <div className="relative h-[258px] overflow-hidden bg-[#1b1b1b]">{cardHero}</div>
                 )}
 
-                <div className="p-6 flex-1 min-w-0 flex flex-col lg:flex-row lg:items-start lg:gap-10">
+                <div className="p-6 flex flex-col">
                   {slide.inventory ? (
-                    <div className="mb-5 lg:mb-0 lg:w-[230px] lg:shrink-0">
+                    <div className="mb-4">
                       <div className="text-[16px] font-extrabold tracking-[-0.038em] leading-tight mb-2">
                         {formatNumber(slide.inventory.containers)} Containers Available
                       </div>
@@ -313,7 +313,7 @@ export default function LocationsGrid() {
                     </>
                   )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-1 flex-1">
+                  <div className="flex flex-col gap-1">
                     {group.map((city) => {
                       const cityLocation = getLocationByDirectoryName(city);
                       const cityPageLink = cityLocation?.imageReady ? getLocationPath(cityLocation) : null;
