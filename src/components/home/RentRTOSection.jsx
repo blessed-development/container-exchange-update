@@ -6,30 +6,33 @@ import { motion } from 'framer-motion';
 
 const OPTIONS = [
   {
-    tag: 'RENT',
-    title: 'Shipping Containers for Rent',
-    desc: 'Flexible monthly rentals with same-week delivery. Perfect for temporary storage, job sites, or seasonal needs.',
-    bullets: ['1 Month Free Rent', 'Flexible Rental Terms', 'Same Week Delivery', 'Easy Pickup When Done'],
-    cta: 'Claim Your Free Month',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
+    title: 'Find Containers Near You',
+    desc: 'Enter your city or ZIP code to discover nearby container availability and local pricing.',
+    bullets: ['Search by City or ZIP Code', 'Nearby Container Availability', 'Local Pricing', 'Fast Search Results'],
+    cta: 'Search Locations',
+    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85',
+    imageAlt: 'Customer searching for nearby container availability on a laptop',
+    to: '/inventory',
     highlight: false,
   },
   {
-    tag: 'BUY',
-    title: 'Buy Shipping Containers',
-    desc: 'Own it outright. Huge selection of new and used containers. Best prices guaranteed with our price-match promise.',
-    bullets: ['Money Back Guaranteed', 'Huge New & Used Selection', 'Depot Location Near You', 'Exclusive Phone Specials'],
-    cta: 'Browse & Buy Now',
-    image: 'https://media.base44.com/images/public/69dd889386a20317a3b688c3/2350032b9_generated_79e70e6c.png',
+    title: 'Choose the Right Container',
+    desc: 'Compare available sizes and conditions to find the container that fits your project and budget.',
+    bullets: ['New & Used Selection', 'Multiple Sizes Available', 'Money-Back Guarantee', 'Depot Locations Near You'],
+    cta: 'Browse Containers',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=85',
+    imageAlt: 'Shipping containers available for selection at a container depot',
+    to: '/inventory',
     highlight: true,
   },
   {
-    tag: 'RENT-TO-OWN',
-    title: 'Rent-to-Own Containers',
-    desc: 'Start with just $1 your first month. No credit check required — everyone qualifies. Own it with early payoff discounts.',
-    bullets: ['Everyone Qualifies', 'No Credit Check Required', 'Early Payoff Discounts', '$1 First Month Special'],
-    cta: 'Start for $1',
-    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&q=80',
+    title: 'Schedule Your Delivery',
+    desc: "After you've chosen your container, our team will help coordinate delivery to your location.",
+    bullets: ['Delivery Scheduling', 'Dedicated Customer Support', 'Simple Purchase Process', 'Flexible Delivery Options'],
+    cta: 'Request a Quote',
+    image: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1200&q=85',
+    imageAlt: 'Shipping container delivery truck at a customer location',
+    to: '/contact',
     highlight: false,
   },
 ];
@@ -39,12 +42,12 @@ export default function RentRTOSection() {
     <section className="py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">AFFORDABLE CONTAINERS</span>
+          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">BUYING MADE SIMPLE</span>
           <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight">
-            Three Ways to <span className="text-primary">Get Your Container</span>
+            The Easiest Way to <span className="text-primary">Find Your Shipping Container</span>
           </h2>
           <p className="text-muted-foreground mt-4 text-lg max-w-xl mx-auto">
-            Whether you need to buy, rent, or rent-to-own — we have flexible options to fit your budget and timeline.
+            Finding the right shipping container shouldn't be complicated. Search nearby inventory, compare available options, and let our team help arrange delivery—all from one trusted marketplace.
           </p>
         </div>
 
@@ -65,15 +68,8 @@ export default function RentRTOSection() {
             >
               {/* Rectangular image */}
               <div className="relative aspect-video overflow-hidden bg-muted">
-                <img src={opt.image} alt={opt.title} className="w-full h-full object-cover" />
+                <img src={opt.image} alt={opt.imageAlt} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-accent/80 to-transparent" />
-                <div className="absolute top-3 left-3">
-                  <span className={`text-xs font-mono font-bold tracking-widest px-3 py-1.5 rounded-full ${
-                    opt.highlight ? 'bg-primary text-primary-foreground' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'
-                  }`}>
-                    {opt.tag}
-                  </span>
-                </div>
                 <div className="absolute bottom-4 left-5 right-5">
                   <h3 className="text-white font-black text-lg leading-tight">{opt.title}</h3>
                 </div>
@@ -90,7 +86,7 @@ export default function RentRTOSection() {
                     </li>
                   ))}
                 </ul>
-                <Link to={opt.tag === 'BUY' ? '/inventory' : '/contact'}>
+                <Link to={opt.to}>
                   <Button className={`w-full font-semibold rounded-xl h-11 ${
                     opt.highlight
                       ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25'
