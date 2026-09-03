@@ -1,18 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 import { Shield, Truck, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+
+const HERO_SLIDES = [
+  {
+    src: '/images/hero/global-supply-network.png',
+    alt: 'Container vessel sailing past a modern port',
+  },
+  {
+    src: '/images/hero/depot-operations.png',
+    alt: 'Reach stacker loading a container onto a delivery truck at a container depot',
+  },
+  {
+    src: '/images/hero/customer-delivery.png',
+    alt: 'Tilt-bed truck delivering a blue shipping container to a customer property',
+  },
+];
 
 export default function HeroSection() {
+  const prefersReducedMotion = useReducedMotion();
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % HERO_SLIDES.length);
+    }, 7000);
+    return () => window.clearInterval(timer);
+  }, [prefersReducedMotion]);
+
   return (
     <section className="relative min-h-[95vh] flex items-center bg-accent overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/599ab2c88_generated_4431dbea.png"
-          alt="Industrial shipping container close-up"
-          className="w-full h-full object-cover opacity-20"
-        />
+        {HERO_SLIDES.map((slide, index) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt={index === activeSlide ? slide.alt : ''}
+            aria-hidden={index !== activeSlide}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              index === activeSlide ? 'opacity-20' : 'opacity-0'
+            }`}
+          />
+        ))}
         <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent/90 to-accent/95" />
         {/* Radial glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
