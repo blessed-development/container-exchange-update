@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { useCart } from '@/context/CartContext';
+import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const formatMoney = (value) =>
   `$${Number(value || 0).toLocaleString('en-US', {
@@ -23,6 +24,23 @@ const fallbackImage =
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();
+  const [selectedLocation, setSelectedLocation] = useState(() => getSavedSelectedLocation());
+
+  useEffect(() => {
+    const syncLocation = (event) => {
+      setSelectedLocation(event?.detail || getSavedSelectedLocation());
+    };
+
+    window.addEventListener('ce-location-change', syncLocation);
+    window.addEventListener('storage', syncLocation);
+    return () => {
+      window.removeEventListener('ce-location-change', syncLocation);
+      window.removeEventListener('storage', syncLocation);
+    };
+  }, []);
+
+  const getDisplayPrice = (product) =>
+    getLocalizedPrice(product.base_price || product.price || 0, selectedLocation, product);
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
@@ -32,7 +50,7 @@ export default function RelatedProducts() {
       productId: product.id,
       title: product.name,
       sub: product.short_description,
-      unitPrice: Number(product.base_price || product.price || 0),
+      unitPrice: getDisplayPrice(product),
       qty: 1,
       img: product.image_url || fallbackImage,
       image: product.image_url || fallbackImage,
@@ -101,7 +119,7 @@ export default function RelatedProducts() {
               <div className="mt-auto">
                 <div className="w-full h-10 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 flex items-center justify-center mb-3">
                   <span className="text-lg font-black text-orange-500 tracking-tight">
-                    {formatMoney(product.base_price || product.price)}
+                    {formatMoney(getDisplayPrice(product))}
                   </span>
                 </div>
 

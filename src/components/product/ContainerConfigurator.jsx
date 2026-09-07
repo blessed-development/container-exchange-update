@@ -384,7 +384,12 @@ export default function ContainerConfigurator({
 
   const rawUnitPrice = getRawPriceFor(sizeOption, effectiveGrade, effectiveCondition);
 
-  const applyLocalPrice = (price) => getLocalizedPrice(price, location);
+  const selectedMarketProduct = findMatchingProduct({
+    sizeIndex: safeSizeIndex,
+    conditionKey: effectiveCondition,
+    gradeKey: effectiveGrade,
+  }) || container;
+  const applyLocalPrice = (price) => getLocalizedPrice(price, location, selectedMarketProduct);
   const unitPrice = applyLocalPrice(rawUnitPrice);
   const totalPrice = unitPrice * qty;
 

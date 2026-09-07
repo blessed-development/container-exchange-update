@@ -187,7 +187,7 @@ export default function ProductDetail() {
   const heroPrice =
     calculatorPrice > 0
       ? calculatorPrice
-      : getLocalizedPrice(baseDisplayPrice, activeLocation);
+      : getLocalizedPrice(baseDisplayPrice, activeLocation, container);
 
   const showStartingFrom =
     !hasActiveZip;

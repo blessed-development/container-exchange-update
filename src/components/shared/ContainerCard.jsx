@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -19,6 +20,11 @@ const CONDITION_COLORS = {
 
 export default function ContainerCard({ container, zipCode, index = 0 }) {
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
+  const displayPrice = getLocalizedPrice(
+    container.base_price || container.price || 0,
+    getSavedSelectedLocation(),
+    container
+  );
   
   return (
     <motion.div
@@ -81,7 +87,7 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
               <div>
                 <span className="text-xs text-muted-foreground">Starts at</span>
                 <p className="text-xl font-black text-primary font-mono">
-                  ${container.base_price?.toLocaleString()}
+                  ${displayPrice.toLocaleString()}
                 </p>
               </div>
               <div className="flex items-center gap-2">

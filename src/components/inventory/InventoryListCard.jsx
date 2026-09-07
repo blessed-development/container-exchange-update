@@ -60,7 +60,8 @@ export default function InventoryListCard({ container, index }) {
 
   const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
-    savedLocation
+    savedLocation,
+    container
   );
   const imageScaleClass =
     container?.size === 40

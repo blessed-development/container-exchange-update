@@ -1,5 +1,6 @@
 import { locations } from '@/data/locations';
 import { normalizeLocationSearch } from '@/data/serviceAreas';
+import { getMarketPrice } from '@/data/marketPricing';
 
 export const POSTAL_OVERRIDES = {
   L4C3Y2: {
@@ -161,14 +162,17 @@ export function getStartingPrice(price) {
   return Math.round(Number(price || 0) * 0.88);
 }
 
-export function getLocalizedPrice(price, location) {
+export function getLocalizedPrice(price, location, product = null) {
   const original = Number(price || 0);
 
   if (!location?.postalCode) {
     return getStartingPrice(original);
   }
 
-  return original;
+  return getMarketPrice(
+    product ? { ...product, base_price: original } : { base_price: original },
+    location
+  ).price;
 }
 
 // Geographic autocomplete shares the existing location-engine module but keeps

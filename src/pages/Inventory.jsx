@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/sheet';
 import {
   getSavedSelectedLocation,
+  getLocalizedPrice,
   lookupPostalCode,
   saveSelectedLocation,
 } from '@/lib/locationEngine';
@@ -117,10 +118,16 @@ export default function Inventory() {
 
     switch (sortBy) {
       case 'price_asc':
-        result.sort((a, b) => (a.base_price || 0) - (b.base_price || 0));
+        result.sort((a, b) =>
+          getLocalizedPrice(a.base_price || 0, savedLocation, a) -
+          getLocalizedPrice(b.base_price || 0, savedLocation, b)
+        );
         break;
       case 'price_desc':
-        result.sort((a, b) => (b.base_price || 0) - (a.base_price || 0));
+        result.sort((a, b) =>
+          getLocalizedPrice(b.base_price || 0, savedLocation, b) -
+          getLocalizedPrice(a.base_price || 0, savedLocation, a)
+        );
         break;
       case 'name_asc':
         result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
@@ -139,7 +146,7 @@ export default function Inventory() {
     }
 
     return result;
-  }, [containers, filters, sortBy]);
+  }, [containers, filters, savedLocation, sortBy]);
 
   const activeFilterCount = Object.values(filters).reduce(
     (acc, arr) => acc + arr.length,
