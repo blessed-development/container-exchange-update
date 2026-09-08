@@ -389,7 +389,8 @@ export default function ContainerConfigurator({
     conditionKey: effectiveCondition,
     gradeKey: effectiveGrade,
   }) || container;
-  const applyLocalPrice = (price) => getLocalizedPrice(price, location, selectedMarketProduct);
+  const applyLocalPrice = (price, product = selectedMarketProduct) =>
+    getLocalizedPrice(price, location, product);
   const unitPrice = applyLocalPrice(rawUnitPrice);
   const totalPrice = unitPrice * qty;
 
@@ -688,9 +689,13 @@ export default function ContainerConfigurator({
         <div className="main-tabs">
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
-
+            const optionMarketProduct = findMatchingProduct({
+              sizeIndex: index,
+              conditionKey: effectiveCondition,
+              gradeKey: effectiveGrade,
+            });
             const optionRawPrice = getRawPriceFor(opt, effectiveGrade, effectiveCondition);
-            const optionPrice = applyLocalPrice(optionRawPrice);
+            const optionPrice = applyLocalPrice(optionRawPrice, optionMarketProduct);
 
             return (
               <button
