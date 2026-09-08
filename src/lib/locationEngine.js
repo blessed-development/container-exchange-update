@@ -1,6 +1,7 @@
 import { locations } from '@/data/locations';
 import { normalizeLocationSearch } from '@/data/serviceAreas';
 import { getMarketPrice } from '@/data/marketPricing';
+import { getCustomerFacingCanadianCity } from '@/data/canadianPostalRules';
 
 export const LOCATION_STORAGE_KEY = 'ce_selected_location';
 
@@ -58,7 +59,7 @@ async function lookupCanadianPostalCode(postalCode) {
 
   const market = getCanadianMarket(clean);
   return {
-    city: result[0],
+    city: getCustomerFacingCanadianCity(result[0], clean),
     state: result[1],
     marketId: market?.marketId,
   };

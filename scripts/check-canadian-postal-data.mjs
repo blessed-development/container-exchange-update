@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { getCustomerFacingCanadianCity } from '../src/data/canadianPostalRules.js';
 
 const root = path.resolve('public/data/canadian-postal');
 const samples = [
@@ -11,6 +12,7 @@ const samples = [
   ['M5V2T6', 'Toronto', 'ON'],
   ['T2P1J9', 'Calgary', 'AB'],
   ['B3H0A1', 'Halifax', 'NS'],
+  ['M8Z4H4', 'Toronto', 'ON'],
 ];
 
 let failures = 0;
@@ -23,7 +25,8 @@ for (const [postalCode, city, province] of samples) {
   }
   const entries = JSON.parse(await readFile(file, 'utf8'));
   const result = entries[postalCode];
-  if (!result || result[0] !== city || result[1] !== province) {
+  const customerCity = result && getCustomerFacingCanadianCity(result[0], postalCode);
+  if (!result || customerCity !== city || result[1] !== province) {
     console.error(`Unexpected result for ${postalCode}: ${JSON.stringify(result)}`);
     failures += 1;
   }
