@@ -23,6 +23,42 @@ export const formatCanadianPostal = (value) => {
   return clean.length === 6 ? `${clean.slice(0, 3)} ${clean.slice(3)}` : value;
 };
 
+// Canada Post's public lookup frequently returns neighbourhoods or delivery
+// districts (for example, "Downtown Toronto"), not the customer-facing city.
+// Keep the complete postal code, but present the parent market consistently.
+const CANADIAN_PARENT_CITY_BY_FSA = [
+  { prefixes: ['M'], city: 'Toronto', state: 'ON' },
+  { prefixes: ['H'], city: 'Montreal', state: 'QC' },
+  { prefixes: ['V3', 'V4', 'V5', 'V6'], city: 'Vancouver / Delta', state: 'BC' },
+  { prefixes: ['T2', 'T3'], city: 'Calgary', state: 'AB' },
+  { prefixes: ['B2', 'B3'], city: 'Halifax / Dartmouth', state: 'NS' },
+  { prefixes: ['R2', 'R3'], city: 'Winnipeg', state: 'MB' },
+  { prefixes: ['S4'], city: 'Regina', state: 'SK' },
+  { prefixes: ['S7'], city: 'Saskatoon', state: 'SK' },
+];
+
+const cleanCanadianPlaceName = (value) =>
+  String(value || '')
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/^(downtown|central|north|south|east|west)\s+/i, '')
+    .trim();
+
+export const getCanadianDisplayLocation = ({ postalCode, city, state }) => {
+  const fsa = cleanPostal(postalCode).slice(0, 3);
+  const parentMarket = CANADIAN_PARENT_CITY_BY_FSA.find(({ prefixes }) =>
+    prefixes.some((prefix) => fsa.startsWith(prefix))
+  );
+
+  if (parentMarket) {
+    return { city: parentMarket.city, state: parentMarket.state };
+  }
+
+  return {
+    city: cleanCanadianPlaceName(city),
+    state: state || '',
+  };
+};
+
 export const isUsZip = (value) => /^\d{5}$/.test(cleanPostal(value));
 
 export const isCanadianPostal = (value) =>
@@ -116,28 +152,21 @@ export async function lookupPostalCode(value) {
 
   const data = await response.json();
   const place = data?.places?.[0];
-  const CANADA_CITY_OVERRIDES = {
-  M9C: 'Toronto',
-  M9V: 'Toronto',
-  M5V: 'Toronto',
-  H3B: 'Montreal',
-  R3C: 'Winnipeg',
-  L4C: 'Richmond Hill',
-  L0L: 'Springwater',
-};
-
-const canadaPrefix = clean.slice(0, 3);
-
-const city = isCanada
-  ? CANADA_CITY_OVERRIDES[canadaPrefix] || place['place name']?.split('(')[0]?.split('/')[0]?.trim()
-  : place['place name'];
   if (!place) {
     throw new Error('ZIP / Postal Code not found.');
   }
 
+  const canadianLocation = isCanada
+    ? getCanadianDisplayLocation({
+        postalCode: clean,
+        city: place['place name'],
+        state: place['state abbreviation'] || place.state,
+      })
+    : null;
+
   return resolveSharedMarketLocation({
-    city: city || '',
-    state: place['state abbreviation'] || place.state || '',
+    city: canadianLocation?.city || place['place name'] || '',
+    state: canadianLocation?.state || place['state abbreviation'] || place.state || '',
     postalCode: isCanada ? formatCanadianPostal(clean) : clean,
     country: isCanada ? 'CA' : 'US',
   });
