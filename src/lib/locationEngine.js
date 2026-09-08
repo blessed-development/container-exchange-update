@@ -141,7 +141,7 @@ export async function lookupPostalCode(value) {
     ...usLocation,
     postalCode: clean,
     country: 'US',
-  });
+  }, { preserveDisplayCity: true });
 }
 
 export function saveSelectedLocation(location) {

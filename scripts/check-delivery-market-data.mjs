@@ -43,6 +43,19 @@ for (const [location, marketId] of routingSamples) {
   }
 }
 
+const customerFacingAnaheim = resolveDeliveryMarket(
+  { city: 'Anaheim', state: 'CA', country: 'US', latitude: 33.8359, longitude: -117.9086 },
+  { preserveDisplayCity: true }
+);
+if (
+  customerFacingAnaheim.city !== 'Anaheim'
+  || customerFacingAnaheim.state !== 'CA'
+  || customerFacingAnaheim.marketId !== 'los-angeles-long-beach-ca'
+) {
+  console.error('Customer locality and delivery market are not correctly separated for Anaheim, CA.');
+  failures += 1;
+}
+
 if (deliveryMarketCentroids.length !== 53 || deliveryMarketCentroids.some((market) =>
   !Number.isFinite(market.latitude)
   || !Number.isFinite(market.longitude)

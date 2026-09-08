@@ -92,7 +92,7 @@ export default function Inventory() {
   }, []);
 
   const inventoryLocationTitle = savedLocation?.postalCode
-    ? `${savedLocation.city}, ${savedLocation.state}`
+    ? savedLocation.marketDisplayName || `${savedLocation.city}, ${savedLocation.state}`
     : null;
 
   const cityPart = inventoryLocationTitle?.split(',')[0] || '';
