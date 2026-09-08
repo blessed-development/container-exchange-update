@@ -1,7 +1,8 @@
-import { locations } from '@/data/locations';
 import { normalizeLocationSearch } from '@/data/serviceAreas';
 import { getMarketPrice } from '@/data/marketPricing';
 import { getCustomerFacingCanadianCity } from '@/data/canadianPostalRules';
+import { getDirectMarket, resolveDeliveryMarket } from '@/data/deliveryMarketRules';
+import { canadianPostalFsaCentroids } from '@/data/generatedCanadianPostalFsaCentroids.js';
 
 export const LOCATION_STORAGE_KEY = 'ce_selected_location';
 
@@ -39,6 +40,8 @@ const getCanadianMarket = (postalCode) => {
 
 const CANADIAN_POSTAL_DATA_ROOT = '/data/canadian-postal';
 const canadianPostalCache = new Map();
+const US_POSTAL_DATA_ROOT = '/data/us-postal';
+const usPostalCache = new Map();
 
 async function lookupCanadianPostalCode(postalCode) {
   const clean = cleanPostal(postalCode);
@@ -58,10 +61,13 @@ async function lookupCanadianPostalCode(postalCode) {
   }
 
   const market = getCanadianMarket(clean);
+  const [latitude, longitude] = canadianPostalFsaCentroids[fsa] || [];
   return {
     city: getCustomerFacingCanadianCity(result[0], clean),
     state: result[1],
     marketId: market?.marketId,
+    latitude,
+    longitude,
   };
 }
 
@@ -76,59 +82,41 @@ export const getCountryLabel = (country) => {
   return '';
 };
 
-const sameText = (left, right) =>
-  normalizeLocationSearch(left) === normalizeLocationSearch(right);
-
-const marketIncludesState = (market, state) => {
-  if (!state) return true;
-
-  return String(market.stateCode || '')
-    .split('/')
-    .map((code) => code.trim())
-    .some((code) => sameText(code, state));
-};
-
 // Some homepage markets intentionally pair two named cities. A ZIP/postal code
 // that resolves to either exact city uses the pair's shared display name.
 export const getSharedMarket = ({ city = '', state = '' } = {}) => {
-  if (!city) return null;
-
-  const pairedMarkets = locations.filter(
-    (location) => (location.marketAliases || []).length > 1
-  );
-
-  const directMarket = pairedMarkets.find(
-    (location) =>
-      marketIncludesState(location, state) &&
-      (location.marketAliases || []).some((alias) => sameText(alias, city))
-  );
-
-  if (directMarket) return directMarket;
-
-  return null;
+  const market = getDirectMarket({ city, state });
+  return (market?.marketAliases || []).length > 1 ? market : null;
 };
 
 export const resolveSharedMarketLocation = (location, { preserveDisplayCity = false } = {}) => {
-  if (!location) return location;
+  return resolveDeliveryMarket(location, { preserveDisplayCity });
+};
 
-  const market = getSharedMarket(location);
-  if (!market) return location;
+async function lookupUsPostalCode(postalCode) {
+  const clean = cleanPostal(postalCode);
+  const prefix = clean.slice(0, 1);
+  let entries = usPostalCache.get(prefix);
+
+  if (!entries) {
+    const response = await fetch(`${US_POSTAL_DATA_ROOT}/${prefix}.json`);
+    if (!response.ok) throw new Error('ZIP / Postal Code not found.');
+    entries = await response.json();
+    usPostalCache.set(prefix, entries);
+  }
+
+  const result = entries[clean];
+  if (!Array.isArray(result) || !result[0] || !result[1]) {
+    throw new Error('ZIP / Postal Code not found.');
+  }
 
   return {
-    ...location,
-    detectedCity: location.detectedCity || location.city,
-    detectedState: location.detectedState || location.state || location.stateCode,
-    ...(preserveDisplayCity
-      ? {}
-      : {
-          city: market.city,
-          state: market.stateCode,
-          stateCode: market.stateCode,
-        }),
-    marketId: market.slug,
-    marketDisplayName: market.displayName,
+    city: result[0],
+    state: result[1],
+    latitude: Number(result[2]),
+    longitude: Number(result[3]),
   };
-};
+}
 
 export async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
@@ -140,32 +128,17 @@ export async function lookupPostalCode(value) {
   const isCanada = isCanadianPostal(clean);
   if (isCanada) {
     const canadianLocation = await lookupCanadianPostalCode(clean);
-    return resolveSharedMarketLocation({
+    const resolved = resolveSharedMarketLocation({
       ...canadianLocation,
       postalCode: formatCanadianPostal(clean),
       country: 'CA',
     }, { preserveDisplayCity: true });
+    return canadianLocation.marketId ? { ...resolved, marketId: canadianLocation.marketId } : resolved;
   }
 
-  const country = isCanada ? 'ca' : 'us';
-
-  const response = await fetch(
-    `https://api.zippopotam.us/${country}/${encodeURIComponent(clean)}`
-  );
-
-  if (!response.ok) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
-  const data = await response.json();
-  const place = data?.places?.[0];
-  if (!place) {
-    throw new Error('ZIP / Postal Code not found.');
-  }
-
+  const usLocation = await lookupUsPostalCode(clean);
   return resolveSharedMarketLocation({
-    city: place['place name'] || '',
-    state: place['state abbreviation'] || place.state || '',
+    ...usLocation,
     postalCode: clean,
     country: 'US',
   });
