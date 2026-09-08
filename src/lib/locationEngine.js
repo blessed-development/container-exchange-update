@@ -27,14 +27,17 @@ export const formatCanadianPostal = (value) => {
 // districts (for example, "Downtown Toronto"), not the customer-facing city.
 // Keep the complete postal code, but present the parent market consistently.
 const CANADIAN_PARENT_CITY_BY_FSA = [
-  { prefixes: ['M'], city: 'Toronto', state: 'ON' },
-  { prefixes: ['H'], city: 'Montreal', state: 'QC' },
-  { prefixes: ['V3', 'V4', 'V5', 'V6'], city: 'Vancouver / Delta', state: 'BC' },
-  { prefixes: ['T2', 'T3'], city: 'Calgary', state: 'AB' },
-  { prefixes: ['B2', 'B3'], city: 'Halifax / Dartmouth', state: 'NS' },
-  { prefixes: ['R2', 'R3'], city: 'Winnipeg', state: 'MB' },
-  { prefixes: ['S4'], city: 'Regina', state: 'SK' },
-  { prefixes: ['S7'], city: 'Saskatoon', state: 'SK' },
+  { prefixes: ['M'], city: 'Toronto', state: 'ON', marketId: 'toronto-on' },
+  { prefixes: ['H'], city: 'Montreal', state: 'QC', marketId: 'montreal-qc' },
+  { prefixes: ['G1'], city: 'Quebec', state: 'QC', marketId: 'montreal-qc' },
+  { prefixes: ['V5', 'V6'], city: 'Vancouver', state: 'BC', marketId: 'vancouver-delta-bc' },
+  { prefixes: ['T2', 'T3'], city: 'Calgary', state: 'AB', marketId: 'calgary-ab' },
+  { prefixes: ['T5', 'T6'], city: 'Edmonton', state: 'AB', marketId: 'edmonton-ab' },
+  { prefixes: ['B2'], city: 'Dartmouth', state: 'NS', marketId: 'halifax-dartmouth-ns' },
+  { prefixes: ['B3'], city: 'Halifax', state: 'NS', marketId: 'halifax-dartmouth-ns' },
+  { prefixes: ['R2', 'R3'], city: 'Winnipeg', state: 'MB', marketId: 'winnipeg-mb' },
+  { prefixes: ['S4'], city: 'Regina', state: 'SK', marketId: 'regina-sk' },
+  { prefixes: ['S7'], city: 'Saskatoon', state: 'SK', marketId: 'saskatoon-sk' },
 ];
 
 const cleanCanadianPlaceName = (value) =>
@@ -50,7 +53,11 @@ export const getCanadianDisplayLocation = ({ postalCode, city, state }) => {
   );
 
   if (parentMarket) {
-    return { city: parentMarket.city, state: parentMarket.state };
+    return {
+      city: parentMarket.city,
+      state: parentMarket.state,
+      marketId: parentMarket.marketId,
+    };
   }
 
   return {
@@ -102,7 +109,7 @@ export const getSharedMarket = ({ city = '', state = '' } = {}) => {
   return null;
 };
 
-export const resolveSharedMarketLocation = (location) => {
+export const resolveSharedMarketLocation = (location, { preserveDisplayCity = false } = {}) => {
   if (!location) return location;
 
   const market = getSharedMarket(location);
@@ -112,9 +119,13 @@ export const resolveSharedMarketLocation = (location) => {
     ...location,
     detectedCity: location.detectedCity || location.city,
     detectedState: location.detectedState || location.state || location.stateCode,
-    city: market.city,
-    state: market.stateCode,
-    stateCode: market.stateCode,
+    ...(preserveDisplayCity
+      ? {}
+      : {
+          city: market.city,
+          state: market.stateCode,
+          stateCode: market.stateCode,
+        }),
     marketId: market.slug,
     marketDisplayName: market.displayName,
   };
@@ -167,9 +178,10 @@ export async function lookupPostalCode(value) {
   return resolveSharedMarketLocation({
     city: canadianLocation?.city || place['place name'] || '',
     state: canadianLocation?.state || place['state abbreviation'] || place.state || '',
+    marketId: canadianLocation?.marketId,
     postalCode: isCanada ? formatCanadianPostal(clean) : clean,
     country: isCanada ? 'CA' : 'US',
-  });
+  }, { preserveDisplayCity: isCanada });
 }
 
 export function saveSelectedLocation(location) {
