@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { base44 } from '@/api/base44Client';
 import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PageSeo from '@/components/seo/PageSeo';
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -62,6 +63,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="Contact Containers Exchange | Shipping Container Quotes & Support" description="Contact Containers Exchange for shipping container availability, local pricing, delivery questions, and expert support." path="/contact" />
       {/* Header */}
       <div className="bg-accent text-white py-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />

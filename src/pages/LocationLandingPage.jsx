@@ -1,26 +1,35 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, useReducedMotion } from 'framer-motion';
+import SeoJsonLd from '@/components/seo/SeoJsonLd';
+import { SITE_URL, toAbsoluteUrl } from '@/lib/seo';
+import { getLocationPath } from '@/data/locations';
 
 const containerConditions = ['New', 'IICL / Multi-Trip', 'CW', 'WWT', 'AS IS'];
 
 export default function LocationLandingPage({ location }) {
   const reduceMotion = useReducedMotion();
   const subtitle = location.subtitle;
+  const canonicalUrl = toAbsoluteUrl(getLocationPath(location));
+  const heroImageUrl = toAbsoluteUrl(location.heroImage);
 
   return (
     <>
       <Helmet>
         <title>{location.seo.title}</title>
         <meta name="description" content={location.seo.description} />
-        <link rel="canonical" href={`${window.location.origin}/${location.slug}`} />
+        <link rel="canonical" href={canonicalUrl} />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={location.seo.title} />
         <meta property="og:description" content={location.seo.description} />
-        <meta property="og:image" content={`${window.location.origin}${location.heroImage}`} />
-        <meta property="og:url" content={`${window.location.origin}/${location.slug}`} />
+        <meta property="og:image" content={heroImageUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={location.seo.title} />
+        <meta name="twitter:description" content={location.seo.description} />
+        <meta name="twitter:image" content={heroImageUrl} />
       </Helmet>
+      <SeoJsonLd data={{ '@context': 'https://schema.org', '@graph': [{ '@type': 'Service', name: `Shipping Containers for Sale in ${location.displayName}`, description: location.seo.description, url: canonicalUrl, image: heroImageUrl, provider: { '@type': 'Organization', name: 'Containers Exchange', url: SITE_URL }, areaServed: { '@type': 'AdministrativeArea', name: `${location.displayName}, ${location.country}` } }, { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL }, { '@type': 'ListItem', position: 2, name: `Shipping Containers in ${location.displayName}`, item: canonicalUrl }] }] }} />
 
       <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-[#07111f]">
         <img

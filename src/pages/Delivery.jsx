@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Phone, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PageSeo from '@/components/seo/PageSeo';
 
 const STATS = [
   { val: '48hr',  label: 'Avg. Turnaround' },
@@ -99,6 +100,7 @@ function FaqItem({ faq }) {
 export default function Delivery() {
   return (
     <div className="min-h-screen bg-accent text-white">
+      <PageSeo title="Shipping Container Delivery | Containers Exchange" description="Learn how shipping container delivery works, including site preparation, scheduling, and delivery requirements." path="/delivery" />
 
       {/* HERO */}
       <section className="relative px-6 sm:px-12 pt-28 pb-16 overflow-hidden border-b border-white/[0.08]">

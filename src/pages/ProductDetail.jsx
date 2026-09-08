@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import SeoJsonLd from '@/components/seo/SeoJsonLd';
+import { SITE_URL, toAbsoluteUrl } from '@/lib/seo';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
@@ -388,51 +390,51 @@ export default function ProductDetail() {
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
+  const pageTitle = seoHeroTitle && seoLocation
+    ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
+    : `${productTitle} | Containers Exchange`;
+  const pageDescription = seoHeroTitle && seoLocation
+    ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
+    : `Browse ${productTitle} shipping container pricing and availability.`;
+  const canonicalUrl = toAbsoluteUrl(`/product/${container.id}`);
+  const productImageUrl = toAbsoluteUrl(productImage);
 
  return (
 <>
 <Helmet>
 
-<title>
-{seoHeroTitle && seoLocation
-  ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
-  : `${productTitle} | Containers Exchange`}
-</title>
+<title>{pageTitle}</title>
 
 <meta
   name="description"
-  content={
-    seoHeroTitle && seoLocation
-      ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
-      : `Browse ${productTitle} shipping container pricing and availability.`
-  }
+  content={pageDescription}
 />
 
 <link
   rel="canonical"
-  href={window.location.href}
+  href={canonicalUrl}
 />
 
 <meta property="og:type" content="product" />
 
 <meta
   property="og:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+  content={pageTitle}
 />
 
 <meta
   property="og:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+  content={pageDescription}
 />
 
 <meta
   property="og:image"
-  content={productImage}
+  content={productImageUrl}
 />
 
 <meta
   property="og:url"
-  content={window.location.href}
+  content={canonicalUrl}
 />
 
 <meta
@@ -442,20 +444,29 @@ export default function ProductDetail() {
 
 <meta
   name="twitter:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+  content={pageTitle}
 />
 
 <meta
   name="twitter:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+  content={pageDescription}
 />
 
 <meta
   name="twitter:image"
-  content={productImage}
+  content={productImageUrl}
 />
 
 </Helmet>
+<SeoJsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Product', name: productTitle, description: productDescription, image: productImageUrl, sku: container.id, category: 'Shipping Container', brand: { '@type': 'Brand', name: 'Containers Exchange' } },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL }, { '@type': 'ListItem', position: 2, name: 'Shipping Containers', item: toAbsoluteUrl('/inventory') }, { '@type': 'ListItem', position: 3, name: productTitle, item: canonicalUrl }] },
+    ],
+  }}
+/>
 
 <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">

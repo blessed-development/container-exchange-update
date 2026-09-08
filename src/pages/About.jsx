@@ -1,4 +1,5 @@
 import React from 'react';
+import PageSeo from '@/components/seo/PageSeo';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Phone, Users, MapPin, Award, Clock } from 'lucide-react';
@@ -21,6 +22,7 @@ const VALUES = [
 export default function About() {
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="About Containers Exchange | Nationwide Shipping Container Experts" description="Learn how Containers Exchange helps businesses and property owners find new and used shipping containers with nationwide delivery and experienced support." path="/about" />
       {/* Header */}
       <div className="bg-accent text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.05] blur-[100px] pointer-events-none" />

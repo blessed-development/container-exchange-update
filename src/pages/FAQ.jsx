@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PageSeo from '@/components/seo/PageSeo';
 
 const FAQ_CATEGORIES = [
   {
@@ -132,6 +133,7 @@ function FaqItem({ faq }) {
 export default function FAQ() {
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="Shipping Container FAQs | Containers Exchange" description="Get answers to common shipping container questions about sizes, conditions, buying, delivery, and pricing." path="/faq" />
       {/* Header */}
       <div className="bg-accent text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
