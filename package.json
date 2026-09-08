@@ -12,7 +12,9 @@
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
     "locations:check": "node scripts/check-location-images.mjs",
-    "locations:activate": "node scripts/activate-location-images.mjs"
+    "locations:activate": "node scripts/activate-location-images.mjs",
+    "postal:build": "node scripts/build-canadian-postal-data.mjs",
+    "postal:check": "node scripts/check-canadian-postal-data.mjs"
   },
   "dependencies": {
     "@base44/sdk": "^0.8.27",
