@@ -527,9 +527,8 @@ export default function ProductDetail() {
               )}
             </div>
 
-            <div className="mt-4 flex items-end justify-between gap-3">
-              {allImages.length > 1 && (
-                <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {allImages.length > 1 && (
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {allImages.slice(0, 10).map((image, index) => (
                   <button
                     key={`${image}-${index}`}
@@ -548,11 +547,12 @@ export default function ProductDetail() {
                     />
                   </button>
                 ))}
-                </div>
-              )}
+              </div>
+            )}
 
-              {showHeroOverlay && (
-                <div className="mb-2 flex shrink-0 items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-1.5 backdrop-blur-sm">
+            {showHeroOverlay && (
+              <div className="mt-1.5 flex justify-end">
+                <div className="flex items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-1.5 backdrop-blur-sm">
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
@@ -574,8 +574,8 @@ export default function ProductDetail() {
                     ({container.review_count || 42} reviews)
                   </span>
                 </div>
-              )}
               </div>
+            )}
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
