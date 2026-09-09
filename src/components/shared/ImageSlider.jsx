@@ -31,7 +31,7 @@ export default function ImageSlider({ images, className = '' }) {
 
   return (
     <div
-      className={`relative overflow-hidden select-none ${className}`}
+      className={`relative h-full w-full overflow-hidden select-none ${className}`}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -46,7 +46,7 @@ export default function ImageSlider({ images, className = '' }) {
           animate="center"
           exit="exit"
           transition={{ duration: 0.35, ease: 'easeInOut' }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-contain"
         />
       </AnimatePresence>
 

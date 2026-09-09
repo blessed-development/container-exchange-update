@@ -4,15 +4,13 @@ import { Separator } from '@/components/ui/separator';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 
 const SIZE_OPTIONS = [
-  { value: '10', label: "10' Container" },
-  { value: '20', label: "20' Container" },
-  { value: '40', label: "40' Container" },
+  { value: '20', label: '20ft Container' },
+  { value: '40', label: '40ft Container' },
 ];
 
 const CONDITION_OPTIONS = [
   { value: 'new', label: 'New (One-Trip)' },
   { value: 'used', label: 'Used' },
-  { value: 'refurbished', label: 'Refurbished' },
 ];
 
 const GRADE_OPTIONS = [
@@ -36,12 +34,14 @@ function FilterGroup({ title, options, selected, onToggle }) {
 
       <div className="space-y-2.5">
         {options.map((opt) => (
-          <label
+          <div
             key={opt.value}
+            onClick={() => onToggle(opt.value)}
             className="flex items-center gap-2.5 cursor-pointer group"
           >
             <Checkbox
               checked={selected.includes(opt.value)}
+              onClick={(event) => event.stopPropagation()}
               onCheckedChange={() => onToggle(opt.value)}
               className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
@@ -49,7 +49,7 @@ function FilterGroup({ title, options, selected, onToggle }) {
             <span className="text-sm text-foreground group-hover:text-primary transition-colors">
               {opt.label}
             </span>
-          </label>
+          </div>
         ))}
       </div>
     </div>

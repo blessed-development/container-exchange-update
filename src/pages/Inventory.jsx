@@ -102,11 +102,13 @@ export default function Inventory() {
     let result = [...containers];
 
     if (filters.size.length > 0) {
-      result = result.filter((c) => filters.size.includes(c.size));
+      result = result.filter((c) => filters.size.includes(String(c.size)));
     }
 
     if (filters.condition.length > 0) {
-      result = result.filter((c) => filters.condition.includes(c.condition));
+      result = result.filter((c) =>
+        filters.condition.includes(String(c.condition || '').toLowerCase())
+      );
     }
 
     if (filters.grade.length > 0) {

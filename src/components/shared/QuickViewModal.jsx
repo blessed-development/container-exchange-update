@@ -17,7 +17,7 @@ export default function QuickViewModal({ container, onClose }) {
   if (!container) return null;
 
   const images = [
-    container.image_url,
+    container.inventory_image_url || container.image_url,
     ...(container.gallery_urls || []),
   ].filter(Boolean);
 
@@ -65,7 +65,7 @@ export default function QuickViewModal({ container, onClose }) {
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left — Large Slider */}
             <div className="relative bg-muted rounded-tl-2xl rounded-bl-2xl overflow-hidden" style={{ minHeight: '360px' }}>
-              <ImageSlider images={displayImages} className="absolute inset-0" />
+              <ImageSlider images={displayImages} className="h-full w-full" />
             </div>
 
             {/* Right — Details */}
