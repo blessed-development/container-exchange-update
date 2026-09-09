@@ -59,7 +59,6 @@ function FilterGroup({ title, options, selected, onToggle }) {
 export default function FilterSidebar({
   filters,
   onFilterChange,
-  zipCode,
   onZipSubmit,
 }) {
   const toggle = (key, value) => {
@@ -75,12 +74,6 @@ export default function FilterSidebar({
     <div className="space-y-6">
       {/* ZIP Code */}
       <div>
-        {zipCode && (
-          <p className="mb-2 text-[11px] font-mono tracking-widest text-primary uppercase">
-            ZIP: {zipCode}
-          </p>
-        )}
-
         <ZipCodeSearch
           variant="compact"
           onZipSubmit={onZipSubmit}

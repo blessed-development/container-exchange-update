@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Eye, Phone } from 'lucide-react';
+import { Star, Eye, FileText, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -79,6 +79,24 @@ export default function InventoryListCard({ container, index }) {
     navigate(`/product/${container.id}`);
   };
 
+  const requestQuote = (e) => {
+    e.stopPropagation();
+
+    const params = new URLSearchParams({
+      container: container.name || 'Shipping Container',
+      ...(savedLocation?.postalCode ? { zip: savedLocation.postalCode } : {}),
+      notes: [
+        `Container: ${container.name || 'Shipping Container'}`,
+        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
+        ...(savedLocation?.marketDisplayName
+          ? [`Supplying market: ${savedLocation.marketDisplayName}`]
+          : []),
+      ].join('\n'),
+    });
+
+    navigate(`/contact?${params.toString()}`);
+  };
+
   return (
     <>
       <motion.div
@@ -150,7 +168,7 @@ export default function InventoryListCard({ container, index }) {
                 </div>
               ) : (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
-                  {savedLocation?.city}, {savedLocation?.state}
+                  {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
 
@@ -197,6 +215,15 @@ export default function InventoryListCard({ container, index }) {
               <Phone className="w-4 h-4" />
               (800) 555-1234
             </a>
+
+            <Button
+              variant="outline"
+              onClick={requestQuote}
+              className="h-[42px] rounded-[14px] font-[760] gap-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
+            >
+              <FileText className="w-4 h-4" />
+              Request a Quote
+            </Button>
           </div>
         </div>
       </motion.div>
