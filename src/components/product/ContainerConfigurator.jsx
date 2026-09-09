@@ -709,6 +709,11 @@ export default function ContainerConfigurator({
                 <span className="tab-price">
                   {isActive ? fmt(unitPrice) : fmt(optionPrice)}
                 </span>
+                {isActive && (
+                  <span className="main-tab-active-check" aria-hidden="true">
+                    <Check size={9} />
+                  </span>
+                )}
               </button>
             );
           })}
