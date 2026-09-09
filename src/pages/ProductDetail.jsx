@@ -510,24 +510,24 @@ export default function ProductDetail() {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
                   </div>
 
-                  <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
-                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-5">
+                  <div className="absolute inset-0 p-6 pb-6 md:p-8 md:pb-7 flex flex-col justify-end">
+                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-2">
                       {seoHeroTitle}
                     </h1>
 
-                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white mb-5">
+                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white">
                       For Sale in
                       <span className="text-primary ml-2">
                         {seoLocation}
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="absolute bottom-6 right-6 md:bottom-7 md:right-8 flex items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-1.5 backdrop-blur-sm">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-5 h-5 ${
+                            className={`w-4 h-4 ${
                               i < Math.round(container.rating || 5)
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-white/30'
@@ -536,11 +536,11 @@ export default function ProductDetail() {
                         ))}
                       </div>
 
-                      <span className="text-base font-black text-white">
+                      <span className="text-sm font-black text-white">
                         {container.rating || 5}
                       </span>
 
-                      <span className="text-sm text-white/80">
+                      <span className="text-xs text-white/80">
                         ({container.review_count || 42} reviews)
                       </span>
                     </div>

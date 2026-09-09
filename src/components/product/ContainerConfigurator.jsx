@@ -31,8 +31,8 @@ const GRADE_OPTIONS = [
 ];
 
 const CONDITION_IMAGES = {
-  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=500&q=80',
-  new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=500&q=80',
+  new: '/images/product-conditions/new-one-trip-side.webp',
+  used: '/images/product-conditions/used-cargo-worthy-side.webp',
 };
 
 const EMPTY_LOCATION = {
@@ -729,7 +729,11 @@ export default function ContainerConfigurator({
                   className={`cond-card ${active ? 'active' : ''}`}
                   onClick={() => handleConditionSwitch(cond)}
                 >
-                  <img src={CONDITION_IMAGES[cond]} className="cond-img" alt={cond} />
+                  <img
+                    src={CONDITION_IMAGES[cond]}
+                    className="cond-img"
+                    alt={cond === 'new' ? 'New one-trip container side detail' : 'Used cargo-worthy container side detail'}
+                  />
 
                   <div className="cc-info">
                     <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
