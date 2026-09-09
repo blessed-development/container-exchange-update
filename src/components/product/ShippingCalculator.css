@@ -2324,13 +2324,13 @@ margin-top:1px !important;
 
 .grade-active-check{
   position:absolute !important;
-  top:9px !important;
-  right:9px !important;
-  width:20px !important;
-  height:20px !important;
+  top:8px !important;
+  right:8px !important;
+  width:16px !important;
+  height:16px !important;
   border-radius:999px !important;
-  background:#22c55e !important;
-  color:#06130a !important;
+  background:#16a34a !important;
+  color:#fff !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
@@ -2835,6 +2835,22 @@ margin-top:1px !important;
   align-items:center !important;
   justify-content:center !important;
   z-index:5 !important;
+}
+
+.grade-active-check svg{
+  width:9px !important;
+  height:9px !important;
+}
+
+.cond-card.active .cc-check{
+  top:8px !important;
+  right:8px !important;
+  width:18px !important;
+  height:18px !important;
+  background:#16a34a !important;
+  color:#fff !important;
+  border-color:rgba(255,255,255,.2) !important;
+  box-shadow:0 5px 14px rgba(22,163,74,.3) !important;
 }
 
 .grade-upgrade-btn.active::after{

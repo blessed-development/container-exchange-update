@@ -32,7 +32,7 @@ const GRADE_OPTIONS = [
 
 const CONDITION_IMAGES = {
   new: '/images/product-conditions/new-one-trip-side.webp',
-  used: '/images/product-conditions/used-cargo-worthy-side.webp',
+  used: '/images/product-conditions/used-cargo-worthy-side-v2.webp',
 };
 
 const EMPTY_LOCATION = {

@@ -515,7 +515,7 @@ export default function ProductDetail() {
                       {seoHeroTitle}
                     </h1>
 
-                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white">
+                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white mb-11">
                       For Sale in
                       <span className="text-primary ml-2">
                         {seoLocation}
