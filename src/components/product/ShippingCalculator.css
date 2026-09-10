@@ -2448,6 +2448,92 @@ margin-top:1px !important;
   display:none !important;
 }
 
+/* Contact-page palette alignment — color only; sizing and layout remain unchanged. */
+.widget{
+  background:#f5f5f5 !important;
+  color:#0a0a0a !important;
+  border-color:#d9d9df !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.08) !important;
+}
+.premium-buy-tab,
+.zip-bar,
+.condition-tabs,
+.main-tabs,
+.cond-cards-section,
+.section-card,
+.checkout,
+.main-tab,
+.cond-card{
+  background:#fff !important;
+  border-color:#d9d9df !important;
+  color:#0a0a0a !important;
+}
+.premium-buy-tab:not(.active),
+.main-tab:not(.active),
+.cond-card:not(.active){
+  background:#fff !important;
+}
+.premium-buy-tab.active{
+  background:#ff4d00 !important;
+  border-color:#ff4d00 !important;
+  color:#fff !important;
+  box-shadow:0 10px 20px rgba(255,77,0,.20) !important;
+}
+.main-tab.active,
+.cond-card.active{
+  background:#fff7f2 !important;
+  border-color:rgba(255,77,0,.55) !important;
+}
+.zip-bar,
+.zip-bar.is-editing{
+  border-color:#d9d9df !important;
+  box-shadow:none !important;
+}
+.zip-left,
+.zip-inline-input,
+.section-header strong,
+.card-val,
+.main-tab,
+.cond-card,
+.checkout,
+.tab-title,
+.tab-title::after,
+.selection-btn,
+.selection-btn span,
+.selection-type,
+.grade-upgrade-btn .grade-name,
+.total-price{
+  color:#0a0a0a !important;
+}
+.zip-label,
+.zip-subtitle,
+.zip-inline-current,
+.zip-val,
+.card-lbl,
+.step-label,
+.section-header span,
+.tax-note,
+.total-lbl,
+.tab-sub,
+.cond-card small,
+.checkout-header-text,
+.grade-upgrade-btn .grade-delta.included{
+  color:#6b7280 !important;
+}
+.zip-inline-input::placeholder{ color:#6b7280 !important; }
+.tab-price,.card-price,.checkout-price,.total-price,.grade-delta.add{ color:#ff4d00 !important; }
+.checkout-action-lock .add-btn{
+  background:#ff4d00 !important;
+  color:#fff !important;
+  box-shadow:0 10px 20px rgba(255,77,0,.20) !important;
+}
+.checkout-action-lock .quote-btn,
+.quote-btn{
+  color:#0a0a0a !important;
+  background:#fff !important;
+  border-color:#d9d9df !important;
+}
+
 /* Final readable text layer for the warm calculator workspace. */
 .widget .step-label,
 .widget .card-lbl,
@@ -3188,4 +3274,50 @@ margin-top:1px !important;
 
 .grade-upgrade-btn.active::after{
   display:none !important;
+}
+
+/* Contact-page palette alignment — final precedence layer, colors only. */
+.widget{
+  background:#f5f5f5 !important;
+  color:#0a0a0a !important;
+  border-color:#d9d9df !important;
+  box-shadow:0 14px 30px rgba(0,0,0,.08) !important;
+}
+.premium-buy-tab,.zip-bar,.condition-tabs,.main-tabs,.cond-cards-section,.section-card,.checkout,.main-tab,.cond-card{
+  background:#fff !important;
+  border-color:#d9d9df !important;
+  color:#0a0a0a !important;
+}
+.premium-buy-tab:not(.active),.main-tab:not(.active),.cond-card:not(.active){ background:#fff !important; }
+.premium-buy-tab.active{
+  background:#ff4d00 !important;
+  border-color:#ff4d00 !important;
+  color:#fff !important;
+  box-shadow:0 10px 20px rgba(255,77,0,.20) !important;
+}
+.main-tab.active,.cond-card.active{
+  background:#fff7f2 !important;
+  border-color:rgba(255,77,0,.55) !important;
+}
+.zip-bar,.zip-bar.is-editing{ border-color:#d9d9df !important; box-shadow:none !important; }
+.zip-left,.zip-inline-input,.section-header strong,.card-val,.main-tab,.cond-card,.checkout,.tab-title,.tab-title::after,.selection-btn,.selection-btn span,.selection-type,.grade-upgrade-btn .grade-name,.total-price{ color:#0a0a0a !important; }
+.zip-label,.zip-subtitle,.zip-inline-current,.zip-val,.card-lbl,.step-label,.section-header span,.tax-note,.total-lbl,.tab-sub,.cond-card small,.checkout-header-text,.grade-upgrade-btn .grade-delta.included{ color:#6b7280 !important; }
+.zip-inline-input::placeholder{ color:#6b7280 !important; }
+.tab-price,.card-price,.checkout-price,.total-price,.grade-delta.add{ color:#ff4d00 !important; }
+.checkout-action-lock .add-btn{
+  background:#ff4d00 !important;
+  color:#fff !important;
+  border-color:#ff4d00 !important;
+  box-shadow:0 10px 20px rgba(255,77,0,.20) !important;
+}
+.checkout-action-lock .quote-btn,.quote-btn{
+  color:#0a0a0a !important;
+  background:#fff !important;
+  border-color:#d9d9df !important;
+}
+.widget .checkout-action-lock .quote-btn,
+.widget .quote-btn{
+  color:#0a0a0a !important;
+  background:#fff !important;
+  border-color:#d9d9df !important;
 }
