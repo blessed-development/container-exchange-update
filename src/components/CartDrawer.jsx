@@ -92,12 +92,12 @@ const CartDrawer = ({ onCheckout }) => {
           width:min(420px,100vw);
           height:100vh;
           z-index:9999;
-          background:#07090d;
-          color:#fff;
+          background:#f3f1ed;
+          color:#22201d;
           display:flex;
           flex-direction:column;
-          border-left:1px solid rgba(255,255,255,.08);
-          box-shadow:-30px 0 80px rgba(0,0,0,.55);
+          border-left:1px solid rgba(33,30,26,.10);
+          box-shadow:-30px 0 80px rgba(26,22,18,.20);
         }
 
         .ce-head{
@@ -106,7 +106,7 @@ const CartDrawer = ({ onCheckout }) => {
           display:flex;
           align-items:center;
           justify-content:space-between;
-          border-bottom:1px solid rgba(255,255,255,.08);
+          border-bottom:1px solid rgba(33,30,26,.10);
         }
 
         .ce-title{
@@ -122,8 +122,8 @@ const CartDrawer = ({ onCheckout }) => {
           height:24px;
           padding:0 7px;
           border-radius:999px;
-          background:#22c55e;
-          color:#050607;
+          background:#ff5c2d;
+          color:#fff;
           font-size:12px;
           font-weight:900;
           display:inline-flex;
@@ -134,7 +134,7 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-close{
           border:0;
           background:transparent;
-          color:rgba(255,255,255,.65);
+          color:rgba(34,32,29,.62);
           cursor:pointer;
           font-size:20px;
         }
@@ -152,7 +152,7 @@ const CartDrawer = ({ onCheckout }) => {
           gap:12px;
           padding:0 0 14px;
           margin-bottom:12px;
-          border-bottom:1px solid rgba(255,255,255,.055);
+          border-bottom:1px solid rgba(33,30,26,.10);
         }
 
         .ce-left{
@@ -167,7 +167,7 @@ const CartDrawer = ({ onCheckout }) => {
           height:52px;
           border-radius:11px;
           object-fit:cover;
-          background:#111827;
+          background:#e7e3dc;
           display:block;
         }
 
@@ -182,10 +182,10 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-qty button{
           width:26px;
           height:26px;
-          border:1px solid rgba(255,255,255,.08);
+          border:1px solid rgba(33,30,26,.12);
           border-radius:9px;
-          background:#111827;
-          color:#fff;
+          background:#fffdf9;
+          color:#22201d;
           font-size:15px;
           font-weight:800;
           cursor:pointer;
@@ -212,7 +212,7 @@ const CartDrawer = ({ onCheckout }) => {
           -webkit-box-orient:vertical;
           width:100%;
           margin:0 0 4px;
-          color:#fff;
+          color:#22201d;
           font-size:14px;
           font-weight:850;
           line-height:1.14;
@@ -224,7 +224,7 @@ const CartDrawer = ({ onCheckout }) => {
           display:block;
           width:100%;
           margin:0;
-          color:rgba(203,213,225,.58);
+          color:rgba(76,70,63,.68);
           font-size:13px;
           font-weight:600;
           line-height:1.22;
@@ -236,7 +236,7 @@ const CartDrawer = ({ onCheckout }) => {
         .ce-price{
           margin-top:10px;
           align-self:flex-end;
-          color:#18d45c;
+          color:#e94a1a;
           font-size:16px;
           font-weight:900;
         }
@@ -249,14 +249,14 @@ const CartDrawer = ({ onCheckout }) => {
           height:24px;
           border:0;
           background:transparent;
-          color:rgba(255,255,255,.45);
+          color:rgba(34,32,29,.42);
           font-size:18px;
           cursor:pointer;
         }
 
         .ce-footer{
           padding:18px 22px 24px;
-          border-top:1px solid rgba(255,255,255,.08);
+          border-top:1px solid rgba(33,30,26,.10);
         }
 
         .ce-subtotal{
@@ -274,7 +274,7 @@ const CartDrawer = ({ onCheckout }) => {
         }
 
         .ce-tax{
-          color:rgba(203,213,225,.66);
+          color:rgba(76,70,63,.72);
           font-size:12.5px;
           margin-bottom:28px;
         }
@@ -284,7 +284,7 @@ const CartDrawer = ({ onCheckout }) => {
           height:48px;
           border:0;
           border-radius:16px;
-          background:linear-gradient(180deg,#35df62,#22c55e);
+          background:linear-gradient(180deg,#ff6a3d,#ef4c1d);
           color:#fff;
           font-size:15px;
           font-weight:900;
@@ -296,7 +296,7 @@ const CartDrawer = ({ onCheckout }) => {
           margin-top:18px;
           border:0;
           background:transparent;
-          color:rgba(203,213,225,.78);
+          color:rgba(76,70,63,.82);
           font-size:14px;
           font-weight:800;
           cursor:pointer;

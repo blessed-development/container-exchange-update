@@ -2332,6 +2332,89 @@
   }
 }
 
+/* Warm-gray checkout workspace */
+.checkout-container{
+  color:#25221e !important;
+  background:
+    radial-gradient(circle at 0% 0%,rgba(255,113,70,.10),transparent 32%),
+    linear-gradient(180deg,#f4f2ed 0%,#e9e6df 100%) !important;
+}
+
+.checkout-header{
+  border-bottom-color:rgba(55,48,40,.10) !important;
+  background:rgba(248,247,243,.88) !important;
+}
+
+.checkout-logo,
+.cart-product-title,
+.cart-qty button,
+.return-store-btn,
+.total-card h2,
+.details-summary-card h2,
+.checkout-details-panel .cart-panel-title h1{
+  color:#25221e !important;
+}
+
+.back-link,
+.secure-badge,
+.cart-product-subtitle,
+.cart-rating span,
+.tax-row em,
+.shipping-note,
+.checkout-help,
+.checkout-help a,
+.details-form label,
+.os-prod-sub,
+.os-disclaimer{
+  color:#716a61 !important;
+}
+
+.cart-panel,
+.total-card,
+.details-summary-card,
+.checkout-details-panel{
+  background:linear-gradient(180deg,#fffdfa,#f4f1eb) !important;
+  border-color:rgba(55,48,40,.11) !important;
+  box-shadow:0 18px 44px rgba(36,29,22,.08) !important;
+}
+
+.cart-table-head,
+.cart-line,
+.grand-total,
+.checkout-details-sidebar .os-head,
+.checkout-details-sidebar .os-item{
+  border-color:rgba(55,48,40,.10) !important;
+  color:#7d756c !important;
+}
+
+.cart-unit-price,
+.cart-line-total,
+.total-row,
+.checkout-details-sidebar .total-row,
+.checkout-details-sidebar .os-prod-title,
+.checkout-details-sidebar .os-price,
+.checkout-details-sidebar .os-qty{
+  color:#28241f !important;
+}
+
+.cart-qty,
+.return-store-btn,
+.details-form input,
+.details-form select,
+.details-form textarea{
+  background:#fffdf9 !important;
+  border-color:rgba(55,48,40,.14) !important;
+  color:#29251f !important;
+}
+
+.cart-product-image,
+.checkout-details-sidebar .os-img{ background:#e8e4dd !important; }
+.checkout-btn,
+.reserve-btn{ background:linear-gradient(180deg,#ff6a3d,#ed4b1d) !important; color:#fff !important; }
+.price-lock-banner{ background:#fff3ed !important; border-color:rgba(237,84,40,.20) !important; }
+.price-lock-banner h3{ color:#6e2b18 !important; }
+.price-lock-banner p{ color:#895f52 !important; }
+
 /* =========================================================
    APPLE / TESLA CHECKOUT REFINEMENT
    Quiet luxury pass: calmer color, precise spacing, reduced noise.
@@ -4091,8 +4174,43 @@
     flex-direction:column !important;
   }
 
-  .success-primary,
-  .success-secondary{
-    width:100% !important;
-  }
+.success-primary,
+.success-secondary{
+  width:100% !important;
+}
+}
+
+/* Purchase flow final palette — intentionally light regardless of device theme. */
+.checkout-container{
+  color:#25221e !important;
+  background:radial-gradient(circle at 0 0,rgba(255,113,70,.10),transparent 32%),linear-gradient(180deg,#f5f3ee 0%,#e9e6df 100%) !important;
+}
+.checkout-header{
+  background:rgba(250,249,246,.92) !important;
+  border-bottom-color:rgba(55,48,40,.11) !important;
+}
+.cart-panel,.total-card,.details-summary-card,.checkout-details-panel,.checkout-details-sidebar,.checkout-payment-form{
+  color:#25221e !important;
+  background:#fffdfa !important;
+  border-color:rgba(55,48,40,.13) !important;
+  box-shadow:0 14px 34px rgba(42,34,26,.08) !important;
+}
+.checkout-container h1,.checkout-container h2,.checkout-container h3,.checkout-container strong,.checkout-container label,.checkout-logo,.cart-product-title,.cart-qty button,.return-store-btn{
+  color:#25221e !important;
+}
+.checkout-container p,.checkout-container span,.checkout-container .back-link,.checkout-container .secure-badge,.cart-product-subtitle,.cart-rating span{
+  color:#726b62 !important;
+}
+.checkout-container input,.checkout-container select,.checkout-container textarea,.cart-qty{
+  color:#25221e !important;
+  background:#f8f6f1 !important;
+  border-color:rgba(55,48,40,.17) !important;
+}
+.checkout-container .cart-price,.checkout-container .line-price,.checkout-container .total-price,.checkout-container .summary-price{
+  color:#e94a1a !important;
+}
+.checkout-container .checkout-btn,.checkout-container .reserve-btn,.checkout-container .place-order-btn{
+  color:#fff !important;
+  background:linear-gradient(180deg,#ff7044,#ed4b1c) !important;
+  border-color:#ed4b1c !important;
 }
