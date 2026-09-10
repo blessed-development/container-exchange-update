@@ -87,14 +87,6 @@ const GRADE_INFO = {
   },
 };
 
-const SAMPLE_GALLERY_IMAGES = [
-  '/images/products/new-20-iicl/representative-1.webp',
-  '/images/products/new-20-iicl/representative-2.webp',
-  '/images/products/new-20-iicl/side-angle.webp',
-  '/images/products/new-20-iicl/interior-1.webp',
-  '/images/products/new-20-iicl/blind-end-angle.webp',
-];
-
 const normalize = (value) =>
   String(value || '').toLowerCase().replace(/[\s_-]/g, '');
 
@@ -194,12 +186,9 @@ export default function ProductDetail() {
   const showStartingFrom =
     !hasActiveZip;
 
-  const productsWithDedicatedGallery = ['used-40-wwt', 'used-40hc-wwt'];
-  const shouldUseSampleGallery = !productsWithDedicatedGallery.includes(container?.id);
   const allImages = [
     productImage,
     ...(container?.gallery_urls || []),
-    ...(shouldUseSampleGallery ? SAMPLE_GALLERY_IMAGES : []),
   ].filter(Boolean);
 
   const activeImage = allImages[activeImageIndex] || productImage;

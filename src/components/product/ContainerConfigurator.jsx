@@ -260,6 +260,7 @@ export default function ContainerConfigurator({
 
   const [postalInput, setPostalInput] = useState('');
   const postalInputRef = useRef(null);
+  const [hasEditedPostalInput, setHasEditedPostalInput] = useState(false);
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
 
@@ -331,6 +332,8 @@ export default function ContainerConfigurator({
   }, [isEditingLocation]);
 
   useEffect(() => {
+    if (!isEditingLocation || !hasEditedPostalInput) return;
+
     const raw = postalInput.trim().toUpperCase();
     const clean = cleanPostal(raw);
 
@@ -360,6 +363,7 @@ export default function ContainerConfigurator({
           })
         );
         setPostalInput('');
+        setHasEditedPostalInput(false);
         setIsEditingLocation(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
@@ -369,7 +373,7 @@ export default function ContainerConfigurator({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [postalInput]);
+  }, [postalInput, isEditingLocation, hasEditedPostalInput]);
 
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
@@ -473,6 +477,7 @@ export default function ContainerConfigurator({
             })
           );
           setPostalInput('');
+          setHasEditedPostalInput(false);
           setIsEditingLocation(false);
         } catch (error) {
           setZipError(error.message || 'Location unavailable.');
@@ -494,12 +499,14 @@ export default function ContainerConfigurator({
   const beginLocationEdit = () => {
     setZipError('');
     setPostalInput(location?.postalCode || '');
+    setHasEditedPostalInput(false);
     setIsEditingLocation(true);
   };
 
   const cancelLocationEdit = () => {
     setZipError('');
     setPostalInput('');
+    setHasEditedPostalInput(false);
     setIsEditingLocation(false);
   };
 
@@ -682,21 +689,14 @@ export default function ContainerConfigurator({
                   aria-label="Delivery ZIP or postal code"
                   placeholder="Enter your ZIP / Postal Code"
                   value={postalInput}
-                  onChange={(e) => setPostalInput(e.target.value)}
+                  onChange={(e) => {
+                    setHasEditedPostalInput(true);
+                    setPostalInput(e.target.value);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === 'Escape') cancelLocationEdit();
                   }}
                 />
-                <button
-                  type="button"
-                  className="zip-inline-locate"
-                  onClick={useCurrentLocation}
-                  disabled={isLookingUp}
-                  aria-label="Use my current location"
-                  title="Use my current location"
-                >
-                  <LocateFixed size={16} />
-                </button>
                 <button type="button" className="zip-action" onClick={cancelLocationEdit}>
                   Cancel
                 </button>
@@ -712,6 +712,17 @@ export default function ContainerConfigurator({
             )}
           </div>
 
+          {isEditingLocation && (
+            <button
+              type="button"
+              className="zip-inline-current"
+              onClick={useCurrentLocation}
+              disabled={isLookingUp}
+            >
+              <LocateFixed size={15} />
+              Use my current location
+            </button>
+          )}
           {isEditingLocation && isLookingUp && (
             <div className="zip-inline-message zip-status">Detecting location...</div>
           )}

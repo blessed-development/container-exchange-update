@@ -197,6 +197,34 @@
   cursor:not-allowed;
 }
 
+.zip-inline-current{
+  width:100%;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:#f3f4f6;
+  font-size:12px;
+  font-weight:800;
+  transition:color .2s ease,background .2s ease;
+}
+
+.zip-inline-current svg{
+  color:#ff5c2d;
+}
+
+.zip-inline-current:hover:not(:disabled){
+  color:#fff;
+  background:rgba(255,255,255,.035);
+}
+
+.zip-inline-current:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
 .zip-inline-message{
   padding:0 12px 10px;
 }
