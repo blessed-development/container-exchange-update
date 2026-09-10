@@ -674,9 +674,7 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className={`step-label ${location?.postalCode ? 'is-complete' : ''}`}>
-          {location?.postalCode ? 'DELIVERY LOCATION SET' : 'STEP 1 — ENTER ZIP / POSTAL CODE'}
-        </div>
+        <div className="step-label">ENTER ZIP / POSTAL CODE</div>
 
         <div className={`zip-bar ${isEditingLocation ? 'is-editing' : ''}`}>
           <div className="zip-collapsed">
