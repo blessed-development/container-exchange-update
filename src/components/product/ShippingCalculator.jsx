@@ -13,8 +13,8 @@ const USED_GRADES = [
 const NEW_GRADES = [{ key: 'IICL', label: 'IICL', adjust: 0 }];
 
 const CONDITION_IMAGES = {
-  used: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80',
-  new: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=300&q=80',
+  used: '/images/product-conditions/used-cargo-worthy-side-v2.webp',
+  new: '/images/product-conditions/new-one-trip-side.webp',
 };
 
 export default function ShippingCalculator({

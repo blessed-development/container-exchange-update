@@ -126,6 +126,81 @@
   font-weight:700;
 }
 
+.zip-location-trigger,
+.zip-inline-editor{
+  width:100%;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.zip-location-trigger{
+  justify-content:space-between;
+  color:inherit;
+  text-align:left;
+}
+
+.zip-location-trigger:focus-visible,
+.zip-inline-input:focus-visible,
+.zip-inline-locate:focus-visible{
+  outline:2px solid #ff5c2d;
+  outline-offset:3px;
+}
+
+.zip-location-text{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.zip-inline-editor > svg{
+  flex:none;
+  color:#e5e7eb;
+}
+
+.zip-inline-input{
+  flex:1;
+  min-width:0;
+  height:32px;
+  border:0;
+  background:transparent;
+  color:#fff;
+  font:inherit;
+  font-size:12px;
+  font-weight:750;
+}
+
+.zip-inline-input::placeholder{
+  color:#8a93a3;
+}
+
+.zip-inline-locate{
+  flex:none;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  color:#ff5c2d;
+  background:rgba(255,92,45,.09);
+  transition:background .2s ease,color .2s ease;
+}
+
+.zip-inline-locate:hover:not(:disabled){
+  background:rgba(255,92,45,.18);
+  color:#fff;
+}
+
+.zip-inline-locate:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.zip-inline-message{
+  padding:0 12px 10px;
+}
+
 .zip-val,
 .card-lbl,
 .step-label,

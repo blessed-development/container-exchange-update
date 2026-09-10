@@ -20,7 +20,7 @@ const GRADE_LABELS = {
 };
 
 const fallbackImage =
-  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=900&q=85';
+  '/images/products/used-20-cw/hero.webp';
 
 export default function RelatedProducts() {
   const { addToCart } = useCart();

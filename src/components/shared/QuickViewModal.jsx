@@ -23,9 +23,9 @@ export default function QuickViewModal({ container, onClose }) {
 
   // Fallback images if none stored
   const displayImages = images.length > 0 ? images : [
-    'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80',
-    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=1200&q=80',
-    'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1200&q=80',
+    '/images/products/new-20-iicl/hero.webp',
+    '/images/products/new-20-iicl/side-angle.webp',
+    '/images/products/new-20-iicl/interior-1.webp',
   ];
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
@@ -9,6 +9,7 @@ import {
   Lock,
   MapPin,
   Check,
+  LocateFixed,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
@@ -252,12 +253,13 @@ export default function ContainerConfigurator({
     getGrandTotal,
   } = useCart();
 
-  const [zipOpen, setZipOpen] = useState(false);
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
   const [location, setLocation] = useState(() => {
     return getSavedSelectedLocation() || EMPTY_LOCATION;
   });
 
   const [postalInput, setPostalInput] = useState('');
+  const postalInputRef = useRef(null);
   const [zipError, setZipError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
 
@@ -311,11 +313,22 @@ export default function ContainerConfigurator({
     if (params.get('openZip') !== '1') return;
 
     const timer = setTimeout(() => {
-      setZipOpen(true);
+      setIsEditingLocation(true);
     }, 1800);
 
     return () => clearTimeout(timer);
   }, [container?.id]);
+
+  useEffect(() => {
+    if (!isEditingLocation) return;
+
+    const timer = setTimeout(() => {
+      postalInputRef.current?.focus();
+      postalInputRef.current?.select();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [isEditingLocation]);
 
   useEffect(() => {
     const raw = postalInput.trim().toUpperCase();
@@ -347,7 +360,7 @@ export default function ContainerConfigurator({
           })
         );
         setPostalInput('');
-        setZipOpen(false);
+        setIsEditingLocation(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
@@ -460,7 +473,7 @@ export default function ContainerConfigurator({
             })
           );
           setPostalInput('');
-          setZipOpen(false);
+          setIsEditingLocation(false);
         } catch (error) {
           setZipError(error.message || 'Location unavailable.');
         } finally {
@@ -476,6 +489,18 @@ export default function ContainerConfigurator({
         timeout: 12000,
       }
     );
+  };
+
+  const beginLocationEdit = () => {
+    setZipError('');
+    setPostalInput(location?.postalCode || '');
+    setIsEditingLocation(true);
+  };
+
+  const cancelLocationEdit = () => {
+    setZipError('');
+    setPostalInput('');
+    setIsEditingLocation(false);
   };
 
   const navigateToMatchingProduct = ({
@@ -646,40 +671,53 @@ export default function ContainerConfigurator({
           {location?.postalCode ? 'DELIVERY LOCATION SET' : 'STEP 1 — ENTER ZIP / POSTAL CODE'}
         </div>
 
-        <div className="zip-bar">
-          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
-            <div className="zip-left">
-              <MapPin size={15} />
-              <span className="zip-location-text">{locationLabel}</span>
-            </div>
-
-            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
-              {zipOpen ? 'Close' : 'Change'}
-            </div>
+        <div className={`zip-bar ${isEditingLocation ? 'is-editing' : ''}`}>
+          <div className="zip-collapsed">
+            {isEditingLocation ? (
+              <div className="zip-inline-editor">
+                <MapPin size={16} aria-hidden="true" />
+                <input
+                  ref={postalInputRef}
+                  className="zip-inline-input"
+                  aria-label="Delivery ZIP or postal code"
+                  placeholder="Enter your ZIP / Postal Code"
+                  value={postalInput}
+                  onChange={(e) => setPostalInput(e.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') cancelLocationEdit();
+                  }}
+                />
+                <button
+                  type="button"
+                  className="zip-inline-locate"
+                  onClick={useCurrentLocation}
+                  disabled={isLookingUp}
+                  aria-label="Use my current location"
+                  title="Use my current location"
+                >
+                  <LocateFixed size={16} />
+                </button>
+                <button type="button" className="zip-action" onClick={cancelLocationEdit}>
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button type="button" className="zip-location-trigger" onClick={beginLocationEdit}>
+                <span className="zip-left">
+                  <MapPin size={15} />
+                  <span className="zip-location-text">{locationLabel}</span>
+                </span>
+                <span className="zip-action">Change</span>
+              </button>
+            )}
           </div>
 
-          <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-            <div className="zip-row zip-row-single">
-              <input
-                className="zip-input"
-                placeholder="Enter your ZIP / Postal Code"
-                value={postalInput}
-                onChange={(e) => setPostalInput(e.target.value)}
-              />
-            </div>
-
-            {isLookingUp && <div className="zip-status">Detecting location...</div>}
-            {zipError && <div className="zip-error">{zipError}</div>}
-
-            <button
-              type="button"
-              className="zip-loc-btn"
-              onClick={useCurrentLocation}
-              disabled={isLookingUp}
-            >
-              Use my current location
-            </button>
-          </div>
+          {isEditingLocation && isLookingUp && (
+            <div className="zip-inline-message zip-status">Detecting location...</div>
+          )}
+          {isEditingLocation && zipError && (
+            <div className="zip-inline-message zip-error">{zipError}</div>
+          )}
         </div>
 
         <div className="section-header">

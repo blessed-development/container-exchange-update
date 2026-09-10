@@ -23,7 +23,7 @@ const CartDrawer = ({ onCheckout }) => {
     item.image_url ||
     item.imageUrl ||
     item.photo ||
-    'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
+    '/images/products/new-20-iicl/hero.webp';
 
   const cleanSub = (item) => {
     if (item) {

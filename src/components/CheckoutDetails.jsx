@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 
 const fallbackImage =
-  'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=300&q=80';
+  '/images/products/new-20-iicl/hero.webp';
 
 const formatMoney = (value) => {
   return `$${Number(value || 0).toLocaleString('en-US', {

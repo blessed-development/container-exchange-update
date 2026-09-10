@@ -119,7 +119,7 @@ export default function InventoryListCard({ container, index }) {
             src={
               container.inventory_image_url ||
               container.image_url ||
-              'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80'
+              '/images/products/new-20-iicl/hero.webp'
             }
             alt={container.name}
             className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
