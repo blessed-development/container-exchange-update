@@ -209,7 +209,7 @@ export default function Inventory() {
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
                   <h2 className="text-[38px] sm:text-5xl font-black tracking-tight leading-[1] whitespace-nowrap">
-                    <span className="text-white">{cityPart}</span>
+                    <span className="text-foreground">{cityPart}</span>
                     <span className="text-primary">,{statePart}</span>
                   </h2>
                 )}

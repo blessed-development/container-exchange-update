@@ -4320,3 +4320,15 @@
 .checkout-container .checkout-details-sidebar .os-disclaimer{
   color:#756e65 !important;
 }
+.checkout-container .checkout-details-sidebar .total-row > span,
+.checkout-container .checkout-details-sidebar .grand-total > span{
+  color:#756e65 !important;
+}
+.checkout-container .checkout-details-sidebar .os-shipto em,
+.checkout-container .checkout-details-sidebar .tax-row em{
+  color:#756e65 !important;
+}
+.checkout-container .checkout-details-sidebar .tax-row strong,
+.checkout-container .checkout-details-sidebar .os-disclaimer strong{
+  color:#282520 !important;
+}
