@@ -268,8 +268,10 @@ export default function ContainerConfigurator({
 
   const [postalInput, setPostalInput] = useState('');
   const postalInputRef = useRef(null);
+  const locationEditorRef = useRef(null);
   const [hasEditedPostalInput, setHasEditedPostalInput] = useState(false);
   const [zipError, setZipError] = useState('');
+  const [didRequestCurrentLocation, setDidRequestCurrentLocation] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
 
   const [grade, setGrade] = useState(() => getDefaultGrade(condition));
@@ -338,6 +340,23 @@ export default function ContainerConfigurator({
     }, 0);
 
     return () => clearTimeout(timer);
+  }, [isEditingLocation]);
+
+  useEffect(() => {
+    if (!isEditingLocation) return;
+
+    const handlePointerDown = (event) => {
+      if (!locationEditorRef.current?.contains(event.target)) {
+        setZipError('');
+        setPostalInput('');
+        setHasEditedPostalInput(false);
+        setDidRequestCurrentLocation(false);
+        setIsEditingLocation(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, [isEditingLocation]);
 
   useEffect(() => {
@@ -465,8 +484,13 @@ export default function ContainerConfigurator({
       }, ${getCountryLabel(location.country)}`
     : 'Enter your ZIP / Postal Code';
 
+  const shouldShowZipError =
+    Boolean(zipError) &&
+    (didRequestCurrentLocation || !/location (permission|unavailable|not supported)/i.test(zipError));
+
   const useCurrentLocation = () => {
     setZipError('');
+    setDidRequestCurrentLocation(true);
 
     if (!navigator.geolocation) {
       setZipError('Current location is not supported by this browser.');
@@ -512,6 +536,7 @@ export default function ContainerConfigurator({
 
   const beginLocationEdit = () => {
     setZipError('');
+    setDidRequestCurrentLocation(false);
     setPostalInput(locationLabel);
     setHasEditedPostalInput(false);
     setIsEditingLocation(true);
@@ -519,6 +544,7 @@ export default function ContainerConfigurator({
 
   const cancelLocationEdit = () => {
     setZipError('');
+    setDidRequestCurrentLocation(false);
     setPostalInput('');
     setHasEditedPostalInput(false);
     setIsEditingLocation(false);
@@ -690,7 +716,7 @@ export default function ContainerConfigurator({
 
         <div className="step-label">ENTER ZIP / POSTAL CODE</div>
 
-        <div className={`zip-bar ${isEditingLocation ? 'is-editing' : ''}`}>
+        <div ref={locationEditorRef} className={`zip-bar ${isEditingLocation ? 'is-editing' : ''}`}>
           <div className="zip-collapsed">
             {isEditingLocation ? (
               <div className="zip-inline-editor">
@@ -738,7 +764,7 @@ export default function ContainerConfigurator({
           {isEditingLocation && isLookingUp && (
             <div className="zip-inline-message zip-status">Detecting location...</div>
           )}
-          {isEditingLocation && zipError && (
+          {isEditingLocation && shouldShowZipError && (
             <div className="zip-inline-message zip-error">{zipError}</div>
           )}
         </div>
