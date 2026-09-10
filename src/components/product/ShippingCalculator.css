@@ -2487,6 +2487,42 @@ margin-top:1px !important;
   margin-top:6px !important;
 }
 
+/* Final compact alignment pass — text metrics intentionally unchanged */
+.zip-bar{
+  border-color:rgba(255,255,255,.045) !important;
+  border-radius:16px !important;
+  box-shadow:none !important;
+}
+
+.zip-bar.is-editing{
+  border-color:rgba(255,90,47,.28) !important;
+}
+
+.zip-collapsed{
+  min-height:46px !important;
+  padding:7px 11px !important;
+}
+
+.main-tabs{
+  gap:4px !important;
+  padding:4px !important;
+  border-radius:16px !important;
+}
+
+.main-tab{
+  min-height:80px !important;
+  padding:7px 6px !important;
+  border-radius:12px !important;
+}
+
+.tab-sub{
+  margin-top:1px !important;
+}
+
+.tab-price{
+  margin-top:3px !important;
+}
+
 /* Product photo framing */
 .product-hero-image{
   object-position:center center;

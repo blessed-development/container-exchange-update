@@ -43,6 +43,14 @@ const EMPTY_LOCATION = {
   country: '',
 };
 
+const extractPostalCandidate = (value) => {
+  const raw = String(value || '').toUpperCase();
+  const canadianMatch = raw.match(/\b[A-Z]\d[A-Z][\s-]?\d[A-Z]\d\b/);
+  const usMatch = raw.match(/\b\d{5}\b/);
+
+  return cleanPostal(canadianMatch?.[0] || usMatch?.[0] || raw);
+};
+
 const CA_PROVINCES = {
   Ontario: 'ON',
   Quebec: 'QC',
@@ -325,7 +333,8 @@ export default function ContainerConfigurator({
 
     const timer = setTimeout(() => {
       postalInputRef.current?.focus();
-      postalInputRef.current?.select();
+      const input = postalInputRef.current;
+      input?.setSelectionRange(input.value.length, input.value.length);
     }, 0);
 
     return () => clearTimeout(timer);
@@ -334,10 +343,15 @@ export default function ContainerConfigurator({
   useEffect(() => {
     if (!isEditingLocation || !hasEditedPostalInput) return;
 
-    const raw = postalInput.trim().toUpperCase();
-    const clean = cleanPostal(raw);
+    const clean = extractPostalCandidate(postalInput);
+    const currentPostal = cleanPostal(location?.postalCode);
 
     if (!clean) {
+      setZipError('');
+      return;
+    }
+
+    if (clean === currentPostal) {
       setZipError('');
       return;
     }
@@ -354,7 +368,7 @@ export default function ContainerConfigurator({
       setIsLookingUp(true);
 
       try {
-        const resolved = await lookupPostalCode(raw);
+        const resolved = await lookupPostalCode(clean);
         setLocation(resolved);
         saveSelectedLocation(resolved);
         window.dispatchEvent(
@@ -373,7 +387,7 @@ export default function ContainerConfigurator({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [postalInput, isEditingLocation, hasEditedPostalInput]);
+  }, [postalInput, isEditingLocation, hasEditedPostalInput, location?.postalCode]);
 
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
@@ -498,7 +512,7 @@ export default function ContainerConfigurator({
 
   const beginLocationEdit = () => {
     setZipError('');
-    setPostalInput(location?.postalCode || '');
+    setPostalInput(locationLabel);
     setHasEditedPostalInput(false);
     setIsEditingLocation(true);
   };
