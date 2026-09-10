@@ -4214,3 +4214,109 @@
   background:linear-gradient(180deg,#ff7044,#ed4b1c) !important;
   border-color:#ed4b1c !important;
 }
+
+/* Readable type hierarchy for the light cart and checkout surfaces. */
+.checkout-container .cart-panel-title h1,
+.checkout-container .total-card h2,
+.checkout-container .details-summary-card > h2,
+.checkout-container .cart-product-title,
+.checkout-container .os-prod-title,
+.checkout-container .cart-qty,
+.checkout-container .cart-qty strong,
+.checkout-container .cart-line-total,
+.checkout-container .cart-unit-price,
+.checkout-container .total-row strong,
+.checkout-container .grand-total strong,
+.checkout-container .price-lock-banner h3,
+.checkout-container .price-lock-banner p strong{
+  color:#282520 !important;
+}
+.checkout-container .cart-table-head,
+.checkout-container .os-head,
+.checkout-container .form-group label,
+.checkout-container .billing-title{
+  color:#706960 !important;
+}
+.checkout-container .cart-product-subtitle,
+.checkout-container .os-prod-sub,
+.checkout-container .total-row,
+.checkout-container .tax-row em,
+.checkout-container .shipping-note,
+.checkout-container .price-lock-banner p,
+.checkout-container .checkout-help,
+.checkout-container .os-disclaimer,
+.checkout-container .billing-check span{
+  color:#756e65 !important;
+}
+.checkout-container .cart-unit-price,
+.checkout-container .cart-line-total,
+.checkout-container .os-price{
+  color:#e94a1a !important;
+}
+.checkout-container .checkout-btn{
+  color:#fff !important;
+  background:linear-gradient(180deg,#ff6c40,#ef4d1e) !important;
+  box-shadow:0 12px 24px rgba(239,77,30,.20) !important;
+}
+.checkout-container .return-store-btn{
+  color:#5f574e !important;
+  background:#f4f1eb !important;
+  border-color:rgba(55,48,40,.14) !important;
+}
+.checkout-container .price-lock-banner{
+  background:linear-gradient(135deg,#fff8f3,#f4eee7) !important;
+  border-color:rgba(239,77,30,.18) !important;
+}
+.checkout-container .price-lock-banner::before{
+  background:#ff6c40 !important;
+}
+.checkout-container input::placeholder,
+.checkout-container textarea::placeholder{
+  color:#a49d93 !important;
+  opacity:1 !important;
+}
+
+/* Match the legacy desktop selectors exactly so they cannot retain white-on-dark text. */
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-product-title{
+  color:#282520 !important;
+}
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-product-subtitle,
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-rating span,
+.checkout-container .checkout-main:not(.checkout-details-layout) .tax-row em,
+.checkout-container .checkout-main:not(.checkout-details-layout) .shipping-note,
+.checkout-container .checkout-main:not(.checkout-details-layout) .price-lock-banner p,
+.checkout-container .checkout-main:not(.checkout-details-layout) .checkout-help{
+  color:#756e65 !important;
+}
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-rating{
+  color:#efae17 !important;
+}
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-unit-price,
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-line-total{
+  color:#e94a1a !important;
+}
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty,
+.checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty strong,
+.checkout-container .checkout-main:not(.checkout-details-layout) .total-card h2,
+.checkout-container .checkout-main:not(.checkout-details-layout) .total-row strong,
+.checkout-container .checkout-main:not(.checkout-details-layout) .grand-total strong,
+.checkout-container .checkout-main:not(.checkout-details-layout) .price-lock-banner h3{
+  color:#282520 !important;
+}
+.checkout-container .checkout-main:not(.checkout-details-layout) .checkout-btn{
+  color:#fff !important;
+  background:linear-gradient(180deg,#ff6c40,#ef4d1e) !important;
+  border-color:#ef4d1e !important;
+}
+.checkout-container .checkout-details-sidebar .os-prod-title,
+.checkout-container .checkout-details-sidebar .os-price,
+.checkout-container .checkout-details-sidebar .os-qty,
+.checkout-container .checkout-details-sidebar .grand-total strong{
+  color:#282520 !important;
+}
+.checkout-container .checkout-details-sidebar .os-prod-sub,
+.checkout-container .checkout-details-sidebar .os-head,
+.checkout-container .checkout-details-sidebar .total-row,
+.checkout-container .checkout-details-sidebar .os-disclaimer{
+  color:#756e65 !important;
+}
