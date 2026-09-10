@@ -2448,6 +2448,38 @@ margin-top:1px !important;
   display:none !important;
 }
 
+/* Final readable text layer for the warm calculator workspace. */
+.widget .step-label,
+.widget .card-lbl,
+.widget .tax-note,
+.widget .total-lbl{
+  color:#746d64 !important;
+}
+.widget .zip-location-text{
+  color:#25221e !important;
+}
+.widget .grade-upgrade-btn .grade-name{
+  color:#29251f !important;
+}
+.widget .grade-upgrade-btn .grade-delta.included{
+  color:#7c746b !important;
+}
+.widget .selection-btn,
+.widget .selection-btn span,
+.widget .selection-type{
+  color:#29251f !important;
+}
+.widget .total-price{
+  color:#29251f !important;
+}
+.widget .checkout-action-lock .quote-btn,
+.widget .quote-btn{
+  color:#514940 !important;
+  background:#fffdfa !important;
+  border-color:rgba(55,48,40,.16) !important;
+  box-shadow:none !important;
+}
+
 /* Purchase workspace final palette — must remain after every calculator variant. */
 .widget{
   background:linear-gradient(180deg,#f8f6f1 0%,#ebe8e1 100%) !important;
