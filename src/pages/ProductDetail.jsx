@@ -500,18 +500,18 @@ export default function ProductDetail() {
                   </div>
 
                   <div className="absolute inset-0 p-6 pb-6 md:p-8 md:pb-7 flex flex-col justify-end">
-                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-2">
+                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-1">
                       {seoHeroTitle}
                     </h1>
 
-                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white">
+                    <div className="text-[17px] md:text-[22px] font-bold leading-tight tracking-[-0.015em] text-white">
                       For Sale in
                       <span className="text-primary ml-2">
                         {seoLocation}
                       </span>
                     </div>
 
-                    <div className="product-hero-rating mt-4 flex items-center gap-2">
+                    <div className="product-hero-rating mt-3 self-end flex items-center gap-2">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star

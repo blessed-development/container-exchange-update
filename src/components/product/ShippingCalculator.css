@@ -3405,3 +3405,67 @@ margin-top:1px !important;
     0 17px 34px rgba(167,61,35,.26),
     inset 0 1px 0 rgba(255,255,255,.28) !important;
 }
+
+/* Product-control polish: warm charcoal typography and restrained tactile depth. */
+.widget{
+  color:#2f2c28 !important;
+}
+.zip-left,
+.zip-inline-input,
+.section-header strong,
+.card-val,
+.main-tab,
+.cond-card,
+.checkout,
+.tab-title,
+.tab-title::after,
+.selection-btn,
+.selection-btn span,
+.selection-type,
+.grade-upgrade-btn .grade-name,
+.total-price{
+  color:#2f2c28 !important;
+}
+.zip-label,
+.zip-subtitle,
+.zip-inline-current,
+.zip-val,
+.card-lbl,
+.step-label,
+.section-header span,
+.tax-note,
+.total-lbl,
+.tab-sub,
+.cond-card small,
+.checkout-header-text,
+.grade-upgrade-btn .grade-delta.included{
+  color:#746f68 !important;
+}
+.main-tab,
+.cond-card,
+.grade-upgrade-btn{
+  background:linear-gradient(180deg,#ffffff 0%,#f4f3f1 100%) !important;
+  border-color:#dedbd6 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 4px 12px rgba(47,44,40,.045) !important;
+}
+.main-tab.active,
+.cond-card.active,
+.grade-upgrade-btn.active{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.96),transparent 62%),
+    linear-gradient(180deg,#fffaf7 0%,#ffe2d3 100%) !important;
+  border-color:rgba(255,77,0,.58) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.98),
+    0 8px 18px rgba(232,82,35,.12) !important;
+}
+.main-tab:not(.active):hover,
+.cond-card:not(.active):hover,
+.grade-upgrade-btn:not(.active):not(:disabled):hover{
+  border-color:rgba(255,77,0,.32) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 7px 15px rgba(47,44,40,.08) !important;
+}
