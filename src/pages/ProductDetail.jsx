@@ -511,6 +511,29 @@ export default function ProductDetail() {
                       </span>
                     </div>
 
+                    <div className="product-hero-rating mt-4 flex items-center gap-2">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-[14px] w-[14px] ${
+                              i < Math.round(container.rating || 5)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-white/30'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      <span className="text-[15px] font-black text-white">
+                        {container.rating || 5}
+                      </span>
+
+                      <span className="text-[12px] font-medium text-white/85">
+                        ({container.review_count || 42} reviews)
+                      </span>
+                    </div>
+
                   </div>
                 </>
               )}
@@ -536,33 +559,6 @@ export default function ProductDetail() {
                     />
                   </button>
                 ))}
-              </div>
-            )}
-
-            {showHeroOverlay && (
-              <div className="mt-1.5 flex justify-end">
-                <div className="flex items-center gap-1.5 rounded-full bg-black/30 px-2.5 py-1.5 backdrop-blur-sm">
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.round(container.rating || 5)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-white/30'
-                        }`}
-                      />
-                    ))}
-                  </div>
-
-                  <span className="text-sm font-black text-foreground">
-                    {container.rating || 5}
-                  </span>
-
-                  <span className="text-xs text-muted-foreground">
-                    ({container.review_count || 42} reviews)
-                  </span>
-                </div>
               </div>
             )}
 
