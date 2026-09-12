@@ -56,48 +56,6 @@ const FAQ_CATEGORIES = [
       },
     ],
   },
-  {
-    category: 'Renting & Rent-to-Own',
-    faqs: [
-      {
-        q: 'Do you offer container rentals?',
-        a: 'Yes! We offer flexible monthly container rentals. We currently have a special promotion for 1 month free rent. Contact us to learn about rental rates and availability in your area.',
-      },
-      {
-        q: 'What is Rent-to-Own (RTO)?',
-        a: 'Rent-to-Own lets you make monthly payments toward owning the container outright. No credit check is required — everyone qualifies. We offer a $1 first month special on RTO agreements, and early payoff discounts are available.',
-      },
-      {
-        q: 'How long are rental terms?',
-        a: 'We offer flexible rental terms ranging from month-to-month up to multi-year agreements. RTO terms are available in 12, 24, 36, and 48-month options.',
-      },
-      {
-        q: 'Can I return a rented container if I no longer need it?',
-        a: 'Yes. We will arrange pickup of the container at the end of your rental term. Simply contact us to schedule a pickup date.',
-      },
-    ],
-  },
-  {
-    category: 'Container Use Cases',
-    faqs: [
-      {
-        q: 'What can I use a shipping container for?',
-        a: 'Common uses include: job site storage, farm equipment storage, retail storage, on-site inventory management, residential storage, climate-controlled storage (with modifications), workshops, and converted living spaces.',
-      },
-      {
-        q: 'Are shipping containers weatherproof?',
-        a: 'Yes. WWT-grade and above containers are guaranteed to be wind and water tight. They are made of Corten steel, which is designed to resist rust and weather. They can withstand extreme temperatures, heavy rain, and high winds.',
-      },
-      {
-        q: 'Can I modify the container — add doors, windows, electricity?',
-        a: 'Absolutely. Containers are highly modifiable. We can discuss modification options during your consultation, or you can work with a local contractor to add doors, windows, insulation, electricity, and more.',
-      },
-      {
-        q: 'Do I need a permit to place a container on my property?',
-        a: 'Permit requirements vary by city, county, and state. We recommend checking with your local municipality before placing a container. Many residential and agricultural uses do not require permits, but commercial zoning may have different rules.',
-      },
-    ],
-  },
 ];
 
 function FaqItem({ faq }) {
