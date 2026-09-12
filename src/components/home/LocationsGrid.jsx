@@ -177,7 +177,7 @@ export default function LocationsGrid() {
   };
 
   return (
-    <section className="w-full bg-[#080808] text-white py-12 px-5 overflow-hidden">
+    <section className="w-full bg-[#f5f5f5] text-[#2f2c28] py-12 px-5 overflow-hidden">
       <div className="max-w-[1680px] mx-auto">
         <div className="mb-8">
           <div className="text-[11px] font-extrabold tracking-[0.16em] uppercase text-[#58beb7] mb-3">
@@ -190,7 +190,7 @@ export default function LocationsGrid() {
 
           <div ref={searchRef} className="relative mt-7 ml-auto w-full max-w-[640px]">
             <label htmlFor="location-search" className="sr-only">Search a city, state, or province</label>
-            <div className="flex items-center rounded-2xl border border-white/15 bg-[#111315] px-4 shadow-[0_16px_40px_rgba(0,0,0,.24)] transition-colors focus-within:border-[#ff6a2b]/80 focus-within:ring-2 focus-within:ring-[#ff6a2b]/20">
+          <div className="flex items-center rounded-2xl border border-[#d8d3cc] bg-white px-4 shadow-[0_12px_28px_rgba(47,44,40,.07)] transition-colors focus-within:border-[#ff6a2b]/80 focus-within:ring-2 focus-within:ring-[#ff6a2b]/20">
               <Search className="h-5 w-5 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
               <input
                 id="location-search"
@@ -207,13 +207,13 @@ export default function LocationsGrid() {
                 aria-autocomplete="list"
                 aria-controls="location-search-results"
                 aria-expanded={isSearchOpen}
-                className="h-14 min-w-0 flex-1 bg-transparent px-3 text-[15px] font-medium text-white outline-none placeholder:text-[#87919c]"
+                className="h-14 min-w-0 flex-1 bg-transparent px-3 text-[15px] font-medium text-[#2f2c28] outline-none placeholder:text-[#8b847b]"
               />
-              <ArrowRight className="h-5 w-5 shrink-0 text-white/70" aria-hidden="true" />
+              <ArrowRight className="h-5 w-5 shrink-0 text-[#746f68]" aria-hidden="true" />
             </div>
 
             {isSearchOpen && searchQuery.trim() && (
-              <div id="location-search-results" role="listbox" className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#111315] p-1.5 shadow-[0_20px_50px_rgba(0,0,0,.5)]">
+              <div id="location-search-results" role="listbox" className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-[#d8d3cc] bg-white p-1.5 shadow-[0_20px_50px_rgba(47,44,40,.16)]">
                 {searchResults.length ? searchResults.map((location, resultIndex) => (
                   <button
                     key={location.key}
@@ -222,18 +222,18 @@ export default function LocationsGrid() {
                     aria-selected={activeResult === resultIndex}
                     onMouseEnter={() => setActiveResult(resultIndex)}
                     onClick={() => openLocation(location)}
-                    className={`flex w-full items-center justify-between gap-4 rounded-xl px-4 py-3 text-left transition-colors ${activeResult === resultIndex ? 'bg-[#ff6a2b]/15 text-white' : 'text-white hover:bg-white/5'}`}
+                    className={`flex w-full items-center justify-between gap-4 rounded-xl px-4 py-3 text-left transition-colors ${activeResult === resultIndex ? 'bg-[#ff6a2b]/12 text-[#2f2c28]' : 'text-[#2f2c28] hover:bg-[#f7f3ef]'}`}
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <MapPin className="h-4 w-4 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
                       <span className="truncate text-[15px] font-bold">{location.displayName}</span>
                     </span>
-                    <span className="shrink-0 text-[13px] font-semibold text-white/60">
+                    <span className="shrink-0 text-[13px] font-semibold text-[#746f68]">
                       {location.country}
                     </span>
                   </button>
                 )) : (
-                  <p className="px-4 py-4 text-[14px] font-medium text-white/60">No matching locations</p>
+                  <p className="px-4 py-4 text-[14px] font-medium text-[#746f68]">No matching locations</p>
                 )}
               </div>
             )}
@@ -275,14 +275,14 @@ export default function LocationsGrid() {
             return (
               <article
                 key={index}
-                className="bg-[#111111] border border-[#2b3036] rounded-[28px] overflow-hidden min-h-[670px] shadow-[0_28px_80px_rgba(0,0,0,.38)] transition-all duration-300 hover:-translate-y-1 hover:border-[#008f7d]/55 hover:shadow-[0_36px_100px_rgba(0,0,0,.48)]"
+                className="bg-white border border-[#d8d3cc] rounded-[28px] overflow-hidden min-h-[670px] shadow-[0_20px_48px_rgba(47,44,40,.10)] transition-all duration-300 hover:-translate-y-1 hover:border-[#008f7d]/55 hover:shadow-[0_28px_60px_rgba(47,44,40,.15)]"
               >
                 {slideLink ? (
-                  <Link to={slideLink} className="relative block h-[258px] overflow-hidden bg-[#1b1b1b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a2b] focus-visible:ring-inset" aria-label={`View containers in ${slide.city}`}>
+                  <Link to={slideLink} className="relative block h-[258px] overflow-hidden bg-[#e9e5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6a2b] focus-visible:ring-inset" aria-label={`View containers in ${slide.city}`}>
                     {cardHero}
                   </Link>
                 ) : (
-                  <div className="relative h-[258px] overflow-hidden bg-[#1b1b1b]">{cardHero}</div>
+                  <div className="relative h-[258px] overflow-hidden bg-[#e9e5df]">{cardHero}</div>
                 )}
 
                 <div className="p-6 flex flex-col">
@@ -292,7 +292,7 @@ export default function LocationsGrid() {
                         {formatNumber(slide.inventory.containers)} Containers Available
                       </div>
 
-                      <div className="text-[13px] font-medium text-[#8fa1b6]">
+                      <div className="text-[13px] font-medium text-[#746f68]">
                         <span>
                           From {formatPrice(slide.inventory.priceFrom)}–{formatPrice(slide.inventory.priceTo)}
                         </span>
@@ -307,7 +307,7 @@ export default function LocationsGrid() {
                         {slide.available}
                       </div>
 
-                      <div className="text-[13px] text-[#8fa1b6] font-medium mb-4">
+                      <div className="text-[13px] text-[#746f68] font-medium mb-4">
                         {slide.price}
                       </div>
                     </>
@@ -317,7 +317,7 @@ export default function LocationsGrid() {
                     {group.map((city) => {
                       const cityLocation = getLocationByDirectoryName(city);
                       const cityPageLink = cityLocation?.imageReady ? getLocationPath(cityLocation) : null;
-                      const className = 'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[14px] font-semibold text-[#e6f5f2] border border-transparent hover:bg-[#ff6a2b]/10 hover:border-[#ff6a2b]/30 hover:text-white hover:pl-4 transition-all duration-200';
+                      const className = 'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[14px] font-semibold text-[#403b35] border border-transparent hover:bg-[#ff6a2b]/10 hover:border-[#ff6a2b]/30 hover:text-[#2f2c28] hover:pl-4 transition-all duration-200';
                       const content = <><MapPin className="w-3.5 h-3.5 text-[#ff6a2b] flex-shrink-0" /><span>{city}</span></>;
 
                       return cityPageLink ? (

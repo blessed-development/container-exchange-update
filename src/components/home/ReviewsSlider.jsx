@@ -90,8 +90,8 @@ export default function ReviewsSlider() {
   }, [groups.length, slide]);
 
   return (
-    <section className="py-24 bg-accent text-white relative overflow-hidden" aria-labelledby="happy-customers-heading">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
+    <section className="py-24 bg-[#f5f5f5] text-[#2f2c28] relative overflow-hidden" aria-labelledby="happy-customers-heading">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.06] blur-[80px] pointer-events-none" />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <h2 id="happy-customers-heading" className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
@@ -123,7 +123,7 @@ export default function ReviewsSlider() {
         {!prefersReducedMotion && (
           <div className="flex justify-center gap-1.5 mt-8" aria-hidden="true">
             {groups.map((_, index) => (
-              <span key={index} className={`h-1.5 rounded-full transition-all duration-300 ${index === slide % groups.length ? 'w-5 bg-primary' : 'w-1.5 bg-white/20'}`} />
+              <span key={index} className={`h-1.5 rounded-full transition-all duration-300 ${index === slide % groups.length ? 'w-5 bg-primary' : 'w-1.5 bg-[#d8d3cc]'}`} />
             ))}
           </div>
         )}
@@ -134,14 +134,14 @@ export default function ReviewsSlider() {
 
 function ReviewCard({ review }) {
   return (
-    <article className="min-h-[244px] bg-white/[0.035] border border-white/[0.08] rounded-2xl p-6 flex flex-col gap-4">
+    <article className="min-h-[244px] bg-white border border-[#d8d3cc] rounded-2xl p-6 flex flex-col gap-4 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0" aria-hidden="true">
           <span className="text-primary font-bold text-sm">{initialsFor(review.name)}</span>
         </div>
         <div>
-          <p className="font-bold text-white text-sm leading-tight">{review.name}</p>
-          <p className="text-white/45 text-xs mt-1">{review.time}</p>
+          <p className="font-bold text-[#2f2c28] text-sm leading-tight">{review.name}</p>
+          <p className="text-[#746f68] text-xs mt-1">{review.time}</p>
         </div>
       </div>
 
@@ -151,7 +151,7 @@ function ReviewCard({ review }) {
         ))}
       </div>
 
-      <p className="text-white/65 text-sm leading-relaxed line-clamp-4">{review.text}</p>
+      <p className="text-[#746f68] text-sm leading-relaxed line-clamp-4">{review.text}</p>
     </article>
   );
 }
