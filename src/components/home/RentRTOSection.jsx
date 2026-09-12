@@ -42,7 +42,6 @@ export default function RentRTOSection() {
     <section className="py-28 bg-muted/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">BUYING MADE SIMPLE</span>
           <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight">
             The Easiest Way to <span className="text-primary">Find Your Shipping Container</span>
           </h2>

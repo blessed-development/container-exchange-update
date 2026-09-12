@@ -1,7 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import HeroSection from '@/components/home/HeroSection';
-import LogoWall from '@/components/home/LogoWall';
 import RentRTOSection from '@/components/home/RentRTOSection';
 import HowItWorks from '@/components/home/HowItWorks';
 import TrustSection from '@/components/home/TrustSection';
@@ -35,14 +34,13 @@ export default function Home() {
       </Helmet>
       <SeoJsonLd data={{ '@context': 'https://schema.org', '@graph': [{ '@type': 'Organization', name: 'Containers Exchange', url: SITE_URL }, { '@type': 'WebSite', name: 'Containers Exchange', url: SITE_URL }] }} />
       <HeroSection />
-      <LogoWall />
-      <RentRTOSection />
-      <HowItWorks />
       <TrustSection />
-      <ReviewsSlider />
+      <HowItWorks />
       <ProductGrid />
-      <RecentlyDelivered />
       <LocationsGrid />
+      <ReviewsSlider />
+      <RecentlyDelivered />
+      <RentRTOSection />
     </div>
   );
 }
