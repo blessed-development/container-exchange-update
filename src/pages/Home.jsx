@@ -38,9 +38,9 @@ export default function Home() {
       <HowItWorks />
       <ProductGrid />
       <LocationsGrid />
+      <ReviewsSlider />
       <LogoWall />
       <RecentlyDelivered />
-      <ReviewsSlider />
     </div>
   );
 }
