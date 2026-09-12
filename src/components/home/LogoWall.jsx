@@ -164,7 +164,6 @@ export default function LogoWall() {
 
       <div className="logo-wall__content">
         <header className="logo-wall__header">
-          <p className="logo-wall__eyebrow">Trusted nationwide</p>
           <h2>Serving Businesses Nationwide</h2>
           <p>Trusted by companies across construction, logistics, manufacturing, retail, transportation and infrastructure.</p>
         </header>

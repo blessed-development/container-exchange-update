@@ -114,10 +114,10 @@ export default function ReviewsSlider() {
                 className="shrink-0"
                 style={{ width: cardWidth }}
                 animate={index === activeIndex
-                  ? { opacity: 1, scale: [1.03, 1.075, 1.03], y: [0, -6, 0] }
+                  ? { opacity: 1, scale: [1.03, 1.075, 1.075, 1.03], y: [0, -6, -6, 0] }
                   : { opacity: 0.86, scale: 0.91, y: 0 }}
                 transition={index === activeIndex
-                  ? { duration: 0.78, ease: [0.22, 1, 0.36, 1], times: [0, 0.48, 1] }
+                  ? { duration: 1.45, ease: [0.22, 1, 0.36, 1], times: [0, 0.25, 0.72, 1] }
                   : { duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ReviewCard review={review} />
@@ -125,7 +125,6 @@ export default function ReviewsSlider() {
             ))}
           </div>
         </div>
-        <p className="text-center text-xs text-[#746f68] mt-6">Customer stories from across North America</p>
       </div>
     </section>
   );

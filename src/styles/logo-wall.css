@@ -2,8 +2,8 @@
   position: relative;
   isolation: isolate;
   overflow: clip;
-  background: #07111f;
-  padding: 6.75rem 1.25rem;
+  background: #0d5f91;
+  padding: 4.5rem 1.25rem 5.25rem;
 }
 
 .logo-wall::before {
@@ -11,7 +11,7 @@
   z-index: -1;
   inset: 0;
   content: '';
-  background: linear-gradient(180deg, rgba(8, 20, 36, 0.97), #07111f 66%);
+  background: linear-gradient(135deg, rgba(55, 159, 223, 0.98), rgba(12, 91, 142, 0.98) 54%, rgba(8, 62, 103, 0.98));
 }
 
 .logo-wall__glow {
@@ -21,20 +21,20 @@
   height: 34rem;
   border-radius: 50%;
   filter: blur(110px);
-  opacity: 0.12;
+  opacity: 0.16;
   pointer-events: none;
 }
 
 .logo-wall__glow--blue {
   top: -27rem;
   left: -19rem;
-  background: #268be6;
+  background: #c6efff;
 }
 
 .logo-wall__glow--orange {
   right: -25rem;
   bottom: -29rem;
-  background: #f97316;
+  background: #1789c9;
 }
 
 .logo-wall__content {
@@ -43,8 +43,8 @@
 }
 
 .logo-wall__header {
-  max-width: 45rem;
-  margin: 0 auto 3.5rem;
+  max-width: 58rem;
+  margin: 0 auto 2.4rem;
   text-align: center;
 }
 
@@ -61,7 +61,7 @@
 .logo-wall h2 {
   margin: 0;
   color: #fff;
-  font-size: clamp(2.15rem, 4.15vw, 3.3rem);
+  font-size: clamp(2.05rem, 3.7vw, 3.05rem);
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1.04;
@@ -70,7 +70,7 @@
 .logo-wall__header > p:last-child {
   max-width: 39rem;
   margin: 1.1rem auto 0;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 0.96rem;
   line-height: 1.65;
 }
@@ -110,11 +110,11 @@
 
 @media (min-width: 640px) {
   .logo-wall {
-    padding: 7.75rem 2rem;
+    padding: 5.25rem 2rem 6rem;
   }
 
   .logo-wall__header {
-    margin-bottom: 4.25rem;
+    margin-bottom: 3rem;
   }
 
   .logo-wall__grid {
@@ -125,7 +125,7 @@
 
 @media (min-width: 1024px) {
   .logo-wall {
-    padding: 8.5rem 2.5rem;
+    padding: 5.75rem 2.5rem 6.5rem;
   }
 
   .logo-wall__content {
