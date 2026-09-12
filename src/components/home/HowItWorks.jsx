@@ -32,7 +32,6 @@ export default function HowItWorks() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">THE PROCESS</span>
           <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
             Three Steps to{' '}
             <span className="text-primary">Deployment</span>

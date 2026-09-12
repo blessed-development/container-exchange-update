@@ -96,7 +96,7 @@ export default function LogoWall() {
   const slots = useMemo(() => Array.from({ length: slotCount }, (_, index) => index), [slotCount]);
   const [logos, setLogos] = useState(() => randomUniqueLogos(getSlotCount()));
   const [visible, setVisible] = useState(false);
-  const [paused, setPaused] = useState(false);
+  const paused = false;
 
   useEffect(() => {
     setLogos((current) => randomUniqueLogos(slotCount, current));
@@ -154,10 +154,6 @@ export default function LogoWall() {
       ref={sectionRef}
       className="logo-wall"
       aria-label="Serving businesses nationwide"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
     >
       <div className="logo-wall__glow logo-wall__glow--blue" aria-hidden="true" />
       <div className="logo-wall__glow logo-wall__glow--orange" aria-hidden="true" />

@@ -89,10 +89,6 @@ export default function ProductGrid() {
     <section className="py-24 bg-background overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
-            FEATURED
-          </span>
-
           <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight">
             Best Selling <span className="text-primary">Containers</span>
           </h2>

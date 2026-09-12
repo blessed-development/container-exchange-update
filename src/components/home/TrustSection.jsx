@@ -20,7 +20,6 @@ export default function TrustSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">WHY CONTAINERS EXCHANGE</span>
             <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight mb-6">
               Industry Expertise.{' '}
               <span className="text-primary">Nationwide Reach.</span>
