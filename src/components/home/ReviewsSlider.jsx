@@ -39,12 +39,12 @@ const REVIEWS = [
 
 const REVIEW_TIMES = ['5 weeks ago', '2 months ago', '3 months ago', '5 months ago', '7 months ago', '9 months ago', '11 months ago', '1 year ago'];
 const AVATAR_TONES = ['from-orange-100 to-amber-50', 'from-sky-100 to-blue-50', 'from-emerald-100 to-teal-50', 'from-violet-100 to-purple-50', 'from-rose-100 to-pink-50'];
-const CARD_GAP = 10;
+const CARD_GAP = 4;
 
 function getCardWidth() {
   if (typeof window === 'undefined') return 320;
-  if (window.innerWidth < 640) return Math.min(Math.round(window.innerWidth * 0.78), 300);
-  if (window.innerWidth < 1024) return 300;
+  if (window.innerWidth < 640) return Math.min(Math.round(window.innerWidth * 0.8), 300);
+  if (window.innerWidth < 1024) return 310;
   return 320;
 }
 
@@ -102,7 +102,7 @@ export default function ReviewsSlider() {
 
         <div className="-mx-4 sm:-mx-6 overflow-hidden py-3" aria-live="polite">
           <div
-            className="flex gap-2.5 will-change-transform"
+            className="flex gap-1 will-change-transform"
             style={{
               transform: `translate3d(calc(50% - ${offset}px), 0, 0)`,
               transition: shouldAnimate && !prefersReducedMotion ? 'transform 760ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
@@ -114,11 +114,11 @@ export default function ReviewsSlider() {
                 className="shrink-0"
                 style={{ width: cardWidth }}
                 animate={index === activeIndex
-                  ? { opacity: 1, scale: [1, 1.035, 1], y: [0, -5, 0] }
-                  : { opacity: 0.5, scale: 0.9, y: 0 }}
+                  ? { opacity: 1, scale: [1.03, 1.075, 1.03], y: [0, -6, 0] }
+                  : { opacity: 0.86, scale: 0.91, y: 0 }}
                 transition={index === activeIndex
-                  ? { duration: 0.92, ease: [0.22, 1, 0.36, 1], times: [0, 0.46, 1] }
-                  : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                  ? { duration: 0.78, ease: [0.22, 1, 0.36, 1], times: [0, 0.48, 1] }
+                  : { duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ReviewCard review={review} />
               </motion.div>
@@ -136,7 +136,7 @@ function ReviewCard({ review }) {
   const displayTime = REVIEW_TIMES[(review.id - 1) % REVIEW_TIMES.length];
 
   return (
-    <article className="min-h-[188px] bg-white border border-[#d8d3cc] rounded-2xl p-4.5 flex flex-col gap-2.5 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
+    <article className="min-h-[188px] bg-white border border-[#d8d3cc] rounded-2xl p-4 flex flex-col gap-2.5 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarTone} border border-[#d8d3cc] flex items-center justify-center shrink-0`} aria-hidden="true">
           <span className="text-primary font-bold text-sm">{initialsFor(review.name)}</span>
@@ -153,7 +153,7 @@ function ReviewCard({ review }) {
         ))}
       </div>
 
-      <p className="text-[#746f68] text-[13px] leading-relaxed line-clamp-3">{review.text}</p>
+      <p className="text-[#625e58] text-[13px] leading-relaxed line-clamp-3">{review.text}</p>
     </article>
   );
 }
