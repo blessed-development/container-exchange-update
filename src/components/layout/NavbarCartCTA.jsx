@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Trash2, X } from 'lucide-react';
+import { ShoppingBasket, Trash2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
@@ -12,25 +12,13 @@ const formatMoney = (value) => `$${Number(value || 0).toLocaleString('en-US', {
 
 function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
-  const fontSize = label.length > 2 ? 9 : label.length > 1 ? 11 : 13;
 
   return (
-    <span className="inline-flex shrink-0" style={{ width: 60, height: 48 }} aria-hidden="true">
-      <svg viewBox="0 0 44 34" fill="none" className="h-full w-full">
-        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        <text
-          x="22"
-          y="20.2"
-          fill="currentColor"
-          fontSize={fontSize}
-          fontWeight="800"
-          textAnchor="middle"
-          dominantBaseline="middle"
-        >
-          {label}
-        </text>
-      </svg>
+    <span className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center" aria-hidden="true">
+      <ShoppingBasket className="h-9 w-9 stroke-[2.75]" />
+      <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-black leading-none text-primary shadow-sm">
+        {label}
+      </span>
     </span>
   );
 }
