@@ -15,10 +15,10 @@ function BasketCountIcon({ count }) {
   const fontSize = label.length > 2 ? 9 : label.length > 1 ? 11 : 13;
 
   return (
-    <span className="inline-flex shrink-0" style={{ width: 54, height: 44 }} aria-hidden="true">
+    <span className="inline-flex shrink-0" style={{ width: 60, height: 48 }} aria-hidden="true">
       <svg viewBox="0 0 44 34" fill="none" className="h-full w-full">
-        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14 10.5 17 5h10l3 5.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M5.25 11h33.5l-3.1 17H8.35l-3.1-17Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         <text
           x="22"
           y="20.2"
@@ -46,7 +46,7 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
   const hasItems = itemCount > 0;
   const frameClass = mobile
     ? 'h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90'
-    : 'h-10 w-28 rounded-lg bg-primary px-0 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/40';
+    : 'h-12 w-32 rounded-lg bg-primary px-0 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/40';
   const motionTransition = { duration: reducedMotion ? 0.01 : 0.24, ease: [0.22, 1, 0.36, 1] };
 
   useEffect(() => {
