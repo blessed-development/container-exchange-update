@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import HeroSection from '@/components/home/HeroSection';
-import RentRTOSection from '@/components/home/RentRTOSection';
+import LogoWall from '@/components/home/LogoWall';
 import HowItWorks from '@/components/home/HowItWorks';
 import TrustSection from '@/components/home/TrustSection';
 import ReviewsSlider from '@/components/home/ReviewsSlider';
@@ -38,9 +38,9 @@ export default function Home() {
       <HowItWorks />
       <ProductGrid />
       <LocationsGrid />
+      <LogoWall />
       <RecentlyDelivered />
       <ReviewsSlider />
-      <RentRTOSection />
     </div>
   );
 }
