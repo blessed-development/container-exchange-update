@@ -46,8 +46,8 @@ export default function HeroSection() {
           />
         ))}
         {/* Keep the copy legible on the left while allowing the logistics photography to lead on the right. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-accent via-accent/75 to-accent/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-accent/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071b33] via-[#071b33]/75 to-[#071b33]/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071b33]/70 via-transparent to-[#071b33]/20" />
         {/* Radial glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
       </div>
