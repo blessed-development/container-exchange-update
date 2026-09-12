@@ -135,7 +135,7 @@ export default function FAQ() {
     <div className="min-h-screen bg-background">
       <PageSeo title="Shipping Container FAQs | Containers Exchange" description="Get answers to common shipping container questions about sizes, conditions, buying, delivery, and pricing." path="/faq" />
       {/* Header */}
-      <div className="bg-accent text-white py-24 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">FAQ</span>

@@ -65,7 +65,7 @@ export default function Contact() {
     <div className="min-h-screen bg-background">
       <PageSeo title="Contact Containers Exchange | Shipping Container Quotes & Support" description="Contact Containers Exchange for shipping container availability, local pricing, delivery questions, and expert support." path="/contact" />
       {/* Header */}
-      <div className="bg-accent text-white py-20 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">GET IN TOUCH</span>

@@ -99,7 +99,7 @@ function FaqItem({ faq }) {
 
 export default function Delivery() {
   return (
-    <div className="min-h-screen bg-accent text-white">
+    <div className="min-h-screen bg-[#061226] text-white">
       <PageSeo title="Shipping Container Delivery | Containers Exchange" description="Learn how shipping container delivery works, including site preparation, scheduling, and delivery requirements." path="/delivery" />
 
       {/* HERO */}

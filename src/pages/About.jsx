@@ -24,7 +24,7 @@ export default function About() {
     <div className="min-h-screen bg-background">
       <PageSeo title="About Containers Exchange | Nationwide Shipping Container Experts" description="Learn how Containers Exchange helps businesses and property owners find new and used shipping containers with nationwide delivery and experienced support." path="/about" />
       {/* Header */}
-      <div className="bg-accent text-white py-24 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.05] blur-[100px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">OUR STORY</span>

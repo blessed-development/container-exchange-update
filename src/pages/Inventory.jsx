@@ -163,8 +163,8 @@ export default function Inventory() {
   return (
     <div className="min-h-screen bg-background">
       <PageSeo title="Shipping Containers for Sale Near You | Containers Exchange" description="Browse new and used shipping containers for sale. Enter your ZIP code to see local availability, container options, and pricing." path="/inventory" />
-      <div className="bg-accent text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent to-accent/90" />
+      <div className="bg-[#061226] text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#061226] via-[#061226] to-[#061226]/90" />
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
