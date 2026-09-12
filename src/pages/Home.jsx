@@ -38,8 +38,8 @@ export default function Home() {
       <HowItWorks />
       <ProductGrid />
       <LocationsGrid />
-      <ReviewsSlider />
       <RecentlyDelivered />
+      <ReviewsSlider />
       <RentRTOSection />
     </div>
   );
