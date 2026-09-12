@@ -14,9 +14,9 @@ function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
 
   return (
-    <span className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center" aria-hidden="true">
-      <ShoppingBasket className="h-9 w-9 stroke-[2.75]" />
-      <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-black leading-none text-primary shadow-sm">
+    <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center" aria-hidden="true">
+      <ShoppingBasket className="h-[38px] w-[38px] stroke-[2.5]" />
+      <span className="absolute left-1/2 top-[55%] flex h-[17px] min-w-[17px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-1 text-[10px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.25)]">
         {label}
       </span>
     </span>
