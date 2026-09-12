@@ -373,12 +373,6 @@ export default function ZipCodeSearch({
         )}
       </div>
 
-      {selectedLocation && !isDetecting && isHero && (
-        <p className="mt-2 ml-1 text-[13px] text-white/45">
-          Showing containers near {selectedLocation.city}
-        </p>
-      )}
-
       {error && (
         <div className="mt-3 rounded-[14px] border border-red-400/15 bg-red-500/[0.08] px-3 py-2">
           <p className="text-[12px] leading-relaxed font-medium text-red-300">

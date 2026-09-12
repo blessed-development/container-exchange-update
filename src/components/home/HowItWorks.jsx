@@ -26,7 +26,7 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-28 bg-accent text-white relative overflow-hidden">
+    <section id="how-it-works" className="py-28 bg-[#07111f] text-white relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/[0.04] blur-[100px] pointer-events-none" />
 
@@ -49,7 +49,7 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15 }}
-                className="relative p-8 border border-white/[0.07] bg-white/[0.03] backdrop-blur-sm rounded-2xl group hover:border-primary/30 hover:bg-white/[0.06] transition-all duration-300 hover:-translate-y-1"
+                className="relative p-8 border border-white/[0.09] bg-[#0c1b2d]/75 backdrop-blur-sm rounded-2xl group hover:border-primary/30 hover:bg-[#10233a] transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="flex items-start justify-between mb-6">
                   <div className="w-12 h-12 border border-primary/30 rounded-xl flex items-center justify-center bg-primary/10 group-hover:bg-primary/15 transition-colors">

@@ -260,7 +260,7 @@ export default function LocationsGrid() {
               </div>
 
               <div className="absolute left-7 right-6 bottom-6">
-                <h3 className="text-[32px] font-extrabold tracking-[-0.055em] leading-none">
+                <h3 className="text-[32px] font-extrabold tracking-[-0.055em] leading-none text-white">
                   {slide.city}
                 </h3>
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[13px] font-semibold">
