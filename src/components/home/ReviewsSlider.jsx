@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Star } from 'lucide-react';
-import { useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 // Placeholder/demo testimonials — replace with approved customer feedback before launch.
 // These entries are original site copy and are not presented as Google, Trustpilot, or verified third-party reviews.
@@ -37,11 +37,13 @@ const REVIEWS = [
   { id: 30, name: 'Arden M.', time: '1 year ago', text: 'The size recommendation was right on target. Our container is secure, useful, and looks right at home.' },
 ];
 
-function getCardsPerPage() {
-  if (typeof window === 'undefined') return 4;
-  if (window.innerWidth >= 1024) return 4;
-  if (window.innerWidth >= 640) return 2;
-  return 1;
+const REVIEW_TIMES = ['5 weeks ago', '2 months ago', '3 months ago', '5 months ago', '7 months ago', '9 months ago', '11 months ago', '1 year ago'];
+const AVATAR_TONES = ['from-orange-100 to-amber-50', 'from-sky-100 to-blue-50', 'from-emerald-100 to-teal-50', 'from-violet-100 to-purple-50', 'from-rose-100 to-pink-50'];
+const CARD_GAP = 14;
+
+function getCardWidth() {
+  if (typeof window === 'undefined') return 390;
+  return window.innerWidth < 640 ? Math.min(Math.round(window.innerWidth * 0.82), 340) : 390;
 }
 
 function initialsFor(name) {
@@ -50,98 +52,96 @@ function initialsFor(name) {
 
 export default function ReviewsSlider() {
   const prefersReducedMotion = useReducedMotion();
-  const [cardsPerPage, setCardsPerPage] = useState(getCardsPerPage);
-  const [slide, setSlide] = useState(0);
+  const [cardWidth, setCardWidth] = useState(getCardWidth);
+  const [activeIndex, setActiveIndex] = useState(REVIEWS.length);
   const [shouldAnimate, setShouldAnimate] = useState(true);
-  const groups = useMemo(() => {
-    const result = [];
-    for (let index = 0; index < REVIEWS.length; index += cardsPerPage) result.push(REVIEWS.slice(index, index + cardsPerPage));
-    return result;
-  }, [cardsPerPage]);
-  const slides = useMemo(() => [...groups, groups[0]], [groups]);
+  const loopedReviews = useMemo(() => [...REVIEWS, ...REVIEWS, ...REVIEWS], []);
 
   useEffect(() => {
-    const updateCardsPerPage = () => setCardsPerPage(getCardsPerPage());
-    window.addEventListener('resize', updateCardsPerPage);
-    return () => window.removeEventListener('resize', updateCardsPerPage);
+    const updateCardWidth = () => setCardWidth(getCardWidth());
+    window.addEventListener('resize', updateCardWidth);
+    return () => window.removeEventListener('resize', updateCardWidth);
   }, []);
 
   useEffect(() => {
-    setSlide(0);
+    setActiveIndex(REVIEWS.length);
     setShouldAnimate(false);
     const frame = window.requestAnimationFrame(() => setShouldAnimate(true));
     return () => window.cancelAnimationFrame(frame);
-  }, [cardsPerPage]);
+  }, [cardWidth]);
 
   useEffect(() => {
-    if (prefersReducedMotion || groups.length < 2) return undefined;
-    const timer = window.setTimeout(() => setSlide((current) => current + 1), 5000);
+    if (prefersReducedMotion) return undefined;
+    const timer = window.setTimeout(() => setActiveIndex((current) => current + 1), 4400);
     return () => window.clearTimeout(timer);
-  }, [groups.length, prefersReducedMotion, slide]);
+  }, [activeIndex, prefersReducedMotion]);
 
   useEffect(() => {
-    if (slide !== groups.length) return undefined;
+    if (activeIndex < REVIEWS.length * 2) return undefined;
     const reset = window.setTimeout(() => {
       setShouldAnimate(false);
-      setSlide(0);
+      setActiveIndex(REVIEWS.length);
       window.requestAnimationFrame(() => setShouldAnimate(true));
-    }, 620);
+    }, 760);
     return () => window.clearTimeout(reset);
-  }, [groups.length, slide]);
+  }, [activeIndex]);
+
+  const offset = activeIndex * (cardWidth + CARD_GAP) + cardWidth / 2;
 
   return (
-    <section className="py-24 bg-[#f5f5f5] text-[#2f2c28] relative overflow-hidden" aria-labelledby="happy-customers-heading">
+    <section className="py-20 sm:py-24 bg-[#f5f5f5] text-[#2f2c28] relative overflow-hidden" aria-labelledby="happy-customers-heading">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.06] blur-[80px] pointer-events-none" />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12">
+        <div className="text-center mb-9">
           <h2 id="happy-customers-heading" className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
             We've Got a Lot of <span className="text-primary">Happy Customers</span>
           </h2>
         </div>
 
-        <div className="overflow-hidden" aria-live="polite">
+        <div className="-mx-4 sm:-mx-6 overflow-hidden py-3" aria-live="polite">
           <div
-            className="flex will-change-transform"
+            className="flex gap-3.5 will-change-transform"
             style={{
-              width: `${slides.length * 100}%`,
-              transform: `translate3d(-${slide * (100 / slides.length)}%, 0, 0)`,
-              transition: shouldAnimate && !prefersReducedMotion ? 'transform 620ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+              transform: `translate3d(calc(50% - ${offset}px), 0, 0)`,
+              transition: shouldAnimate && !prefersReducedMotion ? 'transform 760ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
             }}
           >
-            {slides.map((group, groupIndex) => (
-              <div
-                key={`${groupIndex}-${group[0]?.id ?? 'empty'}`}
-                className="shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-                style={{ width: `${100 / slides.length}%` }}
+            {loopedReviews.map((review, index) => (
+              <motion.div
+                key={`${review.id}-${index}`}
+                className="shrink-0"
+                style={{ width: cardWidth }}
+                animate={index === activeIndex
+                  ? { opacity: 1, scale: [1, 1.025, 1], y: [0, -4, 0] }
+                  : { opacity: 0.62, scale: 0.94, y: 0 }}
+                transition={index === activeIndex
+                  ? { duration: 2.35, ease: 'easeInOut', repeat: Infinity }
+                  : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               >
-                {group.map((review) => <ReviewCard key={review.id} review={review} />)}
-              </div>
+                <ReviewCard review={review} />
+              </motion.div>
             ))}
           </div>
         </div>
-
-        {!prefersReducedMotion && (
-          <div className="flex justify-center gap-1.5 mt-8" aria-hidden="true">
-            {groups.map((_, index) => (
-              <span key={index} className={`h-1.5 rounded-full transition-all duration-300 ${index === slide % groups.length ? 'w-5 bg-primary' : 'w-1.5 bg-[#d8d3cc]'}`} />
-            ))}
-          </div>
-        )}
+        <p className="text-center text-xs text-[#746f68] mt-6">Customer stories from across North America</p>
       </div>
     </section>
   );
 }
 
 function ReviewCard({ review }) {
+  const avatarTone = AVATAR_TONES[(review.id - 1) % AVATAR_TONES.length];
+  const displayTime = REVIEW_TIMES[(review.id - 1) % REVIEW_TIMES.length];
+
   return (
-    <article className="min-h-[244px] bg-white border border-[#d8d3cc] rounded-2xl p-6 flex flex-col gap-4 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
+    <article className="min-h-[208px] bg-white border border-[#d8d3cc] rounded-2xl p-5 flex flex-col gap-3 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary/20 flex items-center justify-center shrink-0" aria-hidden="true">
+        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarTone} border border-[#d8d3cc] flex items-center justify-center shrink-0`} aria-hidden="true">
           <span className="text-primary font-bold text-sm">{initialsFor(review.name)}</span>
         </div>
         <div>
           <p className="font-bold text-[#2f2c28] text-sm leading-tight">{review.name}</p>
-          <p className="text-[#746f68] text-xs mt-1">{review.time}</p>
+          <p className="text-[#746f68] text-xs mt-1">{displayTime}</p>
         </div>
       </div>
 
@@ -151,7 +151,7 @@ function ReviewCard({ review }) {
         ))}
       </div>
 
-      <p className="text-[#746f68] text-sm leading-relaxed line-clamp-4">{review.text}</p>
+      <p className="text-[#746f68] text-sm leading-relaxed line-clamp-3">{review.text}</p>
     </article>
   );
 }

@@ -26,7 +26,7 @@ export default function Footer() {
   const delivery = RECENT_DELIVERIES[tickerIndex];
 
   return (
-    <footer className="bg-accent text-white">
+    <footer className="bg-[#07111f] text-white">
       {/* Live Ticker */}
       <div className="border-b border-white/[0.06] py-3.5 overflow-hidden bg-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-3">
