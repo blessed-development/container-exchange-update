@@ -122,6 +122,8 @@ export default function InventoryListCard({ container, index }) {
               '/images/products/new-20-iicl/hero.webp'
             }
             alt={container.name}
+            loading={index < 3 ? 'eager' : 'lazy'}
+            decoding="async"
             className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
           />
         </div>

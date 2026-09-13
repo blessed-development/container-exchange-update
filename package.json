@@ -1,5 +1,5 @@
 {
-  "name": "base44-app",
+  "name": "containers-exchange",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,11 +16,11 @@
     "postal:build": "node scripts/build-canadian-postal-data.mjs",
     "postal:check": "node scripts/check-canadian-postal-data.mjs",
     "delivery-markets:build": "node scripts/build-delivery-market-data.mjs",
-    "delivery-markets:check": "node scripts/check-delivery-market-data.mjs"
+    "delivery-markets:check": "node scripts/check-delivery-market-data.mjs",
+    "optimize:media": "node scripts/optimize-media.mjs",
+    "optimize:thumbnails": "node scripts/generate-product-thumbnails.mjs"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.27",
-    "@base44/vite-plugin": "^1.0.13",
     "@hello-pangea/dnd": "^17.0.0",
     "@hookform/resolvers": "^4.1.2",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -101,6 +101,7 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "globals": "^15.14.0",
     "postcss": "^8.5.3",
+    "sharp": "^0.35.4",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
     "vite": "^6.1.0"

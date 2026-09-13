@@ -55,11 +55,10 @@ export default function BuySection() {
             className="relative"
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
-              <img
-                src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/2350032b9_generated_79e70e6c.png"
-                alt="Buy shipping containers"
-                className="w-full h-full object-cover"
-              />
+              <picture>
+                <source media="(max-width: 767px)" srcSet="/images/buy/delivery-mobile.webp" />
+                <img src="/images/buy/delivery-desktop.webp" alt="Buy shipping containers" loading="lazy" decoding="async" className="w-full h-full object-cover" />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-accent/50 to-transparent" />
               {/* Floating badge */}
               <div className="absolute bottom-5 left-5 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl px-4 py-3">

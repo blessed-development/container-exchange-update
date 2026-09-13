@@ -5,15 +5,18 @@ import { motion, useReducedMotion } from 'framer-motion';
 
 const HERO_SLIDES = [
   {
-    src: '/images/hero/global-supply-network.png',
+    mobileSrc: '/images/hero/global-supply-network-mobile.webp',
+    src: '/images/hero/global-supply-network-desktop.webp',
     alt: 'Container vessel sailing past a modern port',
   },
   {
-    src: '/images/hero/depot-operations.png',
+    mobileSrc: '/images/hero/depot-operations-mobile.webp',
+    src: '/images/hero/depot-operations-desktop.webp',
     alt: 'Reach stacker loading a container onto a delivery truck at a container depot',
   },
   {
-    src: '/images/hero/customer-delivery.png',
+    mobileSrc: '/images/hero/customer-delivery-mobile.webp',
+    src: '/images/hero/customer-delivery-desktop.webp',
     alt: 'Tilt-bed truck delivering a blue shipping container to a customer property',
   },
 ];
@@ -35,15 +38,18 @@ export default function HeroSection() {
       {/* Background Image */}
       <div className="absolute inset-0">
         {HERO_SLIDES.map((slide, index) => (
-          <img
-            key={slide.src}
-            src={slide.src}
-            alt={index === activeSlide ? slide.alt : ''}
-            aria-hidden={index !== activeSlide}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              index === activeSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
+          <picture key={slide.src}>
+            <source media="(max-width: 767px)" srcSet={slide.mobileSrc} />
+            <img
+              src={slide.src}
+              alt={index === activeSlide ? slide.alt : ''}
+              aria-hidden={index !== activeSlide}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+              decoding="async"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === activeSlide ? 'opacity-100' : 'opacity-0'}`}
+            />
+          </picture>
         ))}
         {/* Keep the copy legible on the left while allowing the logistics photography to lead on the right. */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#061226] via-[#061226]/75 to-[#061226]/20" />

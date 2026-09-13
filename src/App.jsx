@@ -3,8 +3,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientInstance } from '@/lib/query-client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AppLayout from '@/components/layout/AppLayout';
 import Home from '@/pages/Home.jsx';
 import Inventory from '@/pages/Inventory';
@@ -20,23 +18,8 @@ import CheckoutPage from './components/CheckoutPage';
 import CheckoutDetails from './components/CheckoutDetails';
 import CheckoutSuccess from './components/CheckoutSuccess';
 
-const AuthenticatedApp = () => {
-  const { isLoadingPublicSettings, authError } = useAuth();
-
-  if (isLoadingPublicSettings) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (authError?.type === 'user_not_registered') {
-    return <UserNotRegisteredError />;
-  }
-
-  return (
-    <Routes>
+const AppRoutes = () => (
+  <Routes>
       {/* Checkout flow - full screen, no layout */}
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/checkout/details" element={<CheckoutDetails />} />
@@ -53,22 +36,19 @@ const AuthenticatedApp = () => {
         <Route path="/:locationPath" element={<LocationPageRoute />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
-    </Routes>
-  );
-};
+  </Routes>
+);
 
 function App() {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <CartProvider>
-            <AuthenticatedApp />
-          </CartProvider>
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClientInstance}>
+      <Router>
+        <CartProvider>
+          <AppRoutes />
+        </CartProvider>
+      </Router>
+      <Toaster />
+    </QueryClientProvider>
   );
 }
 

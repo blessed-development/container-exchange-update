@@ -553,8 +553,10 @@ export default function ProductDetail() {
                     }`}
                   >
                     <img
-                      src={image}
+                      src={image.replace('/images/products/', '/images/product-thumbnails/')}
                       alt={`${productTitle} preview ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                   </button>

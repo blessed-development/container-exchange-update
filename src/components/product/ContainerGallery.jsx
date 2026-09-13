@@ -20,6 +20,7 @@ export default function ContainerGallery({ images }) {
         <img
           src={allImages[activeIndex]}
           alt="Container"
+          decoding="async"
           className="w-full h-full object-contain object-center"
         />
         {allImages.length > 1 && (
@@ -51,7 +52,7 @@ export default function ContainerGallery({ images }) {
                 i === activeIndex ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'
               }`}
             >
-              <img src={img} alt="" className="w-full h-full object-contain object-center" />
+              <img src={img.replace('/images/products/', '/images/product-thumbnails/')} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain object-center" />
             </button>
           ))}
         </div>

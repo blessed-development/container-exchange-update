@@ -1,39 +1,32 @@
-**Welcome to your Base44 project** 
+# Containers Exchange
 
-**About**
+Marketing and commerce frontend for Containers Exchange, built with React and Vite.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## Local development
 
-This project contains everything you need to run your app locally.
-
-**Edit the code in your local development environment**
-
-Any change pushed to the repo will also be reflected in the Base44 Builder.
-
-**Prerequisites:** 
-
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
-
-```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
-
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
+```bash
+npm install
+npm run dev
 ```
 
-Run the app: `npm run dev`
+## Verification
 
-**Publish your changes**
+```bash
+npm run lint
+npm run postal:check
+npm run delivery-markets:check
+npm run build
+```
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## Image optimization
 
-**Docs & Support**
+The checked-in image scripts create responsive WebP hero assets and compact gallery thumbnails:
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+```bash
+npm run optimize:media
+npm run optimize:thumbnails
+```
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+## Contact enquiries
+
+The Contact form intentionally remains unavailable until a real business mailbox and an approved email-delivery provider are configured. It does not send customer data to a legacy service or display a false successful-submission message.

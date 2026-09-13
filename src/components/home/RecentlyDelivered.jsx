@@ -129,9 +129,16 @@ export default function RecentlyDelivered() {
             {deliveryCards.map((item) => (
               <article
                 key={item.id}
-                className="relative flex-shrink-0 basis-full sm:basis-[calc((100%-10px)/2)] lg:basis-[calc((100%-30px)/4)] h-[320px] rounded-[18px] overflow-hidden bg-[#111] bg-cover bg-center shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
-                style={{ backgroundImage: `url('${item.image}')` }}
+                className="relative flex-shrink-0 basis-full sm:basis-[calc((100%-10px)/2)] lg:basis-[calc((100%-30px)/4)] h-[320px] rounded-[18px] overflow-hidden bg-[#111] shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
               >
+                <img
+                  src={item.image}
+                  alt=""
+                  aria-hidden="true"
+                  loading={item.id <= 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
 
                 <div className="absolute z-10 left-[22px] right-5 bottom-5 text-white">

@@ -45,11 +45,10 @@ export default function TrustSection() {
             transition={{ duration: 0.6 }}
           >
             <div className="relative rounded-2xl overflow-hidden mb-6 shadow-2xl">
-              <img
-                src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/3ef30518d_generated_9c5f1d0a.png"
-                alt="Container terminal aerial view"
-                className="w-full h-64 object-cover"
-              />
+              <picture>
+                <source media="(max-width: 767px)" srcSet="/images/about/container-terminal-mobile.webp" />
+                <img src="/images/about/container-terminal-desktop.webp" alt="Container terminal aerial view" loading="lazy" decoding="async" className="w-full h-64 object-cover" />
+              </picture>
               <div className="absolute inset-0 bg-gradient-to-t from-accent/70 to-transparent" />
             </div>
             <div className="grid grid-cols-2 gap-3">

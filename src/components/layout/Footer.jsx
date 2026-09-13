@@ -112,10 +112,10 @@ export default function Footer() {
                 <Phone className="w-4 h-4" />
                 <span className="font-mono text-sm">(800) 555-1234</span>
               </a>
-              <a href="mailto:info@containersexchange.com" className="flex items-center gap-3 text-white/50 hover:text-primary transition-colors">
+              <div className="flex items-center gap-3 text-white/50">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">info@containersexchange.com</span>
-              </a>
+                <span className="text-sm">Email support coming soon</span>
+              </div>
             </div>
             <div className="mt-6 p-4 border border-white/[0.08] rounded-xl bg-white/[0.03]">
               <p className="text-xs font-mono text-white/35 mb-2">OPERATING HOURS</p>

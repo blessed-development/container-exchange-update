@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { base44 } from '@/api/base44Client';
 import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
@@ -47,10 +46,13 @@ export default function Contact() {
     setSubmitError('');
 
     try {
-      await base44.entities.Quote.create({
-        ...form,
-        status: 'pending',
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
+        body: JSON.stringify({ ...form, company_website: '' }),
       });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Quote request failed. Please call us or try again.');
       setIsSubmitted(true);
     } catch (error) {
       setSubmitError(
@@ -95,15 +97,15 @@ export default function Contact() {
                     <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
                   </div>
                 </a>
-                <a href="mailto:info@containersexchange.com" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">info@containersexchange.com</p>
-                    <p className="text-xs text-muted-foreground">Response within 24 hours</p>
+                    <p className="text-sm font-semibold">Email support coming soon</p>
+                    <p className="text-xs text-muted-foreground">Please call for immediate assistance</p>
                   </div>
-                </a>
+                </div>
                 <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-4 h-4 text-primary" />
