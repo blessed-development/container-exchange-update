@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Eye, FileText, Phone } from 'lucide-react';
+import { Star, Eye, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,19 @@ const GRADE_LABELS = {
   CW: 'Cargo Worthy',
   IICL: 'IICL Certified',
 };
+
+function getListingImage(container) {
+  const source = container.inventory_image_url || container.image_url || '/images/products/new-20-iicl/hero.webp';
+  const match = source.match(/^\/images\/products\/([^/]+)\/hero\.webp$/);
+
+  if (!match) return { src: source, srcSet: undefined };
+
+  const directory = match[1];
+  return {
+    src: `/images/product-listings/${directory}/hero-720.webp`,
+    srcSet: `/images/product-listings/${directory}/hero-480.webp 480w, /images/product-listings/${directory}/hero-720.webp 720w`,
+  };
+}
 
 export default function InventoryListCard({ container, index }) {
   const navigate = useNavigate();
@@ -67,6 +80,7 @@ export default function InventoryListCard({ container, index }) {
     container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
       : 'scale-[1.025] sm:scale-[1.045]';
+  const listingImage = getListingImage(container);
 
   const openProduct = (e) => {
     e.stopPropagation();
@@ -115,17 +129,18 @@ export default function InventoryListCard({ container, index }) {
             </div>
           )}
 
-          <img
-            src={
-              container.inventory_image_url ||
-              container.image_url ||
-              '/images/products/new-20-iicl/hero.webp'
-            }
-            alt={container.name}
-            loading={index < 3 ? 'eager' : 'lazy'}
-            decoding="async"
-            className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
-          />
+          <picture className="block h-full w-full">
+            {listingImage.srcSet && (
+              <source srcSet={listingImage.srcSet} sizes="(min-width: 640px) 38vw, 100vw" type="image/webp" />
+            )}
+            <img
+              src={listingImage.src}
+              alt={container.name}
+              loading={index < 3 ? 'eager' : 'lazy'}
+              decoding="async"
+              className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
+            />
+          </picture>
         </div>
 
         <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
@@ -208,15 +223,6 @@ export default function InventoryListCard({ container, index }) {
               <Eye className="w-4 h-4" />
               Quick View
             </Button>
-
-            <a
-              href="tel:+18005551234"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex h-[42px] items-center justify-center gap-2 rounded-[14px] border border-primary/30 bg-primary/10 px-4 text-sm font-[760] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
-            >
-              <Phone className="w-4 h-4" />
-              (800) 555-1234
-            </a>
 
             <Button
               variant="outline"

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, ArrowRight } from 'lucide-react';
 
 const RECENT_DELIVERIES = [
   { size: "20ft Standard", city: "Denver, CO", mins: 4 },
@@ -108,13 +108,9 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CONTACT</h4>
             <div className="space-y-3">
-              <a href="tel:+18005551234" className="flex items-center gap-3 text-white/50 hover:text-primary transition-colors">
-                <Phone className="w-4 h-4" />
-                <span className="font-mono text-sm">(800) 555-1234</span>
-              </a>
               <div className="flex items-center gap-3 text-white/50">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">Email support coming soon</span>
+                <span className="text-sm">Contact services launching soon</span>
               </div>
             </div>
             <div className="mt-6 p-4 border border-white/[0.08] rounded-xl bg-white/[0.03]">

@@ -72,6 +72,17 @@ const HERO_COMPOSITIONS = {
   'used-40hc-wwt': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
 };
 
+function getListingImage(image) {
+  const match = image.match(/^\/images\/products\/([^/]+)\/hero\.webp$/);
+  if (!match) return { src: image, srcSet: undefined };
+
+  const directory = match[1];
+  return {
+    src: `/images/product-listings/${directory}/hero-720.webp`,
+    srcSet: `/images/product-listings/${directory}/hero-480.webp 480w, /images/product-listings/${directory}/hero-720.webp 720w`,
+  };
+}
+
 export default function ProductGrid() {
   const [activeGroup, setActiveGroup] = useState(0);
 
@@ -166,6 +177,7 @@ function ProductCard({ product, index }) {
     transform: 'translateY(-3%) scale(1.02)',
     position: '50% 43%',
   };
+  const listingImage = getListingImage(product.image);
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}?openZipModal=1`);
@@ -188,15 +200,22 @@ function ProductCard({ product, index }) {
             background: 'linear-gradient(180deg, #f7f6f2 0%, #ebe9e2 58%, #d8d4ca 100%)',
           }}
         >
-          <img
-            src={product.image}
-            alt={product.name}
-          className="h-full w-full object-contain transition-transform duration-700 ease-out"
-            style={{
-              objectPosition: composition.position,
-              transform: composition.transform,
-            }}
-          />
+          <picture className="block h-full w-full">
+            {listingImage.srcSet && (
+              <source srcSet={listingImage.srcSet} sizes="(min-width: 1024px) 32vw, 100vw" type="image/webp" />
+            )}
+            <img
+              src={listingImage.src}
+              alt={product.name}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-contain transition-transform duration-700 ease-out"
+              style={{
+                objectPosition: composition.position,
+                transform: composition.transform,
+              }}
+            />
+          </picture>
           <div className="pointer-events-none absolute bottom-[24%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
         </div>
 

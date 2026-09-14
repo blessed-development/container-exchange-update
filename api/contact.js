@@ -53,6 +53,6 @@ export default function handler(request, response) {
   // Delivery deliberately remains disabled until an approved mailbox and mail provider are configured.
   // The provider integration will use server-only environment variables and Reply-To: enquiry.customer_email.
   return response.status(503).json({
-    error: 'Online quote delivery is not configured yet. Please call (800) 555-1234 for immediate assistance.',
+    error: 'Online quote delivery is not configured yet. Please try again after contact services are available.',
   });
 }

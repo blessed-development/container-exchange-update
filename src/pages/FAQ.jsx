@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Phone } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
 
@@ -26,8 +26,8 @@ const FAQ_CATEGORIES = [
         a: 'Yes. We stand behind the quality and grade of every container we sell. If a container arrives and doesn\'t match the described grade, we will work with you to make it right.',
       },
       {
-        q: 'Can I get exclusive phone discounts?',
-        a: 'Yes! Calling us directly often gets you access to unadvertised specials, location-specific deals, and bulk discounts. Call (800) 555-1234 for the best price.',
+        q: 'Can I get location-specific pricing?',
+        a: 'Yes. Enter your ZIP or postal code on the inventory page to see nearby availability and location-specific starting prices.',
       },
     ],
   },
@@ -134,11 +134,11 @@ export default function FAQ() {
           <h2 className="text-2xl font-black mb-3 relative">Still have questions?</h2>
           <p className="text-white/50 mb-7 relative">Our team is happy to help you find the right container for your needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center relative">
-            <a href="tel:+18005551234">
+            <Link to="/inventory">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-12 px-8 shadow-lg shadow-primary/25">
-                <Phone className="w-4 h-4 mr-2" /> Call (800) 555-1234
+                Browse Inventory
               </Button>
-            </a>
+            </Link>
             <Link to="/contact">
               <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-xl h-12 px-8">
                 Send a Message

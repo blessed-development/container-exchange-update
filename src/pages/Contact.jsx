@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
 
 export default function Contact() {
+  // Kept false until a verified mailbox, durable rate limiting, and delivery provider are live.
+  const contactDeliveryAvailable = false;
   const [form, setForm] = useState({
     customer_name: '',
     customer_email: '',
@@ -52,11 +54,11 @@ export default function Contact() {
         body: JSON.stringify({ ...form, company_website: '' }),
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(result.error || 'Quote request failed. Please call us or try again.');
+      if (!response.ok) throw new Error(result.error || 'Quote request could not be delivered. Your entered details are still in the form.');
       setIsSubmitted(true);
     } catch (error) {
       setSubmitError(
-        error?.message || 'Quote request failed. Please call us or try again.'
+        error?.message || 'Quote request could not be delivered. Your entered details are still in the form.'
       );
     } finally {
       setIsSubmitting(false);
@@ -76,7 +78,7 @@ export default function Contact() {
             <span className="text-primary">Quote</span>
           </h1>
           <p className="text-white/50 mt-5 max-w-lg mx-auto text-lg">
-            Tell us what you need and we'll get back to you with the best pricing and delivery options for your location.
+            Online quote delivery is being finalized. This form is currently unavailable for submissions.
           </p>
         </div>
       </div>
@@ -88,22 +90,22 @@ export default function Contact() {
             <div>
               <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
               <div className="space-y-4">
-                <a href="tel:+18005551234" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Phone className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="font-mono font-semibold text-sm">(800) 555-1234</p>
-                    <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
+                    <p className="font-mono font-semibold text-sm">Phone support coming soon</p>
+                    <p className="text-xs text-muted-foreground">An approved business number has not been published.</p>
                   </div>
-                </a>
+                </div>
                 <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold">Email support coming soon</p>
-                    <p className="text-xs text-muted-foreground">Please call for immediate assistance</p>
+                    <p className="text-xs text-muted-foreground">Quote delivery is not active yet.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
@@ -140,6 +142,14 @@ export default function Contact() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
+                {!contactDeliveryAvailable && (
+                  <div role="status" className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm leading-relaxed text-foreground">
+                    <p className="font-bold">Online quote delivery is temporarily unavailable.</p>
+                    <p className="mt-1 text-muted-foreground">Please do not complete this form yet. We will enable secure submissions after an approved business mailbox and durable rate limiting are configured.</p>
+                  </div>
+                )}
+
+                <fieldset disabled={!contactDeliveryAvailable} className="space-y-6 disabled:opacity-60">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
@@ -198,6 +208,7 @@ export default function Contact() {
                   <Select
                     value={form.container_name}
                     onValueChange={(val) => handleChange('container_name', val)}
+                    disabled={!contactDeliveryAvailable}
                   >
                     <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select container type" />
@@ -233,14 +244,15 @@ export default function Contact() {
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !contactDeliveryAvailable}
                   className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   ) : null}
-                  SUBMIT QUOTE REQUEST
+                  {contactDeliveryAvailable ? 'SUBMIT QUOTE REQUEST' : 'QUOTE DELIVERY UNAVAILABLE'}
                 </Button>
+                </fieldset>
               </form>
             )}
           </div>

@@ -18,7 +18,8 @@
     "delivery-markets:build": "node scripts/build-delivery-market-data.mjs",
     "delivery-markets:check": "node scripts/check-delivery-market-data.mjs",
     "optimize:media": "node scripts/optimize-media.mjs",
-    "optimize:thumbnails": "node scripts/generate-product-thumbnails.mjs"
+    "optimize:thumbnails": "node scripts/generate-product-thumbnails.mjs",
+    "optimize:listings": "node scripts/generate-product-listing-images.mjs"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",

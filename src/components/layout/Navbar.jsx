@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import NavbarCartCTA from './NavbarCartCTA';
 
 const NAV_LINKS = [
@@ -48,10 +48,6 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+18005551234" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm">
-              <Phone className="w-4 h-4" />
-              <span className="font-mono">(800) 555-1234</span>
-            </a>
             <NavbarCartCTA />
           </div>
 
@@ -80,10 +76,6 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="pt-3 border-t border-white/[0.06] mt-3 space-y-3">
-              <a href="tel:+18005551234" className="flex items-center gap-2 text-primary font-mono text-sm px-3 py-2">
-                <Phone className="w-4 h-4" />
-                (800) 555-1234
-              </a>
               <NavbarCartCTA mobile onNavigate={() => setIsOpen(false)} />
             </div>
           </div>
