@@ -36,3 +36,6 @@ dist-ssr
 /.cache/
 
 .vercel
+
+.vercel
+.env*
