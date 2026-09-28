@@ -89,6 +89,11 @@ async function sendWithResend(enquiry, idempotencyKey) {
   if (!apiKey || !to || !from) throw new Error('Email delivery is not configured.');
 
   const subjectSuffix = enquiry.container_name || 'Shipping Container';
+  const isTestSubmission = /\btest\b/i.test(enquiry.source_form);
+  const confirmationPrefix = isTestSubmission ? 'TEST — ' : '';
+  const confirmationNotice = isTestSubmission
+    ? 'This is a test of the Containers Exchange enquiry system. No action is needed.\n\n'
+    : '';
   await resendEmail(apiKey, {
     from, to: [to], reply_to: enquiry.customer_email,
     subject: `New ${enquiry.source_form}: ${subjectSuffix} — ${enquiry.zip_code}`,
@@ -98,9 +103,9 @@ async function sendWithResend(enquiry, idempotencyKey) {
   await resendEmail(apiKey, {
     from, to: [enquiry.customer_email],
     reply_to: to,
-    subject: 'We received your Containers Exchange enquiry',
-    text: `Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
-    html: `<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
+    subject: `${confirmationPrefix}We received your Containers Exchange enquiry`,
+    text: `${confirmationNotice}Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
+    html: `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
   }, `contact-confirmation-${idempotencyKey}`);
 }
 
