@@ -97,6 +97,7 @@ async function sendWithResend(enquiry, idempotencyKey) {
 
   await resendEmail(apiKey, {
     from, to: [enquiry.customer_email],
+    reply_to: to,
     subject: 'We received your Containers Exchange enquiry',
     text: `Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
     html: `<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
