@@ -121,7 +121,7 @@ export default function QuickViewModal({ container, onClose }) {
                     Call Now
                   </Button>
                 </a>
-                <Link to="/contact" className="flex-1">
+                <Link to={`/contact?${new URLSearchParams({ container: container.name || 'Shipping Container', source: 'Quick view' }).toString()}`} className="flex-1">
                   <Button variant="outline" className="w-full h-11 text-sm font-semibold rounded-xl border-2 hover:border-primary hover:text-primary transition-all whitespace-nowrap">
                     Request a Quote
                   </Button>

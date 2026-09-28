@@ -675,6 +675,8 @@ export default function ContainerConfigurator({
     const params = new URLSearchParams({
       container: currentTitle,
       zip: location.postalCode,
+      ...(location?.marketDisplayName ? { location: location.marketDisplayName } : {}),
+      source: 'Product configurator',
       notes: [
         `Container: ${currentTitle}`,
         `Size: ${sizeOption.label}`,

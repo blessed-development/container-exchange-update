@@ -312,7 +312,7 @@ export default function Delivery() {
           <div className="relative z-10">
             <h3 className="text-2xl font-black tracking-tight mb-1">Ready to Schedule Your Delivery?</h3>
             <p className="text-white/50 text-sm mb-5">Our logistics team is standing by — call now or request a quote online.</p>
-            <Link to="/contact">
+            <Link to="/contact?source=Delivery%20page%20quote%20request">
               <Button className="bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg h-11 px-6">
                 Request a Quote
               </Button>

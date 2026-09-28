@@ -139,7 +139,7 @@ export default function FAQ() {
                 Browse Inventory
               </Button>
             </Link>
-            <Link to="/contact">
+            <Link to="/contact?source=FAQ%20page%20message%20request">
               <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-xl h-12 px-8">
                 Send a Message
               </Button>

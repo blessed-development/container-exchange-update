@@ -6,10 +6,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
+import { isContactDeliveryEnabled, submitEnquiry } from '@/lib/submitEnquiry';
 
 export default function Contact() {
-  // Kept false until a verified mailbox, durable rate limiting, and delivery provider are live.
-  const contactDeliveryAvailable = false;
+  const contactDeliveryAvailable = isContactDeliveryEnabled;
   const [form, setForm] = useState({
     customer_name: '',
     customer_email: '',
@@ -17,6 +17,9 @@ export default function Contact() {
     zip_code: '',
     container_name: '',
     notes: '',
+    location: '',
+    source_form: 'Website quote request',
+    company_website: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -27,14 +30,18 @@ export default function Contact() {
     const container = params.get('container');
     const zip = params.get('zip');
     const notes = params.get('notes');
+    const location = params.get('location');
+    const source = params.get('source');
 
-    if (!container && !zip && !notes) return;
+    if (!container && !zip && !notes && !location && !source) return;
 
     setForm((prev) => ({
       ...prev,
       container_name: container || prev.container_name,
       zip_code: zip || prev.zip_code,
       notes: notes || prev.notes,
+      location: location || prev.location,
+      source_form: source || prev.source_form,
     }));
   }, []);
 
@@ -48,13 +55,7 @@ export default function Contact() {
     setSubmitError('');
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
-        body: JSON.stringify({ ...form, company_website: '' }),
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(result.error || 'Quote request could not be delivered. Your entered details are still in the form.');
+      await submitEnquiry({ ...form, source_form: form.source_form });
       setIsSubmitted(true);
     } catch (error) {
       setSubmitError(
@@ -78,7 +79,9 @@ export default function Contact() {
             <span className="text-primary">Quote</span>
           </h1>
           <p className="text-white/50 mt-5 max-w-lg mx-auto text-lg">
-            Online quote delivery is being finalized. This form is currently unavailable for submissions.
+            {contactDeliveryAvailable
+              ? 'Tell us what you need and we will confirm receipt by email.'
+              : 'Online quote delivery is being finalized. This form is currently unavailable for submissions.'}
           </p>
         </div>
       </div>
@@ -134,9 +137,9 @@ export default function Contact() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Quote Request Submitted!</h3>
                 <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                  Our team will review your request and contact you within 24 hours with pricing details.
+                  We received your request and sent a confirmation to your email address.
                 </p>
-                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
+                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '', location: '', source_form: 'Website quote request', company_website: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
                   Submit Another Request
                 </Button>
               </motion.div>
@@ -162,6 +165,7 @@ export default function Contact() {
                       placeholder="John Doe"
                       className="h-11"
                     />
+                    <input name="company_website" value={form.company_website} onChange={(e) => handleChange('company_website', e.target.value)} tabIndex="-1" autoComplete="off" className="sr-only" aria-hidden="true" />
                   </div>
                   <div>
                     <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">

@@ -32,7 +32,7 @@ const OPTIONS = [
     cta: 'Request a Quote',
     image: '/images/buying-journey/schedule-your-delivery.png',
     imageAlt: 'Shipping container delivery truck at a customer location',
-    to: '/contact',
+    to: '/contact?source=Buying%20journey%20delivery%20request',
     highlight: false,
   },
 ];

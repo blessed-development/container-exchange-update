@@ -4447,6 +4447,39 @@
 }
 .checkout-container .price-lock-banner::before{ background:#ff4d00 !important; }
 
+.checkout-container .checkout-delivery-notice{
+  margin:0 0 18px;
+  padding:13px 15px;
+  border:1px solid rgba(255,77,0,.28);
+  border-radius:12px;
+  background:#fff7f2;
+  color:#5a321d;
+  font-size:14px;
+  line-height:1.45;
+}
+.checkout-container .checkout-form-error{
+  margin:14px 0 0;
+  color:#b42318;
+  font-size:14px;
+  line-height:1.45;
+}
+.checkout-container .checkout-honeypot{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+.checkout-container .reserve-btn:disabled{
+  cursor:not-allowed;
+  opacity:.58;
+  box-shadow:none !important;
+}
+
 /* Exact desktop and mobile legacy overrides: palette only, no geometry changes. */
 .checkout-container .checkout-main:not(.checkout-details-layout) .cart-panel,
 .checkout-container .checkout-main:not(.checkout-details-layout) .total-card,

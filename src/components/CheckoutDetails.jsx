@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { isContactDeliveryEnabled, submitEnquiry } from '../lib/submitEnquiry';
 import './CheckoutPage.css';
 
 const fallbackImage =
@@ -226,6 +227,7 @@ const CheckoutDetails = () => {
     state: '',
     zip: '',
     notes: '',
+    company_website: '',
   });
 
   const [billingData, setBillingData] = useState({
@@ -240,6 +242,9 @@ const CheckoutDetails = () => {
     zip: '',
   });
   const [showAllItems, setShowAllItems] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const checkoutDeliveryAvailable = isContactDeliveryEnabled;
 
   const salesTax = calculateSalesTax({
     amount: taxableAmount,
@@ -285,10 +290,53 @@ const CheckoutDetails = () => {
     return parts.length ? parts.join(', ') : 'Enter delivery address';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    clearCart();
-    navigate('/checkout/success');
+    if (!checkoutDeliveryAvailable) return;
+
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    const items = cart
+      .map((item) => `${item.qty || 1} × ${item.title || 'Shipping container'} (${formatMoney(Number(item.unitPrice || 0) * Number(item.qty || 1))})`)
+      .join('\n');
+    const address = [formData.address, formData.apartment, formData.city, formData.state, formData.zip, formData.country]
+      .filter(Boolean)
+      .join(', ');
+    const billingAddress = sameBilling
+      ? 'Same as shipping address'
+      : [billingData.address, billingData.apartment, billingData.city, billingData.state, billingData.zip, billingData.country]
+        .filter(Boolean)
+        .join(', ');
+
+    try {
+      await submitEnquiry({
+        customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
+        customer_email: formData.email,
+        customer_phone: formData.phone,
+        zip_code: formData.zip,
+        container_name: cart.length === 1 ? cart[0].title : `${cart.length} containers requested`,
+        location: [formData.city, formData.state].filter(Boolean).join(', '),
+        source_form: 'Checkout reservation request',
+        company_website: formData.company_website,
+        notes: [
+          `Requested containers:\n${items}`,
+          `Shipping address: ${address}`,
+          `Billing address: ${billingAddress}`,
+          `Quoted subtotal: ${formatMoney(subtotal)}`,
+          `Estimated sales tax: ${formatMoney(salesTax.amount)}`,
+          `Estimated total: ${formatMoney(total)}`,
+          formData.company ? `Company: ${formData.company}` : '',
+          formData.notes ? `Customer notes: ${formData.notes}` : '',
+        ].filter(Boolean).join('\n\n'),
+      });
+      clearCart();
+      navigate('/checkout/success');
+    } catch (error) {
+      setSubmitError(error?.message || 'We could not submit your reservation right now. Your entered details are still in the form.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!cart.length) {
@@ -320,6 +368,12 @@ const CheckoutDetails = () => {
             <h1>Shipping Address</h1>
           </div>
 
+          {!checkoutDeliveryAvailable && (
+            <div className="checkout-delivery-notice" role="status">
+              Online reservation delivery is temporarily unavailable. Please do not complete this form yet; secure submissions will be enabled after delivery testing is complete.
+            </div>
+          )}
+
           <form
             id="checkout-form"
             className="details-form"
@@ -350,6 +404,17 @@ const CheckoutDetails = () => {
                 />
               </div>
             </div>
+
+            <input
+              type="text"
+              name="company_website"
+              value={formData.company_website}
+              onChange={handleChange}
+              tabIndex="-1"
+              autoComplete="off"
+              className="checkout-honeypot"
+              aria-hidden="true"
+            />
 
             <div className="form-group">
               <label>Company Name</label>
@@ -707,9 +772,14 @@ const CheckoutDetails = () => {
               type="submit"
               form="checkout-form"
               className="checkout-btn reserve-btn"
+              disabled={!checkoutDeliveryAvailable || isSubmitting}
             >
-              Reserve My Container Now!
+              {isSubmitting ? 'Sending reservation…' : checkoutDeliveryAvailable ? 'Reserve My Container Now!' : 'Online Reservations Unavailable'}
             </button>
+
+            {submitError && (
+              <p className="checkout-form-error" role="alert">{submitError}</p>
+            )}
 
             <section className="checkout-help checkout-summary-help">
               <p>

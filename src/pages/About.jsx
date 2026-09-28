@@ -65,7 +65,7 @@ export default function About() {
                 </p>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Link to="/contact">
+                <Link to="/contact?source=About%20page%20pricing%20request">
                   <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-12 px-7 shadow-lg shadow-primary/25 hover:-translate-y-0.5 transition-all">
                     Request Pricing
                   </Button>
@@ -212,7 +212,7 @@ export default function About() {
                 Browse Inventory
               </Button>
             </Link>
-            <Link to="/contact">
+            <Link to="/contact?source=About%20page%20quote%20request">
               <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-xl h-13 px-10 text-base">
                 Request a Quote
               </Button>

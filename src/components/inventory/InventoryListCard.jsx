@@ -99,6 +99,8 @@ export default function InventoryListCard({ container, index }) {
     const params = new URLSearchParams({
       container: container.name || 'Shipping Container',
       ...(savedLocation?.postalCode ? { zip: savedLocation.postalCode } : {}),
+      ...(savedLocation?.marketDisplayName ? { location: savedLocation.marketDisplayName } : {}),
+      source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
         `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
