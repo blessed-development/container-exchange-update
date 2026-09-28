@@ -142,7 +142,7 @@ export default function Contact() {
                 <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
                   We received your request and sent a confirmation to your email address.
                 </p>
-                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '', location: '', source_form: 'Website quote request', company_website: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
+                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '', location: '', source_form: 'Website quote request', company_website: '' }); }} variant="outline" className="ce-secondary-button h-11 rounded-xl px-6">
                   Submit Another Request
                 </Button>
               </motion.div>
@@ -252,7 +252,7 @@ export default function Contact() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !contactDeliveryAvailable}
-                  className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                  className="ce-signature-button h-13 w-full rounded-xl font-semibold tracking-wider"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />

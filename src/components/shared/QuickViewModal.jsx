@@ -117,13 +117,13 @@ export default function QuickViewModal({ container, onClose }) {
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-2.5 mt-auto">
                 <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container.name || 'Shipping Container'}`)}`} className="flex-1">
-                  <Button className="w-full h-11 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg shadow-primary/25 gap-2 whitespace-nowrap">
+                  <Button variant="outline" className="ce-secondary-button h-11 w-full rounded-xl text-sm font-semibold gap-2 whitespace-nowrap">
                     <Mail className="w-4 h-4" />
                     Email Sales
                   </Button>
                 </a>
                 <Link to={`/contact?${new URLSearchParams({ container: container.name || 'Shipping Container', source: 'Quick view' }).toString()}`} className="flex-1">
-                  <Button variant="outline" className="w-full h-11 text-sm font-semibold rounded-xl border-2 hover:border-primary hover:text-primary transition-all whitespace-nowrap">
+                  <Button className="ce-signature-button h-11 w-full rounded-xl text-sm font-semibold whitespace-nowrap">
                     Request a Quote
                   </Button>
                 </Link>
