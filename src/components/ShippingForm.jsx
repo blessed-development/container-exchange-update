@@ -54,8 +54,8 @@ const ShippingForm = ({ onNext }) => {
         </label>
 
         <label>
-          <span>Phone Number *</span>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+          <span>Phone Number (optional)</span>
+          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
         </label>
 
         <label>

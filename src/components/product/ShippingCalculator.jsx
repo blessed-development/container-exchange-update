@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ShippingCalculator.css';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Phone, ShieldCheck } from 'lucide-react';
+import { ShoppingCart, Mail, ShieldCheck } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const USED_GRADES = [
   { key: 'AS_IS', label: 'AS IS', adjust: -100 },
@@ -158,10 +159,10 @@ export default function ShippingCalculator({
           </Button>
         </div>
 
-        <a href="tel:+18889779085">
+        <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container?.name || `${sizeOption.label} shipping container`}`)}`}>
           <Button variant="outline" className="premium-call-btn">
-            <Phone className="w-4 h-4" />
-            Call (888) 977-9085
+            <Mail className="w-4 h-4" />
+            Email Sales
           </Button>
         </a>
       </div>

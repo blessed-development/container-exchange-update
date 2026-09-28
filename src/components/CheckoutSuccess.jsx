@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, Clock3, MessageCircle, Phone, ShieldCheck, Truck } from 'lucide-react';
+import { CheckCircle, Clock3, Mail, MessageCircle, ShieldCheck, Truck } from 'lucide-react';
 import './CheckoutPage.css';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const CheckoutSuccess = () => {
   const orderRef = useMemo(
@@ -90,9 +91,9 @@ const CheckoutSuccess = () => {
               Continue Shopping
             </Link>
 
-            <a href="tel:+17132580199" className="success-secondary">
-              <Phone size={15} />
-              Call (713) 258-0199
+            <a href={`mailto:${COMPANY_CONTACT.email}`} className="success-secondary">
+              <Mail size={15} />
+              Email Sales
             </a>
           </div>
         </div>

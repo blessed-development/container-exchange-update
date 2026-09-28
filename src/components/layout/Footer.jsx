@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MapPin, ArrowRight } from 'lucide-react';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const RECENT_DELIVERIES = [
   { size: "20ft Standard", city: "Denver, CO", mins: 4 },
@@ -110,7 +111,9 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-white/50">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">Contact services launching soon</span>
+                <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm hover:text-white transition-colors">
+                  {COMPANY_CONTACT.email}
+                </a>
               </div>
             </div>
             <div className="mt-6 p-4 border border-white/[0.08] rounded-xl bg-white/[0.03]">

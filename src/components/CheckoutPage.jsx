@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Phone, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { Lock, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const fallbackImage =
   '/images/products/new-20-iicl/hero.webp';
@@ -219,15 +220,11 @@ const CheckoutPage = () => {
 
           <section className="checkout-help">
             <p>
-              Want faster service? <a href="tel:+17132580199">Give us a ring!</a> Don&apos;t forget
-              to ask about specials in your area to see if you can save even more.
-            </p>
-
-            <p className="checkout-phone">
-              <Phone size={15} />
-              Need help? Call <a href="tel:+17132580199">(713) 258-0199</a>
+              Questions about your request?{' '}
+              <a href={`mailto:${COMPANY_CONTACT.email}`}>{COMPANY_CONTACT.email}</a>
             </p>
           </section>
+
         </aside>
       </section>
     </main>

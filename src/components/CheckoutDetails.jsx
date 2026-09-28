@@ -501,14 +501,13 @@ const CheckoutDetails = () => {
             </div>
 
             <div className="form-group">
-              <label>Phone *</label>
+              <label>Phone (optional)</label>
               <input
                 type="tel"
                 name="phone"
                 placeholder="Phone number"
                 value={formData.phone}
                 onChange={handleChange}
-                required
               />
             </div>
 

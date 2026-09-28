@@ -3,10 +3,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
 import { isContactDeliveryEnabled, submitEnquiry } from '@/lib/submitEnquiry';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 export default function Contact() {
   const contactDeliveryAvailable = isContactDeliveryEnabled;
@@ -94,24 +95,17 @@ export default function Contact() {
               <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-mono font-semibold text-sm">Phone support coming soon</p>
-                    <p className="text-xs text-muted-foreground">An approved business number has not been published.</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">Email support coming soon</p>
+                    <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm font-semibold hover:text-primary transition-colors">
+                      {COMPANY_CONTACT.email}
+                    </a>
                     <p className="text-xs text-muted-foreground">
                       {contactDeliveryAvailable
-                        ? 'Email enquiries are available through the quote form.'
-                        : 'Quote delivery is not active yet.'}
+                        ? 'Email us directly or send a quote request through this form.'
+                        : 'Email is the current way to reach our team.'}
                     </p>
                   </div>
                 </div>
@@ -191,7 +185,7 @@ export default function Contact() {
                     <Input
                       value={form.customer_phone}
                       onChange={(e) => handleChange('customer_phone', e.target.value)}
-                      placeholder="(555) 123-4567"
+                      placeholder="Your callback number (optional)"
                       className="h-11"
                     />
                   </div>

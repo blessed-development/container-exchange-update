@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Star, Phone } from 'lucide-react';
+import { Star, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -105,12 +106,12 @@ export default function FeaturedCard({ container, index = 0 }) {
               Quick View
             </Button>
           </Link>
-          <a href="tel:+18889779085" className="flex-1">
+          <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container.name}`)}`} className="flex-1">
             <Button
               className="w-full rounded-xl h-10 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all"
             >
-              <Phone className="w-3.5 h-3.5 mr-1.5" />
-              (888) 977-9085
+              <Mail className="w-3.5 h-3.5 mr-1.5" />
+              Email for a Quote
             </Button>
           </a>
         </div>

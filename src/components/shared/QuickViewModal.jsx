@@ -1,10 +1,11 @@
 import React from 'react';
-import { X, Phone, Star } from 'lucide-react';
+import { X, Mail, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import ImageSlider from '@/components/shared/ImageSlider';
 import { Link } from 'react-router-dom';
 import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -115,10 +116,10 @@ export default function QuickViewModal({ container, onClose }) {
 
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-2.5 mt-auto">
-                <a href="tel:+18889779085" className="flex-1">
+                <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container.name || 'Shipping Container'}`)}`} className="flex-1">
                   <Button className="w-full h-11 text-sm font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl shadow-lg shadow-primary/25 gap-2 whitespace-nowrap">
-                    <Phone className="w-4 h-4" />
-                    Call Now
+                    <Mail className="w-4 h-4" />
+                    Email Sales
                   </Button>
                 </a>
                 <Link to={`/contact?${new URLSearchParams({ container: container.name || 'Shipping Container', source: 'Quick view' }).toString()}`} className="flex-1">
