@@ -1,7 +1,9 @@
-// Keep public contact details in one place. Add the official number here only
-// after it has been purchased and approved for publication.
+// Keep public contact details in one place.
+// IMPORTANT: This preview-only construction placeholder must be replaced with
+// the purchased business number before the Production launch/public marketing.
 export const COMPANY_CONTACT = {
   email: 'sales@containersexchange.com',
+  previewPhonePlaceholder: '(123) 456-7890',
   businessPhone: null,
 };
 

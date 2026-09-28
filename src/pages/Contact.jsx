@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageSeo from '@/components/seo/PageSeo';
 import { isContactDeliveryEnabled, submitEnquiry } from '@/lib/submitEnquiry';
@@ -94,28 +94,33 @@ export default function Contact() {
             <div>
               <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
               <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/15">
+                    <Phone className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold">{COMPANY_CONTACT.previewPhonePlaceholder}</p>
+                    <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
+                  </div>
+                </div>
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
-                    <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm font-semibold hover:text-primary transition-colors">
+                  <div className="min-w-0">
+                    <a href={`mailto:${COMPANY_CONTACT.email}`} className="block break-all text-[13px] font-semibold tracking-tight transition-colors hover:text-primary sm:break-normal sm:text-sm">
                       {COMPANY_CONTACT.email}
                     </a>
-                    <p className="text-xs text-muted-foreground">
-                      {contactDeliveryAvailable
-                        ? 'Email us directly or send a quote request through this form.'
-                        : 'Email is the current way to reach our team.'}
-                    </p>
+                    <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 transition-colors group-hover:bg-primary/15">
                     <MapPin className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold">60+ Depot Locations</p>
-                    <p className="text-xs text-muted-foreground">Nationwide USA Coverage</p>
+                    <p className="text-xs text-muted-foreground">Nationwide USA / Canada Coverage</p>
                   </div>
                 </div>
               </div>
