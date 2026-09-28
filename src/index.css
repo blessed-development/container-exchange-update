@@ -148,9 +148,12 @@
   }
 
   .ce-signature-button:focus-visible,
-  .ce-secondary-button:focus-visible {
-    outline: 3px solid #73c7f2;
-    outline-offset: 3px;
+  .ce-secondary-button:focus-visible,
+  .ce-signature-link:focus-visible > .ce-signature-button,
+  .ce-secondary-link:focus-visible > .ce-secondary-button {
+    outline: 3px solid #73c7f2 !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 5px rgba(115, 199, 242, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 8px 18px rgba(8, 26, 43, 0.22) !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
