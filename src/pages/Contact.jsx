@@ -108,7 +108,11 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold">Email support coming soon</p>
-                    <p className="text-xs text-muted-foreground">Quote delivery is not active yet.</p>
+                    <p className="text-xs text-muted-foreground">
+                      {contactDeliveryAvailable
+                        ? 'Email enquiries are available through the quote form.'
+                        : 'Quote delivery is not active yet.'}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
