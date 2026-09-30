@@ -220,7 +220,7 @@ export default function InventoryListCard({ container, index }) {
                 e.stopPropagation();
                 setShowModal(true);
               }}
-              className="h-[42px] rounded-[14px] font-[760] gap-2"
+              className="h-[42px] rounded-[14px] font-[760] gap-2 ce-tertiary-button"
             >
               <Eye className="w-4 h-4" />
               Quick View
@@ -229,7 +229,7 @@ export default function InventoryListCard({ container, index }) {
             <Button
               variant="outline"
               onClick={requestQuote}
-              className="h-[42px] rounded-[14px] font-[760] gap-2 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground"
+              className="h-[42px] rounded-[14px] font-[760] gap-2 ce-secondary-button"
             >
               <FileText className="w-4 h-4" />
               Request a Quote

@@ -4557,3 +4557,84 @@
   background:#fff7f2 !important;
   border-color:rgba(255,77,0,.22) !important;
 }
+
+/* Shared action variants: these selectors only resolve legacy checkout rules;
+   the visual tokens live in index.css. */
+.checkout-container .checkout-btn.ce-signature-button,
+.checkout-container .reserve-btn.ce-signature-button,
+.checkout-container .checkout-main:not(.checkout-details-layout) .checkout-btn.ce-signature-button,
+.checkout-container .checkout-main.checkout-details-layout .reserve-btn.ce-signature-button{
+  color:#fff !important;
+  background:var(--ce-primary-gradient) !important;
+  background-size:100% 135% !important;
+  background-position:center top !important;
+  border:1px solid rgba(255,255,255,.32) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 8px 18px rgba(8,26,43,.22),0 4px 10px rgba(230,83,18,.14) !important;
+}
+.checkout-container .checkout-btn.ce-signature-button:hover:not(:disabled),
+.checkout-container .reserve-btn.ce-signature-button:hover:not(:disabled){
+  color:#fff !important;
+  background-position:center 18% !important;
+}
+.checkout-container .checkout-btn.ce-signature-button:disabled,
+.checkout-container .reserve-btn.ce-signature-button:disabled{
+  color:#78828c !important;
+  background:#dfe4e8 !important;
+  background-image:none !important;
+  border-color:#d3d9de !important;
+  box-shadow:none !important;
+  opacity:1 !important;
+  cursor:not-allowed !important;
+}
+.checkout-container .back-link.ce-secondary-button,
+.checkout-container .return-store-btn.ce-secondary-button{
+  color:#fff !important;
+  background:linear-gradient(145deg,rgba(23,58,85,.96),rgba(8,26,43,.98)) !important;
+  border:1px solid rgba(112,190,234,.52) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 6px 15px rgba(8,26,43,.16) !important;
+}
+.checkout-container .checkout-header .back-link.ce-secondary-button{
+  width:fit-content !important;
+  min-height:40px !important;
+  padding:0 14px !important;
+  justify-self:start !important;
+  font-size:12px !important;
+}
+.checkout-container .cart-qty button.ce-utility-button{
+  color:#173a55 !important;
+  background:#fff !important;
+  border:1px solid #cbd8e2 !important;
+  border-radius:10px !important;
+  width:28px !important;
+  height:28px !important;
+}
+.checkout-container .cart-remove.ce-destructive-button,
+.checkout-container .cart-clear-btn.ce-destructive-button{
+  color:#b42318 !important;
+  background:transparent !important;
+  border:1px solid rgba(180,35,24,.48) !important;
+  opacity:1 !important;
+}
+.checkout-container .cart-remove.ce-destructive-button{
+  width:30px !important;
+  min-height:30px !important;
+  padding:0 !important;
+  border-radius:9px !important;
+}
+.checkout-container .cart-panel-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-top:18px;
+}
+.checkout-container .cart-panel-actions .return-store-btn{ margin-top:0 !important; }
+.checkout-container .cart-clear-btn{
+  min-height:40px !important;
+  padding:0 16px !important;
+  border-radius:999px !important;
+}
+@media(max-width:640px){
+  .checkout-container .cart-panel-actions{ align-items:stretch; flex-direction:column; }
+  .checkout-container .cart-panel-actions .return-store-btn,
+  .checkout-container .cart-clear-btn{ width:100% !important; }
+}

@@ -94,12 +94,35 @@
   }
 }
 
-/* Preview-only signature action system. It is intentionally applied by class
-   to Contact and Quick View first, before any wider site rollout. */
+/* Preview action system. Variants are opt-in so primary actions stay distinct
+   from utility and destructive controls. */
 @layer components {
+  :root {
+    --ce-action-height: 48px;
+    --ce-action-radius: 14px;
+    --ce-action-padding: 0 20px;
+    --ce-focus-ring: #73c7f2;
+    --ce-primary-gradient: linear-gradient(165deg, #ff6a1a 0%, #e65312 38%, #173a55 68%, #081a2b 100%);
+  }
+
+  .ce-signature-button,
+  .ce-secondary-button,
+  .ce-tertiary-button,
+  .ce-destructive-button,
+  .ce-utility-button {
+    min-height: var(--ce-action-height) !important;
+    padding: var(--ce-action-padding) !important;
+    border-radius: var(--ce-action-radius) !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600 !important;
+    line-height: 1.1 !important;
+  }
+
   .ce-signature-button {
     color: #ffffff !important;
-    background-image: linear-gradient(165deg, #ff6a1a 0%, #e65312 38%, #173a55 68%, #081a2b 100%) !important;
+    background-image: var(--ce-primary-gradient) !important;
     background-size: 100% 135% !important;
     background-position: center top !important;
     border: 1px solid rgba(255, 255, 255, 0.32) !important;
@@ -147,25 +170,85 @@
     box-shadow: inset 0 2px 5px rgba(8, 26, 43, 0.34), 0 3px 8px rgba(8, 26, 43, 0.14) !important;
   }
 
+  .ce-tertiary-button,
+  .ce-utility-button {
+    color: #173a55 !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd8e2 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 3px 8px rgba(8, 26, 43, 0.06) !important;
+    transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease !important;
+  }
+
+  .ce-tertiary-button:hover:not(:disabled),
+  .ce-utility-button:hover:not(:disabled) {
+    color: #173a55 !important;
+    background: #f4faff !important;
+    border-color: #73c7f2 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 5px 11px rgba(8, 26, 43, 0.1) !important;
+  }
+
+  .ce-utility-button {
+    min-width: 36px;
+    min-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+  }
+
+  .ce-destructive-button {
+    color: #b42318 !important;
+    background: transparent !important;
+    border: 1px solid rgba(180, 35, 24, 0.48) !important;
+    box-shadow: none !important;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease !important;
+  }
+
+  .ce-destructive-button:hover:not(:disabled) {
+    color: #8d1b12 !important;
+    background: rgba(180, 35, 24, 0.08) !important;
+    border-color: #b42318 !important;
+  }
+
+  .ce-signature-button:disabled,
+  .ce-secondary-button:disabled,
+  .ce-tertiary-button:disabled,
+  .ce-destructive-button:disabled,
+  .ce-utility-button:disabled {
+    color: #78828c !important;
+    background: #dfe4e8 !important;
+    background-image: none !important;
+    border-color: #d3d9de !important;
+    box-shadow: none !important;
+    cursor: not-allowed !important;
+    filter: none !important;
+  }
+
   .ce-signature-button:focus-visible,
   .ce-secondary-button:focus-visible,
+  .ce-tertiary-button:focus-visible,
+  .ce-destructive-button:focus-visible,
+  .ce-utility-button:focus-visible,
   .ce-signature-link:focus-visible > .ce-signature-button,
   .ce-secondary-link:focus-visible > .ce-secondary-button {
-    outline: 3px solid #73c7f2 !important;
+    outline: 3px solid var(--ce-focus-ring) !important;
     outline-offset: 3px !important;
     box-shadow: 0 0 0 5px rgba(115, 199, 242, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.34), 0 8px 18px rgba(8, 26, 43, 0.22) !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .ce-signature-button,
-    .ce-secondary-button {
+    .ce-secondary-button,
+    .ce-tertiary-button,
+    .ce-destructive-button,
+    .ce-utility-button {
       transition: none !important;
     }
 
     .ce-signature-button:hover:not(:disabled),
     .ce-secondary-button:hover:not(:disabled),
     .ce-signature-button:active:not(:disabled),
-    .ce-secondary-button:active:not(:disabled) {
+    .ce-secondary-button:active:not(:disabled),
+    .ce-tertiary-button:hover:not(:disabled),
+    .ce-utility-button:hover:not(:disabled) {
       transform: none;
     }
   }

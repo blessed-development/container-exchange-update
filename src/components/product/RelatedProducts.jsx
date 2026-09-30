@@ -126,7 +126,7 @@ export default function RelatedProducts() {
                 <Button
                   type="button"
                   onClick={(e) => handleAddToCart(e, product)}
-                  className="w-full h-10 rounded-xl font-bold text-sm bg-gradient-to-b from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 border border-orange-400/20 shadow-[0_8px_30px_rgba(255,115,0,0.22)] transition-all duration-300"
+                  className="w-full h-10 rounded-xl font-bold text-sm ce-signature-button"
                 >
                   Add to Cart
                 </Button>

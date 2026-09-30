@@ -37,7 +37,7 @@ const OrderSummary = ({ onCheckout }) => {
           <strong>{formatMoney(total)}</strong>
         </div>
 
-        <button type="button" className="checkout-btn" onClick={onCheckout}>
+        <button type="button" className="checkout-btn ce-signature-button" onClick={onCheckout}>
           Proceed to Checkout
         </button>
 

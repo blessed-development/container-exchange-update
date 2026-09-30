@@ -28,6 +28,7 @@ const CheckoutPage = () => {
     cart,
     updateQuantity,
     removeItem,
+    clearCart,
     getSubtotal,
     getGrandTotal,
   } = useCart();
@@ -43,11 +44,17 @@ const CheckoutPage = () => {
     navigate('/checkout/details');
   };
 
+  const handleClearCart = () => {
+    if (window.confirm('Remove all containers from your cart?')) {
+      clearCart();
+    }
+  };
+
   if (!cart.length) {
     return (
       <main className="checkout-container">
         <header className="checkout-header">
-          <button type="button" className="back-link" onClick={handleBackToStore}>
+          <button type="button" className="back-link ce-secondary-button" onClick={handleBackToStore}>
             ← Back to Store
           </button>
 
@@ -66,7 +73,7 @@ const CheckoutPage = () => {
             <ShoppingCart size={34} />
             <h1>Your cart is empty</h1>
             <p>Add a container to your cart before checkout.</p>
-            <button type="button" onClick={handleBackToStore}>
+            <button type="button" className="ce-secondary-button" onClick={handleBackToStore}>
               Continue Shopping
             </button>
           </div>
@@ -78,7 +85,7 @@ const CheckoutPage = () => {
   return (
     <main className="checkout-container">
       <header className="checkout-header">
-        <button type="button" className="back-link" onClick={handleBackToStore}>
+        <button type="button" className="back-link ce-secondary-button" onClick={handleBackToStore}>
           ← Back to Store
         </button>
 
@@ -144,13 +151,13 @@ const CheckoutPage = () => {
                   <div className="cart-unit-price">{formatMoney(item.unitPrice)}</div>
 
                   <div className="cart-qty">
-                    <button type="button" onClick={() => updateQuantity(item.id, -1)}>
+                    <button type="button" className="ce-utility-button" onClick={() => updateQuantity(item.id, -1)}>
                       −
                     </button>
 
                     <strong>{item.qty}</strong>
 
-                    <button type="button" onClick={() => updateQuantity(item.id, 1)}>
+                    <button type="button" className="ce-utility-button" onClick={() => updateQuantity(item.id, 1)}>
                       +
                     </button>
                   </div>
@@ -159,7 +166,7 @@ const CheckoutPage = () => {
 
                   <button
                     type="button"
-                    className="cart-remove"
+                    className="cart-remove ce-destructive-button"
                     onClick={() => removeItem(item.id)}
                   >
                     ×
@@ -169,9 +176,14 @@ const CheckoutPage = () => {
             })}
           </div>
 
-          <button type="button" className="return-store-btn" onClick={handleBackToStore}>
-            ← Return to Store
-          </button>
+          <div className="cart-panel-actions">
+            <button type="button" className="return-store-btn ce-secondary-button" onClick={handleBackToStore}>
+              ← Return to Store
+            </button>
+            <button type="button" className="cart-clear-btn ce-destructive-button" onClick={handleClearCart}>
+              Clear Cart
+            </button>
+          </div>
         </section>
 
         <aside className="checkout-sidebar">
@@ -193,7 +205,7 @@ const CheckoutPage = () => {
               <strong>{formatMoney(total)}</strong>
             </div>
 
-            <button type="button" className="checkout-btn" onClick={handleProceedToCheckout}>
+            <button type="button" className="checkout-btn ce-signature-button" onClick={handleProceedToCheckout}>
               Proceed to Checkout
             </button>
 

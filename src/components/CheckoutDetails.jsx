@@ -347,7 +347,7 @@ const CheckoutDetails = () => {
   return (
     <main className="checkout-container">
       <header className="checkout-header">
-        <Link to="/checkout" className="back-link">
+        <Link to="/checkout" className="back-link ce-secondary-button">
           ← Back to Cart
         </Link>
 
@@ -655,7 +655,7 @@ const CheckoutDetails = () => {
 
               <button
                 type="button"
-                className="return-store-btn"
+                className="return-store-btn ce-secondary-button"
                 onClick={() => navigate('/checkout')}
               >
                 ← Back to Cart
@@ -770,7 +770,7 @@ const CheckoutDetails = () => {
             <button
               type="submit"
               form="checkout-form"
-              className="checkout-btn reserve-btn"
+              className="checkout-btn reserve-btn ce-signature-button"
               disabled={!checkoutDeliveryAvailable || isSubmitting}
             >
               {isSubmitting ? 'Sending reservation…' : checkoutDeliveryAvailable ? 'Reserve My Container Now!' : 'Online Reservations Unavailable'}

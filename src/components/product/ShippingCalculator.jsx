@@ -136,7 +136,7 @@ export default function ShippingCalculator({
           <div className="premium-qty">
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="premium-qty-btn"
+              className="premium-qty-btn ce-utility-button"
               type="button"
             >
               −
@@ -146,21 +146,21 @@ export default function ShippingCalculator({
 
             <button
               onClick={() => setQty((q) => q + 1)}
-              className="premium-qty-btn"
+              className="premium-qty-btn ce-utility-button"
               type="button"
             >
               +
             </button>
           </div>
 
-          <Button className="premium-cart-btn">
+          <Button className="premium-cart-btn ce-signature-button">
             <ShoppingCart className="w-4 h-4" />
             Add to Cart
           </Button>
         </div>
 
         <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container?.name || `${sizeOption.label} shipping container`}`)}`}>
-          <Button variant="outline" className="premium-call-btn">
+          <Button variant="outline" className="premium-call-btn ce-secondary-button">
             <Mail className="w-4 h-4" />
             Email Sales
           </Button>

@@ -941,7 +941,7 @@ export default function ContainerConfigurator({
                 <div className="cart-row">
                   <button
                     type="button"
-                    className="add-btn"
+                    className="add-btn ce-signature-button"
                     disabled={!hasCheckoutLocation}
                     onClick={addToCart}
                   >
@@ -952,7 +952,7 @@ export default function ContainerConfigurator({
 
                 <button
                   type="button"
-                  className="quote-btn"
+                  className="quote-btn ce-secondary-button"
                   disabled={!hasCheckoutLocation}
                   onClick={requestQuote}
                 >
@@ -978,7 +978,7 @@ export default function ContainerConfigurator({
 
           <button
             type="button"
-            className="drawer-close"
+            className="drawer-close ce-utility-button"
             onClick={() => setIsDrawerOpen(false)}
           >
             <X size={16} />
@@ -996,7 +996,7 @@ export default function ContainerConfigurator({
                 <div className="ci-info">
                   <button
                     type="button"
-                    className="ci-remove"
+                    className="ci-remove ce-destructive-button"
                     onClick={() => removeItem(item.id)}
                   >
                     ×
@@ -1009,7 +1009,7 @@ export default function ContainerConfigurator({
                   <div className="ci-qty-row">
                     <button
                       type="button"
-                      className="ci-qty-btn"
+                      className="ci-qty-btn ce-utility-button"
                       onClick={() => updateQuantity(item.id, -1)}
                     >
                       −
@@ -1019,7 +1019,7 @@ export default function ContainerConfigurator({
 
                     <button
                       type="button"
-                      className="ci-qty-btn"
+                      className="ci-qty-btn ce-utility-button"
                       onClick={() => updateQuantity(item.id, 1)}
                     >
                       +
@@ -1039,13 +1039,13 @@ export default function ContainerConfigurator({
 
           <div className="drawer-tax-note" />
 
-          <button type="button" className="checkout-btn" onClick={openCheckout}>
+          <button type="button" className="checkout-btn ce-signature-button" onClick={openCheckout}>
             Checkout
           </button>
 
           <button
             type="button"
-            className="continue-btn"
+            className="continue-btn ce-secondary-button"
             onClick={() => setIsDrawerOpen(false)}
           >
             Continue Shopping

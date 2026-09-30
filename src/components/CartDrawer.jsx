@@ -311,7 +311,7 @@ const CartDrawer = ({ onCheckout }) => {
             Your Cart <span className="ce-count">{itemCount}</span>
           </div>
 
-          <button className="ce-close" onClick={() => setIsDrawerOpen(false)}>
+          <button className="ce-close ce-utility-button" onClick={() => setIsDrawerOpen(false)}>
             ×
           </button>
         </div>
@@ -328,13 +328,13 @@ const CartDrawer = ({ onCheckout }) => {
                   <img className="ce-img" src={getImage(item)} alt={item.title || 'Container'} />
 
                   <div className="ce-qty">
-                    <button type="button" onClick={() => updateQuantity(item.id, -1)}>
+                    <button type="button" className="ce-utility-button" onClick={() => updateQuantity(item.id, -1)}>
                       −
                     </button>
 
                     <span>{item.qty}</span>
 
-                    <button type="button" onClick={() => updateQuantity(item.id, 1)}>
+                    <button type="button" className="ce-utility-button" onClick={() => updateQuantity(item.id, 1)}>
                       +
                     </button>
                   </div>
@@ -343,7 +343,7 @@ const CartDrawer = ({ onCheckout }) => {
                 <div className="ce-info">
                   <button
                     type="button"
-                    className="ce-remove"
+                    className="ce-remove ce-destructive-button"
                     onClick={() => removeItem(item.id)}
                   >
                     ×
@@ -369,13 +369,13 @@ const CartDrawer = ({ onCheckout }) => {
 
             <div className="ce-tax">Sales tax calculated at checkout</div>
 
-            <button type="button" className="ce-checkout" onClick={onCheckout}>
+            <button type="button" className="ce-checkout ce-signature-button" onClick={onCheckout}>
               Checkout →
             </button>
 
             <button
               type="button"
-              className="ce-continue"
+              className="ce-continue ce-secondary-button"
               onClick={() => setIsDrawerOpen(false)}
             >
               Continue Shopping

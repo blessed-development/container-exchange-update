@@ -101,14 +101,14 @@ export default function FeaturedCard({ container, index = 0 }) {
           <Link to={`/product/${container.id}`} className="flex-1">
             <Button
               variant="outline"
-              className="w-full rounded-xl h-10 text-sm font-semibold border-border hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+              className="w-full rounded-xl h-10 text-sm font-semibold ce-tertiary-button"
             >
               Quick View
             </Button>
           </Link>
           <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container.name}`)}`} className="flex-1">
             <Button
-              className="w-full rounded-xl h-10 text-sm font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-all"
+              className="w-full rounded-xl h-10 text-sm font-semibold ce-secondary-button"
             >
               <Mail className="w-3.5 h-3.5 mr-1.5" />
               Email for a Quote
