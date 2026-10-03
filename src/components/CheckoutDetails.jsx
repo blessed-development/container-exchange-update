@@ -263,9 +263,6 @@ const CheckoutDetails = () => {
   });
 
   const total = taxableAmount + salesTax.amount;
-  const taxLabel = salesTax.region
-    ? `${salesTax.region} ${(salesTax.rate * 100).toFixed(3).replace(/\.?0+$/, '')}%`
-    : 'Enter state/province';
   const visibleCartItems = showAllItems ? cart : cart.slice(0, 3);
   const hiddenItemCount = Math.max(0, cart.length - visibleCartItems.length);
 
@@ -751,19 +748,16 @@ const CheckoutDetails = () => {
               <strong>{formatMoney(subtotal)}</strong>
             </div>
 
-            <div className="total-row os-shipto">
-              <span>Ship To</span>
-              <em>{getShipTo()}</em>
-            </div>
+            <div className="summary-location-tax-group">
+              <div className="total-row os-shipto">
+                <span>Ship To</span>
+                <em>{getShipTo()}</em>
+              </div>
 
-            <div className="total-row tax-row">
-              <span>Sales Tax</span>
-              <strong>{formatMoney(salesTax.amount)}</strong>
-            </div>
-
-            <div className="total-row tax-row">
-              <span>Tax Rate</span>
-              <em>{taxLabel}</em>
+              <div className="total-row tax-row">
+                <span>Sales Tax</span>
+                <strong>{formatMoney(salesTax.amount)}</strong>
+              </div>
             </div>
 
             <div className="total-row grand-total">

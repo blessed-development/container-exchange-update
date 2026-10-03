@@ -4558,6 +4558,17 @@
   border-color:rgba(255,77,0,.22) !important;
 }
 
+/* Keep the delivery and tax details as one compact group, distinct from the subtotal. */
+.checkout-container .checkout-main.checkout-details-layout .checkout-details-sidebar .summary-location-tax-group{
+  margin-top:22px;
+}
+.checkout-container .checkout-main.checkout-details-layout .checkout-details-sidebar .summary-location-tax-group .total-row{
+  padding:4px 0 !important;
+}
+.checkout-container .checkout-main.checkout-details-layout .checkout-details-sidebar .grand-total{
+  margin-top:8px !important;
+}
+
 /* Shared action variants: these selectors only resolve legacy checkout rules;
    the visual tokens live in index.css. */
 .checkout-container .checkout-btn.ce-signature-button,
