@@ -104,9 +104,7 @@ export default function InventoryListCard({ container, index }) {
       source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
-        ...(priceInfo.isIndicative
-          ? [`Estimated container price: USD $${Number(displayPrice).toLocaleString()}. Final price and availability requested for confirmation.`]
-          : ['Pricing and availability requested for confirmation.']),
+        'Pricing and availability requested for confirmation.',
         ...(savedLocation?.marketDisplayName
           ? [`Supplying market: ${savedLocation.marketDisplayName}`]
           : []),
@@ -184,22 +182,19 @@ export default function InventoryListCard({ container, index }) {
             </div>
 
             <div className="mb-[16px]">
-              {priceInfo.isPublished || priceInfo.isIndicative ? (
-                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
-                  {priceInfo.isIndicative ? 'Estimated container price · USD' : (savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`)}
-                </div>
-              ) : (
+              {!hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-                  Request a Quote
+                  Starting From
+                </div>
+              ) : (
+                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
+                  {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
-              {priceInfo.isPublished || priceInfo.isIndicative ? (
-                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">USD ${Number(displayPrice).toLocaleString()}</div>
+              {Number(displayPrice) > 0 ? (
+                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">${Number(displayPrice).toLocaleString()}</div>
               ) : (
-                <div className="text-[20px] leading-tight font-black text-foreground">Confirm current availability</div>
-              )}
-              {priceInfo.isIndicative && (
-                <p className="mt-2 max-w-xl text-xs font-medium leading-relaxed text-muted-foreground">Availability and final price confirmed by quote. Delivery and taxes additional.</p>
+                <div className="text-[20px] leading-tight font-black text-foreground">Request a Quote</div>
               )}
             </div>
 
