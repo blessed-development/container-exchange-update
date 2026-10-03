@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
+import { getLocalizedPriceInfo, getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -20,7 +20,7 @@ const CONDITION_COLORS = {
 
 export default function ContainerCard({ container, zipCode, index = 0 }) {
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
-  const displayPrice = getLocalizedPrice(
+  const priceInfo = getLocalizedPriceInfo(
     container.base_price || container.price || 0,
     getSavedSelectedLocation(),
     container
@@ -85,21 +85,13 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
             {/* Price + CTA */}
             <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
               <div>
-                <span className="text-xs text-muted-foreground">Starts at</span>
+                <span className="text-xs text-muted-foreground">{priceInfo.isPublished ? 'Fixed price' : 'Pricing'}</span>
                 <p className="text-xl font-black text-primary font-mono">
-                  ${displayPrice.toLocaleString()}
+                  {priceInfo.isPublished ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote'}
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                {container.is_available ? (
-                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                    In Stock
-                  </span>
-                ) : (
-                  <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
-                    Limited
-                  </span>
-                )}
+                <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Availability on request</span>
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                   Get Quote
                 </span>

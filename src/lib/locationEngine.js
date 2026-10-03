@@ -164,16 +164,11 @@ export function getStartingPrice(price) {
 }
 
 export function getLocalizedPrice(price, location, product = null) {
-  const original = Number(price || 0);
+  return getMarketPrice(product || { base_price: Number(price || 0) }, location).price;
+}
 
-  if (!location?.postalCode) {
-    return getStartingPrice(original);
-  }
-
-  return getMarketPrice(
-    product ? { ...product, base_price: original } : { base_price: original },
-    location
-  ).price;
+export function getLocalizedPriceInfo(price, location, product = null) {
+  return getMarketPrice(product || { base_price: Number(price || 0) }, location);
 }
 
 // Geographic autocomplete shares the existing location-engine module but keeps

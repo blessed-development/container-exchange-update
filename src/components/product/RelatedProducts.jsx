@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { inventoryProducts } from '@/data/inventoryProducts';
-import { useCart } from '@/context/CartContext';
-import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
+import { getLocalizedPriceInfo, getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const formatMoney = (value) =>
   `$${Number(value || 0).toLocaleString('en-US', {
@@ -23,7 +22,6 @@ const fallbackImage =
   '/images/products/used-20-cw/hero.webp';
 
 export default function RelatedProducts() {
-  const { addToCart } = useCart();
   const [selectedLocation, setSelectedLocation] = useState(() => getSavedSelectedLocation());
 
   useEffect(() => {
@@ -39,26 +37,8 @@ export default function RelatedProducts() {
     };
   }, []);
 
-  const getDisplayPrice = (product) =>
-    getLocalizedPrice(product.base_price || product.price || 0, selectedLocation, product);
-
-  const handleAddToCart = (e, product) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    addToCart({
-      productId: product.id,
-      title: product.name,
-      sub: product.short_description,
-      unitPrice: getDisplayPrice(product),
-      qty: 1,
-      img: product.image_url || fallbackImage,
-      image: product.image_url || fallbackImage,
-      url: `/product/${product.id}`,
-      rating: product.rating,
-      reviewCount: product.review_count,
-    });
-  };
+  const getPriceInfo = (product) =>
+    getLocalizedPriceInfo(product.base_price || product.price || 0, selectedLocation, product);
 
   return (
     <section className="related-products-section max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
@@ -119,17 +99,13 @@ export default function RelatedProducts() {
               <div className="mt-auto">
                 <div className="w-full h-10 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 flex items-center justify-center mb-3">
                   <span className="text-lg font-black text-orange-500 tracking-tight">
-                    {formatMoney(getDisplayPrice(product))}
+                    {getPriceInfo(product).isPublished ? formatMoney(getPriceInfo(product).price) : 'Request a quote'}
                   </span>
                 </div>
 
-                <Button
-                  type="button"
-                  onClick={(e) => handleAddToCart(e, product)}
-                  className="w-full h-10 rounded-xl font-bold text-sm ce-signature-button"
-                >
-                  Add to Cart
-                </Button>
+                <Link to={`/contact?${new URLSearchParams({ container: product.name, source: 'Related products' }).toString()}`} className="block">
+                  <Button type="button" className="w-full h-10 rounded-xl font-bold text-sm ce-signature-button">Request a Quote</Button>
+                </Link>
               </div>
             </div>
           </article>

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Lock, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 import { COMPANY_CONTACT } from '@/config/companyContact';
+import { validateCheckoutPricing } from '@/lib/validateCheckoutPricing';
 
 const fallbackImage =
   '/images/products/new-20-iicl/hero.webp';
@@ -35,6 +36,17 @@ const CheckoutPage = () => {
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
+  const [checkoutStatus, setCheckoutStatus] = useState({ checking: true, eligible: false, message: '' });
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!cart.length) return undefined;
+    setCheckoutStatus({ checking: true, eligible: false, message: '' });
+    validateCheckoutPricing(cart)
+      .then(() => !cancelled && setCheckoutStatus({ checking: false, eligible: true, message: '' }))
+      .catch((error) => !cancelled && setCheckoutStatus({ checking: false, eligible: false, message: error.message }));
+    return () => { cancelled = true; };
+  }, [cart]);
 
   const handleBackToStore = () => {
     navigate('/inventory');
@@ -205,9 +217,13 @@ const CheckoutPage = () => {
               <strong>{formatMoney(total)}</strong>
             </div>
 
-            <button type="button" className="checkout-btn ce-signature-button" onClick={handleProceedToCheckout}>
-              Proceed to Checkout
+            <button type="button" className="checkout-btn ce-signature-button" onClick={handleProceedToCheckout} disabled={!checkoutStatus.eligible}>
+              {checkoutStatus.checking ? 'Checking current price…' : checkoutStatus.eligible ? 'Proceed to Checkout' : 'Request a Quote'}
             </button>
+
+            {!checkoutStatus.checking && !checkoutStatus.eligible && (
+              <p className="shipping-note">{checkoutStatus.message}</p>
+            )}
 
             <p className="shipping-note">
               Shipping Internationally? <Link to="/delivery">Learn more</Link>

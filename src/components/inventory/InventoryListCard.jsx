@@ -8,7 +8,7 @@ import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 
 import {
   getSavedSelectedLocation,
-  getLocalizedPrice,
+  getLocalizedPriceInfo,
 } from '../../lib/locationEngine';
 
 const GRADE_LABELS = {
@@ -71,11 +71,12 @@ export default function InventoryListCard({ container, index }) {
     container?.id
   );
 
-  const displayPrice = getLocalizedPrice(
+  const priceInfo = getLocalizedPriceInfo(
     container.base_price || container.price || 0,
     savedLocation,
     container
   );
+  const displayPrice = priceInfo.price;
   const imageScaleClass =
     container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
@@ -103,7 +104,7 @@ export default function InventoryListCard({ container, index }) {
       source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
-        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
+        'Pricing and availability requested for confirmation.',
         ...(savedLocation?.marketDisplayName
           ? [`Supplying market: ${savedLocation.marketDisplayName}`]
           : []),
@@ -181,19 +182,20 @@ export default function InventoryListCard({ container, index }) {
             </div>
 
             <div className="mb-[16px]">
-              {!hasZip ? (
-                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-                  Starting From
-                </div>
-              ) : (
+              {priceInfo.isPublished ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
                   {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
+              ) : (
+                <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
+                  Request a Quote
+                </div>
               )}
-
-              <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
-                ${Number(displayPrice || 0).toLocaleString()}
-              </div>
+              {priceInfo.isPublished ? (
+                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">USD ${Number(displayPrice).toLocaleString()}</div>
+              ) : (
+                <div className="text-[20px] leading-tight font-black text-foreground">Confirm current availability</div>
+              )}
             </div>
 
             <div className="space-y-[7px] text-[13px]">

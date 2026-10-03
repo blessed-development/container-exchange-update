@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { isContactDeliveryEnabled, submitEnquiry } from '../lib/submitEnquiry';
+import { validateCheckoutPricing } from '../lib/validateCheckoutPricing';
 import './CheckoutPage.css';
 
 const fallbackImage =
@@ -310,6 +311,7 @@ const CheckoutDetails = () => {
         .join(', ');
 
     try {
+      await validateCheckoutPricing(cart);
       await submitEnquiry({
         customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
         customer_email: formData.email,

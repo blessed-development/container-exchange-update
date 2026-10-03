@@ -12,7 +12,6 @@ import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
-  getLocalizedPrice,
   getSavedSelectedLocation,
   lookupPostalCode,
   saveSelectedLocation,
@@ -161,30 +160,16 @@ export default function ProductDetail() {
   const productTitle = container?.name || '';
   const productImage = container?.image_url || selectedSize.image;
 
-  const baseDisplayPrice =
-    container?.base_price ||
-    container?.price ||
-    0;
-
   const activeLocation = getBestLocation(
     localizedPricing?.location,
     savedLocation,
     getSavedSelectedLocation()
   );
 
-  const hasActiveZip =
-    Boolean(getLocationZip(activeLocation));
-
   const calculatorPrice =
     Number(localizedPricing?.price || 0);
 
-  const heroPrice =
-    calculatorPrice > 0
-      ? calculatorPrice
-      : getLocalizedPrice(baseDisplayPrice, activeLocation, container);
-
-  const showStartingFrom =
-    !hasActiveZip;
+  const hasFixedPrice = calculatorPrice > 0;
 
   const allImages = [
     productImage,
@@ -566,17 +551,14 @@ export default function ProductDetail() {
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
-                {showStartingFrom && (
-                  <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
-                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
-                      Starting From
-                    </span>
+                {hasFixedPrice ? (
+                  <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">USD ${Number(calculatorPrice).toLocaleString()}</div>
+                ) : (
+                  <div>
+                    <div className="inline-flex items-center rounded-full bg-slate-700 px-3 py-1"><span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">Current pricing by quote</span></div>
+                    <div className="mt-2 text-xl font-black tracking-tight text-orange-500">Request a Quote</div>
                   </div>
                 )}
-
-                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
-                  ${Number(heroPrice).toLocaleString()}
-                </div>
               </div>
 
               <button
