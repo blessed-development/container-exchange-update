@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { isContactDeliveryEnabled, submitEnquiry } from '../lib/submitEnquiry';
+import { getSavedSelectedLocation } from '../lib/locationEngine';
 import './CheckoutPage.css';
 
 const fallbackImage =
@@ -192,6 +193,18 @@ const normalizeRegion = (value) => {
   return REGION_ALIASES[raw.toLowerCase()] || upper;
 };
 
+const getCheckoutLocationPrefill = () => {
+  const location = getSavedSelectedLocation();
+  const country = String(location?.country || '').trim().toUpperCase();
+
+  return {
+    country: country === 'CA' || country === 'CANADA' ? 'Canada' : 'United States',
+    city: location?.city || location?.detectedCity || '',
+    state: location?.stateCode || location?.state || location?.detectedState || '',
+    zip: location?.postalCode || location?.zip || location?.zipCode || '',
+  };
+};
+
 const calculateSalesTax = ({ amount, country, state }) => {
   const countryCode = getCountryCode(country);
   const region = normalizeRegion(state);
@@ -214,21 +227,18 @@ const CheckoutDetails = () => {
 
   const [sameBilling, setSameBilling] = useState(true);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     firstName: '',
     lastName: '',
     company: '',
     email: '',
     phone: '',
-    country: 'United States',
     address: '',
     apartment: '',
-    city: '',
-    state: '',
-    zip: '',
+    ...getCheckoutLocationPrefill(),
     notes: '',
     company_website: '',
-  });
+  }));
 
   const [billingData, setBillingData] = useState({
     firstName: '',
