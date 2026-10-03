@@ -85,16 +85,19 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
             {/* Price + CTA */}
             <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
               <div>
-                <span className="text-xs text-muted-foreground">{priceInfo.isPublished ? 'Fixed price' : priceInfo.isIndicative ? 'Estimated container price · USD' : 'Pricing'}</span>
+                <span className="text-xs text-muted-foreground">Starts at</span>
                 <p className="text-xl font-black text-primary font-mono">
-                  {priceInfo.isPublished || priceInfo.isIndicative ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote'}
+                  {priceInfo.isPublished || priceInfo.isIndicative ? `$${priceInfo.price.toLocaleString()}` : '—'}
                 </p>
-                {priceInfo.isIndicative && <p className="mt-1 text-[11px] leading-snug text-muted-foreground">Availability and final price confirmed by quote.</p>}
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Availability on request</span>
+                {container.is_available ? (
+                  <span className="text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">In Stock</span>
+                ) : (
+                  <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Limited</span>
+                )}
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  Get Quote
+                  View Details
                 </span>
               </div>
             </div>
