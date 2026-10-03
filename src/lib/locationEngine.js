@@ -164,7 +164,18 @@ export function getStartingPrice(price) {
 }
 
 export function getLocalizedPrice(price, location, product = null) {
-  return getMarketPrice(product || { base_price: Number(price || 0) }, location).price;
+  const original = Number(price || 0);
+
+  if (!location?.postalCode) {
+    return getStartingPrice(original);
+  }
+
+  const marketPrice = getMarketPrice(
+    product ? { ...product, base_price: original } : { base_price: original },
+    location
+  ).price;
+
+  return Number(marketPrice || original);
 }
 
 export function getLocalizedPriceInfo(price, location, product = null) {

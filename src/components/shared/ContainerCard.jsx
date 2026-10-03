@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { getLocalizedPriceInfo, getSavedSelectedLocation } from '@/lib/locationEngine';
+import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const GRADE_LABELS = {
   'AS_IS': 'As-Is',
@@ -20,7 +20,7 @@ const CONDITION_COLORS = {
 
 export default function ContainerCard({ container, zipCode, index = 0 }) {
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
-  const priceInfo = getLocalizedPriceInfo(
+  const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
     getSavedSelectedLocation(),
     container
@@ -87,7 +87,7 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
               <div>
                 <span className="text-xs text-muted-foreground">Starts at</span>
                 <p className="text-xl font-black text-primary font-mono">
-                  {priceInfo.isPublished || priceInfo.isIndicative ? `$${priceInfo.price.toLocaleString()}` : '—'}
+                  ${displayPrice.toLocaleString()}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
                   <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Limited</span>
                 )}
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  View Details
+                  Get Quote
                 </span>
               </div>
             </div>

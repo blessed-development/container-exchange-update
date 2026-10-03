@@ -19,7 +19,7 @@ import {
   cleanPostal,
   isUsZip,
   isCanadianPostal,
-  getLocalizedPriceInfo,
+  getLocalizedPrice,
   saveSelectedLocation,
   getSavedSelectedLocation,
 } from '../../lib/locationEngine';
@@ -418,6 +418,9 @@ export default function ContainerConfigurator({
   const effectiveGrade = isNewContainer ? 'IICL' : grade;
   const activeGrade = getGradeOption(effectiveGrade);
 
+  const selectedStandardPrice =
+    isNewContainer ? sizeOption.newPrice : sizeOption.usedPrice;
+
   const getRawPriceFor = (option, gradeKey = grade, conditionKey = condition) => {
     if (!option) return 0;
 
@@ -436,27 +439,21 @@ export default function ContainerConfigurator({
     conditionKey: effectiveCondition,
     gradeKey: effectiveGrade,
   }) || container;
-  const priceInfo = getLocalizedPriceInfo(rawUnitPrice, location, selectedMarketProduct);
-  const unitPrice = priceInfo.price || 0;
-  const fixedPriceAvailable = priceInfo.isPublished;
-  const indicativePriceAvailable = priceInfo.isIndicative;
+  const applyLocalPrice = (price, product = selectedMarketProduct) =>
+    getLocalizedPrice(price, location, product);
+  const unitPrice = applyLocalPrice(rawUnitPrice);
   const totalPrice = unitPrice * qty;
 
   useEffect(() => {
     if (typeof onPricingChange === 'function') {
       onPricingChange({
-        price: fixedPriceAvailable ? unitPrice : null,
-        indicativePrice: indicativePriceAvailable ? unitPrice : null,
-        fixedPriceAvailable,
-        indicativePriceAvailable,
+        price: unitPrice,
         hasLocalPrice: Boolean(location?.postalCode),
         location,
       });
     }
   }, [
     unitPrice,
-    fixedPriceAvailable,
-    indicativePriceAvailable,
     location?.postalCode,
     location?.city,
     location?.state,
@@ -644,7 +641,7 @@ export default function ContainerConfigurator({
   };
 
   const addToCart = () => {
-    if (!hasCheckoutLocation || !fixedPriceAvailable) return;
+    if (!hasCheckoutLocation) return;
 
     addCartItem({
       id: `${container?.id || effectiveCondition}-${safeSizeIndex}-${effectiveGrade}-${Date.now()}`,
@@ -685,7 +682,7 @@ export default function ContainerConfigurator({
         `Size: ${sizeOption.label}`,
         `Condition: ${effectiveCondition}`,
         `Grade: ${activeGrade.label}`,
-        'Price and availability requested for confirmation.',
+        `Estimated unit price: ${fmt(unitPrice)}`,
       ].join('\n'),
     });
 
@@ -787,7 +784,7 @@ export default function ContainerConfigurator({
               gradeKey: effectiveGrade,
             });
             const optionRawPrice = getRawPriceFor(opt, effectiveGrade, effectiveCondition);
-            const optionPriceInfo = getLocalizedPriceInfo(optionRawPrice, location, optionMarketProduct);
+            const optionPrice = applyLocalPrice(optionRawPrice, optionMarketProduct);
 
             return (
               <button
@@ -799,9 +796,7 @@ export default function ContainerConfigurator({
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                  {isActive
-                    ? (fixedPriceAvailable || indicativePriceAvailable ? fmt(unitPrice) : '—')
-                    : (optionPriceInfo.isPublished || optionPriceInfo.isIndicative ? fmt(optionPriceInfo.price) : '—')}
+                  {isActive ? fmt(unitPrice) : fmt(optionPrice)}
                 </span>
                 {isActive && (
                   <span className="main-tab-active-check" aria-hidden="true">
@@ -922,7 +917,9 @@ export default function ContainerConfigurator({
             <div className="total-row">
               <span className="total-lbl">Total</span>
 
-              <span className="total-price">{fixedPriceAvailable || indicativePriceAvailable ? fmt(totalPrice) : '—'}</span>
+              <div className="flex flex-col items-end">
+                <span className="total-price">{fmt(totalPrice)}</span>
+              </div>
             </div>
 
             <div className="relative mt-4 checkout-action-lock">
@@ -934,18 +931,24 @@ export default function ContainerConfigurator({
                 </div>
               )}
 
-              <div className={`transition-all duration-300 ${!hasCheckoutLocation ? 'blur-[5px] pointer-events-none select-none' : ''}`}>
-                {fixedPriceAvailable && <div className="cart-row">
+              <div
+                className={`transition-all duration-300 ${
+                  !hasCheckoutLocation
+                    ? 'blur-[5px] pointer-events-none select-none'
+                    : ''
+                }`}
+              >
+                <div className="cart-row">
                   <button
                     type="button"
                     className="add-btn ce-signature-button"
-                    disabled={!hasCheckoutLocation || !fixedPriceAvailable}
+                    disabled={!hasCheckoutLocation}
                     onClick={addToCart}
                   >
                     <ShoppingCart size={17} />
                     Add to Cart
                   </button>
-                </div>}
+                </div>
 
                 <button
                   type="button"

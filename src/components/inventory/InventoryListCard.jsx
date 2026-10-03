@@ -8,7 +8,7 @@ import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 
 import {
   getSavedSelectedLocation,
-  getLocalizedPriceInfo,
+  getLocalizedPrice,
 } from '../../lib/locationEngine';
 
 const GRADE_LABELS = {
@@ -71,12 +71,11 @@ export default function InventoryListCard({ container, index }) {
     container?.id
   );
 
-  const priceInfo = getLocalizedPriceInfo(
+  const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
     savedLocation,
     container
   );
-  const displayPrice = priceInfo.price;
   const imageScaleClass =
     container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
@@ -104,7 +103,7 @@ export default function InventoryListCard({ container, index }) {
       source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
-        'Pricing and availability requested for confirmation.',
+        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
         ...(savedLocation?.marketDisplayName
           ? [`Supplying market: ${savedLocation.marketDisplayName}`]
           : []),
@@ -191,11 +190,9 @@ export default function InventoryListCard({ container, index }) {
                   {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
-              {Number(displayPrice) > 0 ? (
-                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">${Number(displayPrice).toLocaleString()}</div>
-              ) : (
-                <div className="text-[20px] leading-tight font-black text-foreground">Request a Quote</div>
-              )}
+              <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
+                ${Number(displayPrice || 0).toLocaleString()}
+              </div>
             </div>
 
             <div className="space-y-[7px] text-[13px]">

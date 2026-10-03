@@ -12,6 +12,7 @@ import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
 import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
+  getLocalizedPrice,
   getSavedSelectedLocation,
   lookupPostalCode,
   saveSelectedLocation,
@@ -153,9 +154,6 @@ export default function ProductDetail() {
   const [localizedPricing, setLocalizedPricing] = useState({
     hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
     price: null,
-    indicativePrice: null,
-    fixedPriceAvailable: false,
-    indicativePriceAvailable: false,
     location: getSavedSelectedLocation(),
   });
 
@@ -163,18 +161,30 @@ export default function ProductDetail() {
   const productTitle = container?.name || '';
   const productImage = container?.image_url || selectedSize.image;
 
+  const baseDisplayPrice =
+    container?.base_price ||
+    container?.price ||
+    0;
+
   const activeLocation = getBestLocation(
     localizedPricing?.location,
     savedLocation,
     getSavedSelectedLocation()
   );
 
+  const hasActiveZip =
+    Boolean(getLocationZip(activeLocation));
+
   const calculatorPrice =
     Number(localizedPricing?.price || 0);
-  const indicativePrice = Number(localizedPricing?.indicativePrice || 0);
 
-  const hasFixedPrice = Boolean(localizedPricing?.fixedPriceAvailable && calculatorPrice > 0);
-  const hasIndicativePrice = Boolean(localizedPricing?.indicativePriceAvailable && indicativePrice > 0);
+  const heroPrice =
+    calculatorPrice > 0
+      ? calculatorPrice
+      : getLocalizedPrice(baseDisplayPrice, activeLocation, container);
+
+  const showStartingFrom =
+    !hasActiveZip;
 
   const allImages = [
     productImage,
@@ -556,11 +566,17 @@ export default function ProductDetail() {
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
-                {(hasFixedPrice || hasIndicativePrice) && (
-                  <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
-                    ${Number(hasFixedPrice ? calculatorPrice : indicativePrice).toLocaleString()}
+                {showStartingFrom && (
+                  <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
+                    <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
+                      Starting From
+                    </span>
                   </div>
                 )}
+
+                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
+                  ${Number(heroPrice).toLocaleString()}
+                </div>
               </div>
 
               <button

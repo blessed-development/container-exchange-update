@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import ImageSlider from '@/components/shared/ImageSlider';
 import { Link } from 'react-router-dom';
-import { getLocalizedPriceInfo, getSavedSelectedLocation } from '@/lib/locationEngine';
+import { getLocalizedPrice, getSavedSelectedLocation } from '@/lib/locationEngine';
 import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const GRADE_LABELS = {
@@ -31,7 +31,7 @@ export default function QuickViewModal({ container, onClose }) {
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const stars = Math.round(container.rating || 5);
-  const priceInfo = getLocalizedPriceInfo(
+  const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
     getSavedSelectedLocation(),
     container
@@ -90,11 +90,9 @@ export default function QuickViewModal({ container, onClose }) {
                 </div>
 
                 {/* Price */}
-                {(priceInfo.isPublished || priceInfo.isIndicative) && (
-                  <p className="text-3xl font-black text-primary mb-3">
-                    ${priceInfo.price.toLocaleString()}
-                  </p>
-                )}
+                <p className="text-3xl font-black text-primary mb-3">
+                  ${displayPrice.toLocaleString() || '—'}
+                </p>
               </div>
 
               {/* Specs */}
