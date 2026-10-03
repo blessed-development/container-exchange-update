@@ -99,9 +99,10 @@ export default function RelatedProducts() {
               <div className="mt-auto">
                 <div className="w-full h-10 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 flex items-center justify-center mb-3">
                   <span className="text-lg font-black text-orange-500 tracking-tight">
-                    {getPriceInfo(product).isPublished ? formatMoney(getPriceInfo(product).price) : 'Request a quote'}
+                    {getPriceInfo(product).isPublished || getPriceInfo(product).isIndicative ? formatMoney(getPriceInfo(product).price) : 'Request a quote'}
                   </span>
                 </div>
+                {getPriceInfo(product).isIndicative && <p className="-mt-2 mb-3 text-center text-[11px] leading-snug text-muted-foreground">Estimated container price · USD<br />Final price confirmed by quote.</p>}
 
                 <Link to={`/contact?${new URLSearchParams({ container: product.name, source: 'Related products' }).toString()}`} className="block">
                   <Button type="button" className="w-full h-10 rounded-xl font-bold text-sm ce-signature-button">Request a Quote</Button>

@@ -153,6 +153,9 @@ export default function ProductDetail() {
   const [localizedPricing, setLocalizedPricing] = useState({
     hasLocalPrice: Boolean(getSavedSelectedLocation()?.postalCode),
     price: null,
+    indicativePrice: null,
+    fixedPriceAvailable: false,
+    indicativePriceAvailable: false,
     location: getSavedSelectedLocation(),
   });
 
@@ -168,8 +171,10 @@ export default function ProductDetail() {
 
   const calculatorPrice =
     Number(localizedPricing?.price || 0);
+  const indicativePrice = Number(localizedPricing?.indicativePrice || 0);
 
-  const hasFixedPrice = calculatorPrice > 0;
+  const hasFixedPrice = Boolean(localizedPricing?.fixedPriceAvailable && calculatorPrice > 0);
+  const hasIndicativePrice = Boolean(localizedPricing?.indicativePriceAvailable && indicativePrice > 0);
 
   const allImages = [
     productImage,
@@ -553,6 +558,12 @@ export default function ProductDetail() {
               <div className="mb-8 flex items-center gap-4">
                 {hasFixedPrice ? (
                   <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">USD ${Number(calculatorPrice).toLocaleString()}</div>
+                ) : hasIndicativePrice ? (
+                  <div>
+                    <div className="inline-flex items-center rounded-full bg-slate-700 px-3 py-1"><span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">Estimated container price · USD</span></div>
+                    <div className="mt-2 text-4xl font-black tracking-tight text-orange-500 leading-none">USD ${Number(indicativePrice).toLocaleString()}</div>
+                    <p className="mt-2 max-w-md text-sm font-medium leading-relaxed text-muted-foreground">Availability and final price confirmed by quote. Delivery and taxes additional.</p>
+                  </div>
                 ) : (
                   <div>
                     <div className="inline-flex items-center rounded-full bg-slate-700 px-3 py-1"><span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">Current pricing by quote</span></div>

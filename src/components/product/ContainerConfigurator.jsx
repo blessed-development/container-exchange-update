@@ -439,13 +439,16 @@ export default function ContainerConfigurator({
   const priceInfo = getLocalizedPriceInfo(rawUnitPrice, location, selectedMarketProduct);
   const unitPrice = priceInfo.price || 0;
   const fixedPriceAvailable = priceInfo.isPublished;
+  const indicativePriceAvailable = priceInfo.isIndicative;
   const totalPrice = unitPrice * qty;
 
   useEffect(() => {
     if (typeof onPricingChange === 'function') {
       onPricingChange({
         price: fixedPriceAvailable ? unitPrice : null,
+        indicativePrice: indicativePriceAvailable ? unitPrice : null,
         fixedPriceAvailable,
+        indicativePriceAvailable,
         hasLocalPrice: Boolean(location?.postalCode),
         location,
       });
@@ -453,6 +456,7 @@ export default function ContainerConfigurator({
   }, [
     unitPrice,
     fixedPriceAvailable,
+    indicativePriceAvailable,
     location?.postalCode,
     location?.city,
     location?.state,
@@ -681,7 +685,9 @@ export default function ContainerConfigurator({
         `Size: ${sizeOption.label}`,
         `Condition: ${effectiveCondition}`,
         `Grade: ${activeGrade.label}`,
-        'Price and availability requested for confirmation.',
+        ...(indicativePriceAvailable
+          ? [`Estimated container price: USD $${Number(unitPrice).toLocaleString()}. Final price and availability requested for confirmation.`]
+          : ['Price and availability requested for confirmation.']),
       ].join('\n'),
     });
 
@@ -795,7 +801,9 @@ export default function ContainerConfigurator({
                 <span className="tab-title">{opt.label}</span>
                 <span className="tab-sub">{opt.dims}</span>
                 <span className="tab-price">
-                  {isActive ? (fixedPriceAvailable ? fmt(unitPrice) : 'Quote') : (optionPriceInfo.isPublished ? fmt(optionPriceInfo.price) : 'Quote')}
+                  {isActive
+                    ? (fixedPriceAvailable ? fmt(unitPrice) : indicativePriceAvailable ? `Est. ${fmt(unitPrice)}` : 'Quote')
+                    : (optionPriceInfo.isPublished ? fmt(optionPriceInfo.price) : optionPriceInfo.isIndicative ? `Est. ${fmt(optionPriceInfo.price)}` : 'Quote')}
                 </span>
                 {isActive && (
                   <span className="main-tab-active-check" aria-hidden="true">
@@ -916,7 +924,12 @@ export default function ContainerConfigurator({
             <div className="total-row">
               <span className="total-lbl">Total</span>
 
-              <div className="flex flex-col items-end"><span className="total-price">{fixedPriceAvailable ? fmt(totalPrice) : 'Request a Quote'}</span></div>
+              <div className="flex flex-col items-end">
+                <span className="total-price">{fixedPriceAvailable ? fmt(totalPrice) : indicativePriceAvailable ? fmt(totalPrice) : 'Request a Quote'}</span>
+                {indicativePriceAvailable && !fixedPriceAvailable && (
+                  <span className="mt-1 text-right text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Estimated container price · USD</span>
+                )}
+              </div>
             </div>
 
             <div className="relative mt-4 checkout-action-lock">
@@ -942,7 +955,11 @@ export default function ContainerConfigurator({
                 </div>}
 
                 {!fixedPriceAvailable && hasCheckoutLocation && (
-                  <p className="mb-3 text-center text-xs font-semibold text-muted-foreground">Current stock and price are confirmed by quote.</p>
+                  <p className="mb-3 text-center text-xs font-semibold text-muted-foreground">
+                    {indicativePriceAvailable
+                      ? 'Availability and final price confirmed by quote. Delivery and taxes additional.'
+                      : 'Current stock and price are confirmed by quote.'}
+                  </p>
                 )}
 
                 <button

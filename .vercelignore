@@ -1,0 +1,3 @@
+# Internal market-research assessment only. The browser receives the separate,
+# sanitized indicative estimate table in src/data/indicativeMarketPrices.js.
+pricing-research/

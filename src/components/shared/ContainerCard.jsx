@@ -85,10 +85,11 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
             {/* Price + CTA */}
             <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
               <div>
-                <span className="text-xs text-muted-foreground">{priceInfo.isPublished ? 'Fixed price' : 'Pricing'}</span>
+                <span className="text-xs text-muted-foreground">{priceInfo.isPublished ? 'Fixed price' : priceInfo.isIndicative ? 'Estimated container price · USD' : 'Pricing'}</span>
                 <p className="text-xl font-black text-primary font-mono">
-                  {priceInfo.isPublished ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote'}
+                  {priceInfo.isPublished || priceInfo.isIndicative ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote'}
                 </p>
+                {priceInfo.isIndicative && <p className="mt-1 text-[11px] leading-snug text-muted-foreground">Availability and final price confirmed by quote.</p>}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Availability on request</span>

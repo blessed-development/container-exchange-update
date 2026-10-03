@@ -1,10 +1,12 @@
 import { locations } from '@/data/locations';
 import { serviceAreas } from '@/data/serviceAreas';
 import { RELEASED_MARKET_PRICES } from '@/data/releasedMarketPrices';
+import { INDICATIVE_MARKET_PRICES } from '@/data/indicativeMarketPrices';
 
-// Public pricing is intentionally limited to records that have completed the
-// supplier, currency, fee, market-evidence, margin and expiry checks on the
-// server. Do not put supplier costs, quantities or pending proposals here.
+// Fixed prices are limited to records that have completed the supplier,
+// currency, fee, market-evidence, margin and expiry checks on the server.
+// Indicative estimates are a separately assessed, quote-only customer aid.
+// Do not put supplier costs, quantities or pending proposals here.
 const normalize = (value = '') => String(value).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const matchesState = (market, state) => {
@@ -34,14 +36,24 @@ const countryCode = (value) => {
 export const getMarketPrice = (product, location = {}) => {
   const marketId = getMarketIdForLocation(location);
   const country = countryCode(location.country);
-  const record = marketId ? RELEASED_MARKET_PRICES[marketId]?.[product?.id] : null;
-  const isReleased = Boolean(record && record.country === country && record.currency === 'USD' && Number(record.price) > 0 && (!record.validUntil || new Date(record.validUntil).getTime() > Date.now()));
+  const releasedRecord = marketId ? RELEASED_MARKET_PRICES[marketId]?.[product?.id] : null;
+  const isReleased = Boolean(releasedRecord && releasedRecord.country === country && releasedRecord.currency === 'USD' && Number(releasedRecord.price) > 0 && (!releasedRecord.validUntil || new Date(releasedRecord.validUntil).getTime() > Date.now()));
+  const indicativeRecord = marketId ? INDICATIVE_MARKET_PRICES[marketId]?.[product?.id] : null;
+  const isIndicative = !isReleased && Boolean(
+    indicativeRecord &&
+      country === 'US' &&
+      indicativeRecord.country === country &&
+      indicativeRecord.currency === 'USD' &&
+      Number(indicativeRecord.price) > 0
+  );
+
   return {
-    price: isReleased ? Number(record.price) : null,
-    currency: isReleased ? record.currency : null,
+    price: isReleased ? Number(releasedRecord.price) : isIndicative ? Number(indicativeRecord.price) : null,
+    currency: isReleased ? releasedRecord.currency : isIndicative ? indicativeRecord.currency : null,
     marketId,
     isPublished: isReleased,
-    status: isReleased ? 'released' : 'request_quote',
-    delivery: isReleased ? 'Delivery quoted separately.' : null,
+    isIndicative,
+    status: isReleased ? 'released' : isIndicative ? 'indicative' : 'request_quote',
+    delivery: isReleased || isIndicative ? 'Delivery quoted separately.' : null,
   };
 };

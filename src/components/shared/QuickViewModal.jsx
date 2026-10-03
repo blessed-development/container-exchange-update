@@ -90,9 +90,12 @@ export default function QuickViewModal({ container, onClose }) {
                 </div>
 
                 {/* Price */}
-                <p className="text-2xl font-black text-primary mb-3">
-                  {priceInfo.isPublished ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote for current pricing'}
-                </p>
+                <div className="mb-3">
+                  <p className="text-2xl font-black text-primary">
+                    {priceInfo.isPublished || priceInfo.isIndicative ? `USD $${priceInfo.price.toLocaleString()}` : 'Request a quote for current pricing'}
+                  </p>
+                  {priceInfo.isIndicative && <p className="mt-1 text-xs font-medium text-muted-foreground">Estimated container price. Availability and final price confirmed by quote. Delivery and taxes additional.</p>}
+                </div>
               </div>
 
               {/* Specs */}
