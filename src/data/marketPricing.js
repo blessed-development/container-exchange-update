@@ -15,6 +15,10 @@ const matchesState = (market, state) => {
 };
 
 export const getMarketIdForLocation = (location = {}) => {
+  // A first-time visitor has no stored location. Inventory must remain
+  // browseable and quote-only in that state rather than crashing while cards
+  // ask the pricing resolver for a market.
+  location = location || {};
   if (location.marketId) return location.marketId;
   const city = normalize(location.city || location.detectedCity);
   const state = location.stateCode || location.state || location.detectedState;
@@ -34,6 +38,7 @@ const countryCode = (value) => {
 };
 
 export const getMarketPrice = (product, location = {}) => {
+  location = location || {};
   const marketId = getMarketIdForLocation(location);
   const country = countryCode(location.country);
   const releasedRecord = marketId ? RELEASED_MARKET_PRICES[marketId]?.[product?.id] : null;
