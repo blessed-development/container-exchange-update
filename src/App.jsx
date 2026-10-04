@@ -11,6 +11,7 @@ import Contact from '@/pages/Contact';
 import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
+import BuyersGuide from '@/pages/BuyersGuide';
 import LocationPageRoute from '@/pages/LocationPageRoute';
 
 import { CartProvider } from './context/CartContext';
@@ -33,6 +34,7 @@ const AppRoutes = () => (
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/delivery" element={<Delivery />} />
+        <Route path="/buyers-guide" element={<BuyersGuide />} />
         <Route path="/:locationPath" element={<LocationPageRoute />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>

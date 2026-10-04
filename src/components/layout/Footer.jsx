@@ -75,7 +75,7 @@ export default function Footer() {
                 { label: 'Buy Containers', path: '/inventory' },
                 { label: 'Rent a Container', path: '/contact' },
                 { label: 'Rent-to-Own', path: '/contact' },
-                { label: 'How It Works', path: '/#how-it-works' },
+                { label: 'How It Works', path: '/buyers-guide' },
                 { label: 'About Us', path: '/about' },
                 { label: 'FAQ', path: '/faq' },
                 { label: 'Get a Quote', path: '/contact' },

@@ -5,7 +5,7 @@ import NavbarCartCTA from './NavbarCartCTA';
 
 const NAV_LINKS = [
   { label: 'Buy Containers', path: '/inventory' },
-  { label: 'How It Works', path: '/#how-it-works' },
+  { label: 'How It Works', path: '/buyers-guide' },
   { label: 'About', path: '/about' },
   { label: 'Delivery', path: '/delivery' },
   { label: 'FAQ', path: '/faq' },
