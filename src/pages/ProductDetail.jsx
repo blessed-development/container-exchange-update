@@ -589,8 +589,8 @@ export default function ProductDetail() {
                 }}
                 className={`product-grade-card group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                   gradeOpen
-                    ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
-                    : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
+                    ? 'border-border bg-card shadow-[0_12px_35px_rgba(15,23,42,0.10)]'
+                    : 'border-border bg-card/80 hover:border-primary/35 hover:bg-card'
                 }`}
               >
                 <div className="flex items-center justify-between gap-4 px-5 pt-4">
@@ -610,7 +610,7 @@ export default function ProductDetail() {
                     gradeOpen ? 'max-h-[330px]' : 'max-h-[92px]'
                   }`}
                 >
-                  <p className="mb-1 text-base font-semibold text-white/95">
+                  <p className="mb-1 text-base font-semibold text-foreground">
                     {gradeInfo.label || container.grade}
                   </p>
 
@@ -640,13 +640,13 @@ export default function ProductDetail() {
                   }}
                   className={`product-description-card group mt-[-8px] mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                     descriptionOpen
-                      ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
-                      : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
+                      ? 'border-border bg-card shadow-[0_12px_35px_rgba(15,23,42,0.10)]'
+                      : 'border-border bg-card/80 hover:border-primary/35 hover:bg-card'
                   }`}
                 >
                   <div className="flex justify-end px-5 pt-4">
                     <ChevronDown
-                      className={`h-4 w-4 shrink-0 text-white/45 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                      className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                         descriptionOpen ? 'rotate-180' : ''
                       }`}
                     />

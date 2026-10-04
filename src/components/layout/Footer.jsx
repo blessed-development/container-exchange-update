@@ -80,7 +80,7 @@ export default function Footer() {
                 { label: 'FAQ', path: '/faq' },
                 { label: 'Get a Quote', path: '/contact' },
               ].map((link) => (
-                <li key={link.path}>
+                <li key={`${link.label}-${link.path}`}>
                   <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     {link.label}

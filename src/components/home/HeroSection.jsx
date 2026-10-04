@@ -45,7 +45,6 @@ export default function HeroSection() {
               alt={index === activeSlide ? slide.alt : ''}
               aria-hidden={index !== activeSlide}
               loading={index === 0 ? 'eager' : 'lazy'}
-              fetchPriority={index === 0 ? 'high' : 'auto'}
               decoding="async"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === activeSlide ? 'opacity-100' : 'opacity-0'}`}
             />

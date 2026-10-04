@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -256,6 +256,12 @@ const CheckoutDetails = () => {
   const [submitError, setSubmitError] = useState('');
   const checkoutDeliveryAvailable = isContactDeliveryEnabled;
 
+  useEffect(() => {
+    if (!cart.length) {
+      navigate('/checkout', { replace: true });
+    }
+  }, [cart.length, navigate]);
+
   const salesTax = calculateSalesTax({
     amount: taxableAmount,
     country: formData.country,
@@ -347,8 +353,11 @@ const CheckoutDetails = () => {
   };
 
   if (!cart.length) {
-    navigate('/checkout');
-    return null;
+    return (
+      <main className="checkout-container" aria-live="polite">
+        <p className="text-center py-16 text-muted-foreground">Returning to your cart…</p>
+      </main>
+    );
   }
 
   return (

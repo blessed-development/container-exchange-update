@@ -212,7 +212,12 @@ export default function ZipCodeSearch({
     }
   };
 
-  const handleKeyDown = () => {
+  const handleKeyDown = (event) => {
+    // A completed postal code begins an automatic lookup. Keep that lookup
+    // alive when a customer presses Enter, rather than leaving the control in
+    // its loading state with the scheduled lookup cancelled.
+    if (event.key === 'Enter') return;
+
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
