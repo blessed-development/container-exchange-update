@@ -28,7 +28,6 @@ const CheckoutPage = () => {
     cart,
     updateQuantity,
     removeItem,
-    clearCart,
     getSubtotal,
     getGrandTotal,
   } = useCart();
@@ -41,12 +40,6 @@ const CheckoutPage = () => {
 
   const handleProceedToCheckout = () => {
     navigate('/checkout/details');
-  };
-
-  const handleClearCart = () => {
-    if (window.confirm('Remove all containers from your cart?')) {
-      clearCart();
-    }
   };
 
   if (!cart.length) {
@@ -175,14 +168,6 @@ const CheckoutPage = () => {
             })}
           </div>
 
-          <div className="cart-panel-actions">
-            <button type="button" className="return-store-btn ce-secondary-button" onClick={handleBackToStore}>
-              ← Return to Store
-            </button>
-            <button type="button" className="cart-clear-btn ce-destructive-button" onClick={handleClearCart}>
-              Clear Cart
-            </button>
-          </div>
         </section>
 
         <aside className="checkout-sidebar">

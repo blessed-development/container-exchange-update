@@ -669,13 +669,6 @@ const CheckoutDetails = () => {
                 </div>
               )}
 
-              <button
-                type="button"
-                className="return-store-btn ce-secondary-button"
-                onClick={() => navigate('/checkout')}
-              >
-                ← Back to Cart
-              </button>
             </div>
           </form>
         </section>
