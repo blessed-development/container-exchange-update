@@ -118,6 +118,72 @@ async function lookupUsPostalCode(postalCode) {
   };
 }
 
+// Used by the location picker. Search stays local to the postal-data shard
+// that matches the entered prefix, so customers receive exact locations
+// without sending their search terms to another service.
+export async function searchPostalLocations(value, { limit = 6 } = {}) {
+  const clean = cleanPostal(value);
+
+  if (/^\d{1,5}$/.test(clean)) {
+    const prefix = clean.slice(0, 1);
+    let entries = usPostalCache.get(prefix);
+
+    if (!entries) {
+      const response = await fetch(`${US_POSTAL_DATA_ROOT}/${prefix}.json`);
+      if (!response.ok) return [];
+      entries = await response.json();
+      usPostalCache.set(prefix, entries);
+    }
+
+    return Object.entries(entries)
+      .filter(([postalCode]) => postalCode.startsWith(clean))
+      .slice(0, limit)
+      .map(([postalCode, result]) => resolveSharedMarketLocation({
+        city: result[0],
+        state: result[1],
+        latitude: Number(result[2]),
+        longitude: Number(result[3]),
+        postalCode,
+        country: 'US',
+      }, { preserveDisplayCity: true }));
+  }
+
+  // Canadian data is organised by the three-character FSA prefix. Waiting
+  // for that prefix keeps the picker fast while returning real postal codes.
+  if (/^[A-Z]\d[A-Z][A-Z\d]*$/.test(clean) && clean.length >= 3) {
+    const fsa = clean.slice(0, 3);
+    let entries = canadianPostalCache.get(fsa);
+
+    if (!entries) {
+      const response = await fetch(`${CANADIAN_POSTAL_DATA_ROOT}/${fsa}.json`);
+      if (!response.ok) return [];
+      entries = await response.json();
+      canadianPostalCache.set(fsa, entries);
+    }
+
+    const market = getCanadianMarket(clean);
+    const [latitude, longitude] = canadianPostalFsaCentroids[fsa] || [];
+
+    return Object.entries(entries)
+      .filter(([postalCode]) => postalCode.startsWith(clean))
+      .slice(0, limit)
+      .map(([postalCode, result]) => {
+        const resolved = resolveSharedMarketLocation({
+          city: getCustomerFacingCanadianCity(result[0], postalCode),
+          state: result[1],
+          postalCode: formatCanadianPostal(postalCode),
+          country: 'CA',
+          latitude,
+          longitude,
+        }, { preserveDisplayCity: true });
+
+        return market?.marketId ? { ...resolved, marketId: market.marketId } : resolved;
+      });
+  }
+
+  return [];
+}
+
 export async function lookupPostalCode(value) {
   const clean = cleanPostal(value);
 

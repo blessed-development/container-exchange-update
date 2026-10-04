@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { LocateFixed, MapPin, Search } from 'lucide-react';
+import { Check, LocateFixed, MapPin, Search } from 'lucide-react';
 import {
   getSavedSelectedLocation,
   saveSelectedLocation,
   lookupPostalCode,
+  searchPostalLocations,
   isUsZip,
   isCanadianPostal,
   getCountryLabel,
@@ -80,6 +81,8 @@ export default function ZipCodeSearch({
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const timerRef = useRef(null);
+  const pickerRef = useRef(null);
+  const searchRequestRef = useRef(0);
 
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
@@ -95,6 +98,10 @@ export default function ZipCodeSearch({
   );
   const [isDetecting, setIsDetecting] = useState(false);
   const [error, setError] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const [isSearching, setIsSearching] = useState(false);
 
   const moveCursorToEnd = () => {
     requestAnimationFrame(() => {
@@ -164,27 +171,52 @@ export default function ZipCodeSearch({
     };
   }, []);
 
-  const detectPostal = (value) => {
+  useEffect(() => {
+    const closeOnOutsidePress = (event) => {
+      if (!pickerRef.current?.contains(event.target)) {
+        setIsSuggestionsOpen(false);
+        setActiveSuggestion(-1);
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePress);
+
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePress);
+  }, []);
+
+  const searchPostalSuggestions = (value) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
-    setIsDetecting(true);
-    setSelectedLocation(null);
-    setInputValue('Loading...');
+    const requestId = ++searchRequestRef.current;
+    setIsSearching(true);
+    setIsSuggestionsOpen(true);
+    setActiveSuggestion(-1);
 
     timerRef.current = setTimeout(async () => {
       try {
-        const detected = await lookupPostalCode(value);
-        completeLocation(detected);
+        const matches = await searchPostalLocations(value);
+
+        if (requestId !== searchRequestRef.current) return;
+
+        setSuggestions(matches);
+        setIsSearching(false);
+        setIsSuggestionsOpen(true);
       } catch {
-        setIsDetecting(false);
-        setInputValue(value);
-        setSelectedLocation(null);
-        setError(LOCATION_ERROR);
-        moveCursorToEnd();
+        if (requestId !== searchRequestRef.current) return;
+
+        setSuggestions([]);
+        setIsSearching(false);
       }
-    }, 1000);
+    }, 180);
+  };
+
+  const selectSuggestion = (location) => {
+    completeLocation(location);
+    setSuggestions([]);
+    setIsSuggestionsOpen(false);
+    setActiveSuggestion(-1);
   };
 
   const handleChange = (e) => {
@@ -207,16 +239,40 @@ export default function ZipCodeSearch({
 
     setIsDetecting(false);
 
-    if (isValidPostal(zipCandidate)) {
-      detectPostal(zipCandidate);
+    if (zipCandidate) {
+      searchPostalSuggestions(zipCandidate);
+    } else {
+      setSuggestions([]);
+      setIsSuggestionsOpen(false);
+      setIsSearching(false);
     }
   };
 
   const handleKeyDown = (event) => {
-    // A completed postal code begins an automatic lookup. Keep that lookup
-    // alive when a customer presses Enter, rather than leaving the control in
-    // its loading state with the scheduled lookup cancelled.
-    if (event.key === 'Enter') return;
+    if (event.key === 'ArrowDown' && suggestions.length) {
+      event.preventDefault();
+      setIsSuggestionsOpen(true);
+      setActiveSuggestion((current) => Math.min(current + 1, suggestions.length - 1));
+      return;
+    }
+
+    if (event.key === 'ArrowUp' && suggestions.length) {
+      event.preventDefault();
+      setActiveSuggestion((current) => Math.max(current - 1, 0));
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      setIsSuggestionsOpen(false);
+      setActiveSuggestion(-1);
+      return;
+    }
+
+    if (event.key === 'Enter' && suggestions.length) {
+      event.preventDefault();
+      selectSuggestion(suggestions[activeSuggestion >= 0 ? activeSuggestion : 0]);
+      return;
+    }
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
@@ -231,6 +287,10 @@ export default function ZipCodeSearch({
 
   const handleFocus = () => {
     moveCursorToEnd();
+
+    if (zip && !selectedLocation) {
+      searchPostalSuggestions(zip);
+    }
   };
 
   const handleUseCurrentLocation = () => {
@@ -320,7 +380,7 @@ export default function ZipCodeSearch({
             : `flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-[720px]' : ''}`
         }
       >
-        <div className="relative w-full min-w-0">
+        <div ref={pickerRef} className="relative w-full min-w-0">
           <div
             className={`absolute ${isHero ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
               isCompact ? 'text-white/25' : 'text-white/30'
@@ -346,6 +406,67 @@ export default function ZipCodeSearch({
                   : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
             }`}
           />
+
+          {isSuggestionsOpen && (isSearching || suggestions.length > 0 || zip.length > 0) && (
+            <div
+              role="listbox"
+              aria-label="Matching ZIP and postal-code locations"
+              className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
+                isHero || isCompact
+                  ? 'border-white/12 bg-[#0b1c2d]/[0.96]'
+                  : 'border-border bg-popover'
+              }`}
+            >
+              {isSearching ? (
+                <div className={`flex items-center gap-2 px-4 py-3 text-sm ${isHero || isCompact ? 'text-white/70' : 'text-muted-foreground'}`}>
+                  <Search className="h-4 w-4 animate-pulse" />
+                  Finding matching locations…
+                </div>
+              ) : suggestions.length ? (
+                <>
+                  <div className={`px-4 pt-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] ${isHero || isCompact ? 'text-white/45' : 'text-muted-foreground'}`}>
+                    Select your exact location
+                  </div>
+                  {suggestions.map((suggestion, index) => {
+                    const isActive = index === activeSuggestion;
+                    const isSaved = getZipValue(selectedLocation) === getZipValue(suggestion);
+
+                    return (
+                      <button
+                        key={`${suggestion.country}-${getZipValue(suggestion)}`}
+                        type="button"
+                        role="option"
+                        aria-selected={isActive || isSaved}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => selectSuggestion(suggestion)}
+                        onMouseEnter={() => setActiveSuggestion(index)}
+                        className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
+                          isActive
+                            ? isHero || isCompact ? 'bg-white/10' : 'bg-muted'
+                            : isHero || isCompact ? 'hover:bg-white/[0.06]' : 'hover:bg-muted/70'
+                        }`}
+                      >
+                        <MapPin className={`h-4 w-4 shrink-0 ${isHero || isCompact ? 'text-sky-300' : 'text-primary'}`} />
+                        <span className="min-w-0 flex-1">
+                          <span className={`block truncate text-sm font-semibold ${isHero || isCompact ? 'text-white' : 'text-foreground'}`}>
+                            {formatLocationDisplay(suggestion, getZipValue(suggestion))}
+                          </span>
+                          <span className={`block truncate text-xs ${isHero || isCompact ? 'text-white/55' : 'text-muted-foreground'}`}>
+                            Use this location for inventory and pricing
+                          </span>
+                        </span>
+                        {isSaved && <Check className="h-4 w-4 shrink-0 text-sky-300" />}
+                      </button>
+                    );
+                  })}
+                </>
+              ) : (
+                <div className={`px-4 py-3 text-sm ${isHero || isCompact ? 'text-white/65' : 'text-muted-foreground'}`}>
+                  Keep typing to find an exact ZIP or postal code.
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {isCompact ? (
