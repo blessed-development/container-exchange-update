@@ -391,8 +391,14 @@ export default function ZipCodeSearch({
 
           <Input
             ref={inputRef}
+            id="container-exchange-location-search"
+            name="container-exchange-location-search"
             type="text"
             inputMode="text"
+            autoComplete="off"
+            aria-autocomplete="list"
+            aria-controls="container-exchange-location-suggestions"
+            aria-expanded={isSuggestionsOpen}
             value={inputValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -409,6 +415,7 @@ export default function ZipCodeSearch({
 
           {isSuggestionsOpen && (isSearching || suggestions.length > 0 || zip.length > 0) && (
             <div
+              id="container-exchange-location-suggestions"
               role="listbox"
               aria-label="Matching ZIP and postal-code locations"
               className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
