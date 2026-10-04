@@ -34,12 +34,38 @@ const DELIVERIES = [
   ['Used 40HC Cargo Worthy Container Delivered Chicago, IL', 'Chicago, IL', 'December 03, 2025'],
 ];
 
-const IMAGES = [
-  '/images/products/new-40hc-iicl/hero.webp',
-  '/images/products/used-20-iicl/hero.webp',
-  '/images/products/new-40-iicl/hero.webp',
-  '/images/products/used-40-cw/hero.webp',
-  '/images/products/used-40-as-is/hero.webp',
+// Each delivery card has a dedicated local WebP matched to its unit size and condition.
+const LOCAL_IMAGES = [
+  '/images/recent-deliveries/los-angeles-ca-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/arlington-tn-used-20ft-wwt.webp',
+  '/images/recent-deliveries/houston-tx-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/dallas-tx-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/phoenix-az-used-40hc-wwt.webp',
+  '/images/recent-deliveries/miami-fl-new-40hc.webp',
+  '/images/recent-deliveries/nashville-tn-used-20ft-cargo-worthy.webp',
+  '/images/recent-deliveries/portland-or-used-40ft-storage.webp',
+  '/images/recent-deliveries/long-beach-ca-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/memphis-tn-used-20ft-wwt.webp',
+  '/images/recent-deliveries/tampa-fl-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/jacksonville-fl-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/charlotte-nc-new-40ft-standard.webp',
+  '/images/recent-deliveries/cleveland-oh-used-20ft-storage.webp',
+  '/images/recent-deliveries/las-vegas-nv-used-40hc-wwt.webp',
+  '/images/recent-deliveries/seattle-wa-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/st-louis-mo-used-20ft-wwt.webp',
+  '/images/recent-deliveries/san-antonio-tx-new-20ft.webp',
+  '/images/recent-deliveries/kansas-city-ks-used-40ft-wwt.webp',
+  '/images/recent-deliveries/detroit-mi-new-40hc.webp',
+  '/images/recent-deliveries/norfolk-va-used-20ft-cargo-worthy.webp',
+  '/images/recent-deliveries/cincinnati-oh-new-20ft-one-trip.webp',
+  '/images/recent-deliveries/salt-lake-city-ut-used-40ft-wwt.webp',
+  '/images/recent-deliveries/raleigh-nc-used-20ft-wwt.webp',
+  '/images/recent-deliveries/savannah-ga-new-40hc-one-trip.webp',
+  '/images/recent-deliveries/atlanta-ga-used-40ft-cargo-worthy.webp',
+  '/images/recent-deliveries/columbus-oh-new-20ft-standard.webp',
+  '/images/recent-deliveries/mobile-al-used-20ft-wwt.webp',
+  '/images/recent-deliveries/denver-co-new-40ft-one-trip.webp',
+  '/images/recent-deliveries/chicago-il-used-40hc-cargo-worthy.webp',
 ];
 
 const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
@@ -47,7 +73,7 @@ const deliveryCards = DELIVERIES.map(([headline, city, date], index) => ({
   headline,
   city,
   date,
-  image: IMAGES[index % IMAGES.length],
+  image: LOCAL_IMAGES[index],
 }));
 
 export default function RecentlyDelivered() {
@@ -103,9 +129,16 @@ export default function RecentlyDelivered() {
             {deliveryCards.map((item) => (
               <article
                 key={item.id}
-                className="relative flex-shrink-0 basis-full sm:basis-[calc((100%-10px)/2)] lg:basis-[calc((100%-30px)/4)] h-[320px] rounded-[18px] overflow-hidden bg-[#111] bg-cover bg-center shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
-                style={{ backgroundImage: `url('${item.image}')` }}
+                className="relative flex-shrink-0 basis-full sm:basis-[calc((100%-10px)/2)] lg:basis-[calc((100%-30px)/4)] h-[320px] rounded-[18px] overflow-hidden bg-[#111] shadow-[0_22px_46px_rgba(0,0,0,.22)] transition-transform duration-300 hover:-translate-y-1"
               >
+                <img
+                  src={item.image}
+                  alt=""
+                  aria-hidden="true"
+                  loading={item.id <= 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
 
                 <div className="absolute z-10 left-[22px] right-5 bottom-5 text-white">

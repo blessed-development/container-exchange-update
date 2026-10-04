@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export default function ImageSlider({ images, className = '' }) {
+export default function ImageSlider({ images, className = '', imageClassName = '' }) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartX = useRef(null);
@@ -31,7 +31,7 @@ export default function ImageSlider({ images, className = '' }) {
 
   return (
     <div
-      className={`relative overflow-hidden select-none ${className}`}
+      className={`relative h-full w-full overflow-hidden select-none ${className}`}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -46,7 +46,7 @@ export default function ImageSlider({ images, className = '' }) {
           animate="center"
           exit="exit"
           transition={{ duration: 0.35, ease: 'easeInOut' }}
-          className="absolute inset-0 w-full h-full object-contain object-center bg-muted"
+          className={`absolute inset-0 w-full h-full object-contain ${imageClassName}`}
         />
       </AnimatePresence>
 

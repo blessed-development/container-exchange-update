@@ -1,7 +1,8 @@
 import React from 'react';
+import PageSeo from '@/components/seo/PageSeo';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Phone, Users, MapPin, Award, Clock } from 'lucide-react';
+import { CheckCircle2, Users, MapPin, Award, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const STATS = [
@@ -21,8 +22,9 @@ const VALUES = [
 export default function About() {
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="About Containers Exchange | Nationwide Shipping Container Experts" description="Learn how Containers Exchange helps businesses and property owners find new and used shipping containers with nationwide delivery and experienced support." path="/about" />
       {/* Header */}
-      <div className="bg-accent text-white py-24 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-primary/[0.05] blur-[100px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">OUR STORY</span>
@@ -63,11 +65,11 @@ export default function About() {
                 </p>
               </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <a href="tel:+18005551234">
+                <Link to="/contact?source=About%20page%20pricing%20request">
                   <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-12 px-7 shadow-lg shadow-primary/25 hover:-translate-y-0.5 transition-all">
-                    <Phone className="w-4 h-4 mr-2" /> Call for Best Pricing
+                    Request Pricing
                   </Button>
-                </a>
+                </Link>
                 <Link to="/inventory">
                   <Button variant="outline" className="rounded-xl h-12 px-7 hover:-translate-y-0.5 transition-all">
                     Browse Inventory
@@ -82,11 +84,10 @@ export default function About() {
               className="relative"
             >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-5">
-                <img
-                  src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/3ef30518d_generated_9c5f1d0a.png"
-                  alt="Container terminal"
-                  className="w-full h-72 object-cover"
-                />
+                <picture>
+                  <source media="(max-width: 767px)" srcSet="/images/about/container-terminal-mobile.webp" />
+                  <img src="/images/about/container-terminal-desktop.webp" alt="Container terminal" loading="lazy" decoding="async" className="w-full h-72 object-cover" />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-accent/60 to-transparent" />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -204,14 +205,14 @@ export default function About() {
         <div className="absolute inset-0 bg-primary/[0.03] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl sm:text-4xl font-black mb-4">Ready to Get Started?</h2>
-          <p className="text-white/50 text-lg mb-8">Call us today for the best pricing and fast delivery to your location.</p>
+          <p className="text-white/50 text-lg mb-8">Explore available containers and delivery coverage for your location.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="tel:+18005551234">
+            <Link to="/inventory">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-13 px-10 text-base shadow-lg shadow-primary/25">
-                <Phone className="w-5 h-5 mr-2" /> (800) 555-1234
+                Browse Inventory
               </Button>
-            </a>
-            <Link to="/contact">
+            </Link>
+            <Link to="/contact?source=About%20page%20quote%20request">
               <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-xl h-13 px-10 text-base">
                 Request a Quote
               </Button>

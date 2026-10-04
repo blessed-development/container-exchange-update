@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Phone } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import PageSeo from '@/components/seo/PageSeo';
 
 const FAQ_CATEGORIES = [
   {
@@ -25,8 +26,8 @@ const FAQ_CATEGORIES = [
         a: 'Yes. We stand behind the quality and grade of every container we sell. If a container arrives and doesn\'t match the described grade, we will work with you to make it right.',
       },
       {
-        q: 'Can I get exclusive phone discounts?',
-        a: 'Yes! Calling us directly often gets you access to unadvertised specials, location-specific deals, and bulk discounts. Call (800) 555-1234 for the best price.',
+        q: 'Can I get location-specific pricing?',
+        a: 'Yes. Enter your ZIP or postal code on the inventory page to see nearby availability and location-specific starting prices.',
       },
     ],
   },
@@ -52,48 +53,6 @@ const FAQ_CATEGORIES = [
       {
         q: 'Is there a delivery fee?',
         a: 'Delivery fees vary by distance from the nearest depot. Use our ZIP code tool on any product page to get an instant delivery fee estimate for your location.',
-      },
-    ],
-  },
-  {
-    category: 'Renting & Rent-to-Own',
-    faqs: [
-      {
-        q: 'Do you offer container rentals?',
-        a: 'Yes! We offer flexible monthly container rentals. We currently have a special promotion for 1 month free rent. Contact us to learn about rental rates and availability in your area.',
-      },
-      {
-        q: 'What is Rent-to-Own (RTO)?',
-        a: 'Rent-to-Own lets you make monthly payments toward owning the container outright. No credit check is required — everyone qualifies. We offer a $1 first month special on RTO agreements, and early payoff discounts are available.',
-      },
-      {
-        q: 'How long are rental terms?',
-        a: 'We offer flexible rental terms ranging from month-to-month up to multi-year agreements. RTO terms are available in 12, 24, 36, and 48-month options.',
-      },
-      {
-        q: 'Can I return a rented container if I no longer need it?',
-        a: 'Yes. We will arrange pickup of the container at the end of your rental term. Simply contact us to schedule a pickup date.',
-      },
-    ],
-  },
-  {
-    category: 'Container Use Cases',
-    faqs: [
-      {
-        q: 'What can I use a shipping container for?',
-        a: 'Common uses include: job site storage, farm equipment storage, retail storage, on-site inventory management, residential storage, climate-controlled storage (with modifications), workshops, and converted living spaces.',
-      },
-      {
-        q: 'Are shipping containers weatherproof?',
-        a: 'Yes. WWT-grade and above containers are guaranteed to be wind and water tight. They are made of Corten steel, which is designed to resist rust and weather. They can withstand extreme temperatures, heavy rain, and high winds.',
-      },
-      {
-        q: 'Can I modify the container — add doors, windows, electricity?',
-        a: 'Absolutely. Containers are highly modifiable. We can discuss modification options during your consultation, or you can work with a local contractor to add doors, windows, insulation, electricity, and more.',
-      },
-      {
-        q: 'Do I need a permit to place a container on my property?',
-        a: 'Permit requirements vary by city, county, and state. We recommend checking with your local municipality before placing a container. Many residential and agricultural uses do not require permits, but commercial zoning may have different rules.',
       },
     ],
   },
@@ -132,8 +91,9 @@ function FaqItem({ faq }) {
 export default function FAQ() {
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="Shipping Container FAQs | Containers Exchange" description="Get answers to common shipping container questions about sizes, conditions, buying, delivery, and pricing." path="/faq" />
       {/* Header */}
-      <div className="bg-accent text-white py-24 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-24 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">FAQ</span>
@@ -174,12 +134,12 @@ export default function FAQ() {
           <h2 className="text-2xl font-black mb-3 relative">Still have questions?</h2>
           <p className="text-white/50 mb-7 relative">Our team is happy to help you find the right container for your needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center relative">
-            <a href="tel:+18005551234">
+            <Link to="/inventory">
               <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl h-12 px-8 shadow-lg shadow-primary/25">
-                <Phone className="w-4 h-4 mr-2" /> Call (800) 555-1234
+                Browse Inventory
               </Button>
-            </a>
-            <Link to="/contact">
+            </Link>
+            <Link to="/contact?source=FAQ%20page%20message%20request">
               <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 rounded-xl h-12 px-8">
                 Send a Message
               </Button>

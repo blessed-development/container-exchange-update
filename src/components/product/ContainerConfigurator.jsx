@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
@@ -9,6 +9,7 @@ import {
   Lock,
   MapPin,
   Check,
+  LocateFixed,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
@@ -31,8 +32,8 @@ const GRADE_OPTIONS = [
 ];
 
 const CONDITION_IMAGES = {
-  used: '/images/products/used-20-wwt/hero.webp',
-  new: '/images/products/new-20-iicl/hero.webp',
+  new: '/images/product-conditions/new-one-trip-side.webp',
+  used: '/images/product-conditions/used-cargo-worthy-side-v2.webp',
 };
 
 const EMPTY_LOCATION = {
@@ -40,6 +41,14 @@ const EMPTY_LOCATION = {
   state: '',
   postalCode: '',
   country: '',
+};
+
+const extractPostalCandidate = (value) => {
+  const raw = String(value || '').toUpperCase();
+  const canadianMatch = raw.match(/\b[A-Z]\d[A-Z][\s-]?\d[A-Z]\d\b/);
+  const usMatch = raw.match(/\b\d{5}\b/);
+
+  return cleanPostal(canadianMatch?.[0] || usMatch?.[0] || raw);
 };
 
 const CA_PROVINCES = {
@@ -252,13 +261,17 @@ export default function ContainerConfigurator({
     getGrandTotal,
   } = useCart();
 
-  const [zipOpen, setZipOpen] = useState(false);
+  const [isEditingLocation, setIsEditingLocation] = useState(false);
   const [location, setLocation] = useState(() => {
     return getSavedSelectedLocation() || EMPTY_LOCATION;
   });
 
   const [postalInput, setPostalInput] = useState('');
+  const postalInputRef = useRef(null);
+  const locationEditorRef = useRef(null);
+  const [hasEditedPostalInput, setHasEditedPostalInput] = useState(false);
   const [zipError, setZipError] = useState('');
+  const [didRequestCurrentLocation, setDidRequestCurrentLocation] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
 
   const [grade, setGrade] = useState(() => getDefaultGrade(condition));
@@ -311,17 +324,53 @@ export default function ContainerConfigurator({
     if (params.get('openZip') !== '1') return;
 
     const timer = setTimeout(() => {
-      setZipOpen(true);
+      setIsEditingLocation(true);
     }, 1800);
 
     return () => clearTimeout(timer);
   }, [container?.id]);
 
   useEffect(() => {
-    const raw = postalInput.trim().toUpperCase();
-    const clean = cleanPostal(raw);
+    if (!isEditingLocation) return;
+
+    const timer = setTimeout(() => {
+      postalInputRef.current?.focus();
+      const input = postalInputRef.current;
+      input?.setSelectionRange(input.value.length, input.value.length);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [isEditingLocation]);
+
+  useEffect(() => {
+    if (!isEditingLocation) return;
+
+    const handlePointerDown = (event) => {
+      if (!locationEditorRef.current?.contains(event.target)) {
+        setZipError('');
+        setPostalInput('');
+        setHasEditedPostalInput(false);
+        setDidRequestCurrentLocation(false);
+        setIsEditingLocation(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [isEditingLocation]);
+
+  useEffect(() => {
+    if (!isEditingLocation || !hasEditedPostalInput) return;
+
+    const clean = extractPostalCandidate(postalInput);
+    const currentPostal = cleanPostal(location?.postalCode);
 
     if (!clean) {
+      setZipError('');
+      return;
+    }
+
+    if (clean === currentPostal) {
       setZipError('');
       return;
     }
@@ -338,7 +387,7 @@ export default function ContainerConfigurator({
       setIsLookingUp(true);
 
       try {
-        const resolved = await lookupPostalCode(raw);
+        const resolved = await lookupPostalCode(clean);
         setLocation(resolved);
         saveSelectedLocation(resolved);
         window.dispatchEvent(
@@ -347,7 +396,8 @@ export default function ContainerConfigurator({
           })
         );
         setPostalInput('');
-        setZipOpen(false);
+        setHasEditedPostalInput(false);
+        setIsEditingLocation(false);
       } catch (error) {
         setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
       } finally {
@@ -356,7 +406,7 @@ export default function ContainerConfigurator({
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [postalInput]);
+  }, [postalInput, isEditingLocation, hasEditedPostalInput, location?.postalCode]);
 
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
@@ -384,7 +434,13 @@ export default function ContainerConfigurator({
 
   const rawUnitPrice = getRawPriceFor(sizeOption, effectiveGrade, effectiveCondition);
 
-  const applyLocalPrice = (price) => getLocalizedPrice(price, location);
+  const selectedMarketProduct = findMatchingProduct({
+    sizeIndex: safeSizeIndex,
+    conditionKey: effectiveCondition,
+    gradeKey: effectiveGrade,
+  }) || container;
+  const applyLocalPrice = (price, product = selectedMarketProduct) =>
+    getLocalizedPrice(price, location, product);
   const unitPrice = applyLocalPrice(rawUnitPrice);
   const totalPrice = unitPrice * qty;
 
@@ -428,8 +484,13 @@ export default function ContainerConfigurator({
       }, ${getCountryLabel(location.country)}`
     : 'Enter your ZIP / Postal Code';
 
+  const shouldShowZipError =
+    Boolean(zipError) &&
+    (didRequestCurrentLocation || !/location (permission|unavailable|not supported)/i.test(zipError));
+
   const useCurrentLocation = () => {
     setZipError('');
+    setDidRequestCurrentLocation(true);
 
     if (!navigator.geolocation) {
       setZipError('Current location is not supported by this browser.');
@@ -454,7 +515,8 @@ export default function ContainerConfigurator({
             })
           );
           setPostalInput('');
-          setZipOpen(false);
+          setHasEditedPostalInput(false);
+          setIsEditingLocation(false);
         } catch (error) {
           setZipError(error.message || 'Location unavailable.');
         } finally {
@@ -470,6 +532,22 @@ export default function ContainerConfigurator({
         timeout: 12000,
       }
     );
+  };
+
+  const beginLocationEdit = () => {
+    setZipError('');
+    setDidRequestCurrentLocation(false);
+    setPostalInput(locationLabel);
+    setHasEditedPostalInput(false);
+    setIsEditingLocation(true);
+  };
+
+  const cancelLocationEdit = () => {
+    setZipError('');
+    setDidRequestCurrentLocation(false);
+    setPostalInput('');
+    setHasEditedPostalInput(false);
+    setIsEditingLocation(false);
   };
 
   const navigateToMatchingProduct = ({
@@ -597,6 +675,8 @@ export default function ContainerConfigurator({
     const params = new URLSearchParams({
       container: currentTitle,
       zip: location.postalCode,
+      ...(location?.marketDisplayName ? { location: location.marketDisplayName } : {}),
+      source: 'Product configurator',
       notes: [
         `Container: ${currentTitle}`,
         `Size: ${sizeOption.label}`,
@@ -636,44 +716,59 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className={`step-label ${location?.postalCode ? 'is-complete' : ''}`}>
-          {location?.postalCode ? 'DELIVERY LOCATION SET' : 'STEP 1 — ENTER ZIP / POSTAL CODE'}
-        </div>
+        <div className="step-label">ENTER ZIP / POSTAL CODE</div>
 
-        <div className="zip-bar">
-          <div className="zip-collapsed" onClick={() => setZipOpen(!zipOpen)}>
-            <div className="zip-left">
-              <MapPin size={15} />
-              <span className="zip-location-text">{locationLabel}</span>
-            </div>
-
-            <div className={`zip-action ${zipOpen ? 'open' : ''}`}>
-              {zipOpen ? 'Close' : 'Change'}
-            </div>
+        <div ref={locationEditorRef} className={`zip-bar ${isEditingLocation ? 'is-editing' : ''}`}>
+          <div className="zip-collapsed">
+            {isEditingLocation ? (
+              <div className="zip-inline-editor">
+                <MapPin size={16} aria-hidden="true" />
+                <input
+                  ref={postalInputRef}
+                  className="zip-inline-input"
+                  aria-label="Delivery ZIP or postal code"
+                  placeholder="Enter your ZIP / Postal Code"
+                  value={postalInput}
+                  onChange={(e) => {
+                    setHasEditedPostalInput(true);
+                    setPostalInput(e.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') cancelLocationEdit();
+                  }}
+                />
+                <button type="button" className="zip-action" onClick={cancelLocationEdit}>
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button type="button" className="zip-location-trigger" onClick={beginLocationEdit}>
+                <span className="zip-left">
+                  <MapPin size={15} />
+                  <span className="zip-location-text">{locationLabel}</span>
+                </span>
+                <span className="zip-action">Change</span>
+              </button>
+            )}
           </div>
 
-          <div className={`zip-panel ${zipOpen ? 'open' : ''}`}>
-            <div className="zip-row zip-row-single">
-              <input
-                className="zip-input"
-                placeholder="Enter your ZIP / Postal Code"
-                value={postalInput}
-                onChange={(e) => setPostalInput(e.target.value)}
-              />
-            </div>
-
-            {isLookingUp && <div className="zip-status">Detecting location...</div>}
-            {zipError && <div className="zip-error">{zipError}</div>}
-
+          {isEditingLocation && (
             <button
               type="button"
-              className="zip-loc-btn"
+              className="zip-inline-current"
               onClick={useCurrentLocation}
               disabled={isLookingUp}
             >
+              <LocateFixed size={15} />
               Use my current location
             </button>
-          </div>
+          )}
+          {isEditingLocation && isLookingUp && (
+            <div className="zip-inline-message zip-status">Detecting location...</div>
+          )}
+          {isEditingLocation && shouldShowZipError && (
+            <div className="zip-inline-message zip-error">{zipError}</div>
+          )}
         </div>
 
         <div className="section-header">
@@ -683,9 +778,13 @@ export default function ContainerConfigurator({
         <div className="main-tabs">
           {SIZE_OPTIONS.map((opt, index) => {
             const isActive = safeSizeIndex === index;
-
+            const optionMarketProduct = findMatchingProduct({
+              sizeIndex: index,
+              conditionKey: effectiveCondition,
+              gradeKey: effectiveGrade,
+            });
             const optionRawPrice = getRawPriceFor(opt, effectiveGrade, effectiveCondition);
-            const optionPrice = applyLocalPrice(optionRawPrice);
+            const optionPrice = applyLocalPrice(optionRawPrice, optionMarketProduct);
 
             return (
               <button
@@ -699,6 +798,11 @@ export default function ContainerConfigurator({
                 <span className="tab-price">
                   {isActive ? fmt(unitPrice) : fmt(optionPrice)}
                 </span>
+                {isActive && (
+                  <span className="main-tab-active-check" aria-hidden="true">
+                    <Check size={9} />
+                  </span>
+                )}
               </button>
             );
           })}
@@ -719,7 +823,11 @@ export default function ContainerConfigurator({
                   className={`cond-card ${active ? 'active' : ''}`}
                   onClick={() => handleConditionSwitch(cond)}
                 >
-                  <img src={CONDITION_IMAGES[cond]} className="cond-img" alt={cond} />
+                  <img
+                    src={CONDITION_IMAGES[cond]}
+                    className="cond-img"
+                    alt={cond === 'new' ? 'New one-trip container side detail' : 'Used cargo-worthy container side detail'}
+                  />
 
                   <div className="cc-info">
                     <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
@@ -833,7 +941,7 @@ export default function ContainerConfigurator({
                 <div className="cart-row">
                   <button
                     type="button"
-                    className="add-btn"
+                    className="add-btn ce-signature-button"
                     disabled={!hasCheckoutLocation}
                     onClick={addToCart}
                   >
@@ -844,7 +952,7 @@ export default function ContainerConfigurator({
 
                 <button
                   type="button"
-                  className="quote-btn"
+                  className="quote-btn ce-secondary-button"
                   disabled={!hasCheckoutLocation}
                   onClick={requestQuote}
                 >
@@ -870,7 +978,7 @@ export default function ContainerConfigurator({
 
           <button
             type="button"
-            className="drawer-close"
+            className="drawer-close ce-utility-button"
             onClick={() => setIsDrawerOpen(false)}
           >
             <X size={16} />
@@ -888,7 +996,7 @@ export default function ContainerConfigurator({
                 <div className="ci-info">
                   <button
                     type="button"
-                    className="ci-remove"
+                    className="ci-remove ce-destructive-button"
                     onClick={() => removeItem(item.id)}
                   >
                     ×
@@ -901,7 +1009,7 @@ export default function ContainerConfigurator({
                   <div className="ci-qty-row">
                     <button
                       type="button"
-                      className="ci-qty-btn"
+                      className="ci-qty-btn ce-utility-button"
                       onClick={() => updateQuantity(item.id, -1)}
                     >
                       −
@@ -911,7 +1019,7 @@ export default function ContainerConfigurator({
 
                     <button
                       type="button"
-                      className="ci-qty-btn"
+                      className="ci-qty-btn ce-utility-button"
                       onClick={() => updateQuantity(item.id, 1)}
                     >
                       +
@@ -931,13 +1039,13 @@ export default function ContainerConfigurator({
 
           <div className="drawer-tax-note" />
 
-          <button type="button" className="checkout-btn" onClick={openCheckout}>
+          <button type="button" className="checkout-btn ce-signature-button" onClick={openCheckout}>
             Checkout
           </button>
 
           <button
             type="button"
-            className="continue-btn"
+            className="continue-btn ce-secondary-button"
             onClick={() => setIsDrawerOpen(false)}
           >
             Continue Shopping

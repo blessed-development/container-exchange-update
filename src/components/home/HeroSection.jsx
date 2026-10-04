@@ -1,19 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 import { Shield, Truck, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+
+const HERO_SLIDES = [
+  {
+    mobileSrc: '/images/hero/global-supply-network-mobile.webp',
+    src: '/images/hero/global-supply-network-desktop.webp',
+    alt: 'Container vessel sailing past a modern port',
+  },
+  {
+    mobileSrc: '/images/hero/depot-operations-mobile.webp',
+    src: '/images/hero/depot-operations-desktop.webp',
+    alt: 'Reach stacker loading a container onto a delivery truck at a container depot',
+  },
+  {
+    mobileSrc: '/images/hero/customer-delivery-mobile.webp',
+    src: '/images/hero/customer-delivery-desktop.webp',
+    alt: 'Tilt-bed truck delivering a blue shipping container to a customer property',
+  },
+];
 
 export default function HeroSection() {
+  const prefersReducedMotion = useReducedMotion();
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % HERO_SLIDES.length);
+    }, 7000);
+    return () => window.clearInterval(timer);
+  }, [prefersReducedMotion]);
+
   return (
     <section className="relative min-h-[95vh] flex items-center bg-accent overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src="https://media.base44.com/images/public/69dd889386a20317a3b688c3/599ab2c88_generated_4431dbea.png"
-          alt="Industrial shipping container close-up"
-          className="w-full h-full object-cover opacity-20"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent/90 to-accent/95" />
+        {HERO_SLIDES.map((slide, index) => (
+          <picture key={slide.src}>
+            <source media="(max-width: 767px)" srcSet={slide.mobileSrc} />
+            <img
+              src={slide.src}
+              alt={index === activeSlide ? slide.alt : ''}
+              aria-hidden={index !== activeSlide}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === activeSlide ? 'opacity-100' : 'opacity-0'}`}
+            />
+          </picture>
+        ))}
+        {/* Keep the copy legible on the left while allowing the logistics photography to lead on the right. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#061226] via-[#061226]/75 to-[#061226]/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#061226]/70 via-transparent to-[#061226]/20" />
         {/* Radial glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
       </div>
@@ -100,7 +139,7 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#061226] to-transparent" />
     </section>
   );
 }

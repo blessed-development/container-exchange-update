@@ -63,6 +63,26 @@ const PRODUCT_GROUPS = [
   ],
 ];
 
+const HERO_COMPOSITIONS = {
+  'new-20-iicl': { transform: 'translateY(-4%) scale(1.04)', position: '50% 43%' },
+  'new-40-iicl': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'new-40hc-iicl': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'used-20-cw': { transform: 'translateY(-4%) scale(1.04)', position: '50% 43%' },
+  'used-40-cw': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+  'used-40hc-wwt': { transform: 'translateY(-3%) scale(1.02)', position: '50% 43%' },
+};
+
+function getListingImage(image) {
+  const match = image.match(/^\/images\/products\/([^/]+)\/hero\.webp$/);
+  if (!match) return { src: image, srcSet: undefined };
+
+  const directory = match[1];
+  return {
+    src: `/images/product-listings/${directory}/hero-720.webp`,
+    srcSet: `/images/product-listings/${directory}/hero-480.webp 480w, /images/product-listings/${directory}/hero-720.webp 720w`,
+  };
+}
+
 export default function ProductGrid() {
   const [activeGroup, setActiveGroup] = useState(0);
 
@@ -80,10 +100,6 @@ export default function ProductGrid() {
     <section className="py-24 bg-background overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12">
-          <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-4">
-            FEATURED
-          </span>
-
           <h2 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight leading-tight">
             Best Selling <span className="text-primary">Containers</span>
           </h2>
@@ -157,6 +173,11 @@ export default function ProductGrid() {
 function ProductCard({ product, index }) {
   const navigate = useNavigate();
   const stars = Math.round(product.rating);
+  const composition = HERO_COMPOSITIONS[product.id] || {
+    transform: 'translateY(-3%) scale(1.02)',
+    position: '50% 43%',
+  };
+  const listingImage = getListingImage(product.image);
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}?openZipModal=1`);
@@ -171,27 +192,45 @@ function ProductCard({ product, index }) {
       <button
         type="button"
         onClick={handleCardClick}
-        className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-card hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
+        className="group text-left relative block h-[520px] w-full overflow-hidden rounded-[32px] border border-border bg-[#d9d7d1] hover:border-primary/40 hover:shadow-2xl hover:shadow-black/20 transition-all duration-500"
       >
-        <img
-          src={product.image}
-          alt={product.name}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-        />
+        <div
+          className="absolute inset-0 overflow-hidden bg-[#eeece7]"
+          style={{
+            background: 'linear-gradient(180deg, #f7f6f2 0%, #ebe9e2 58%, #d8d4ca 100%)',
+          }}
+        >
+          <picture className="block h-full w-full">
+            {listingImage.srcSet && (
+              <source srcSet={listingImage.srcSet} sizes="(min-width: 1024px) 32vw, 100vw" type="image/webp" />
+            )}
+            <img
+              src={listingImage.src}
+              alt={product.name}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-contain transition-transform duration-700 ease-out"
+              style={{
+                objectPosition: composition.position,
+                transform: composition.transform,
+              }}
+            />
+          </picture>
+          <div className="pointer-events-none absolute bottom-[24%] left-1/2 h-4 w-[58%] -translate-x-1/2 rounded-[100%] bg-black/15 blur-2xl" />
+        </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_48%,rgba(0,0,0,.18)_62%,rgba(0,0,0,.68)_82%,rgba(0,0,0,.94)_100%)]" />
 
         <div className="absolute top-5 left-5 rounded-full bg-primary text-primary-foreground px-3.5 py-1.5 text-[10px] font-black tracking-[0.14em]">
           BEST SELLER
         </div>
 
-        <div className="absolute left-6 right-6 bottom-6">
-          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-4">
+        <div className="absolute left-6 right-6 bottom-3">
+          <h3 className="text-[25px] sm:text-[27px] font-black leading-[1.06] tracking-tight text-white mb-2">
             {product.name}
           </h3>
 
-          <div className="flex items-center gap-2 mb-5">
+          <div className="flex items-center gap-2 mb-3">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
@@ -204,14 +243,8 @@ function ProductCard({ product, index }) {
                 />
               ))}
             </div>
-
-            <span className="text-white font-semibold text-[15px]">
-              {product.rating.toFixed(1)}
-            </span>
-
-            <span className="text-white/60 text-[13px]">
-              ({product.reviewCount} reviews)
-            </span>
+            <span className="text-white font-semibold text-[15px]">{product.rating.toFixed(1)}</span>
+            <span className="text-white/60 text-[13px]">({product.reviewCount} reviews)</span>
           </div>
 
           <div className="h-11 rounded-[14px] bg-primary text-primary-foreground font-extrabold flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-[1.01]">

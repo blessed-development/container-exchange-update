@@ -3,11 +3,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { base44 } from '@/api/base44Client';
 import { Phone, Mail, MapPin, Loader2, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PageSeo from '@/components/seo/PageSeo';
+import { isContactDeliveryEnabled, submitEnquiry } from '@/lib/submitEnquiry';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 export default function Contact() {
+  const contactDeliveryAvailable = isContactDeliveryEnabled;
   const [form, setForm] = useState({
     customer_name: '',
     customer_email: '',
@@ -15,6 +18,9 @@ export default function Contact() {
     zip_code: '',
     container_name: '',
     notes: '',
+    location: '',
+    source_form: 'Website quote request',
+    company_website: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -25,14 +31,18 @@ export default function Contact() {
     const container = params.get('container');
     const zip = params.get('zip');
     const notes = params.get('notes');
+    const location = params.get('location');
+    const source = params.get('source');
 
-    if (!container && !zip && !notes) return;
+    if (!container && !zip && !notes && !location && !source) return;
 
     setForm((prev) => ({
       ...prev,
       container_name: container || prev.container_name,
       zip_code: zip || prev.zip_code,
       notes: notes || prev.notes,
+      location: location || prev.location,
+      source_form: source || prev.source_form,
     }));
   }, []);
 
@@ -46,14 +56,11 @@ export default function Contact() {
     setSubmitError('');
 
     try {
-      await base44.entities.Quote.create({
-        ...form,
-        status: 'pending',
-      });
+      await submitEnquiry({ ...form, source_form: form.source_form });
       setIsSubmitted(true);
     } catch (error) {
       setSubmitError(
-        error?.message || 'Quote request failed. Please call us or try again.'
+        error?.message || 'Quote request could not be delivered. Your entered details are still in the form.'
       );
     } finally {
       setIsSubmitting(false);
@@ -62,8 +69,9 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageSeo title="Contact Containers Exchange | Shipping Container Quotes & Support" description="Contact Containers Exchange for shipping container availability, local pricing, delivery questions, and expert support." path="/contact" />
       {/* Header */}
-      <div className="bg-accent text-white py-20 relative overflow-hidden">
+      <div className="bg-[#061226] text-white py-20 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <span className="inline-block text-xs font-mono text-primary tracking-widest bg-primary/10 px-3 py-1.5 rounded-full mb-5">GET IN TOUCH</span>
@@ -72,7 +80,9 @@ export default function Contact() {
             <span className="text-primary">Quote</span>
           </h1>
           <p className="text-white/50 mt-5 max-w-lg mx-auto text-lg">
-            Tell us what you need and we'll get back to you with the best pricing and delivery options for your location.
+            {contactDeliveryAvailable
+              ? 'Tell us what you need and we will confirm receipt by email.'
+              : 'Online quote delivery is being finalized. This form is currently unavailable for submissions.'}
           </p>
         </div>
       </div>
@@ -84,31 +94,33 @@ export default function Contact() {
             <div>
               <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
               <div className="space-y-4">
-                <a href="tel:+18005551234" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
-                    <Phone className="w-4 h-4 text-primary" />
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/15">
+                    <Phone className="h-4 w-4 text-primary" />
                   </div>
-                  <div>
-                    <p className="font-mono font-semibold text-sm">(800) 555-1234</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold">{COMPANY_CONTACT.previewPhonePlaceholder}</p>
                     <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
                   </div>
-                </a>
-                <a href="mailto:info@containersexchange.com" className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+                </div>
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
                   <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                     <Mail className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold">info@containersexchange.com</p>
+                  <div className="min-w-0">
+                    <a href={`mailto:${COMPANY_CONTACT.email}`} className="block break-all text-[13px] font-semibold tracking-tight transition-colors hover:text-primary sm:break-normal sm:text-sm">
+                      {COMPANY_CONTACT.email}
+                    </a>
                     <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                   </div>
-                </a>
-                <div className="flex items-center gap-4 p-4 rounded-2xl border border-border bg-card">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                </div>
+                <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 transition-colors group-hover:bg-primary/15">
                     <MapPin className="w-4 h-4 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm font-semibold">60+ Depot Locations</p>
-                    <p className="text-xs text-muted-foreground">Nationwide USA Coverage</p>
+                    <p className="text-xs text-muted-foreground">Nationwide USA / Canada Coverage</p>
                   </div>
                 </div>
               </div>
@@ -128,14 +140,22 @@ export default function Contact() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Quote Request Submitted!</h3>
                 <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
-                  Our team will review your request and contact you within 24 hours with pricing details.
+                  We received your request and sent a confirmation to your email address.
                 </p>
-                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '' }); }} variant="outline" className="rounded-xl h-11 px-6">
+                <Button onClick={() => { setIsSubmitted(false); setForm({ customer_name: '', customer_email: '', customer_phone: '', zip_code: '', container_name: '', notes: '', location: '', source_form: 'Website quote request', company_website: '' }); }} variant="outline" className="ce-secondary-button h-11 rounded-xl px-6">
                   Submit Another Request
                 </Button>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
+                {!contactDeliveryAvailable && (
+                  <div role="status" className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-sm leading-relaxed text-foreground">
+                    <p className="font-bold">Online quote delivery is temporarily unavailable.</p>
+                    <p className="mt-1 text-muted-foreground">Please do not complete this form yet. We will enable secure submissions after an approved business mailbox and durable rate limiting are configured.</p>
+                  </div>
+                )}
+
+                <fieldset disabled={!contactDeliveryAvailable} className="space-y-6 disabled:opacity-60">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
@@ -148,6 +168,7 @@ export default function Contact() {
                       placeholder="John Doe"
                       className="h-11"
                     />
+                    <input name="company_website" value={form.company_website} onChange={(e) => handleChange('company_website', e.target.value)} tabIndex="-1" autoComplete="off" className="sr-only" aria-hidden="true" />
                   </div>
                   <div>
                     <label className="text-xs font-mono text-muted-foreground tracking-widest mb-2 block">
@@ -169,7 +190,7 @@ export default function Contact() {
                     <Input
                       value={form.customer_phone}
                       onChange={(e) => handleChange('customer_phone', e.target.value)}
-                      placeholder="(555) 123-4567"
+                      placeholder="Your callback number (optional)"
                       className="h-11"
                     />
                   </div>
@@ -194,6 +215,7 @@ export default function Contact() {
                   <Select
                     value={form.container_name}
                     onValueChange={(val) => handleChange('container_name', val)}
+                    disabled={!contactDeliveryAvailable}
                   >
                     <SelectTrigger className="h-11">
                       <SelectValue placeholder="Select container type" />
@@ -229,14 +251,15 @@ export default function Contact() {
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full h-13 bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wider rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                  disabled={isSubmitting || !contactDeliveryAvailable}
+                  className="ce-signature-button h-13 w-full rounded-xl font-semibold tracking-wider"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   ) : null}
-                  SUBMIT QUOTE REQUEST
+                  {contactDeliveryAvailable ? 'SUBMIT QUOTE REQUEST' : 'QUOTE DELIVERY UNAVAILABLE'}
                 </Button>
+                </fieldset>
               </form>
             )}
           </div>

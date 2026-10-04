@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import PageSeo from '@/components/seo/PageSeo';
 import InventoryListCard from '@/components/inventory/InventoryListCard';
 import FilterSidebar from '@/components/inventory/FilterSidebar';
 import { inventoryProducts } from '@/data/inventoryProducts';
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/sheet';
 import {
   getSavedSelectedLocation,
+  getLocalizedPrice,
   lookupPostalCode,
   saveSelectedLocation,
 } from '@/lib/locationEngine';
@@ -90,7 +92,7 @@ export default function Inventory() {
   }, []);
 
   const inventoryLocationTitle = savedLocation?.postalCode
-    ? `${savedLocation.city}, ${savedLocation.state}`
+    ? savedLocation.marketDisplayName || `${savedLocation.city}, ${savedLocation.state}`
     : null;
 
   const cityPart = inventoryLocationTitle?.split(',')[0] || '';
@@ -100,11 +102,13 @@ export default function Inventory() {
     let result = [...containers];
 
     if (filters.size.length > 0) {
-      result = result.filter((c) => filters.size.includes(c.size));
+      result = result.filter((c) => filters.size.includes(String(c.size)));
     }
 
     if (filters.condition.length > 0) {
-      result = result.filter((c) => filters.condition.includes(c.condition));
+      result = result.filter((c) =>
+        filters.condition.includes(String(c.condition || '').toLowerCase())
+      );
     }
 
     if (filters.grade.length > 0) {
@@ -117,20 +121,35 @@ export default function Inventory() {
 
     switch (sortBy) {
       case 'price_asc':
-        result.sort((a, b) => (a.base_price || 0) - (b.base_price || 0));
+        result.sort((a, b) =>
+          getLocalizedPrice(a.base_price || 0, savedLocation, a) -
+          getLocalizedPrice(b.base_price || 0, savedLocation, b)
+        );
         break;
       case 'price_desc':
-        result.sort((a, b) => (b.base_price || 0) - (a.base_price || 0));
+        result.sort((a, b) =>
+          getLocalizedPrice(b.base_price || 0, savedLocation, b) -
+          getLocalizedPrice(a.base_price || 0, savedLocation, a)
+        );
         break;
       case 'name_asc':
         result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       default:
+        result.sort((a, b) => {
+          const reviewDiff = (b.review_count || 0) - (a.review_count || 0);
+          if (reviewDiff !== 0) return reviewDiff;
+
+          const ratingDiff = (b.rating || 0) - (a.rating || 0);
+          if (ratingDiff !== 0) return ratingDiff;
+
+          return (a.name || '').localeCompare(b.name || '');
+        });
         break;
     }
 
     return result;
-  }, [containers, filters, sortBy]);
+  }, [containers, filters, savedLocation, sortBy]);
 
   const activeFilterCount = Object.values(filters).reduce(
     (acc, arr) => acc + arr.length,
@@ -143,8 +162,9 @@ export default function Inventory() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="bg-accent text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent to-accent/90" />
+      <PageSeo title="Shipping Containers for Sale Near You | Containers Exchange" description="Browse new and used shipping containers for sale. Enter your ZIP code to see local availability, container options, and pricing." path="/inventory" />
+      <div className="bg-[#061226] text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#061226] via-[#061226] to-[#061226]/90" />
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/[0.04] blur-[80px] pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
@@ -189,7 +209,7 @@ export default function Inventory() {
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
                   <h2 className="text-[38px] sm:text-5xl font-black tracking-tight leading-[1] whitespace-nowrap">
-                    <span className="text-white">{cityPart}</span>
+                    <span className="text-foreground">{cityPart}</span>
                     <span className="text-primary">,{statePart}</span>
                   </h2>
                 )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Eye, Phone } from 'lucide-react';
+import { Star, Eye, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,19 @@ const GRADE_LABELS = {
   CW: 'Cargo Worthy',
   IICL: 'IICL Certified',
 };
+
+function getListingImage(container) {
+  const source = container.inventory_image_url || container.image_url || '/images/products/new-20-iicl/hero.webp';
+  const match = source.match(/^\/images\/products\/([^/]+)\/hero\.webp$/);
+
+  if (!match) return { src: source, srcSet: undefined };
+
+  const directory = match[1];
+  return {
+    src: `/images/product-listings/${directory}/hero-720.webp`,
+    srcSet: `/images/product-listings/${directory}/hero-480.webp 480w, /images/product-listings/${directory}/hero-720.webp 720w`,
+  };
+}
 
 export default function InventoryListCard({ container, index }) {
   const navigate = useNavigate();
@@ -48,10 +61,26 @@ export default function InventoryListCard({ container, index }) {
   const stars = Math.round(container.rating || 5);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const hasZip = Boolean(savedLocation?.postalCode);
+  const hasWideCatalogImage = [
+    'new-20-iicl',
+    'new-40hc-iicl',
+    'used-20-wwt',
+    'used-40-wwt',
+    'used-40hc-wwt',
+  ].includes(
+    container?.id
+  );
+
   const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
-    savedLocation
+    savedLocation,
+    container
   );
+  const imageScaleClass =
+    container?.size === 40
+      ? 'scale-[1.075] sm:scale-[1.10]'
+      : 'scale-[1.025] sm:scale-[1.045]';
+  const listingImage = getListingImage(container);
 
   const openProduct = (e) => {
     e.stopPropagation();
@@ -64,6 +93,26 @@ export default function InventoryListCard({ container, index }) {
     navigate(`/product/${container.id}`);
   };
 
+  const requestQuote = (e) => {
+    e.stopPropagation();
+
+    const params = new URLSearchParams({
+      container: container.name || 'Shipping Container',
+      ...(savedLocation?.postalCode ? { zip: savedLocation.postalCode } : {}),
+      ...(savedLocation?.marketDisplayName ? { location: savedLocation.marketDisplayName } : {}),
+      source: 'Inventory listing',
+      notes: [
+        `Container: ${container.name || 'Shipping Container'}`,
+        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
+        ...(savedLocation?.marketDisplayName
+          ? [`Supplying market: ${savedLocation.marketDisplayName}`]
+          : []),
+      ].join('\n'),
+    });
+
+    navigate(`/contact?${params.toString()}`);
+  };
+
   return (
     <>
       <motion.div
@@ -74,7 +123,7 @@ export default function InventoryListCard({ container, index }) {
         className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
         <div
-          className="relative h-[280px] sm:h-full sm:w-[38%] overflow-hidden bg-muted"
+          className={`relative h-[260px] sm:h-full ${hasWideCatalogImage ? 'sm:w-[38%]' : 'sm:w-[38%]'} overflow-hidden bg-muted`}
         >
           {container.is_bestseller && (
             <div className="absolute top-4 left-4 z-10 rounded-full px-3 py-[7px] text-[11px] font-black tracking-[.08em] text-white bg-gradient-to-b from-orange-500 to-orange-700 shadow-lg">
@@ -82,15 +131,18 @@ export default function InventoryListCard({ container, index }) {
             </div>
           )}
 
-          <img
-            src={
-              container.inventory_image_url ||
-              container.image_url ||
-              '/images/products/new-20-iicl/hero.webp'
-            }
-            alt={container.name}
-            className="w-full h-full object-contain object-center hover:scale-[1.02] transition-transform duration-500"
-          />
+          <picture className="block h-full w-full">
+            {listingImage.srcSet && (
+              <source srcSet={listingImage.srcSet} sizes="(min-width: 640px) 38vw, 100vw" type="image/webp" />
+            )}
+            <img
+              src={listingImage.src}
+              alt={container.name}
+              loading={index < 3 ? 'eager' : 'lazy'}
+              decoding="async"
+              className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
+            />
+          </picture>
         </div>
 
         <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
@@ -135,10 +187,9 @@ export default function InventoryListCard({ container, index }) {
                 </div>
               ) : (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
-                  {savedLocation?.city}, {savedLocation?.state}
+                  {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
-
               <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
                 ${Number(displayPrice || 0).toLocaleString()}
               </div>
@@ -168,20 +219,20 @@ export default function InventoryListCard({ container, index }) {
                 e.stopPropagation();
                 setShowModal(true);
               }}
-              className="h-[42px] rounded-[14px] font-[760] gap-2"
+              className="h-[42px] rounded-[14px] font-[760] gap-2 ce-tertiary-button"
             >
               <Eye className="w-4 h-4" />
               Quick View
             </Button>
 
-            <a
-              href="tel:+18005551234"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex h-[42px] items-center justify-center gap-2 rounded-[14px] border border-primary/30 bg-primary/10 px-4 text-sm font-[760] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+            <Button
+              variant="outline"
+              onClick={requestQuote}
+              className="h-[42px] rounded-[14px] font-[760] gap-2 ce-secondary-button"
             >
-              <Phone className="w-4 h-4" />
-              (800) 555-1234
-            </a>
+              <FileText className="w-4 h-4" />
+              Request a Quote
+            </Button>
           </div>
         </div>
       </motion.div>

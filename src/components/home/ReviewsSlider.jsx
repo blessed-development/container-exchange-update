@@ -1,127 +1,129 @@
-import React, { useState } from 'react';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Star } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
 
+// Placeholder/demo testimonials — replace with approved customer feedback before launch.
+// These entries are original site copy and are not presented as Google, Trustpilot, or verified third-party reviews.
 const REVIEWS = [
-  {
-    id: 1,
-    name: 'Mark Cobb',
-    initials: 'MC',
-    avatar: 'https://i.pravatar.cc/48?img=11',
-    time: '12 months ago',
-    rating: 5,
-    text: 'The whole On-Site Storage Solutions staff were great to work with, from my first phone call to the day of delivery. They were professional, responsive, and made the whole process seamless.',
-  },
-  {
-    id: 2,
-    name: 'Nikunj Patel',
-    initials: 'NP',
-    avatar: null,
-    time: '12 months ago',
-    rating: 5,
-    text: 'Their service was good as they said.',
-  },
-  {
-    id: 3,
-    name: 'Andres Pena',
-    initials: 'AP',
-    avatar: null,
-    time: '6 months ago',
-    rating: 5,
-    text: '20ft Conex box. Came across the ad on Facebook marketplace, Rene was very responsive and helpful throughout the entire process. Great experience overall.',
-  },
-  {
-    id: 4,
-    name: 'Raven Ramos',
-    initials: 'RR',
-    avatar: null,
-    time: '4 months ago',
-    rating: 5,
-    text: 'Very clean storages, friendly service and the manager Sal was very knowledgeable on everything and was able to help me find exactly what I needed at a great price.',
-  },
-  {
-    id: 5,
-    name: 'James Thornton',
-    initials: 'JT',
-    avatar: null,
-    time: '3 weeks ago',
-    rating: 5,
-    text: 'Ordered a 40ft high cube for my property. Delivery was on time, driver was very careful placing it. Excellent communication from start to finish.',
-  },
-  {
-    id: 6,
-    name: 'Lisa Nguyen',
-    initials: 'LN',
-    avatar: null,
-    time: '8 months ago',
-    rating: 5,
-    text: 'Best price I found after calling around. Container arrived in great shape and the team was super easy to work with. Would definitely order again.',
-  },
+  { id: 1, name: 'Julia R.', time: '2 months ago', text: 'The 20ft unit was placed exactly where we needed it. The delivery team made the process easy from start to finish.' },
+  { id: 2, name: 'Mateo R.', time: '3 months ago', text: 'We needed secure storage for our crew quickly. The container arrived clean, solid, and ready to use.' },
+  { id: 3, name: 'Danielle S.', time: '4 months ago', text: 'Clear communication, straightforward pricing, and a container that fits our small business yard perfectly.' },
+  { id: 4, name: 'Ethan W.', time: '5 months ago', text: 'Our 40ft container is exactly what the farm needed for seasonal equipment and supplies.' },
+  { id: 5, name: 'Priya K.', time: '6 months ago', text: 'The team answered every question before delivery. Placement was careful and the unit looks great on site.' },
+  { id: 6, name: 'Noah B.', time: '6 months ago', text: 'A dependable storage solution for our construction materials. The doors operate smoothly and the unit feels secure.' },
+  { id: 7, name: 'Carla M.', time: '7 months ago', text: 'We compared several options and this was the simplest experience. Delivery was right on schedule.' },
+  { id: 8, name: 'Isaac T.', time: '8 months ago', text: 'The container was a practical addition to our property. It arrived in the condition we expected.' },
+  { id: 9, name: 'Megan H.', time: '8 months ago', text: 'From quote to placement, everyone was helpful. Our workshop materials finally have a proper home.' },
+  { id: 10, name: 'Luis G.', time: '9 months ago', text: 'Great option for extra inventory storage. The delivery driver worked around our tight driveway with care.' },
+  { id: 11, name: 'Avery P.', time: '9 months ago', text: 'The unit has held up well through heavy weather. It is exactly the extra space our team needed.' },
+  { id: 12, name: 'Jordan C.', time: '10 months ago', text: 'Professional service and a solid container. The ordering process was easier than we expected.' },
+  { id: 13, name: 'Taylor N.', time: '10 months ago', text: 'We use it daily for tools and equipment. It is secure, clean, and a strong value for our operation.' },
+  { id: 14, name: 'Riley F.', time: '11 months ago', text: 'The delivery was coordinated well and the container was positioned neatly beside our warehouse.' },
+  { id: 15, name: 'Morgan L.', time: '11 months ago', text: 'A reliable solution for job-site storage. The entire process felt organized and straightforward.' },
+  { id: 16, name: 'Casey J.', time: '12 months ago', text: 'We appreciate the responsive help choosing the right size. The container has been a great fit.' },
+  { id: 17, name: 'Cameron D.', time: '12 months ago', text: 'Our delivery arrived when promised and the unit was ready for work immediately.' },
+  { id: 18, name: 'Sydney V.', time: '1 year ago', text: 'A clean, dependable storage container for our growing landscaping business. Very pleased with the experience.' },
+  { id: 19, name: 'Blake A.', time: '1 year ago', text: 'The 40ft container gave us room to organize supplies without adding another building to the property.' },
+  { id: 20, name: 'Reese O.', time: '1 year ago', text: 'Everything was explained clearly, and delivery day went smoothly. We would use this service again.' },
+  { id: 21, name: 'Quinn E.', time: '1 year ago', text: 'The unit is sturdy and well suited to our storage needs. It was placed exactly to our plan.' },
+  { id: 22, name: 'Parker I.', time: '1 year ago', text: 'Good communication throughout and no surprises. The container has made our site much easier to manage.' },
+  { id: 23, name: 'Logan Y.', time: '1 year ago', text: 'We wanted a simple long-term storage solution, and this container has delivered exactly that.' },
+  { id: 24, name: 'Emerson Z.', time: '1 year ago', text: 'The driver was considerate of our property and the unit was set down cleanly and securely.' },
+  { id: 25, name: 'Hayden Q.', time: '1 year ago', text: 'A practical, secure solution for our renovation materials. The service was easy to work with.' },
+  { id: 26, name: 'Kendall X.', time: '1 year ago', text: 'The team helped us select a container that made sense for our budget and space.' },
+  { id: 27, name: 'Rowan U.', time: '1 year ago', text: 'The container has been a useful addition to our operations. Ordering and delivery both felt seamless.' },
+  { id: 28, name: 'Finley B.', time: '1 year ago', text: 'It arrived in great condition and gives us the secure overflow storage we were looking for.' },
+  { id: 29, name: 'Sage W.', time: '1 year ago', text: 'A well-run delivery experience and a dependable container. It has made our workspace much more organized.' },
+  { id: 30, name: 'Arden M.', time: '1 year ago', text: 'The size recommendation was right on target. Our container is secure, useful, and looks right at home.' },
 ];
 
-const CARDS_VISIBLE = 3;
+const REVIEW_TIMES = ['5 weeks ago', '2 months ago', '3 months ago', '5 months ago', '7 months ago', '9 months ago', '11 months ago', '1 year ago'];
+const AVATAR_TONES = ['from-orange-100 to-amber-50', 'from-sky-100 to-blue-50', 'from-emerald-100 to-teal-50', 'from-violet-100 to-purple-50', 'from-rose-100 to-pink-50'];
+const CARD_GAP = 4;
+
+function getCardWidth() {
+  if (typeof window === 'undefined') return 320;
+  if (window.innerWidth < 640) return Math.min(Math.round(window.innerWidth * 0.8), 300);
+  if (window.innerWidth < 1024) return 310;
+  return 320;
+}
+
+function initialsFor(name) {
+  return name.replace('.', '').split(' ').map((part) => part[0]).join('').slice(0, 2);
+}
 
 export default function ReviewsSlider() {
-  const [index, setIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+  const [cardWidth, setCardWidth] = useState(getCardWidth);
+  const [activeIndex, setActiveIndex] = useState(REVIEWS.length);
+  const [shouldAnimate, setShouldAnimate] = useState(true);
+  const loopedReviews = useMemo(() => [...REVIEWS, ...REVIEWS, ...REVIEWS], []);
 
-  const maxIndex = REVIEWS.length - CARDS_VISIBLE;
+  useEffect(() => {
+    const updateCardWidth = () => setCardWidth(getCardWidth());
+    window.addEventListener('resize', updateCardWidth);
+    return () => window.removeEventListener('resize', updateCardWidth);
+  }, []);
 
-  const prev = () => setIndex((i) => Math.max(i - 1, 0));
-  const next = () => setIndex((i) => Math.min(i + 1, maxIndex));
+  useEffect(() => {
+    setActiveIndex(REVIEWS.length);
+    setShouldAnimate(false);
+    const frame = window.requestAnimationFrame(() => setShouldAnimate(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, [cardWidth]);
 
-  const visible = REVIEWS.slice(index, index + CARDS_VISIBLE);
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+    const timer = window.setTimeout(() => setActiveIndex((current) => current + 1), 4400);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (activeIndex < REVIEWS.length * 2) return undefined;
+    const reset = window.setTimeout(() => {
+      setShouldAnimate(false);
+      setActiveIndex(REVIEWS.length);
+      window.requestAnimationFrame(() => setShouldAnimate(true));
+    }, 760);
+    return () => window.clearTimeout(reset);
+  }, [activeIndex]);
+
+  const offset = activeIndex * (cardWidth + CARD_GAP) + cardWidth / 2;
 
   return (
-    <section className="py-24 bg-accent text-white relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.05] blur-[80px] pointer-events-none" />
+    <section className="py-20 sm:py-24 bg-[#f5f5f5] text-[#2f2c28] relative overflow-hidden" aria-labelledby="happy-customers-heading">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.06] blur-[80px] pointer-events-none" />
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
-            We've Got a Lot of{' '}
-            <span className="text-primary">Happy Customers</span>
+        <div className="text-center mb-9">
+          <h2 id="happy-customers-heading" className="text-4xl sm:text-5xl font-black tracking-tight leading-tight">
+            We've Got a Lot of <span className="text-primary">Happy Customers</span>
           </h2>
         </div>
 
-        {/* Slider */}
-        <div className="relative">
-          {/* Prev button */}
-          <button
-            onClick={prev}
-            disabled={index === 0}
-            className="absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        <div className="-mx-4 sm:-mx-6 overflow-hidden py-3" aria-live="polite">
+          <div
+            className="flex gap-1 will-change-transform"
+            style={{
+              transform: `translate3d(calc(50% - ${offset}px), 0, 0)`,
+              transition: shouldAnimate && !prefersReducedMotion ? 'transform 760ms cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+            }}
           >
-            <ChevronLeft className="w-5 h-5 text-white" />
-          </button>
-
-          {/* Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 overflow-hidden">
-            <AnimatePresence mode="popLayout">
-              {visible.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </AnimatePresence>
+            {loopedReviews.map((review, index) => (
+              <motion.div
+                key={`${review.id}-${index}`}
+                className="shrink-0"
+                style={{ width: cardWidth }}
+                animate={index === activeIndex
+                  ? { opacity: 1, scale: [1.03, 1.075, 1.075, 1.03], y: [0, -6, -6, 0] }
+                  : { opacity: 0.86, scale: 0.91, y: 0 }}
+                transition={index === activeIndex
+                  ? { duration: 1.45, ease: [0.22, 1, 0.36, 1], times: [0, 0.25, 0.72, 1] }
+                  : { duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <ReviewCard review={review} />
+              </motion.div>
+            ))}
           </div>
-
-          {/* Next button */}
-          <button
-            onClick={next}
-            disabled={index >= maxIndex}
-            className="absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-          >
-            <ChevronRight className="w-5 h-5 text-white" />
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-8">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              className={`w-2 h-2 rounded-full transition-all ${i === index ? 'bg-primary w-6' : 'bg-white/25'}`}
-            />
-          ))}
         </div>
       </div>
     </section>
@@ -129,64 +131,28 @@ export default function ReviewsSlider() {
 }
 
 function ReviewCard({ review }) {
-  const [expanded, setExpanded] = useState(false);
-  const MAX_LEN = 120;
-  const isLong = review.text.length > MAX_LEN;
-  const displayText = !expanded && isLong ? review.text.slice(0, MAX_LEN) + '…' : review.text;
+  const avatarTone = AVATAR_TONES[(review.id - 1) % AVATAR_TONES.length];
+  const displayTime = REVIEW_TIMES[(review.id - 1) % REVIEW_TIMES.length];
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.3 }}
-      className="bg-white/[0.06] border border-white/[0.1] rounded-2xl p-5 flex flex-col gap-3"
-    >
-      {/* Top row: avatar + name + google badge */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-3">
-          {review.avatar ? (
-            <img src={review.avatar} alt={review.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-primary font-bold text-sm">{review.initials}</span>
-            </div>
-          )}
-          <div>
-            <p className="font-bold text-white text-sm leading-tight">{review.name}</p>
-            <p className="text-white/40 text-xs">{review.time}</p>
-          </div>
+    <article className="min-h-[188px] bg-white border border-[#d8d3cc] rounded-2xl p-4 flex flex-col gap-2.5 shadow-[0_12px_28px_rgba(47,44,40,.06)]">
+      <div className="flex items-center gap-3">
+        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarTone} border border-[#d8d3cc] flex items-center justify-center shrink-0`} aria-hidden="true">
+          <span className="text-primary font-bold text-sm">{initialsFor(review.name)}</span>
         </div>
-        {/* Google G badge */}
-        <div className="flex-shrink-0 w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm">
-          <span className="font-black text-sm" style={{ color: '#4285F4' }}>G</span>
+        <div>
+          <p className="font-bold text-[#2f2c28] text-sm leading-tight">{review.name}</p>
+          <p className="text-[#746f68] text-xs mt-1">{displayTime}</p>
         </div>
       </div>
 
-      {/* Stars + verified */}
-      <div className="flex items-center gap-1.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+      <div className="flex items-center gap-1" aria-label="5 out of 5 stars">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star key={index} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" aria-hidden="true" />
         ))}
-        <svg className="w-4 h-4 ml-1" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="12" fill="#1DA1F2" />
-          <path d="M7 12.5l3.5 3.5 6.5-7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
       </div>
 
-      {/* Review text */}
-      <p className="text-white/65 text-sm leading-relaxed flex-1">
-        {displayText}
-        {isLong && (
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            className="text-primary hover:underline ml-1 text-xs font-semibold"
-          >
-            {expanded ? 'Show less' : 'Read more'}
-          </button>
-        )}
-      </p>
-    </motion.div>
+      <p className="text-[#625e58] text-[13px] leading-relaxed line-clamp-3">{review.text}</p>
+    </article>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, ArrowRight } from 'lucide-react';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const RECENT_DELIVERIES = [
   { size: "20ft Standard", city: "Denver, CO", mins: 4 },
@@ -26,7 +27,7 @@ export default function Footer() {
   const delivery = RECENT_DELIVERIES[tickerIndex];
 
   return (
-    <footer className="bg-accent text-white">
+    <footer className="bg-[#07111f] text-white">
       {/* Live Ticker */}
       <div className="border-b border-white/[0.06] py-3.5 overflow-hidden bg-white/[0.02]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center gap-3">
@@ -74,12 +75,12 @@ export default function Footer() {
                 { label: 'Buy Containers', path: '/inventory' },
                 { label: 'Rent a Container', path: '/contact' },
                 { label: 'Rent-to-Own', path: '/contact' },
-                { label: 'How It Works', path: '/#how-it-works' },
+                { label: 'How It Works', path: '/buyers-guide' },
                 { label: 'About Us', path: '/about' },
                 { label: 'FAQ', path: '/faq' },
                 { label: 'Get a Quote', path: '/contact' },
               ].map((link) => (
-                <li key={link.path}>
+                <li key={`${link.label}-${link.path}`}>
                   <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
                     <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     {link.label}
@@ -108,14 +109,12 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CONTACT</h4>
             <div className="space-y-3">
-              <a href="tel:+18005551234" className="flex items-center gap-3 text-white/50 hover:text-primary transition-colors">
-                <Phone className="w-4 h-4" />
-                <span className="font-mono text-sm">(800) 555-1234</span>
-              </a>
-              <a href="mailto:info@containersexchange.com" className="flex items-center gap-3 text-white/50 hover:text-primary transition-colors">
+              <div className="flex items-center gap-3 text-white/50">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">info@containersexchange.com</span>
-              </a>
+                <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm hover:text-white transition-colors">
+                  {COMPANY_CONTACT.email}
+                </a>
+              </div>
             </div>
             <div className="mt-6 p-4 border border-white/[0.08] rounded-xl bg-white/[0.03]">
               <p className="text-xs font-mono text-white/35 mb-2">OPERATING HOURS</p>

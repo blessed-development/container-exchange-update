@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Menu, X } from 'lucide-react';
+import NavbarCartCTA from './NavbarCartCTA';
 
 const NAV_LINKS = [
   { label: 'Buy Containers', path: '/inventory' },
-  { label: 'How It Works', path: '/#how-it-works' },
+  { label: 'How It Works', path: '/buyers-guide' },
   { label: 'About', path: '/about' },
   { label: 'Delivery', path: '/delivery' },
   { label: 'FAQ', path: '/faq' },
@@ -48,15 +48,7 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="tel:+18005551234" className="flex items-center gap-2 text-white/50 hover:text-white transition-colors text-sm">
-              <Phone className="w-4 h-4" />
-              <span className="font-mono">(800) 555-1234</span>
-            </a>
-            <Link to="/inventory">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:-translate-y-0.5 text-sm px-5">
-                Get Pricing
-              </Button>
-            </Link>
+            <NavbarCartCTA />
           </div>
 
           {/* Mobile toggle */}
@@ -84,15 +76,7 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="pt-3 border-t border-white/[0.06] mt-3 space-y-3">
-              <a href="tel:+18005551234" className="flex items-center gap-2 text-primary font-mono text-sm px-3 py-2">
-                <Phone className="w-4 h-4" />
-                (800) 555-1234
-              </a>
-              <Link to="/inventory" onClick={() => setIsOpen(false)}>
-                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg h-12">
-                  Get Pricing
-                </Button>
-              </Link>
+              <NavbarCartCTA mobile onNavigate={() => setIsOpen(false)} />
             </div>
           </div>
         </div>

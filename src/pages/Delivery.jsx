@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Phone, HelpCircle } from 'lucide-react';
+import { Mail, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import PageSeo from '@/components/seo/PageSeo';
 
 const STATS = [
   { val: '48hr',  label: 'Avg. Turnaround' },
@@ -98,7 +99,8 @@ function FaqItem({ faq }) {
 
 export default function Delivery() {
   return (
-    <div className="min-h-screen bg-accent text-white">
+    <div className="min-h-screen bg-[#061226] text-white">
+      <PageSeo title="Shipping Container Delivery | Containers Exchange" description="Learn how shipping container delivery works, including site preparation, scheduling, and delivery requirements." path="/delivery" />
 
       {/* HERO */}
       <section className="relative px-6 sm:px-12 pt-28 pb-16 overflow-hidden border-b border-white/[0.08]">
@@ -123,7 +125,7 @@ export default function Delivery() {
           <div className="flex gap-3 flex-wrap">
             <a href="#contact">
               <Button className="bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg h-11 px-6 gap-2 shadow-lg shadow-green-500/20">
-                <Phone className="w-4 h-4" />
+                <Mail className="w-4 h-4" />
                 Contact Our Team
               </Button>
             </a>
@@ -309,16 +311,13 @@ export default function Delivery() {
           <div className="absolute right-0 top-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10">
             <h3 className="text-2xl font-black tracking-tight mb-1">Ready to Schedule Your Delivery?</h3>
-            <p className="text-white/50 text-sm mb-5">Our logistics team is standing by — call now or request a quote online.</p>
-            <Link to="/contact">
+            <p className="text-white/50 text-sm mb-5">Request a quote online or email our team for delivery help.</p>
+            <Link to="/contact?source=Delivery%20page%20quote%20request">
               <Button className="bg-green-500 hover:bg-green-600 text-black font-bold rounded-lg h-11 px-6">
                 Request a Quote
               </Button>
             </Link>
           </div>
-          <a href="tel:7132580199" className="relative z-10 font-mono text-3xl font-semibold text-green-400 hover:opacity-70 transition-opacity whitespace-nowrap">
-            (713) 258-0199
-          </a>
         </div>
 
         {/* FAQ */}

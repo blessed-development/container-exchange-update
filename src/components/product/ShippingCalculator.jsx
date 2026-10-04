@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ShippingCalculator.css';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Phone, ShieldCheck } from 'lucide-react';
+import { ShoppingCart, Mail, ShieldCheck } from 'lucide-react';
 import { SIZE_OPTIONS } from './SizeSelector';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const USED_GRADES = [
   { key: 'AS_IS', label: 'AS IS', adjust: -100 },
@@ -13,8 +14,8 @@ const USED_GRADES = [
 const NEW_GRADES = [{ key: 'IICL', label: 'IICL', adjust: 0 }];
 
 const CONDITION_IMAGES = {
-  used: '/images/products/used-20-wwt/hero.webp',
-  new: '/images/products/new-20-iicl/hero.webp',
+  used: '/images/product-conditions/used-cargo-worthy-side-v2.webp',
+  new: '/images/product-conditions/new-one-trip-side.webp',
 };
 
 export default function ShippingCalculator({
@@ -135,7 +136,7 @@ export default function ShippingCalculator({
           <div className="premium-qty">
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="premium-qty-btn"
+              className="premium-qty-btn ce-utility-button"
               type="button"
             >
               −
@@ -145,23 +146,23 @@ export default function ShippingCalculator({
 
             <button
               onClick={() => setQty((q) => q + 1)}
-              className="premium-qty-btn"
+              className="premium-qty-btn ce-utility-button"
               type="button"
             >
               +
             </button>
           </div>
 
-          <Button className="premium-cart-btn">
+          <Button className="premium-cart-btn ce-signature-button">
             <ShoppingCart className="w-4 h-4" />
             Add to Cart
           </Button>
         </div>
 
-        <a href="tel:+18889779085">
-          <Button variant="outline" className="premium-call-btn">
-            <Phone className="w-4 h-4" />
-            Call (888) 977-9085
+        <a href={`mailto:${COMPANY_CONTACT.email}?subject=${encodeURIComponent(`Quote request: ${container?.name || `${sizeOption.label} shipping container`}`)}`}>
+          <Button variant="outline" className="premium-call-btn ce-secondary-button">
+            <Mail className="w-4 h-4" />
+            Email Sales
           </Button>
         </a>
       </div>
@@ -197,7 +198,7 @@ export default function ShippingCalculator({
                 <img
                   src={CONDITION_IMAGES[cond]}
                   alt={cond}
-                  className="w-[68px] h-[52px] object-contain object-center rounded-lg flex-shrink-0 bg-muted"
+                  className="w-[68px] h-[52px] object-cover rounded-lg flex-shrink-0 bg-muted"
                 />
 
                 <div>

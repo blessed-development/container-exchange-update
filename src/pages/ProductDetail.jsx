@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import SeoJsonLd from '@/components/seo/SeoJsonLd';
+import { SITE_URL, toAbsoluteUrl } from '@/lib/seo';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import ProductFAQ from '@/components/product/ProductFAQ';
@@ -179,7 +181,7 @@ export default function ProductDetail() {
   const heroPrice =
     calculatorPrice > 0
       ? calculatorPrice
-      : getLocalizedPrice(baseDisplayPrice, activeLocation);
+      : getLocalizedPrice(baseDisplayPrice, activeLocation, container);
 
   const showStartingFrom =
     !hasActiveZip;
@@ -377,51 +379,51 @@ export default function ProductDetail() {
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
+  const pageTitle = seoHeroTitle && seoLocation
+    ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
+    : `${productTitle} | Containers Exchange`;
+  const pageDescription = seoHeroTitle && seoLocation
+    ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
+    : `Browse ${productTitle} shipping container pricing and availability.`;
+  const canonicalUrl = toAbsoluteUrl(`/product/${container.id}`);
+  const productImageUrl = toAbsoluteUrl(productImage);
 
  return (
 <>
 <Helmet>
 
-<title>
-{seoHeroTitle && seoLocation
-  ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
-  : `${productTitle} | Containers Exchange`}
-</title>
+<title>{pageTitle}</title>
 
 <meta
   name="description"
-  content={
-    seoHeroTitle && seoLocation
-      ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
-      : `Browse ${productTitle} shipping container pricing and availability.`
-  }
+  content={pageDescription}
 />
 
 <link
   rel="canonical"
-  href={window.location.href}
+  href={canonicalUrl}
 />
 
 <meta property="og:type" content="product" />
 
 <meta
   property="og:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+  content={pageTitle}
 />
 
 <meta
   property="og:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+  content={pageDescription}
 />
 
 <meta
   property="og:image"
-  content={productImage}
+  content={productImageUrl}
 />
 
 <meta
   property="og:url"
-  content={window.location.href}
+  content={canonicalUrl}
 />
 
 <meta
@@ -431,20 +433,29 @@ export default function ProductDetail() {
 
 <meta
   name="twitter:title"
-  content={`${seoHeroTitle} For Sale in ${seoLocation}`}
+  content={pageTitle}
 />
 
 <meta
   name="twitter:description"
-  content={`Buy ${seoHeroTitle.toLowerCase()} in ${seoLocation}.`}
+  content={pageDescription}
 />
 
 <meta
   name="twitter:image"
-  content={productImage}
+  content={productImageUrl}
 />
 
 </Helmet>
+<SeoJsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'Product', name: productTitle, description: productDescription, image: productImageUrl, sku: container.id, category: 'Shipping Container', brand: { '@type': 'Brand', name: 'Containers Exchange' } },
+      { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL }, { '@type': 'ListItem', position: 2, name: 'Shipping Containers', item: toAbsoluteUrl('/inventory') }, { '@type': 'ListItem', position: 3, name: productTitle, item: canonicalUrl }] },
+    ],
+  }}
+/>
 
 <div className="min-h-screen bg-background">
       <div className="bg-muted/30 border-b border-border">
@@ -477,7 +488,7 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className="product-hero-image w-full h-[340px] sm:h-[390px] md:h-[430px] object-contain object-center brightness-[0.92] contrast-[1.04] transition-all duration-700 ease-out group-hover:scale-[1.015] animate-in fade-in"
+                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
               />
 
               {showHeroOverlay && (
@@ -488,24 +499,24 @@ export default function ProductDetail() {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
                   </div>
 
-                  <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
-                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-5">
+                  <div className="absolute inset-0 p-6 pb-6 md:p-8 md:pb-7 flex flex-col justify-end">
+                    <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-1">
                       {seoHeroTitle}
                     </h1>
 
-                    <div className="text-[17px] md:text-[22px] font-bold tracking-[-0.015em] text-white mb-5">
+                    <div className="text-[17px] md:text-[22px] font-bold leading-tight tracking-[-0.015em] text-white">
                       For Sale in
                       <span className="text-primary ml-2">
                         {seoLocation}
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="product-hero-rating mt-3 self-end flex items-center gap-2">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-5 h-5 ${
+                            className={`h-[14px] w-[14px] ${
                               i < Math.round(container.rating || 5)
                                 ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-white/30'
@@ -514,14 +525,15 @@ export default function ProductDetail() {
                         ))}
                       </div>
 
-                      <span className="text-base font-black text-white">
+                      <span className="text-[15px] font-black text-white">
                         {container.rating || 5}
                       </span>
 
-                      <span className="text-sm text-white/80">
+                      <span className="text-[12px] font-medium text-white/85">
                         ({container.review_count || 42} reviews)
                       </span>
                     </div>
+
                   </div>
                 </>
               )}
@@ -541,9 +553,11 @@ export default function ProductDetail() {
                     }`}
                   >
                     <img
-                      src={image}
+                      src={image.replace('/images/products/', '/images/product-thumbnails/')}
                       alt={`${productTitle} preview ${index + 1}`}
-                      className="w-full h-full object-contain object-center transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                   </button>
                 ))}
@@ -575,8 +589,8 @@ export default function ProductDetail() {
                 }}
                 className={`product-grade-card group relative mb-4 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                   gradeOpen
-                    ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
-                    : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
+                    ? 'border-border bg-card shadow-[0_12px_35px_rgba(15,23,42,0.10)]'
+                    : 'border-border bg-card/80 hover:border-primary/35 hover:bg-card'
                 }`}
               >
                 <div className="flex items-center justify-between gap-4 px-5 pt-4">
@@ -596,7 +610,7 @@ export default function ProductDetail() {
                     gradeOpen ? 'max-h-[330px]' : 'max-h-[92px]'
                   }`}
                 >
-                  <p className="mb-1 text-base font-semibold text-white/95">
+                  <p className="mb-1 text-base font-semibold text-foreground">
                     {gradeInfo.label || container.grade}
                   </p>
 
@@ -626,13 +640,13 @@ export default function ProductDetail() {
                   }}
                   className={`product-description-card group mt-[-8px] mb-6 md:mb-10 w-full overflow-hidden rounded-[22px] border text-left transition-[border-color,background-color,box-shadow] duration-500 ease-out ${
                     descriptionOpen
-                      ? 'border-white/15 bg-white/[0.032] shadow-[0_12px_35px_rgba(0,0,0,0.12)]'
-                      : 'border-white/10 bg-white/[0.022] hover:border-white/15 hover:bg-white/[0.032]'
+                      ? 'border-border bg-card shadow-[0_12px_35px_rgba(15,23,42,0.10)]'
+                      : 'border-border bg-card/80 hover:border-primary/35 hover:bg-card'
                   }`}
                 >
                   <div className="flex justify-end px-5 pt-4">
                     <ChevronDown
-                      className={`h-4 w-4 shrink-0 text-white/45 transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+                      className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
                         descriptionOpen ? 'rotate-180' : ''
                       }`}
                     />
