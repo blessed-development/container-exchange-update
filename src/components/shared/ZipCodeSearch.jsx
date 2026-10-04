@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -83,6 +83,9 @@ export default function ZipCodeSearch({
   const timerRef = useRef(null);
   const pickerRef = useRef(null);
   const searchRequestRef = useRef(0);
+  const locationFieldId = useId().replace(/:/g, '');
+  const inputId = `container-exchange-location-search-${locationFieldId}`;
+  const suggestionsId = `container-exchange-location-suggestions-${locationFieldId}`;
 
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
@@ -391,13 +394,13 @@ export default function ZipCodeSearch({
 
           <Input
             ref={inputRef}
-            id="container-exchange-location-search"
+            id={inputId}
             name="container-exchange-location-search"
             type="text"
             inputMode="text"
             autoComplete="off"
             aria-autocomplete="list"
-            aria-controls="container-exchange-location-suggestions"
+            aria-controls={suggestionsId}
             aria-expanded={isSuggestionsOpen}
             value={inputValue}
             onChange={handleChange}
@@ -415,7 +418,7 @@ export default function ZipCodeSearch({
 
           {isSuggestionsOpen && (isSearching || suggestions.length > 0 || zip.length > 0) && (
             <div
-              id="container-exchange-location-suggestions"
+              id={suggestionsId}
               role="listbox"
               aria-label="Matching ZIP and postal-code locations"
               className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
