@@ -92,8 +92,8 @@ def main() -> None:
 
         eligible = True
         reason = ""
-        if country != "US":
-            eligible, reason = False, "Canadian pricing remains on currency hold"
+        if country not in {"US", "CA"}:
+            eligible, reason = False, "Unsupported country"
         elif currency != "USD":
             eligible, reason = False, "Currency is not confirmed as USD"
         elif not product:
@@ -112,7 +112,7 @@ def main() -> None:
 
         if eligible:
             record = {
-                "country": "US",
+                "country": country,
                 "currency": "USD",
                 "price": int(proposed),
             }

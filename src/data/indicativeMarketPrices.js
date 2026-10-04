@@ -155,6 +155,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "price": 2250
     }
   },
+  "calgary-ab": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3350
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4900
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5100
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1650
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2100
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1900
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2200
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2800
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3350
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2450
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2350
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3000
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3600
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    }
+  },
   "charleston-sc": {
     "new-20-iicl": {
       "country": "US",
@@ -848,6 +925,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "price": 2300
     }
   },
+  "edmonton-ab": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3200
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4700
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4850
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1600
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2000
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2450
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1800
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2100
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3200
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2250
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2850
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3400
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    }
+  },
   "el-paso-tx": {
     "new-20-iicl": {
       "country": "US",
@@ -1000,6 +1154,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "country": "US",
       "currency": "USD",
       "price": 2400
+    }
+  },
+  "halifax-dartmouth-ns": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3500
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5150
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5300
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1750
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2200
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1950
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3500
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2500
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3150
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3750
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2800
     }
   },
   "houston-tx": {
@@ -1844,6 +2075,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "price": 2050
     }
   },
+  "montreal-qc": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4250
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4400
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1450
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1850
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2200
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1650
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1900
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2400
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2100
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2050
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2600
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3100
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    }
+  },
   "nashville-tn": {
     "new-20-iicl": {
       "country": "US",
@@ -2383,6 +2691,160 @@ export const INDICATIVE_MARKET_PRICES = {
       "price": 2400
     }
   },
+  "prince-rupert-bc": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3050
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4450
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4650
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1550
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1900
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1750
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2000
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3050
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2200
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2150
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2750
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3250
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2400
+    }
+  },
+  "regina-sk": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5350
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5550
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1850
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2800
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2050
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2400
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3050
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2600
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3300
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3850
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
+    }
+  },
   "saint-louis-mo-il": {
     "new-20-iicl": {
       "country": "US",
@@ -2612,6 +3074,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "country": "US",
       "currency": "USD",
       "price": 2200
+    }
+  },
+  "saskatoon-sk": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5350
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5550
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1850
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2800
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2050
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2400
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3050
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2600
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3300
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3850
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
     }
   },
   "savannah-ga": {
@@ -2922,6 +3461,160 @@ export const INDICATIVE_MARKET_PRICES = {
       "price": 2200
     }
   },
+  "toronto-on": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3800
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3850
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1350
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1650
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1950
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1450
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1650
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2100
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1900
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1850
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2700
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2000
+    }
+  },
+  "vancouver-delta-bc": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3200
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4700
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 4850
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1600
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2000
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2450
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1800
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2100
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3200
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2250
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2850
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3400
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2550
+    }
+  },
   "wilmington-nc": {
     "new-20-iicl": {
       "country": "US",
@@ -2997,6 +3690,83 @@ export const INDICATIVE_MARKET_PRICES = {
       "country": "US",
       "currency": "USD",
       "price": 2400
+    }
+  },
+  "winnipeg-mb": {
+    "new-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "new-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5350
+    },
+    "new-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 5550
+    },
+    "used-20-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 1850
+    },
+    "used-20-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2300
+    },
+    "used-20-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2800
+    },
+    "used-20-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2050
+    },
+    "used-40-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2400
+    },
+    "used-40-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3050
+    },
+    "used-40-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3650
+    },
+    "used-40-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2650
+    },
+    "used-40hc-as-is": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2600
+    },
+    "used-40hc-cw": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3300
+    },
+    "used-40hc-iicl": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 3850
+    },
+    "used-40hc-wwt": {
+      "country": "CA",
+      "currency": "USD",
+      "price": 2900
     }
   },
   "worcester-boston-ma": {

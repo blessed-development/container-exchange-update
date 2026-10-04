@@ -46,7 +46,7 @@ export const getMarketPrice = (product, location = {}) => {
   const indicativeRecord = marketId ? INDICATIVE_MARKET_PRICES[marketId]?.[product?.id] : null;
   const isIndicative = !isReleased && Boolean(
     indicativeRecord &&
-      country === 'US' &&
+      (country === 'US' || country === 'CA') &&
       indicativeRecord.country === country &&
       indicativeRecord.currency === 'USD' &&
       Number(indicativeRecord.price) > 0
