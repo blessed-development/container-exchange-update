@@ -78,6 +78,7 @@ export default function FilterSidebar({
           <div>
             <ZipCodeSearch
               variant="compact"
+              appearance="calculator"
               onZipSubmit={onZipSubmit}
               placeholder="Enter your zipcode / Postalcode"
             />

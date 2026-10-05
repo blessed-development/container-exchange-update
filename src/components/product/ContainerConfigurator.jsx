@@ -580,16 +580,13 @@ export default function ContainerConfigurator({
           <span>SELECTION TYPE</span>
         </div>
 
-        <div className="section-card selection-section-card">
-
-          <div className="selection-type">
-            <button type="button" className="selection-btn active">
-              <span className="selection-dot">
-                <Check size={10} />
-              </span>
-              <span>First off the Stack</span>
-            </button>
-          </div>
+        <div className="selection-type standalone-selection-type">
+          <button type="button" className="selection-btn active">
+            <span className="selection-dot">
+              <Check size={10} />
+            </span>
+            <span>First off the Stack</span>
+          </button>
         </div>
 
         <div className="checkout">

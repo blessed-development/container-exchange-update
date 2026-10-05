@@ -3673,7 +3673,8 @@ margin-top:1px !important;
 .selection-section-card{
   overflow:visible !important;
 }
-.selection-section-card .selection-type{
+.selection-section-card .selection-type,
+.standalone-selection-type{
   margin:0 !important;
   padding:10px 12px 12px !important;
 }
