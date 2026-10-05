@@ -9,7 +9,7 @@ import RelatedProducts from '@/components/product/RelatedProducts';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
-import { Star, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 
 import {
   getLocalizedPrice,
@@ -139,12 +139,15 @@ export default function ProductDetail() {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [condition, setCondition] = useState('used');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isHeroTitleVisible, setIsHeroTitleVisible] = useState(true);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [descriptionLocked, setDescriptionLocked] = useState(false);
   const descriptionCardRef = useRef(null);
   const [gradeOpen, setGradeOpen] = useState(false);
   const [gradeLocked, setGradeLocked] = useState(false);
   const gradeCardRef = useRef(null);
+  const heroIdleTimerRef = useRef(null);
+  const heroTouchStartRef = useRef(null);
   const [showZipModal, setShowZipModal] = useState(false);
 
   const [savedLocation, setSavedLocation] = useState(() =>
@@ -198,6 +201,77 @@ export default function ProductDetail() {
   const seoHeroTitle = buildSeoProductTitle(productTitle);
 
   const seoLocation = formatCityState(activeLocation);
+
+  const clearHeroIdleTimer = () => {
+    if (heroIdleTimerRef.current) {
+      window.clearTimeout(heroIdleTimerRef.current);
+      heroIdleTimerRef.current = null;
+    }
+  };
+
+  const scheduleHeroTitleFade = () => {
+    clearHeroIdleTimer();
+
+    if (!showHeroOverlay) return;
+
+    heroIdleTimerRef.current = window.setTimeout(() => {
+      setIsHeroTitleVisible(false);
+    }, 3200);
+  };
+
+  const revealHeroTitle = () => {
+    if (!showHeroOverlay) return;
+
+    setIsHeroTitleVisible(true);
+    scheduleHeroTitleFade();
+  };
+
+  const moveHeroImage = (direction) => {
+    if (allImages.length < 2) return;
+
+    setActiveImageIndex((currentIndex) => {
+      const nextIndex =
+        (currentIndex + direction + allImages.length) % allImages.length;
+
+      return nextIndex;
+    });
+  };
+
+  const handleHeroTouchStart = (event) => {
+    const touch = event.touches?.[0];
+
+    if (!touch) return;
+
+    heroTouchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+
+    revealHeroTitle();
+  };
+
+  const handleHeroTouchEnd = (event) => {
+    const start = heroTouchStartRef.current;
+    const touch = event.changedTouches?.[0];
+
+    heroTouchStartRef.current = null;
+
+    if (!start || !touch || allImages.length < 2) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+
+    if (Math.abs(deltaX) < 46 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    moveHeroImage(deltaX < 0 ? 1 : -1);
+  };
+
+  useEffect(() => {
+    setIsHeroTitleVisible(true);
+    scheduleHeroTitleFade();
+
+    return clearHeroIdleTimer;
+  }, [showHeroOverlay, activeImage]);
 
   useEffect(() => {
     if (!seoHeroTitle || !seoLocation) return;
@@ -483,7 +557,17 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div>
-            <div className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group">
+            <div
+              className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group"
+              onPointerMove={(event) => {
+                if (event.pointerType === 'mouse') {
+                  revealHeroTitle();
+                }
+              }}
+              onFocusCapture={revealHeroTitle}
+              onTouchStart={handleHeroTouchStart}
+              onTouchEnd={handleHeroTouchEnd}
+            >
               <img
                 key={activeImage}
                 src={activeImage}
@@ -494,12 +578,25 @@ export default function ProductDetail() {
               {showHeroOverlay && (
                 <>
                   <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/22 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/38 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-700 ease-out ${
+                        isHeroTitleVisible ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/38 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-black/28 via-transparent to-transparent" />
+                    </div>
                   </div>
 
-                  <div className="absolute inset-0 p-6 pb-6 md:p-8 md:pb-7 flex flex-col justify-end">
+                  <div
+                    className={`absolute inset-x-0 bottom-0 p-6 pb-6 md:p-8 md:pb-7 flex flex-col justify-end transition-[opacity,transform] duration-700 ease-out ${
+                      isHeroTitleVisible
+                        ? 'opacity-100 translate-y-0'
+                        : 'pointer-events-none opacity-0 translate-y-2'
+                    }`}
+                  >
                     <h1 className="text-[28px] sm:text-[31px] md:text-[40px] font-black text-white leading-[1.04] tracking-[-0.035em] max-w-[640px] mb-1">
                       {seoHeroTitle}
                     </h1>
@@ -510,31 +607,58 @@ export default function ProductDetail() {
                         {seoLocation}
                       </span>
                     </div>
+                  </div>
 
-                    <div className="product-hero-rating mt-3 self-end flex items-center gap-2">
-                      <div className="flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-[14px] w-[14px] ${
-                              i < Math.round(container.rating || 5)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-white/30'
-                            }`}
-                          />
-                        ))}
-                      </div>
-
-                      <span className="text-[15px] font-black text-white">
-                        {container.rating || 5}
-                      </span>
-
-                      <span className="text-[12px] font-medium text-white/85">
-                        ({container.review_count || 42} reviews)
-                      </span>
+                  <div className="product-hero-rating absolute bottom-6 right-6 z-10 flex items-center gap-2 md:bottom-7 md:right-8">
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-[14px] w-[14px] ${
+                            i < Math.round(container.rating || 5)
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-white/30'
+                          }`}
+                        />
+                      ))}
                     </div>
 
+                    <span className="text-[15px] font-black text-white">
+                      {container.rating || 5}
+                    </span>
+
+                    <span className="text-[12px] font-medium text-white/85">
+                      ({container.review_count || 42} reviews)
+                    </span>
                   </div>
+                </>
+              )}
+
+              {allImages.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    aria-label="Show previous product image"
+                    onClick={() => {
+                      revealHeroTitle();
+                      moveHeroImage(-1);
+                    }}
+                    className="absolute left-4 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/[0.14] text-white shadow-[0_8px_28px_rgba(2,6,23,0.32)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/[0.28] hover:shadow-[0_10px_32px_rgba(2,6,23,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-95 sm:h-11 sm:w-11"
+                  >
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                  </button>
+
+                  <button
+                    type="button"
+                    aria-label="Show next product image"
+                    onClick={() => {
+                      revealHeroTitle();
+                      moveHeroImage(1);
+                    }}
+                    className="absolute right-4 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/[0.14] text-white shadow-[0_8px_28px_rgba(2,6,23,0.32)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/[0.28] hover:shadow-[0_10px_32px_rgba(2,6,23,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-95 sm:h-11 sm:w-11"
+                  >
+                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                  </button>
                 </>
               )}
             </div>
@@ -545,7 +669,10 @@ export default function ProductDetail() {
                   <button
                     key={`${image}-${index}`}
                     type="button"
-                    onClick={() => setActiveImageIndex(index)}
+                    onClick={() => {
+                      setActiveImageIndex(index);
+                      setIsHeroTitleVisible(true);
+                    }}
                     className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
                       activeImageIndex === index
                         ? 'border-orange-500 ring-2 ring-orange-500/25'
