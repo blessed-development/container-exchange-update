@@ -449,7 +449,7 @@ export default function ContainerConfigurator({
           <div className="premium-buy-tabs">
             <button
               type="button"
-              className={`premium-buy-tab ${effectiveCondition === 'new' ? 'active' : ''}`}
+              className={`premium-buy-tab premium-buy-tab--new ${effectiveCondition === 'new' ? 'active' : ''}`}
               onClick={() => handleConditionSwitch('new')}
             >
               <strong>BUY</strong>
@@ -459,7 +459,7 @@ export default function ContainerConfigurator({
 
             <button
               type="button"
-              className={`premium-buy-tab ${effectiveCondition === 'used' ? 'active' : ''}`}
+              className={`premium-buy-tab premium-buy-tab--used ${effectiveCondition === 'used' ? 'active' : ''}`}
               onClick={() => handleConditionSwitch('used')}
             >
               <strong>BUY</strong>
@@ -515,40 +515,6 @@ export default function ContainerConfigurator({
               </button>
             );
           })}
-        </div>
-
-        <div className="cond-cards-section">
-          <div className="cond-cards-head">
-            <span className="card-lbl">CONDITION</span>
-          </div>
-
-          <div className="cond-cards">
-            {['new', 'used'].map((cond) => {
-              const active = effectiveCondition === cond;
-
-              return (
-                <div
-                  key={cond}
-                  className={`cond-card ${active ? 'active' : ''}`}
-                  onClick={() => handleConditionSwitch(cond)}
-                >
-                  <img
-                    src={CONDITION_IMAGES[cond]}
-                    className="cond-img"
-                    alt={cond === 'new' ? 'New one-trip container side detail' : 'Used cargo-worthy container side detail'}
-                  />
-
-                  <div className="cc-info">
-                    <span className="cc-name">{cond === 'new' ? 'NEW' : 'USED'}</span>
-                  </div>
-
-                  <span className="cc-check">
-                    <Check size={10} />
-                  </span>
-                </div>
-              );
-            })}
-          </div>
         </div>
 
         <div className="section-card grade-section-card">

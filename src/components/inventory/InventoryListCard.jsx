@@ -219,7 +219,7 @@ export default function InventoryListCard({ container, index }) {
                 e.stopPropagation();
                 setShowModal(true);
               }}
-              className="h-[42px] rounded-[14px] font-[760] gap-2 ce-tertiary-button"
+              className="hidden h-[42px] rounded-[14px] font-[760] gap-2 ce-tertiary-button sm:inline-flex"
             >
               <Eye className="w-4 h-4" />
               Quick View
