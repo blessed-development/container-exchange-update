@@ -1,54 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { MapPin, X } from 'lucide-react';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { MapPin, Search, X } from 'lucide-react';
 import {
-  lookupPostalCode,
   saveSelectedLocation,
   cleanPostal,
-  isUsZip,
-  isCanadianPostal,
+  searchPostalLocations,
 } from '../../lib/locationEngine';
 
 export default function ZipRequiredModal({ open, onClose, onSuccess }) {
   const [postalInput, setPostalInput] = useState('');
   const [error, setError] = useState('');
   const [checking, setChecking] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const searchTimerRef = useRef(null);
+  const searchRequestRef = useRef(0);
+  const pickerId = useId().replace(/:/g, '');
+  const inputId = `product-postal-required-${pickerId}`;
+  const suggestionsId = `product-postal-required-suggestions-${pickerId}`;
 
   useEffect(() => {
-    if (!open) return;
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    if (!open) {
+      setSuggestions([]);
+      setChecking(false);
+      setActiveSuggestion(-1);
+      return;
+    }
 
     const raw = postalInput.trim().toUpperCase();
     const clean = cleanPostal(raw);
 
     if (!clean) {
       setError('');
+      setSuggestions([]);
+      setChecking(false);
+      setActiveSuggestion(-1);
       return;
     }
 
-    const ready = isUsZip(clean) || isCanadianPostal(clean);
-
-    if (!ready) {
-      setError('');
-      return;
-    }
-
-    const timer = setTimeout(async () => {
+    const requestId = ++searchRequestRef.current;
+    searchTimerRef.current = setTimeout(async () => {
       setChecking(true);
       setError('');
 
       try {
-        const location = await lookupPostalCode(raw);
-        saveSelectedLocation(location);
-        setPostalInput('');
-        onSuccess(location);
-      } catch (err) {
-        setError(err.message || 'Enter a valid ZIP / Postal Code.');
+        const matches = await searchPostalLocations(clean);
+        if (requestId !== searchRequestRef.current) return;
+        setSuggestions(matches);
+      } catch {
+        if (requestId !== searchRequestRef.current) return;
+        setSuggestions([]);
       } finally {
-        setChecking(false);
+        if (requestId === searchRequestRef.current) setChecking(false);
       }
-    }, 500);
+    }, 180);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(searchTimerRef.current);
   }, [postalInput, open, onSuccess]);
+
+  const selectSuggestion = (location) => {
+    saveSelectedLocation(location);
+    setPostalInput('');
+    setSuggestions([]);
+    setActiveSuggestion(-1);
+    onSuccess(location);
+  };
 
   if (!open) return null;
 
@@ -77,16 +93,70 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
 
         <input
           autoFocus
+          id={inputId}
+          name={`container-exchange-product-postal-${pickerId}`}
+          autoComplete="off"
           className="w-full h-14 rounded-2xl bg-black border border-white/10 px-4 text-white text-base outline-none focus:border-green-500"
           placeholder="Enter ZIP / Postal Code"
           value={postalInput}
-          onChange={(e) => setPostalInput(e.target.value)}
+          aria-autocomplete="list"
+          aria-controls={suggestionsId}
+          aria-expanded={checking || suggestions.length > 0}
+          onChange={(e) => {
+            setPostalInput(e.target.value);
+            setActiveSuggestion(-1);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'ArrowDown' && suggestions.length) {
+              event.preventDefault();
+              setActiveSuggestion((current) => Math.min(current + 1, suggestions.length - 1));
+              return;
+            }
+
+            if (event.key === 'ArrowUp' && suggestions.length) {
+              event.preventDefault();
+              setActiveSuggestion((current) => Math.max(current - 1, 0));
+              return;
+            }
+
+            if (event.key === 'Enter' && suggestions.length) {
+              event.preventDefault();
+              selectSuggestion(suggestions[activeSuggestion >= 0 ? activeSuggestion : 0]);
+            }
+          }}
         />
 
         {checking && (
-          <p className="text-green-500 text-xs font-bold mt-3">
-            Detecting location...
+          <p className="flex items-center gap-2 text-green-500 text-xs font-bold mt-3">
+            <Search size={14} aria-hidden="true" /> Finding matching locations…
           </p>
+        )}
+
+        {!checking && suggestions.length > 0 && (
+          <div id={suggestionsId} role="listbox" aria-label="Matching ZIP and postal-code locations" className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+            {suggestions.map((suggestion, index) => {
+              const isActive = index === activeSuggestion;
+              const country = suggestion.country === 'CA' ? 'Canada' : 'United States';
+
+              return (
+                <button
+                  key={`${suggestion.country}-${suggestion.postalCode}`}
+                  type="button"
+                  role="option"
+                  aria-selected={isActive}
+                  onMouseEnter={() => setActiveSuggestion(index)}
+                  onClick={() => selectSuggestion(suggestion)}
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${isActive ? 'bg-white/10' : 'hover:bg-white/[0.06]'}`}
+                >
+                  <MapPin size={16} className="shrink-0 text-sky-300" aria-hidden="true" />
+                  <span className="min-w-0">
+                    <strong className="block truncate text-sm text-white">{suggestion.city}, {suggestion.state} {suggestion.postalCode}</strong>
+                    <small className="block truncate text-xs text-white/55">{country}</small>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         )}
 
         {error && (

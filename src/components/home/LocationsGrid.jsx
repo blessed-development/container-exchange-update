@@ -194,7 +194,9 @@ export default function LocationsGrid() {
               <Search className="h-5 w-5 shrink-0 text-[#ff6a2b]" aria-hidden="true" />
               <input
                 id="location-search"
+                name="container-exchange-market-search"
                 type="search"
+                autoComplete="off"
                 value={searchQuery}
                 onChange={(event) => {
                   setSearchQuery(event.target.value);
