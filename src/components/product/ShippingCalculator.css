@@ -3629,24 +3629,24 @@ margin-top:1px !important;
 .premium-buy-tab.premium-buy-tab--new{
   background-image:
     linear-gradient(180deg,rgba(244,238,222,.76),rgba(197,180,145,.82)),
-    url('/images/products/new-20-iicl/side-angle.webp') !important;
+    url('/images/ui-textures/new-container-body-texture.webp') !important;
   color:#25221e !important;
 }
 .premium-buy-tab.premium-buy-tab--used{
   background-image:
     linear-gradient(180deg,rgba(111,40,27,.55),rgba(58,25,21,.78)),
-    url('/images/product-conditions/used-cargo-worthy-side-v2.webp') !important;
+    url('/images/ui-textures/used-container-body-texture.webp') !important;
   color:#fff !important;
 }
 .premium-buy-tab.premium-buy-tab--new.active{
   background-image:
     linear-gradient(180deg,rgba(255,118,77,.82),rgba(205,76,36,.84) 46%,rgba(28,42,53,.9)),
-    url('/images/products/new-20-iicl/side-angle.webp') !important;
+    url('/images/ui-textures/new-container-body-texture.webp') !important;
   color:#fff !important;
 }
 .premium-buy-tab.premium-buy-tab--used.active{
   background-image:
     linear-gradient(180deg,rgba(255,109,66,.72),rgba(172,58,35,.78) 44%,rgba(25,35,45,.9)),
-    url('/images/product-conditions/used-cargo-worthy-side-v2.webp') !important;
+    url('/images/ui-textures/used-container-body-texture.webp') !important;
   color:#fff !important;
 }
