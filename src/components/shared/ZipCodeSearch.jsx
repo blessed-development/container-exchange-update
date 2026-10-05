@@ -404,6 +404,13 @@ export default function ZipCodeSearch({
             type="text"
             inputMode="text"
             autoComplete="off"
+            data-1p-ignore="true"
+            data-bwignore="true"
+            data-lpignore="true"
+            data-protonpass-ignore="true"
+            data-form-type="other"
+            data-keeper-ignore="true"
+            data-np-autofill-ignore="true"
             aria-autocomplete="list"
             aria-controls={suggestionsId}
             aria-expanded={isSuggestionsOpen}

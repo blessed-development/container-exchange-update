@@ -197,6 +197,13 @@ export default function LocationsGrid() {
                 name="container-exchange-market-search"
                 type="search"
                 autoComplete="off"
+                data-1p-ignore="true"
+                data-bwignore="true"
+                data-lpignore="true"
+                data-protonpass-ignore="true"
+                data-form-type="other"
+                data-keeper-ignore="true"
+                data-np-autofill-ignore="true"
                 value={searchQuery}
                 onChange={(event) => {
                   setSearchQuery(event.target.value);

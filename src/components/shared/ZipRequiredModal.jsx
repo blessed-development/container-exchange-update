@@ -96,6 +96,13 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
           id={inputId}
           name={`container-exchange-product-postal-${pickerId}`}
           autoComplete="off"
+          data-1p-ignore="true"
+          data-bwignore="true"
+          data-lpignore="true"
+          data-protonpass-ignore="true"
+          data-form-type="other"
+          data-keeper-ignore="true"
+          data-np-autofill-ignore="true"
           className="w-full h-14 rounded-2xl bg-black border border-white/10 px-4 text-white text-base outline-none focus:border-green-500"
           placeholder="Enter ZIP / Postal Code"
           value={postalInput}
