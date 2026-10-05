@@ -51,13 +51,18 @@ export default function Navbar() {
             <NavbarCartCTA />
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/[0.08] transition-all"
-          >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* Mobile actions */}
+          <div className="flex items-center gap-1 md:hidden">
+            <NavbarCartCTA compact />
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/[0.08] transition-all"
+              aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 

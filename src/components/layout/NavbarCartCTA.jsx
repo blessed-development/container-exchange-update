@@ -23,7 +23,7 @@ function BasketCountIcon({ count }) {
   );
 }
 
-export default function NavbarCartCTA({ mobile = false, onNavigate }) {
+export default function NavbarCartCTA({ mobile = false, compact = false, onNavigate }) {
   const { cart, getSubtotal, removeItem } = useCart();
   const navigate = useNavigate();
   const reducedMotion = useReducedMotion();
@@ -32,7 +32,9 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
   const itemCount = cart.reduce((sum, item) => sum + Number(item.qty || 0), 0);
   const subtotal = getSubtotal();
   const hasItems = itemCount > 0;
-  const frameClass = mobile
+  const frameClass = compact
+    ? 'h-10 w-10 rounded-lg bg-white/[0.06] px-0 text-white hover:bg-white/[0.12]'
+    : mobile
     ? 'h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90'
     : 'h-12 w-32 rounded-lg bg-primary px-0 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/40';
   const motionTransition = { duration: reducedMotion ? 0.01 : 0.24, ease: [0.22, 1, 0.36, 1] };
@@ -81,10 +83,10 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
         aria-label={buttonLabel}
         aria-haspopup={hasItems ? 'dialog' : undefined}
         aria-expanded={hasItems ? isOpen : undefined}
-        className={`relative flex items-center justify-center overflow-hidden font-semibold focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-accent ${frameClass}`}
+        className={`relative flex items-center justify-center overflow-visible font-semibold focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-accent ${frameClass}`}
       >
         <AnimatePresence initial={false} mode="wait">
-          {hasItems ? (
+          {hasItems || compact ? (
             <motion.span
               key="cart-content"
               className="flex items-center justify-center gap-1.5 whitespace-nowrap"
@@ -93,8 +95,10 @@ export default function NavbarCartCTA({ mobile = false, onNavigate }) {
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
               transition={motionTransition}
             >
-              <BasketCountIcon count={itemCount} />
-              {!mobile && <span className="text-sm font-bold leading-none tracking-[-0.02em]">{formatMoney(subtotal)}</span>}
+              <span className={compact ? 'scale-[0.72] origin-center' : ''}>
+                <BasketCountIcon count={itemCount} />
+              </span>
+              {!mobile && !compact && <span className="text-sm font-bold leading-none tracking-[-0.02em]">{formatMoney(subtotal)}</span>}
             </motion.span>
           ) : (
             <motion.span

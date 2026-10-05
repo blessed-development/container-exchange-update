@@ -208,7 +208,7 @@ export default function Inventory() {
             <div className="flex flex-col gap-5 mb-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
-                  <h2 className="text-[38px] sm:text-5xl font-black tracking-tight leading-[1] whitespace-nowrap">
+                  <h2 className="max-w-full break-words text-[clamp(2.15rem,10vw,3rem)] font-black leading-[0.98] tracking-tight sm:text-5xl sm:leading-[1]">
                     <span className="text-foreground">{cityPart}</span>
                     <span className="text-primary">,{statePart}</span>
                   </h2>

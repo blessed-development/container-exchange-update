@@ -114,6 +114,7 @@ export default function ZipCodeSearch({
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLocationInputActive, setIsLocationInputActive] = useState(false);
 
   const moveCursorToEnd = () => {
     requestAnimationFrame(() => {
@@ -143,6 +144,7 @@ export default function ZipCodeSearch({
     setSelectedLocation(finalLocation);
     setInputValue(formatLocationDisplay(finalLocation, finalZip));
     setIsDetecting(false);
+    setIsLocationInputActive(false);
     setError('');
 
     persistLocation(finalLocation);
@@ -212,6 +214,21 @@ export default function ZipCodeSearch({
 
         if (requestId !== searchRequestRef.current) return;
 
+        const normalizedValue = normalizePostalInput(value);
+        const exactMatch = matches.find(
+          (location) =>
+            normalizePostalInput(getZipValue(location)) === normalizedValue
+        );
+
+        if (exactMatch) {
+          setSuggestions([]);
+          setIsSuggestionsOpen(false);
+          setActiveSuggestion(-1);
+          setIsSearching(false);
+          completeLocation(exactMatch);
+          return;
+        }
+
         setSuggestions(matches);
         setIsSearching(false);
         setIsSuggestionsOpen(true);
@@ -240,6 +257,7 @@ export default function ZipCodeSearch({
     }
 
     setError('');
+    setIsLocationInputActive(true);
     setInputValue(rawValue);
 
     const zipCandidate = normalized;
@@ -421,11 +439,15 @@ export default function ZipCodeSearch({
             value={inputValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
+            onFocus={() => {
+              setIsLocationInputActive(true);
+              handleFocus();
+            }}
+            onBlur={() => setIsLocationInputActive(false)}
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
               usesCalculatorAppearance
-                ? `h-[52px] pl-12 ${showCurrentLocationControl ? 'pr-12' : 'pr-5'} rounded-[16px] bg-white border-[#d9d9df] text-[13px] text-[#2f2c28] placeholder:text-[#746f68] focus:bg-white focus:border-[#226fa1]/60 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.96)]`
+                ? `h-[52px] pl-12 ${showCurrentLocationControl ? isLocationInputActive ? 'pr-[168px]' : 'pr-12' : 'pr-5'} rounded-[16px] bg-white border-[#d9d9df] text-[13px] text-[#2f2c28] placeholder:text-[#746f68] focus:bg-white focus:border-[#226fa1]/60 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.96)]`
                 : isCompact || usesSoftAppearance
                 ? `h-[52px] pl-12 ${showCurrentLocationControl ? 'pr-12' : 'pr-5'} rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]`
                 : isHero
@@ -437,22 +459,27 @@ export default function ZipCodeSearch({
           {showCurrentLocationControl && (
             <button
               type="button"
+              onMouseDown={(event) => event.preventDefault()}
               onClick={handleUseCurrentLocation}
               disabled={isDetecting}
               aria-label="Use my current location"
-              title="Use my current location"
-              className={`group absolute right-2 top-1/2 z-[1] -translate-y-1/2 rounded-xl p-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`absolute right-2 top-1/2 z-[1] flex h-9 -translate-y-1/2 items-center gap-1.5 rounded-xl px-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 disabled:cursor-not-allowed disabled:opacity-50 ${
                 usesCalculatorAppearance
                   ? 'text-[#226fa1] hover:bg-[#226fa1]/10'
                   : 'text-sky-300 hover:bg-white/10'
               }`}
             >
-              <LocateFixed className="h-4 w-4" aria-hidden="true" />
-              <span className={`pointer-events-none absolute right-0 top-[calc(100%+8px)] z-50 w-max rounded-lg px-2.5 py-1.5 text-[11px] font-semibold opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 ${
-                usesCalculatorAppearance ? 'bg-[#1d2d3a] text-white' : 'bg-black/90 text-white'
-              }`}>
+              <span
+                aria-hidden="true"
+                className={`overflow-hidden whitespace-nowrap text-[11px] font-semibold transition-all duration-200 ${
+                  isLocationInputActive
+                    ? 'max-w-[128px] opacity-100'
+                    : 'max-w-0 opacity-0'
+                }`}
+              >
                 Use my current location
               </span>
+              <LocateFixed className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
 

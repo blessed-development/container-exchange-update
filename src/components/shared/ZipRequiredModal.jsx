@@ -46,6 +46,16 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
       try {
         const matches = await searchPostalLocations(clean, { limit: 20 });
         if (requestId !== searchRequestRef.current) return;
+
+        const exactMatch = matches.find(
+          (location) => cleanPostal(location.postalCode) === clean
+        );
+
+        if (exactMatch) {
+          selectSuggestion(exactMatch);
+          return;
+        }
+
         setSuggestions(matches);
       } catch {
         if (requestId !== searchRequestRef.current) return;
