@@ -225,6 +225,67 @@
   cursor:not-allowed;
 }
 
+.zip-suggestions{
+  border-top:1px solid rgba(55,48,40,.10);
+  background:rgba(255,255,255,.74);
+}
+
+.zip-suggestion,
+.zip-suggestion-status{
+  width:100%;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 12px;
+  text-align:left;
+}
+
+.zip-suggestion{
+  color:#2f2c28;
+  transition:background .18s ease;
+}
+
+.zip-suggestion:hover,
+.zip-suggestion.is-active{
+  background:rgba(34,111,161,.08);
+}
+
+.zip-suggestion > svg{
+  flex:none;
+  color:#226fa1;
+}
+
+.zip-suggestion span{
+  min-width:0;
+  display:grid;
+  gap:2px;
+}
+
+.zip-suggestion strong,
+.zip-suggestion small{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.zip-suggestion strong{
+  color:#2f2c28;
+  font-size:12px;
+  font-weight:750;
+}
+
+.zip-suggestion small,
+.zip-suggestion-status{
+  color:#746f68;
+  font-size:11px;
+  font-weight:650;
+}
+
+.zip-suggestion-status svg{
+  color:#226fa1;
+}
+
 .zip-inline-message{
   padding:0 12px 10px;
 }

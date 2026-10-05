@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ShippingCalculator.css';
 import { SIZE_OPTIONS } from './SizeSelector';
@@ -10,15 +10,14 @@ import {
   MapPin,
   Check,
   LocateFixed,
+  Search,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 import {
-  lookupPostalCode,
   getCountryLabel,
   cleanPostal,
-  isUsZip,
-  isCanadianPostal,
+  searchPostalLocations,
   getLocalizedPrice,
   saveSelectedLocation,
   getSavedSelectedLocation,
@@ -269,10 +268,17 @@ export default function ContainerConfigurator({
   const [postalInput, setPostalInput] = useState('');
   const postalInputRef = useRef(null);
   const locationEditorRef = useRef(null);
+  const postalSearchTimerRef = useRef(null);
+  const postalSearchRequestRef = useRef(0);
+  const locationPickerId = useId().replace(/:/g, '');
+  const postalSuggestionsId = `product-postal-suggestions-${locationPickerId}`;
   const [hasEditedPostalInput, setHasEditedPostalInput] = useState(false);
   const [zipError, setZipError] = useState('');
   const [didRequestCurrentLocation, setDidRequestCurrentLocation] = useState(false);
   const [isLookingUp, setIsLookingUp] = useState(false);
+  const [postalSuggestions, setPostalSuggestions] = useState([]);
+  const [isSearchingPostal, setIsSearchingPostal] = useState(false);
+  const [activePostalSuggestion, setActivePostalSuggestion] = useState(-1);
 
   const [grade, setGrade] = useState(() => getDefaultGrade(condition));
   const [qty] = useState(1);
@@ -360,53 +366,48 @@ export default function ContainerConfigurator({
   }, [isEditingLocation]);
 
   useEffect(() => {
-    if (!isEditingLocation || !hasEditedPostalInput) return;
+    if (postalSearchTimerRef.current) {
+      clearTimeout(postalSearchTimerRef.current);
+    }
+
+    if (!isEditingLocation || !hasEditedPostalInput) {
+      setPostalSuggestions([]);
+      setIsSearchingPostal(false);
+      setActivePostalSuggestion(-1);
+      return;
+    }
 
     const clean = extractPostalCandidate(postalInput);
-    const currentPostal = cleanPostal(location?.postalCode);
 
     if (!clean) {
       setZipError('');
+      setPostalSuggestions([]);
+      setIsSearchingPostal(false);
       return;
     }
 
-    if (clean === currentPostal) {
+    const requestId = ++postalSearchRequestRef.current;
+    setIsSearchingPostal(true);
+    setActivePostalSuggestion(-1);
+    postalSearchTimerRef.current = setTimeout(async () => {
       setZipError('');
-      return;
-    }
-
-    const ready = isUsZip(clean) || isCanadianPostal(clean);
-
-    if (!ready) {
-      setZipError('');
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      setZipError('');
-      setIsLookingUp(true);
 
       try {
-        const resolved = await lookupPostalCode(clean);
-        setLocation(resolved);
-        saveSelectedLocation(resolved);
-        window.dispatchEvent(
-          new CustomEvent('ce-location-change', {
-            detail: resolved,
-          })
-        );
-        setPostalInput('');
-        setHasEditedPostalInput(false);
-        setIsEditingLocation(false);
-      } catch (error) {
-        setZipError(error.message || 'Enter a valid ZIP / Postal Code.');
+        const matches = await searchPostalLocations(clean);
+        if (requestId !== postalSearchRequestRef.current) return;
+        setPostalSuggestions(matches);
+      } catch {
+        if (requestId !== postalSearchRequestRef.current) return;
+        setPostalSuggestions([]);
       } finally {
-        setIsLookingUp(false);
+        if (requestId === postalSearchRequestRef.current) {
+          setIsSearchingPostal(false);
+        }
       }
-    }, 500);
+    }, 180);
 
-    return () => clearTimeout(timer);
-  }, [postalInput, isEditingLocation, hasEditedPostalInput, location?.postalCode]);
+    return () => clearTimeout(postalSearchTimerRef.current);
+  }, [postalInput, isEditingLocation, hasEditedPostalInput]);
 
   const safeSizeIndex = selectedSizeIndex ?? 0;
   const sizeOption = SIZE_OPTIONS[safeSizeIndex] || SIZE_OPTIONS[0];
@@ -546,6 +547,21 @@ export default function ContainerConfigurator({
     setZipError('');
     setDidRequestCurrentLocation(false);
     setPostalInput('');
+    setHasEditedPostalInput(false);
+    setPostalSuggestions([]);
+    setActivePostalSuggestion(-1);
+    setIsEditingLocation(false);
+  };
+
+  const selectPostalSuggestion = (resolved) => {
+    setLocation(resolved);
+    saveSelectedLocation(resolved);
+    window.dispatchEvent(
+      new CustomEvent('ce-location-change', { detail: resolved })
+    );
+    setPostalInput('');
+    setPostalSuggestions([]);
+    setActivePostalSuggestion(-1);
     setHasEditedPostalInput(false);
     setIsEditingLocation(false);
   };
@@ -727,6 +743,11 @@ export default function ContainerConfigurator({
                   ref={postalInputRef}
                   className="zip-inline-input"
                   aria-label="Delivery ZIP or postal code"
+                  aria-autocomplete="list"
+                  aria-controls={postalSuggestionsId}
+                  aria-expanded={isSearchingPostal || postalSuggestions.length > 0}
+                  autoComplete="off"
+                  name="container-exchange-product-location-search"
                   placeholder="Enter your ZIP / Postal Code"
                   value={postalInput}
                   onChange={(e) => {
@@ -734,6 +755,30 @@ export default function ContainerConfigurator({
                     setPostalInput(e.target.value);
                   }}
                   onKeyDown={(event) => {
+                    if (event.key === 'ArrowDown' && postalSuggestions.length) {
+                      event.preventDefault();
+                      setActivePostalSuggestion((current) =>
+                        Math.min(current + 1, postalSuggestions.length - 1)
+                      );
+                      return;
+                    }
+
+                    if (event.key === 'ArrowUp' && postalSuggestions.length) {
+                      event.preventDefault();
+                      setActivePostalSuggestion((current) => Math.max(current - 1, 0));
+                      return;
+                    }
+
+                    if (event.key === 'Enter' && postalSuggestions.length) {
+                      event.preventDefault();
+                      selectPostalSuggestion(
+                        postalSuggestions[
+                          activePostalSuggestion >= 0 ? activePostalSuggestion : 0
+                        ]
+                      );
+                      return;
+                    }
+
                     if (event.key === 'Escape') cancelLocationEdit();
                   }}
                 />
@@ -751,6 +796,48 @@ export default function ContainerConfigurator({
               </button>
             )}
           </div>
+
+          {isEditingLocation && (isSearchingPostal || postalSuggestions.length > 0) && (
+            <div
+              id={postalSuggestionsId}
+              className="zip-suggestions"
+              role="listbox"
+              aria-label="Matching ZIP and postal-code locations"
+            >
+              {isSearchingPostal ? (
+                <div className="zip-suggestion-status">
+                  <Search size={15} aria-hidden="true" />
+                  Finding matching locations…
+                </div>
+              ) : (
+                postalSuggestions.map((suggestion, index) => {
+                  const isActive = activePostalSuggestion === index;
+                  const country = suggestion.country === 'CA' ? 'Canada' : 'United States';
+
+                  return (
+                    <button
+                      key={`${suggestion.country}-${suggestion.postalCode}`}
+                      type="button"
+                      role="option"
+                      aria-selected={isActive}
+                      className={`zip-suggestion ${isActive ? 'is-active' : ''}`}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onMouseEnter={() => setActivePostalSuggestion(index)}
+                      onClick={() => selectPostalSuggestion(suggestion)}
+                    >
+                      <MapPin size={15} aria-hidden="true" />
+                      <span>
+                        <strong>
+                          {suggestion.city}, {suggestion.state} {suggestion.postalCode}
+                        </strong>
+                        <small>{country}</small>
+                      </span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          )}
 
           {isEditingLocation && (
             <button

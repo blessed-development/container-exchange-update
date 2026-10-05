@@ -51,6 +51,9 @@ const formatLocationDisplay = (location, fallbackZip = '') => {
   return '';
 };
 
+const getPickerCountryLabel = (country) =>
+  country === 'CA' ? 'Canada' : 'United States';
+
 const buildResolvedLocation = (detected) => {
   const postalCode = detected?.postalCode || '';
 
@@ -462,7 +465,7 @@ export default function ZipCodeSearch({
                             {formatLocationDisplay(suggestion, getZipValue(suggestion))}
                           </span>
                           <span className={`block truncate text-xs ${isHero || isCompact ? 'text-white/55' : 'text-muted-foreground'}`}>
-                            Use this location for inventory and pricing
+                            {getPickerCountryLabel(suggestion.country)}
                           </span>
                         </span>
                         {isSaved && <Check className="h-4 w-4 shrink-0 text-sky-300" />}
