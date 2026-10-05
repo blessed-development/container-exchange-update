@@ -66,7 +66,7 @@ export default function HowItWorks() {
         </div>
 
         <div className="max-w-xl mx-auto">
-          <ZipCodeSearch variant="hero" />
+          <ZipCodeSearch variant="hero" appearance="compact" />
         </div>
       </div>
     </section>

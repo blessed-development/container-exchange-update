@@ -85,7 +85,7 @@ export default function HeroSection() {
             </p>
 
             {/* ZIP Search */}
-            <ZipCodeSearch variant="hero" className="w-full" />
+            <ZipCodeSearch variant="hero" appearance="compact" className="w-full" />
 
             {/* Value Props */}
             <motion.div

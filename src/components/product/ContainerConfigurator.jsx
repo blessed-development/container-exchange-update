@@ -747,7 +747,7 @@ export default function ContainerConfigurator({
                   aria-controls={postalSuggestionsId}
                   aria-expanded={isSearchingPostal || postalSuggestions.length > 0}
                   autoComplete="off"
-                  name="container-exchange-product-location-search"
+                  name={`container-exchange-product-location-search-${locationPickerId}`}
                   placeholder="Enter your ZIP / Postal Code"
                   value={postalInput}
                   onChange={(e) => {

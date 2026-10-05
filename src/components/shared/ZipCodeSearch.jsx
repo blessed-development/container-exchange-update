@@ -77,6 +77,7 @@ const buildResolvedLocation = (detected) => {
 
 export default function ZipCodeSearch({
   variant = 'hero',
+  appearance = variant,
   onZipSubmit,
   className = '',
   placeholder = 'Enter your zipcode',
@@ -92,6 +93,7 @@ export default function ZipCodeSearch({
 
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
+  const usesSoftAppearance = appearance === 'compact';
 
   const savedLocation = getSavedSelectedLocation?.();
 
@@ -378,7 +380,7 @@ export default function ZipCodeSearch({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`w-full ${className}`}>
+    <form onSubmit={handleSubmit} autoComplete="off" className={`w-full ${className}`}>
       <div
         className={
           isCompact
@@ -388,17 +390,17 @@ export default function ZipCodeSearch({
       >
         <div ref={pickerRef} className="relative w-full min-w-0">
           <div
-            className={`absolute ${isHero ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
-              isCompact ? 'text-white/25' : 'text-white/30'
+            className={`absolute ${isHero && !usesSoftAppearance ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
+              isCompact || usesSoftAppearance ? 'text-white/25' : 'text-white/30'
             }`}
           >
-            <MapPin className={isCompact ? 'w-4 h-4' : isHero ? 'w-6 h-6' : 'w-5 h-5'} />
+            <MapPin className={isCompact || usesSoftAppearance ? 'w-4 h-4' : isHero ? 'w-6 h-6' : 'w-5 h-5'} />
           </div>
 
           <Input
             ref={inputRef}
             id={inputId}
-            name="container-exchange-location-search"
+            name={`container-exchange-location-search-${locationFieldId}`}
             type="text"
             inputMode="text"
             autoComplete="off"
@@ -411,7 +413,7 @@ export default function ZipCodeSearch({
             onFocus={handleFocus}
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
-              isCompact
+              isCompact || usesSoftAppearance
                 ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
                 : isHero
                   ? 'h-[68px] pl-14 pr-6 rounded-2xl text-[18px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
@@ -437,9 +439,6 @@ export default function ZipCodeSearch({
                 </div>
               ) : suggestions.length ? (
                 <>
-                  <div className={`px-4 pt-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.14em] ${isHero || isCompact ? 'text-white/45' : 'text-muted-foreground'}`}>
-                    Select your exact location
-                  </div>
                   {suggestions.map((suggestion, index) => {
                     const isActive = index === activeSuggestion;
                     const isSaved = getZipValue(selectedLocation) === getZipValue(suggestion);
@@ -497,12 +496,12 @@ export default function ZipCodeSearch({
             type="submit"
             disabled={!canSubmit}
             className={`font-medium transition-all duration-500 ${
-              isHero
+              isHero && !usesSoftAppearance
                 ? 'h-[68px] px-10 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[18px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
-                : 'h-12 px-6 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed'
-            }`}
-          >
-            <Search className={isHero ? 'w-6 h-6 mr-2.5' : 'w-5 h-5 mr-2'} />
+                : 'h-[52px] px-6 rounded-[16px] bg-primary hover:bg-primary/90 text-primary-foreground text-[14px] disabled:opacity-50 disabled:cursor-not-allowed'
+          }`}
+        >
+            <Search className={isHero && !usesSoftAppearance ? 'w-6 h-6 mr-2.5' : 'w-5 h-5 mr-2'} />
             {isDetecting
               ? 'Loading...'
               : isHero
