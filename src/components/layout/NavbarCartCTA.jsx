@@ -23,6 +23,19 @@ function BasketCountIcon({ count }) {
   );
 }
 
+function MobileBasketIcon({ count }) {
+  const label = count > 99 ? '99+' : String(count);
+
+  return (
+    <span className="relative inline-flex h-7 w-7 items-center justify-center" aria-hidden="true">
+      <ShoppingBasket className="h-6 w-6 stroke-[2.25]" />
+      <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border border-[#061226] bg-primary px-1 text-[9px] font-black leading-none text-white shadow-sm">
+        {label}
+      </span>
+    </span>
+  );
+}
+
 export default function NavbarCartCTA({ mobile = false, compact = false, onNavigate }) {
   const { cart, getSubtotal, removeItem } = useCart();
   const navigate = useNavigate();
@@ -95,9 +108,7 @@ export default function NavbarCartCTA({ mobile = false, compact = false, onNavig
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.94 }}
               transition={motionTransition}
             >
-              <span className={compact ? 'scale-[0.72] origin-center' : ''}>
-                <BasketCountIcon count={itemCount} />
-              </span>
+              {compact ? <MobileBasketIcon count={itemCount} /> : <BasketCountIcon count={itemCount} />}
               {!mobile && !compact && <span className="text-sm font-bold leading-none tracking-[-0.02em]">{formatMoney(subtotal)}</span>}
             </motion.span>
           ) : (
@@ -123,7 +134,11 @@ export default function NavbarCartCTA({ mobile = false, compact = false, onNavig
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
             transition={motionTransition}
-            className={`absolute z-[60] mt-3 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-white/[0.1] bg-[#0a1320]/95 text-white shadow-2xl shadow-black/50 backdrop-blur-xl ${mobile ? 'left-0' : 'right-0'}`}
+            className={`z-[60] overflow-hidden rounded-2xl border border-white/[0.1] bg-[#0a1320]/95 text-white shadow-2xl shadow-black/50 backdrop-blur-xl ${
+              compact
+                ? 'fixed inset-x-3 top-[76px] w-auto'
+                : `absolute mt-3 w-[min(24rem,calc(100vw-2rem))] ${mobile ? 'left-0' : 'right-0'}`
+            }`}
           >
             <header className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3.5">
               <div>

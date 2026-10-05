@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import PageSeo from '@/components/seo/PageSeo';
 import InventoryListCard from '@/components/inventory/InventoryListCard';
 import FilterSidebar from '@/components/inventory/FilterSidebar';
+import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import {
   Select,
@@ -257,6 +258,17 @@ export default function Inventory() {
                     <SelectItem value="name_asc">Name: A to Z</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="w-full lg:hidden">
+                <ZipCodeSearch
+                  variant="compact"
+                  appearance="calculator"
+                  showAction={false}
+                  showCurrentLocationControl
+                  onZipSubmit={setZipCode}
+                  placeholder="Enter your ZIP / Postal Code"
+                />
               </div>
             </div>
 
