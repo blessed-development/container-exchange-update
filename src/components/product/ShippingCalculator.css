@@ -3621,6 +3621,7 @@ margin-top:1px !important;
    textures make the choice obvious without adding another photo-card section. */
 .premium-buy-tab.premium-buy-tab--new,
 .premium-buy-tab.premium-buy-tab--used{
+  position:relative;
   isolation:isolate;
   overflow:hidden;
   background-size:cover !important;
@@ -3662,5 +3663,7 @@ margin-top:1px !important;
   border-radius:999px;
   background:#16a34a;
   color:#fff;
+  z-index:2;
+  pointer-events:none;
   box-shadow:0 3px 8px rgba(10,95,45,.28),inset 0 1px 0 rgba(255,255,255,.32);
 }
