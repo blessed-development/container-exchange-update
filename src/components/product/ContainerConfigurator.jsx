@@ -455,6 +455,11 @@ export default function ContainerConfigurator({
               <strong>BUY</strong>
               <span>NEW (One-Trip)</span>
               <small>Shipping Containers</small>
+              {effectiveCondition === 'new' && (
+                <span className="premium-buy-tab-check" aria-label="Selected">
+                  <Check size={12} strokeWidth={3} />
+                </span>
+              )}
             </button>
 
             <button
@@ -465,6 +470,11 @@ export default function ContainerConfigurator({
               <strong>BUY</strong>
               <span>USED (Wind/Water Tight)</span>
               <small>Shipping Containers</small>
+              {effectiveCondition === 'used' && (
+                <span className="premium-buy-tab-check" aria-label="Selected">
+                  <Check size={12} strokeWidth={3} />
+                </span>
+              )}
             </button>
           </div>
         </div>

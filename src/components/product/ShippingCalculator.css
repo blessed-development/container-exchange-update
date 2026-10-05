@@ -3628,25 +3628,39 @@ margin-top:1px !important;
 }
 .premium-buy-tab.premium-buy-tab--new{
   background-image:
-    linear-gradient(180deg,rgba(244,238,222,.76),rgba(197,180,145,.82)),
+    linear-gradient(180deg,rgba(244,238,222,.12) 0%,rgba(29,38,43,.76) 100%),
     url('/images/ui-textures/new-container-body-texture.webp') !important;
-  color:#25221e !important;
+  color:#fff !important;
 }
 .premium-buy-tab.premium-buy-tab--used{
   background-image:
-    linear-gradient(180deg,rgba(111,40,27,.55),rgba(58,25,21,.78)),
+    linear-gradient(180deg,rgba(33,23,20,.08) 0%,rgba(20,28,35,.78) 100%),
     url('/images/ui-textures/used-container-body-texture.webp') !important;
   color:#fff !important;
 }
 .premium-buy-tab.premium-buy-tab--new.active{
   background-image:
-    linear-gradient(180deg,rgba(255,118,77,.82),rgba(205,76,36,.84) 46%,rgba(28,42,53,.9)),
+    linear-gradient(180deg,rgba(244,238,222,.12) 0%,rgba(29,38,43,.76) 100%),
     url('/images/ui-textures/new-container-body-texture.webp') !important;
   color:#fff !important;
 }
 .premium-buy-tab.premium-buy-tab--used.active{
   background-image:
-    linear-gradient(180deg,rgba(255,109,66,.72),rgba(172,58,35,.78) 44%,rgba(25,35,45,.9)),
+    linear-gradient(180deg,rgba(33,23,20,.08) 0%,rgba(20,28,35,.78) 100%),
     url('/images/ui-textures/used-container-body-texture.webp') !important;
   color:#fff !important;
+}
+.premium-buy-tab-check{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:flex;
+  width:26px;
+  height:26px;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  background:#16a34a;
+  color:#fff;
+  box-shadow:0 3px 8px rgba(10,95,45,.28),inset 0 1px 0 rgba(255,255,255,.32);
 }
