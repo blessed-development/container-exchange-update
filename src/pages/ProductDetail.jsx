@@ -209,21 +209,21 @@ export default function ProductDetail() {
     }
   };
 
-  const scheduleHeroTitleFade = () => {
+  const scheduleHeroTitleReturn = () => {
     clearHeroIdleTimer();
 
     if (!showHeroOverlay) return;
 
     heroIdleTimerRef.current = window.setTimeout(() => {
-      setIsHeroTitleVisible(false);
+      setIsHeroTitleVisible(true);
     }, 3200);
   };
 
-  const revealHeroTitle = () => {
+  const hideHeroTitleDuringActivity = () => {
     if (!showHeroOverlay) return;
 
-    setIsHeroTitleVisible(true);
-    scheduleHeroTitleFade();
+    setIsHeroTitleVisible(false);
+    scheduleHeroTitleReturn();
   };
 
   const moveHeroImage = (direction) => {
@@ -247,7 +247,7 @@ export default function ProductDetail() {
       y: touch.clientY,
     };
 
-    revealHeroTitle();
+    hideHeroTitleDuringActivity();
   };
 
   const handleHeroTouchEnd = (event) => {
@@ -267,8 +267,8 @@ export default function ProductDetail() {
   };
 
   useEffect(() => {
-    setIsHeroTitleVisible(true);
-    scheduleHeroTitleFade();
+    setIsHeroTitleVisible(false);
+    scheduleHeroTitleReturn();
 
     return clearHeroIdleTimer;
   }, [showHeroOverlay, activeImage]);
@@ -561,10 +561,10 @@ export default function ProductDetail() {
               className="product-hero-card relative overflow-hidden rounded-[30px] bg-muted shadow-2xl group"
               onPointerMove={(event) => {
                 if (event.pointerType === 'mouse') {
-                  revealHeroTitle();
+                  hideHeroTitleDuringActivity();
                 }
               }}
-              onFocusCapture={revealHeroTitle}
+              onFocusCapture={hideHeroTitleDuringActivity}
               onTouchStart={handleHeroTouchStart}
               onTouchEnd={handleHeroTouchEnd}
             >
@@ -640,7 +640,7 @@ export default function ProductDetail() {
                     type="button"
                     aria-label="Show previous product image"
                     onClick={() => {
-                      revealHeroTitle();
+                      hideHeroTitleDuringActivity();
                       moveHeroImage(-1);
                     }}
                     className="absolute left-4 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/[0.14] text-white shadow-[0_8px_28px_rgba(2,6,23,0.32)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/[0.28] hover:shadow-[0_10px_32px_rgba(2,6,23,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-95 sm:h-11 sm:w-11"
@@ -652,7 +652,7 @@ export default function ProductDetail() {
                     type="button"
                     aria-label="Show next product image"
                     onClick={() => {
-                      revealHeroTitle();
+                      hideHeroTitleDuringActivity();
                       moveHeroImage(1);
                     }}
                     className="absolute right-4 top-1/2 z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/[0.14] text-white shadow-[0_8px_28px_rgba(2,6,23,0.32)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1/2 hover:bg-white/[0.28] hover:shadow-[0_10px_32px_rgba(2,6,23,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 active:scale-95 sm:h-11 sm:w-11"
@@ -671,7 +671,7 @@ export default function ProductDetail() {
                     type="button"
                     onClick={() => {
                       setActiveImageIndex(index);
-                      setIsHeroTitleVisible(true);
+                      setIsHeroTitleVisible(false);
                     }}
                     className={`shrink-0 w-[74px] h-[58px] rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg ${
                       activeImageIndex === index
