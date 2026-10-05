@@ -78,6 +78,7 @@ const buildResolvedLocation = (detected) => {
 export default function ZipCodeSearch({
   variant = 'hero',
   appearance = variant,
+  showAction = true,
   onZipSubmit,
   className = '',
   placeholder = 'Enter your zipcode',
@@ -94,6 +95,8 @@ export default function ZipCodeSearch({
   const isHero = variant === 'hero';
   const isCompact = variant === 'compact';
   const usesSoftAppearance = appearance === 'compact';
+  const usesCalculatorAppearance = appearance === 'calculator';
+  const usesDarkPicker = (isHero || isCompact) && !usesCalculatorAppearance;
 
   const savedLocation = getSavedSelectedLocation?.();
 
@@ -390,11 +393,11 @@ export default function ZipCodeSearch({
       >
         <div ref={pickerRef} className="relative w-full min-w-0">
           <div
-            className={`absolute ${isHero && !usesSoftAppearance ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
-              isCompact || usesSoftAppearance ? 'text-white/25' : 'text-white/30'
+            className={`absolute ${isHero && !usesSoftAppearance && !usesCalculatorAppearance ? 'left-5' : 'left-4'} top-1/2 -translate-y-1/2 pointer-events-none ${
+              usesCalculatorAppearance ? 'text-[#746f68]' : isCompact || usesSoftAppearance ? 'text-white/25' : 'text-white/30'
             }`}
           >
-            <MapPin className={isCompact || usesSoftAppearance ? 'w-4 h-4' : isHero ? 'w-6 h-6' : 'w-5 h-5'} />
+            <MapPin className={isCompact || usesSoftAppearance || usesCalculatorAppearance ? 'w-4 h-4' : isHero ? 'w-6 h-6' : 'w-5 h-5'} />
           </div>
 
           <Input
@@ -420,7 +423,9 @@ export default function ZipCodeSearch({
             onFocus={handleFocus}
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
-              isCompact || usesSoftAppearance
+              usesCalculatorAppearance
+                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white border-[#d9d9df] text-[13px] text-[#2f2c28] placeholder:text-[#746f68] focus:bg-white focus:border-[#226fa1]/60 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.96)]'
+                : isCompact || usesSoftAppearance
                 ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
                 : isHero
                   ? 'h-[68px] pl-14 pr-6 rounded-2xl text-[18px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
@@ -434,13 +439,13 @@ export default function ZipCodeSearch({
               role="listbox"
               aria-label="Matching ZIP and postal-code locations"
               className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
-                isHero || isCompact
+                usesDarkPicker
                   ? 'border-white/12 bg-[#0b1c2d]/[0.96]'
                   : 'border-border bg-popover'
               }`}
             >
               {isSearching ? (
-                <div className={`flex items-center gap-2 px-4 py-3 text-sm ${isHero || isCompact ? 'text-white/70' : 'text-muted-foreground'}`}>
+                <div className={`flex items-center gap-2 px-4 py-3 text-sm ${usesDarkPicker ? 'text-white/70' : 'text-muted-foreground'}`}>
                   <Search className="h-4 w-4 animate-pulse" />
                   Finding matching locations…
                 </div>
@@ -461,16 +466,16 @@ export default function ZipCodeSearch({
                         onMouseEnter={() => setActiveSuggestion(index)}
                         className={`flex w-full items-center gap-3 px-4 py-3 text-left transition-colors ${
                           isActive
-                            ? isHero || isCompact ? 'bg-white/10' : 'bg-muted'
-                            : isHero || isCompact ? 'hover:bg-white/[0.06]' : 'hover:bg-muted/70'
+                            ? usesDarkPicker ? 'bg-white/10' : 'bg-muted'
+                            : usesDarkPicker ? 'hover:bg-white/[0.06]' : 'hover:bg-muted/70'
                         }`}
                       >
-                        <MapPin className={`h-4 w-4 shrink-0 ${isHero || isCompact ? 'text-sky-300' : 'text-primary'}`} />
+                        <MapPin className={`h-4 w-4 shrink-0 ${usesDarkPicker ? 'text-sky-300' : 'text-primary'}`} />
                         <span className="min-w-0 flex-1">
-                          <span className={`block truncate text-sm font-semibold ${isHero || isCompact ? 'text-white' : 'text-foreground'}`}>
+                          <span className={`block truncate text-sm font-semibold ${usesDarkPicker ? 'text-white' : 'text-foreground'}`}>
                             {formatLocationDisplay(suggestion, getZipValue(suggestion))}
                           </span>
-                          <span className={`block truncate text-xs ${isHero || isCompact ? 'text-white/55' : 'text-muted-foreground'}`}>
+                          <span className={`block truncate text-xs ${usesDarkPicker ? 'text-white/55' : 'text-muted-foreground'}`}>
                             {getPickerCountryLabel(suggestion.country)}
                           </span>
                         </span>
@@ -480,7 +485,7 @@ export default function ZipCodeSearch({
                   })}
                 </>
               ) : (
-                <div className={`px-4 py-3 text-sm ${isHero || isCompact ? 'text-white/65' : 'text-muted-foreground'}`}>
+                <div className={`px-4 py-3 text-sm ${usesDarkPicker ? 'text-white/65' : 'text-muted-foreground'}`}>
                   Keep typing to find an exact ZIP or postal code.
                 </div>
               )}
@@ -488,7 +493,7 @@ export default function ZipCodeSearch({
           )}
         </div>
 
-        {isCompact ? (
+        {showAction && isCompact ? (
           <Button
             type="button"
             onClick={handleUseCurrentLocation}
@@ -498,12 +503,12 @@ export default function ZipCodeSearch({
             <LocateFixed className="w-3.5 h-3.5 mr-2" />
             {isDetecting ? 'Detecting location…' : 'Use current location'}
           </Button>
-        ) : (
+        ) : showAction ? (
           <Button
             type="submit"
             disabled={!canSubmit}
             className={`font-medium transition-all duration-500 ${
-              isHero && !usesSoftAppearance
+              isHero && !usesSoftAppearance && !usesCalculatorAppearance
                 ? 'h-[68px] px-10 rounded-2xl bg-primary hover:scale-[1.015] hover:brightness-[1.03] text-primary-foreground text-[18px] shadow-[0_14px_35px_rgba(255,112,44,0.18)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
                 : 'h-[52px] px-6 rounded-[16px] bg-primary hover:bg-primary/90 text-primary-foreground text-[14px] disabled:opacity-50 disabled:cursor-not-allowed'
           }`}
@@ -515,7 +520,7 @@ export default function ZipCodeSearch({
                 ? 'Locate inventory'
                 : 'Find pricing'}
           </Button>
-        )}
+        ) : null}
       </div>
 
       {error && (
