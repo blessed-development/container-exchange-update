@@ -527,10 +527,11 @@ export default function ContainerConfigurator({
           })}
         </div>
 
+        <div className="section-header">
+          <span>GRADE</span>
+        </div>
+
         <div className="section-card grade-section-card">
-          <div className="card-head grade-static-head">
-            <span className="card-lbl">GRADE</span>
-          </div>
 
           <div className="grade-upgrade-grid">
             {GRADE_OPTIONS.map((g) => {
@@ -575,10 +576,11 @@ export default function ContainerConfigurator({
           </div>
         </div>
 
-        <div className="section-card">
-          <div className="card-head">
-            <span className="card-lbl">SELECTION TYPE</span>
-          </div>
+        <div className="section-header">
+          <span>SELECTION TYPE</span>
+        </div>
+
+        <div className="section-card selection-section-card">
 
           <div className="selection-type">
             <button type="button" className="selection-btn active">

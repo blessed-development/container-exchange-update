@@ -3667,3 +3667,13 @@ margin-top:1px !important;
   pointer-events:none;
   box-shadow:0 3px 8px rgba(10,95,45,.28),inset 0 1px 0 rgba(255,255,255,.32);
 }
+
+/* Keep each calculator section title in the same standalone rhythm. */
+.grade-section-card,
+.selection-section-card{
+  overflow:visible !important;
+}
+.selection-section-card .selection-type{
+  margin:0 !important;
+  padding:10px 12px 12px !important;
+}
