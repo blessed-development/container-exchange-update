@@ -80,9 +80,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="pt-3 border-t border-white/[0.06] mt-3 space-y-3">
-              <NavbarCartCTA mobile onNavigate={() => setIsOpen(false)} />
-            </div>
           </div>
         </div>
       )}

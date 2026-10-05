@@ -206,7 +206,7 @@ export default function Inventory() {
           </aside>
 
           <div className="flex-1 min-w-0">
-            <div className="flex flex-col gap-5 mb-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-3 mb-4 lg:flex-row lg:items-end lg:justify-between lg:gap-5 lg:mb-6">
               <div className="min-h-[48px] flex items-center">
                 {inventoryLocationTitle && (
                   <h2 className="max-w-full break-words text-[clamp(2.15rem,10vw,3rem)] font-black leading-[0.98] tracking-tight sm:text-5xl sm:leading-[1]">
@@ -241,6 +241,7 @@ export default function Inventory() {
                         onFilterChange={setFilters}
                         zipCode={zipCode}
                         onZipSubmit={setZipCode}
+                        showLocationSearch={false}
                       />
                     </div>
                   </SheetContent>

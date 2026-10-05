@@ -60,6 +60,7 @@ export default function FilterSidebar({
   filters,
   onFilterChange,
   onZipSubmit,
+  showLocationSearch = true,
 }) {
   const toggle = (key, value) => {
     const current = filters[key] || [];
@@ -72,16 +73,19 @@ export default function FilterSidebar({
 
   return (
     <div className="space-y-6">
-      {/* ZIP Code */}
-      <div>
-        <ZipCodeSearch
-          variant="compact"
-          onZipSubmit={onZipSubmit}
-          placeholder="Enter your zipcode / Postalcode"
-        />
-      </div>
+      {showLocationSearch && (
+        <>
+          <div>
+            <ZipCodeSearch
+              variant="compact"
+              onZipSubmit={onZipSubmit}
+              placeholder="Enter your zipcode / Postalcode"
+            />
+          </div>
 
-      <Separator />
+          <Separator />
+        </>
+      )}
 
       <FilterGroup
         title="SIZE / LENGTH"
