@@ -433,7 +433,7 @@ export default function ZipCodeSearch({
             }`}
           />
 
-          {isSuggestionsOpen && (isSearching || suggestions.length > 0 || zip.length > 0) && (
+          {isSuggestionsOpen && suggestions.length > 0 && (
             <div
               id={suggestionsId}
               role="listbox"
@@ -444,14 +444,7 @@ export default function ZipCodeSearch({
                   : 'border-border bg-popover'
               }`}
             >
-              {isSearching ? (
-                <div className={`flex items-center gap-2 px-4 py-3 text-sm ${usesDarkPicker ? 'text-white/70' : 'text-muted-foreground'}`}>
-                  <Search className="h-4 w-4 animate-pulse" />
-                  Finding matching locations…
-                </div>
-              ) : suggestions.length ? (
-                <>
-                  {suggestions.map((suggestion, index) => {
+              {suggestions.map((suggestion, index) => {
                     const isActive = index === activeSuggestion;
                     const isSaved = getZipValue(selectedLocation) === getZipValue(suggestion);
 
@@ -483,12 +476,6 @@ export default function ZipCodeSearch({
                       </button>
                     );
                   })}
-                </>
-              ) : (
-                <div className={`px-4 py-3 text-sm ${usesDarkPicker ? 'text-white/65' : 'text-muted-foreground'}`}>
-                  Keep typing to find an exact ZIP or postal code.
-                </div>
-              )}
             </div>
           )}
         </div>

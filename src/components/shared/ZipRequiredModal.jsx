@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { MapPin, Search, X } from 'lucide-react';
+import { MapPin, X } from 'lucide-react';
 import {
   saveSelectedLocation,
   cleanPostal,
@@ -132,12 +132,6 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
             }
           }}
         />
-
-        {checking && (
-          <p className="flex items-center gap-2 text-green-500 text-xs font-bold mt-3">
-            <Search size={14} aria-hidden="true" /> Finding matching locations…
-          </p>
-        )}
 
         {!checking && suggestions.length > 0 && (
           <div id={suggestionsId} role="listbox" aria-label="Matching ZIP and postal-code locations" className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
