@@ -79,6 +79,7 @@ export default function ZipCodeSearch({
   variant = 'hero',
   appearance = variant,
   showAction = true,
+  showCurrentLocationControl = false,
   onZipSubmit,
   className = '',
   placeholder = 'Enter your zipcode',
@@ -207,7 +208,7 @@ export default function ZipCodeSearch({
 
     timerRef.current = setTimeout(async () => {
       try {
-        const matches = await searchPostalLocations(value);
+        const matches = await searchPostalLocations(value, { limit: 20 });
 
         if (requestId !== searchRequestRef.current) return;
 
@@ -424,21 +425,43 @@ export default function ZipCodeSearch({
             placeholder={placeholder}
             className={`w-full border transition-all duration-500 ${
               usesCalculatorAppearance
-                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white border-[#d9d9df] text-[13px] text-[#2f2c28] placeholder:text-[#746f68] focus:bg-white focus:border-[#226fa1]/60 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.96)]'
+                ? `h-[52px] pl-12 ${showCurrentLocationControl ? 'pr-12' : 'pr-5'} rounded-[16px] bg-white border-[#d9d9df] text-[13px] text-[#2f2c28] placeholder:text-[#746f68] focus:bg-white focus:border-[#226fa1]/60 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.96)]`
                 : isCompact || usesSoftAppearance
-                ? 'h-[52px] pl-12 pr-5 rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]'
+                ? `h-[52px] pl-12 ${showCurrentLocationControl ? 'pr-12' : 'pr-5'} rounded-[16px] bg-white/[0.035] border-white/10 text-[13px] text-white placeholder:text-white/30 focus:bg-white/[0.07] focus:border-white/20 focus:ring-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.025)]`
                 : isHero
-                  ? 'h-[68px] pl-14 pr-6 rounded-2xl text-[18px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]'
-                  : 'h-12 pl-12 pr-4 rounded-sm bg-secondary placeholder:text-muted-foreground'
+                  ? `h-[68px] pl-14 ${showCurrentLocationControl ? 'pr-14' : 'pr-6'} rounded-2xl text-[18px] font-medium bg-white/[0.07] border-white/10 backdrop-blur-xl text-white placeholder:text-white/25 focus:bg-white/[0.10] focus:border-white/20 focus:ring-0 shadow-[0_6px_30px_rgba(0,0,0,0.12)]`
+                  : `h-12 pl-12 ${showCurrentLocationControl ? 'pr-12' : 'pr-4'} rounded-sm bg-secondary placeholder:text-muted-foreground`
             }`}
           />
+
+          {showCurrentLocationControl && (
+            <button
+              type="button"
+              onClick={handleUseCurrentLocation}
+              disabled={isDetecting}
+              aria-label="Use my current location"
+              title="Use my current location"
+              className={`group absolute right-2 top-1/2 z-[1] -translate-y-1/2 rounded-xl p-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 disabled:cursor-not-allowed disabled:opacity-50 ${
+                usesCalculatorAppearance
+                  ? 'text-[#226fa1] hover:bg-[#226fa1]/10'
+                  : 'text-sky-300 hover:bg-white/10'
+              }`}
+            >
+              <LocateFixed className="h-4 w-4" aria-hidden="true" />
+              <span className={`pointer-events-none absolute right-0 top-[calc(100%+8px)] z-50 w-max rounded-lg px-2.5 py-1.5 text-[11px] font-semibold opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 ${
+                usesCalculatorAppearance ? 'bg-[#1d2d3a] text-white' : 'bg-black/90 text-white'
+              }`}>
+                Use my current location
+              </span>
+            </button>
+          )}
 
           {isSuggestionsOpen && suggestions.length > 0 && (
             <div
               id={suggestionsId}
               role="listbox"
               aria-label="Matching ZIP and postal-code locations"
-              className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] overflow-hidden rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
+              className={`absolute z-50 left-0 right-0 top-[calc(100%+8px)] max-h-[min(360px,50vh)] overflow-x-hidden overflow-y-auto rounded-2xl border backdrop-blur-xl shadow-[0_20px_48px_rgba(4,18,33,0.26)] ${
                 usesDarkPicker
                   ? 'border-white/12 bg-[#0b1c2d]/[0.96]'
                   : 'border-border bg-popover'

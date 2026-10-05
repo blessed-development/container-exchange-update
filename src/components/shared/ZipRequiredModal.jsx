@@ -44,7 +44,7 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
       setError('');
 
       try {
-        const matches = await searchPostalLocations(clean);
+        const matches = await searchPostalLocations(clean, { limit: 20 });
         if (requestId !== searchRequestRef.current) return;
         setSuggestions(matches);
       } catch {
@@ -134,7 +134,7 @@ export default function ZipRequiredModal({ open, onClose, onSuccess }) {
         />
 
         {!checking && suggestions.length > 0 && (
-          <div id={suggestionsId} role="listbox" aria-label="Matching ZIP and postal-code locations" className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+          <div id={suggestionsId} role="listbox" aria-label="Matching ZIP and postal-code locations" className="mt-3 max-h-[min(280px,42vh)] overflow-x-hidden overflow-y-auto rounded-2xl border border-white/10 bg-white/[0.04]">
             {suggestions.map((suggestion, index) => {
               const isActive = index === activeSuggestion;
               const country = suggestion.country === 'CA' ? 'Canada' : 'United States';

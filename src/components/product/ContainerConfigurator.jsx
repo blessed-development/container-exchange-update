@@ -475,6 +475,7 @@ export default function ContainerConfigurator({
           variant="hero"
           appearance="calculator"
           showAction={false}
+          showCurrentLocationControl
           className="calculator-location-search"
           placeholder="Enter your ZIP / Postal Code"
         />
