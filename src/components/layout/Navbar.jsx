@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import NavbarCartCTA from './NavbarCartCTA';
 
 const NAV_LINKS = [
@@ -12,18 +12,8 @@ const NAV_LINKS = [
   { label: 'Contact', path: '/contact' },
 ];
 
-const CUSTOMER_CARE_LINKS = [
-  { label: 'Customer Care', path: '/customer-care' },
-  { label: 'Condition Standards', path: '/customer-care/container-standards' },
-  { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
-  { label: 'Returns & Cancellations', path: '/customer-care/returns-cancellations' },
-  { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
-  { label: 'Privacy Policy', path: '/customer-care/privacy' },
-];
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [careOpen, setCareOpen] = useState(false);
   const location = useLocation();
 
   return (
@@ -54,32 +44,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setCareOpen((open) => !open)}
-                aria-expanded={careOpen}
-                className={`inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium tracking-wide transition-all hover:bg-white/[0.08] hover:text-white ${
-                  location.pathname.startsWith('/customer-care') ? 'text-white bg-white/[0.08]' : 'text-white/60'
-                }`}
-              >
-                Customer Care <ChevronDown className={`h-3.5 w-3.5 transition-transform ${careOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {careOpen && (
-                <div className="absolute right-0 top-[calc(100%+10px)] w-64 rounded-xl border border-white/[0.10] bg-[#0b1b2d]/95 p-2 shadow-2xl backdrop-blur-xl">
-                  {CUSTOMER_CARE_LINKS.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setCareOpen(false)}
-                      className="block rounded-lg px-3 py-2.5 text-sm text-white/70 transition-colors hover:bg-white/[0.08] hover:text-white"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* CTA */}
@@ -116,19 +80,6 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-3 border-t border-white/[0.08] pt-3">
-              <p className="px-3 pb-1 text-[10px] font-mono font-semibold tracking-[0.14em] text-white/35">CUSTOMER CARE</p>
-              {CUSTOMER_CARE_LINKS.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className="block text-white/70 hover:text-white hover:bg-white/[0.08] font-medium text-sm py-3 px-3 rounded-lg transition-all"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
           </div>
         </div>
       )}

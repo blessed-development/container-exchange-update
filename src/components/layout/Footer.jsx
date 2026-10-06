@@ -120,17 +120,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Customer care */}
+          {/* Guides & policies */}
           <div>
-            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CUSTOMER CARE</h4>
+            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">GUIDES & POLICIES</h4>
             <ul className="space-y-3">
               {[
-                { label: 'Delivery & Site Preparation', path: '/delivery' },
-                { label: 'Condition Standards', path: '/customer-care/container-standards' },
-                { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
-                { label: 'Returns & Cancellations', path: '/customer-care/returns-cancellations' },
-                { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
-                { label: 'Privacy Policy', path: '/customer-care/privacy' },
+                { label: 'Guide', path: '/buyers-guide' },
+                { label: 'Delivery', path: '/delivery' },
+                { label: 'Conditions', path: '/customer-care/container-standards' },
+                { label: 'Payments', path: '/customer-care/payments-reservations' },
+                { label: 'Returns', path: '/customer-care/returns-cancellations' },
+                { label: 'Terms', path: '/customer-care/terms-of-sale' },
+                { label: 'Privacy', path: '/customer-care/privacy' },
               ].map((link) => (
                 <li key={link.path}>
                   <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
