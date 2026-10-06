@@ -46,7 +46,7 @@ export default function Footer() {
 
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-5">
@@ -65,6 +65,28 @@ export default function Footer() {
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>Nationwide Coverage — USA</span>
             </div>
+          </div>
+
+          {/* Customer care */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CUSTOMER CARE</h4>
+            <ul className="space-y-3">
+              {[
+                { label: 'Delivery & Site Preparation', path: '/delivery' },
+                { label: 'Condition Standards', path: '/customer-care/container-standards' },
+                { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
+                { label: 'Returns & Cancellations', path: '/customer-care/returns-cancellations' },
+                { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
+                { label: 'Privacy Policy', path: '/customer-care/privacy' },
+              ].map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Quick Links */}
@@ -132,8 +154,8 @@ export default function Footer() {
             © {new Date().getFullYear()} CONTAINERS EXCHANGE. ALL RIGHTS RESERVED.
           </p>
           <div className="flex items-center gap-6">
-            <Link to="/contact" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
-            <Link to="/contact" className="text-white/25 hover:text-white/50 text-xs transition-colors">Terms of Service</Link>
+            <Link to="/customer-care/privacy" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
+            <Link to="/customer-care/terms-of-sale" className="text-white/25 hover:text-white/50 text-xs transition-colors">Terms of Sale</Link>
             <a href="/login" className="text-white/25 hover:text-white/50 text-xs transition-colors">Staff Login</a>
           </div>
         </div>

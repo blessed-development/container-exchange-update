@@ -12,6 +12,8 @@ import About from '@/pages/About';
 import FAQ from '@/pages/FAQ';
 import Delivery from '@/pages/Delivery';
 import BuyersGuide from '@/pages/BuyersGuide';
+import CustomerCare from '@/pages/CustomerCare';
+import CustomerCarePolicy from '@/pages/CustomerCarePolicy';
 import LocationPageRoute from '@/pages/LocationPageRoute';
 
 import { CartProvider } from './context/CartContext';
@@ -35,6 +37,8 @@ const AppRoutes = () => (
         <Route path="/faq" element={<FAQ />} />
         <Route path="/delivery" element={<Delivery />} />
         <Route path="/buyers-guide" element={<BuyersGuide />} />
+        <Route path="/customer-care" element={<CustomerCare />} />
+        <Route path="/customer-care/:policySlug" element={<CustomerCarePolicy />} />
         <Route path="/:locationPath" element={<LocationPageRoute />} />
         <Route path="*" element={<PageNotFound />} />
       </Route>
