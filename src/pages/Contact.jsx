@@ -99,7 +99,9 @@ export default function Contact() {
                     <Phone className="h-4 w-4 text-primary" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold">{COMPANY_CONTACT.previewPhonePlaceholder}</p>
+                    <a href={`tel:${COMPANY_CONTACT.businessPhoneHref}`} className="text-sm font-semibold transition-colors hover:text-primary">
+                      {COMPANY_CONTACT.businessPhone}
+                    </a>
                     <p className="text-xs text-muted-foreground">Mon-Fri 7AM-6PM PST</p>
                   </div>
                 </div>

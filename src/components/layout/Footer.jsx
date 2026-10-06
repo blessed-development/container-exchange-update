@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const RECENT_DELIVERIES = [
@@ -46,7 +46,7 @@ export default function Footer() {
 
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.25fr_.9fr_1.05fr_1.1fr]">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-5">
@@ -65,6 +65,38 @@ export default function Footer() {
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>Nationwide Coverage — USA</span>
             </div>
+          </div>
+
+          {/* Shop */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">SHOP</h4>
+            <ul className="space-y-3">
+              {[
+                { label: 'Buy Containers', path: '/inventory' },
+                { label: 'How It Works', path: '/buyers-guide' },
+                { label: 'About Us', path: '/about' },
+                { label: 'FAQ', path: '/faq' },
+                { label: 'Get a Quote', path: '/contact' },
+              ].map((link) => (
+                <li key={`${link.label}-${link.path}`}>
+                  <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-7 text-xs font-mono font-semibold tracking-widest text-white/30">POPULAR TYPES</p>
+            <ul className="mt-4 space-y-3">
+              {['20ft Standard', '40ft Standard', '40ft High Cube', 'New One-Trip'].map((type) => (
+                <li key={type}>
+                  <Link to="/inventory" className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    {type}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Customer care */}
@@ -89,48 +121,16 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">NAVIGATE</h4>
-            <ul className="space-y-3">
-              {[
-                { label: 'Buy Containers', path: '/inventory' },
-                { label: 'Rent a Container', path: '/contact' },
-                { label: 'Rent-to-Own', path: '/contact' },
-                { label: 'How It Works', path: '/buyers-guide' },
-                { label: 'About Us', path: '/about' },
-                { label: 'FAQ', path: '/faq' },
-                { label: 'Get a Quote', path: '/contact' },
-              ].map((link) => (
-                <li key={`${link.label}-${link.path}`}>
-                  <Link to={link.path} className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Container Types */}
-          <div>
-            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CONTAINERS</h4>
-            <ul className="space-y-3">
-              {['20ft Standard', '40ft Standard', '40ft High Cube', '10ft Mini', 'New One-Trip', 'Used WWT'].map((type) => (
-                <li key={type}>
-                  <Link to="/inventory" className="text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2 group">
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                    {type}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Contact */}
           <div>
             <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CONTACT</h4>
             <div className="space-y-3">
+              <div className="flex items-center gap-3 text-white/50">
+                <Phone className="w-4 h-4" />
+                <a href={`tel:${COMPANY_CONTACT.businessPhoneHref}`} className="text-sm hover:text-white transition-colors">
+                  {COMPANY_CONTACT.businessPhone}
+                </a>
+              </div>
               <div className="flex items-center gap-3 text-white/50">
                 <Mail className="w-4 h-4" />
                 <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm hover:text-white transition-colors">
@@ -153,10 +153,11 @@ export default function Footer() {
           <p className="text-white/25 text-xs font-mono">
             © {new Date().getFullYear()} CONTAINERS EXCHANGE. ALL RIGHTS RESERVED.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <Link to="/customer-care/privacy" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
             <Link to="/customer-care/terms-of-sale" className="text-white/25 hover:text-white/50 text-xs transition-colors">Terms of Sale</Link>
-            <a href="/login" className="text-white/25 hover:text-white/50 text-xs transition-colors">Staff Login</a>
+            <Link to="/customer-care/returns-cancellations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Returns & Cancellations</Link>
+            <Link to="/customer-care/payments-reservations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Payments & Reservations</Link>
           </div>
         </div>
       </div>
