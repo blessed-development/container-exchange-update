@@ -10,7 +10,7 @@ export default function CustomerCare() {
   return (
     <div className="min-h-screen bg-background">
       <PageSeo
-        title="Guides & Policies | Containers Exchange"
+        title="Customer Care | Containers Exchange"
         description="Find clear guidance for container conditions, reservations, delivery preparation, order support, and privacy."
         path="/customer-care"
       />
@@ -18,7 +18,7 @@ export default function CustomerCare() {
       <header className="relative overflow-hidden bg-[#061226] py-24 text-white sm:py-28">
         <div className="pointer-events-none absolute right-[-8rem] top-[-8rem] h-80 w-80 rounded-full bg-primary/15 blur-[100px]" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <p className="text-xs font-mono font-semibold tracking-[0.18em] text-primary">GUIDES & POLICIES</p>
+          <p className="text-xs font-mono font-semibold tracking-[0.18em] text-primary">CUSTOMER CARE</p>
           <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
             Clear information for a confident container purchase.
           </h1>

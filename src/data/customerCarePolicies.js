@@ -1,7 +1,7 @@
 export const CUSTOMER_CARE_POLICIES = [
   {
     slug: 'container-standards',
-    title: 'Conditions',
+    title: 'Container Condition & Buyer Standards',
     summary: 'Understand container grades, normal used-container wear, and what to confirm before reserving a unit.',
     eyebrow: 'BUY WITH CLARITY',
     sections: [
@@ -35,7 +35,7 @@ export const CUSTOMER_CARE_POLICIES = [
   },
   {
     slug: 'payments-reservations',
-    title: 'Payments',
+    title: 'Payments & Reservations',
     summary: 'How a reservation request becomes a confirmed container order.',
     eyebrow: 'A CLEAR ORDER PROCESS',
     sections: [
@@ -66,7 +66,7 @@ export const CUSTOMER_CARE_POLICIES = [
   },
   {
     slug: 'returns-cancellations',
-    title: 'Returns',
+    title: 'Returns, Cancellations & Refunds',
     summary: 'How to raise a cancellation request or report an order concern promptly.',
     eyebrow: 'ORDER SUPPORT',
     sections: [
@@ -96,7 +96,7 @@ export const CUSTOMER_CARE_POLICIES = [
   },
   {
     slug: 'terms-of-sale',
-    title: 'Terms',
+    title: 'Terms of Sale',
     summary: 'The core terms that apply when a reservation becomes a confirmed order.',
     eyebrow: 'ORDER TERMS',
     sections: [
@@ -124,7 +124,7 @@ export const CUSTOMER_CARE_POLICIES = [
   },
   {
     slug: 'privacy',
-    title: 'Privacy',
+    title: 'Privacy Policy',
     summary: 'How we use the information customers provide when requesting a quote or reservation.',
     eyebrow: 'YOUR INFORMATION',
     sections: [

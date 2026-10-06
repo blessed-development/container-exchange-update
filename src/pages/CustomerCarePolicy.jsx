@@ -22,7 +22,7 @@ export default function CustomerCarePolicy() {
       <header className="border-b border-border bg-muted/30">
         <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
           <Link to="/customer-care" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
-            <ArrowLeft className="h-4 w-4" /> Guides & Policies
+            <ArrowLeft className="h-4 w-4" /> Customer Care
           </Link>
           <p className="mt-8 text-xs font-mono font-semibold tracking-[0.18em] text-primary">{policy.eyebrow}</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-foreground sm:text-5xl">{policy.title}</h1>
