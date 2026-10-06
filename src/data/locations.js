@@ -35,7 +35,7 @@ const createLocation = ({
     heroPosition,
     headingSize,
     seo: {
-      title: `Buy Shipping Containers in ${displayName} | Container Exchange`,
+      title: `Buy Shipping Containers in ${displayName} | Containers Exchange`,
       description: subtitle,
     },
     rating: 4.9,
