@@ -54,11 +54,11 @@ const TIPS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: '/images/delivery/tiltbed-offload.webp', alt: 'Tilt-bed truck offloading a weathered 40-foot shipping container at a delivery yard', span2: true },
-  { src: '/images/delivery/standard-placement.webp', alt: 'Tilt-bed truck carrying a used blue 20-foot shipping container' },
-  { src: '/images/delivery/crane-placement.webp', alt: 'One-trip high-cube container on an unbranded tilt-bed delivery truck' },
-  { src: '/images/delivery/level-foundation.webp', alt: 'Tilt-bed truck preparing a long container for a residential delivery' },
-  { src: '/images/delivery/rural-route.webp', alt: 'Used shipping container being safely unloaded from a tilt-bed truck onto supports' },
+  { src: '/images/delivery/tiltbed-offload.webp', alt: 'Cream shipping container being transported on an unbranded tilt-deck trailer at a delivery yard', span2: true },
+  { src: '/images/delivery/standard-placement.webp', alt: 'Used blue 20-foot shipping container on a neutral tilt-bed delivery truck' },
+  { src: '/images/delivery/crane-placement.webp', alt: 'One-trip high-cube shipping container on a delivery trailer at a container yard' },
+  { src: '/images/delivery/level-foundation.webp', alt: 'Shipping container delivered to a residential driveway on a neutral tilt-deck trailer' },
+  { src: '/images/delivery/rural-route.webp', alt: 'Shipping containers on a tilt-bed trailer during delivery preparation' },
 ];
 
 const FAQS = [
