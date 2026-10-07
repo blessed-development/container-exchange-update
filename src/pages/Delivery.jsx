@@ -54,11 +54,11 @@ const TIPS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: '/images/delivery/tiltbed-offload.webp', alt: 'Marked 40-foot shipping container on a chassis truck at a container depot', span2: true },
-  { src: '/images/delivery/standard-placement.webp', alt: 'Marked 20-foot container delivered to a prepared construction site on a flatbed chassis' },
-  { src: '/images/delivery/crane-placement.webp', alt: 'Used marked container carried on a chassis truck at a commercial loading yard' },
-  { src: '/images/delivery/level-foundation.webp', alt: 'High-cube container transported to an industrial site on a conventional chassis truck' },
-  { src: '/images/delivery/rural-route.webp', alt: 'Marked shipping container arriving at a farm site on a flatbed chassis truck' },
+  { src: '/images/delivery/tiltbed-offload.webp', alt: 'Tilt-bed truck offloading a weathered 40-foot shipping container at a delivery yard', span2: true },
+  { src: '/images/delivery/standard-placement.webp', alt: 'Tilt-bed truck carrying a used blue 20-foot shipping container' },
+  { src: '/images/delivery/crane-placement.webp', alt: 'One-trip high-cube container on an unbranded tilt-bed delivery truck' },
+  { src: '/images/delivery/level-foundation.webp', alt: 'Tilt-bed truck preparing a long container for a residential delivery' },
+  { src: '/images/delivery/rural-route.webp', alt: 'Used shipping container being safely unloaded from a tilt-bed truck onto supports' },
 ];
 
 const FAQS = [
