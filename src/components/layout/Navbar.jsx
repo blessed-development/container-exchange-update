@@ -63,7 +63,7 @@ export default function Navbar() {
                   location.pathname.startsWith('/customer-care') ? 'text-white bg-white/[0.08]' : 'text-white/60'
                 }`}
               >
-                Customer Care <ChevronDown className={`h-3.5 w-3.5 transition-transform ${careOpen ? 'rotate-180' : ''}`} />
+                Policies <ChevronDown className={`h-3.5 w-3.5 transition-transform ${careOpen ? 'rotate-180' : ''}`} />
               </button>
               {careOpen && (
                 <div className="absolute right-0 top-[calc(100%+10px)] w-64 rounded-xl border border-white/[0.10] bg-[#0b1b2d]/95 p-2 shadow-2xl backdrop-blur-xl">
@@ -117,7 +117,7 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="mt-3 border-t border-white/[0.08] pt-3">
-              <p className="px-3 pb-1 text-[10px] font-mono font-semibold tracking-[0.14em] text-white/35">CUSTOMER CARE</p>
+              <p className="px-3 pb-1 text-[10px] font-mono font-semibold tracking-[0.14em] text-white/35">POLICIES</p>
               {CUSTOMER_CARE_LINKS.map((link) => (
                 <Link
                   key={link.path}

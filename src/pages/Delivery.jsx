@@ -54,12 +54,11 @@ const TIPS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/TiltBedTrailer.jpg',          alt: 'Tiltbed Trailer', span2: true },
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/KlineTiltbed.jpg',            alt: 'Kline Tiltbed' },
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/IMG_29791.jpg',               alt: 'Container Delivery' },
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/IMG_20200111_174612_01.jpg',  alt: 'Container Delivery' },
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/IMG_20200111_174633_01.jpg',  alt: 'Container Delivery' },
-  { src: 'https://starboxusa.com/wp-content/uploads/2023/07/MobileTrailerDelivery4.jpg',  alt: '20ft Wrecker' },
+  { src: '/images/delivery/tiltbed-offload.webp', alt: 'Tilt-bed truck offloading a shipping container at a commercial yard', span2: true },
+  { src: '/images/delivery/standard-placement.webp', alt: 'Shipping container placed at a prepared commercial site' },
+  { src: '/images/delivery/crane-placement.webp', alt: 'Truck-mounted crane placing a container at a residential site' },
+  { src: '/images/delivery/level-foundation.webp', alt: 'Shipping container resting on a prepared level foundation' },
+  { src: '/images/delivery/rural-route.webp', alt: 'Container delivery truck travelling on a rural access road' },
 ];
 
 const FAQS = [
@@ -284,10 +283,10 @@ export default function Delivery() {
         {/* GALLERY */}
         <motion.section initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <p className="text-[10px] font-bold text-green-400 tracking-[0.12em] uppercase mb-3 flex items-center gap-2">
-            <span className="w-4 h-px bg-green-400 inline-block" /> Our Fleet in Action
+            <span className="w-4 h-px bg-green-400 inline-block" /> Delivery in Action
           </p>
           <h2 className="text-3xl font-black tracking-tight mb-2">Delivery <span className="text-green-400">Gallery</span></h2>
-          <p className="text-white/50 text-sm leading-relaxed mb-7">Real deliveries from our fleet — tiltbed and wrecker placements across residential, commercial, and industrial sites.</p>
+          <p className="text-white/50 text-sm leading-relaxed mb-7">Examples of the equipment, placement, and site preparation involved in container delivery.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {GALLERY_IMAGES.map((img, i) => (
               <div
