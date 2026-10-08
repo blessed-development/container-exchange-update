@@ -150,6 +150,24 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Payment methods */}
+      <div className="border-t border-white/[0.06] bg-white/[0.02]">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-4 py-6 sm:px-6 lg:flex-row">
+          <p className="text-center text-xs font-semibold tracking-wide text-white/45 lg:text-left">ACCEPTED PAYMENT METHODS</p>
+          <div className="flex flex-wrap items-center justify-center gap-2.5" aria-label="Accepted payment methods">
+            <span className="rounded-md bg-[#0070ba] px-3 py-1.5 text-sm font-black italic tracking-tight text-white">PayPal</span>
+            <span className="rounded-md bg-white px-2.5 py-1.5 text-sm font-black tracking-tight text-[#1434cb]">VISA</span>
+            <span className="flex items-center gap-0.5 rounded-md bg-[#151515] px-2 py-1.5 text-[10px] font-bold text-white">
+              <span className="h-4 w-4 rounded-full bg-[#eb001b]" /><span className="-ml-2 h-4 w-4 rounded-full bg-[#f79e1b] opacity-90" />
+              <span className="ml-1">mastercard</span>
+            </span>
+            <span className="rounded-md bg-[#1677b9] px-2 py-1.5 text-[9px] font-black leading-none tracking-tight text-white">AMERICAN<br />EXPRESS</span>
+            <span className="rounded-md bg-white px-2.5 py-1.5 text-xs font-black italic tracking-tight text-[#f76f1d]">DISCOVER</span>
+            <span className="rounded-md border border-white/20 bg-white/[0.06] px-2.5 py-1.5 text-[10px] font-bold tracking-wide text-white/80">ACH / BANK TRANSFER</span>
+          </div>
+        </div>
+      </div>
+
       {/* Bottom Bar */}
       <div className="border-t border-white/[0.06] py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">

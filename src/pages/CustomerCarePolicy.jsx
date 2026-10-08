@@ -5,12 +5,37 @@ import PageSeo from '@/components/seo/PageSeo';
 import { COMPANY_CONTACT } from '@/config/companyContact';
 import { getCustomerCarePolicy } from '@/data/customerCarePolicies';
 
-const CONDITION_VISUALS = [
-  { title: 'New / One-Trip', src: '/images/condition-standards/one-trip.webp', alt: 'Clean one-trip shipping container with light handling marks' },
-  { title: 'IICL', src: '/images/condition-standards/iicl.webp', alt: 'Well-maintained used blue shipping container with minor surface wear' },
-  { title: 'Cargo Worthy', src: '/images/condition-standards/cargo-worthy.webp', alt: 'Structurally sound used red shipping container with normal paint wear' },
-  { title: 'Wind & Water Tight', src: '/images/condition-standards/wwt.webp', alt: 'Used grey shipping container with intact doors and normal surface wear' },
-  { title: 'AS-IS', src: '/images/condition-standards/as-is.webp', alt: 'Older green shipping container with visible weathering and repair marks' },
+const CONDITION_CARDS = [
+  {
+    title: 'New / One-Trip',
+    description: 'A newer container that has completed a single cargo journey and may still show normal handling marks.',
+    src: '/images/condition-standards/one-trip.webp',
+    alt: 'Clean one-trip shipping container with light handling marks',
+  },
+  {
+    title: 'IICL',
+    description: 'A higher used-container condition commonly chosen when appearance and cargo-service suitability matter.',
+    src: '/images/condition-standards/iicl.webp',
+    alt: 'Well-maintained used blue shipping container with minor surface wear',
+  },
+  {
+    title: 'Cargo Worthy',
+    description: 'A used unit that may be suitable for freight use when it holds applicable current certification. Confirm current certification requirements before export.',
+    src: '/images/condition-standards/cargo-worthy.webp',
+    alt: 'Structurally sound used red shipping container with normal paint wear',
+  },
+  {
+    title: 'Wind & Water Tight',
+    description: 'A practical storage-grade option intended to keep ordinary weather out; it is not automatically certified for ocean transport.',
+    src: '/images/condition-standards/wwt.webp',
+    alt: 'Used grey shipping container with intact doors and normal surface wear',
+  },
+  {
+    title: 'AS-IS',
+    description: 'A lower-cost option that can show significant wear or require repair. Confirm suitability before reserving.',
+    src: '/images/condition-standards/as-is.webp',
+    alt: 'Older green shipping container with visible weathering and repair marks',
+  },
 ];
 
 export default function CustomerCarePolicy() {
@@ -46,7 +71,7 @@ export default function CustomerCarePolicy() {
               {section.paragraphs?.map((paragraph) => (
                 <p key={paragraph} className="mt-4 text-[15px] leading-7 text-muted-foreground">{paragraph}</p>
               ))}
-              {section.bullets && (
+              {section.bullets && !(policy.slug === 'container-standards' && section.heading === 'Common condition grades') && (
                 <ul className="mt-5 space-y-3">
                   {section.bullets.map((bullet) => (
                     <li key={bullet} className="flex gap-3 text-[15px] leading-7 text-muted-foreground">
@@ -57,12 +82,20 @@ export default function CustomerCarePolicy() {
                 </ul>
               )}
               {policy.slug === 'container-standards' && section.heading === 'Common condition grades' && (
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                  {CONDITION_VISUALS.map((visual) => (
-                    <figure key={visual.title} className="overflow-hidden rounded-xl border border-border bg-muted/20">
-                      <img src={visual.src} alt={visual.alt} loading="lazy" className="aspect-[4/3] w-full object-cover" />
-                      <figcaption className="px-4 py-3 text-sm font-bold text-foreground">{visual.title}</figcaption>
-                    </figure>
+                <div className="mt-7 space-y-5">
+                  {CONDITION_CARDS.map((card, index) => (
+                    <article key={card.title} className="overflow-hidden rounded-2xl border border-border bg-muted/20 md:grid md:grid-cols-2">
+                      <div className={`p-6 sm:p-7 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
+                        <div className="flex items-center gap-3">
+                          <span className="h-2 w-2 rounded-full bg-primary" />
+                          <h3 className="text-xl font-black tracking-tight text-foreground">{card.title}</h3>
+                        </div>
+                        <p className="mt-4 text-[15px] leading-7 text-muted-foreground">{card.description}</p>
+                      </div>
+                      <figure className={index % 2 === 0 ? 'md:order-2' : 'md:order-1'}>
+                        <img src={card.src} alt={card.alt} loading="lazy" className="aspect-[4/3] h-full w-full object-cover" />
+                      </figure>
+                    </article>
                   ))}
                 </div>
               )}
