@@ -16,6 +16,7 @@ const GRADE_LABELS = {
   WWT: 'Wind & Water Tight',
   CW: 'Cargo Worthy',
   IICL: 'IICL Certified',
+  USED_REEFER: 'Used Reefer',
 };
 
 function getListingImage(container) {
@@ -63,7 +64,10 @@ export default function InventoryListCard({ container, index }) {
   }, []);
 
   const isSpecialty = Boolean(container.is_specialty);
-  const stars = Math.round(container.rating || 0);
+  const displayRating = isSpecialty
+    ? Number(container.preview_rating || 0)
+    : Number(container.rating || 0);
+  const stars = Math.round(displayRating);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const hasZip = Boolean(savedLocation?.postalCode);
   const hasWideCatalogImage = [
@@ -164,9 +168,9 @@ export default function InventoryListCard({ container, index }) {
               </div>
             )}
 
-            {!isSpecialty && <div className="flex items-center gap-1.5 mb-[14px]">
+            {(displayRating > 0 || !isSpecialty) && <div className="flex items-center gap-1.5 mb-[14px]">
               <span className="text-[14px] font-[850]">
-                {(container.rating || 5).toFixed(1)}
+                {(displayRating || 5).toFixed(1)}
               </span>
 
               <div className="flex">
@@ -183,19 +187,23 @@ export default function InventoryListCard({ container, index }) {
               </div>
 
               <span className="text-[12px] text-muted-foreground">
-                ({container.review_count || 0})
+                {isSpecialty ? '(Preview)' : `(${container.review_count || 0})`}
               </span>
             </div>}
 
             <div className="mb-[16px]">
               {isSpecialty ? (
                 <>
-                  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary mb-1">
-                    Specialty configuration
+                  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
+                    {savedLocation?.marketDisplayName || (hasZip ? `${savedLocation?.city}, ${savedLocation?.state}` : 'Select location')}
                   </div>
-                  <div className="text-[25px] leading-none font-black text-foreground tracking-[-0.04em]">
-                    Request a Quote
+                  <div className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
+                    Preview price
                   </div>
+                  <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
+                    ${Number(container.preview_price || 0).toLocaleString()}
+                  </div>
+                  <p className="mt-2 text-xs font-medium text-muted-foreground">Final price confirmed by quote.</p>
                 </>
               ) : !hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
@@ -217,7 +225,7 @@ export default function InventoryListCard({ container, index }) {
               {[
                 ['Condition', container.condition],
                 ['Door Type', container.door_type || 'Double Doors at 1 End'],
-                ...(!isSpecialty ? [['Grade', gradeLabel]] : []),
+                ['Grade', gradeLabel],
               ].map(([label, value]) => (
                 <div key={label} className="flex gap-2">
                   <span className="font-[760] w-[92px] flex-shrink-0">

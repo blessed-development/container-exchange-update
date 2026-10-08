@@ -86,6 +86,12 @@ const GRADE_INFO = {
     description:
       'Each unit comes standard with a lockbox on the door to prevent lock cutting. Forklift pockets on both sides of the container for easy moving. Plywood lacquered floors are marine grade treated planks and reinforced from the bottom to prevent intrusion.',
   },
+  USED_REEFER: {
+    label: 'Used Reefer',
+    desc: 'Used refrigerated-container configuration. Final unit condition and equipment details are confirmed as part of the quote process.',
+    description:
+      'This is a specialty refrigerated-container format, quoted individually so the requested configuration can be confirmed before a reservation is arranged.',
+  },
 };
 
 const normalize = (value) =>
@@ -462,7 +468,9 @@ export default function ProductDetail() {
   const gradeInfo = GRADE_INFO[container.grade] || {};
 
   const productDescription =
-    gradeInfo.description || container.short_description || '';
+    isSpecialty
+      ? container.description || container.short_description || ''
+      : gradeInfo.description || container.short_description || '';
   const pageTitle = isSpecialty
     ? `${seoHeroTitle} | Containers Exchange`
     : seoHeroTitle && seoLocation
@@ -723,8 +731,9 @@ export default function ProductDetail() {
 
                 {isSpecialty ? (
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">Specialty container</p>
-                    <p className="mt-1 text-xl font-black tracking-tight text-foreground">Quote required</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">Preview price</p>
+                    <p className="mt-1 text-4xl font-black tracking-tight leading-none text-orange-500">${Number(container.preview_price || 0).toLocaleString()}</p>
+                    <p className="mt-2 text-xs font-medium text-muted-foreground">Construction display only — final price confirmed by quote.</p>
                   </div>
                 ) : (
                   <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
@@ -733,7 +742,7 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              {!isSpecialty && <button
+              <button
                 ref={gradeCardRef}
                 type="button"
                 aria-expanded={gradeOpen}
@@ -781,7 +790,7 @@ export default function ProductDetail() {
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background via-background/80 to-transparent" />
                   )}
                 </div>
-              </button>}
+              </button>
 
               {productDescription && (
                 <button
