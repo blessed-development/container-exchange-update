@@ -19,6 +19,10 @@ const GRADE_LABELS = {
 };
 
 function getListingImage(container) {
+  if (container?.is_specialty) {
+    return { src: container.image_url, srcSet: undefined };
+  }
+
   const source = container.inventory_image_url || container.image_url || '/images/products/new-20-iicl/hero.webp';
   const match = source.match(/^\/images\/products\/([^/]+)\/hero\.webp$/);
 
@@ -58,7 +62,8 @@ export default function InventoryListCard({ container, index }) {
     };
   }, []);
 
-  const stars = Math.round(container.rating || 5);
+  const isSpecialty = Boolean(container.is_specialty);
+  const stars = Math.round(container.rating || 0);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const hasZip = Boolean(savedLocation?.postalCode);
   const hasWideCatalogImage = [
@@ -103,7 +108,9 @@ export default function InventoryListCard({ container, index }) {
       source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
-        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
+        ...(!isSpecialty
+          ? [`Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`]
+          : []),
         ...(savedLocation?.marketDisplayName
           ? [`Supplying market: ${savedLocation.marketDisplayName}`]
           : []),
@@ -157,7 +164,7 @@ export default function InventoryListCard({ container, index }) {
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 mb-[14px]">
+            {!isSpecialty && <div className="flex items-center gap-1.5 mb-[14px]">
               <span className="text-[14px] font-[850]">
                 {(container.rating || 5).toFixed(1)}
               </span>
@@ -178,10 +185,19 @@ export default function InventoryListCard({ container, index }) {
               <span className="text-[12px] text-muted-foreground">
                 ({container.review_count || 0})
               </span>
-            </div>
+            </div>}
 
             <div className="mb-[16px]">
-              {!hasZip ? (
+              {isSpecialty ? (
+                <>
+                  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary mb-1">
+                    Specialty configuration
+                  </div>
+                  <div className="text-[25px] leading-none font-black text-foreground tracking-[-0.04em]">
+                    Request a Quote
+                  </div>
+                </>
+              ) : !hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
                   Starting From
                 </div>
@@ -190,16 +206,18 @@ export default function InventoryListCard({ container, index }) {
                   {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
-              <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
-                ${Number(displayPrice || 0).toLocaleString()}
-              </div>
+              {!isSpecialty && (
+                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
+                  ${Number(displayPrice || 0).toLocaleString()}
+                </div>
+              )}
             </div>
 
             <div className="space-y-[7px] text-[13px]">
               {[
                 ['Condition', container.condition],
                 ['Door Type', container.door_type || 'Double Doors at 1 End'],
-                ['Grade', gradeLabel],
+                ...(!isSpecialty ? [['Grade', gradeLabel]] : []),
               ].map(([label, value]) => (
                 <div key={label} className="flex gap-2">
                   <span className="font-[760] w-[92px] flex-shrink-0">

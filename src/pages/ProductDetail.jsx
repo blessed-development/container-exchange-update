@@ -4,6 +4,7 @@ import SeoJsonLd from '@/components/seo/SeoJsonLd';
 import { SITE_URL, toAbsoluteUrl } from '@/lib/seo';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import ContainerConfigurator from '@/components/product/ContainerConfigurator';
+import SpecialtyQuotePanel from '@/components/product/SpecialtyQuotePanel';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
@@ -450,13 +451,18 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
+  const isSpecialty = Boolean(container.is_specialty);
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
-  const pageTitle = seoHeroTitle && seoLocation
+  const pageTitle = isSpecialty
+    ? `${seoHeroTitle} | Containers Exchange`
+    : seoHeroTitle && seoLocation
     ? `${seoHeroTitle} For Sale in ${seoLocation} | Containers Exchange`
     : `${productTitle} | Containers Exchange`;
-  const pageDescription = seoHeroTitle && seoLocation
+  const pageDescription = isSpecialty
+    ? `Request a quote for ${productTitle}. Review the container format, dimensions, and door arrangement before contacting Containers Exchange.`
+    : seoHeroTitle && seoLocation
     ? `Buy ${seoHeroTitle.toLowerCase()} for sale in ${seoLocation}. View local pricing, delivery, sizes and container specifications.`
     : `Browse ${productTitle} shipping container pricing and availability.`;
   const canonicalUrl = toAbsoluteUrl(`/product/${container.id}`);
@@ -602,14 +608,20 @@ export default function ProductDetail() {
                     </h1>
 
                     <div className="text-[17px] md:text-[22px] font-bold leading-tight tracking-[-0.015em] text-white">
-                      For Sale in
-                      <span className="text-primary ml-2">
-                        {seoLocation}
-                      </span>
+                      {isSpecialty ? (
+                        <span className="text-primary">Specialty configuration</span>
+                      ) : (
+                        <>
+                          For Sale in
+                          <span className="text-primary ml-2">
+                            {seoLocation}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  <div className="product-hero-rating absolute bottom-6 right-6 z-10 flex items-center gap-2 md:bottom-7 md:right-8">
+                  {!isSpecialty && <div className="product-hero-rating absolute bottom-6 right-6 z-10 flex items-center gap-2 md:bottom-7 md:right-8">
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
@@ -630,7 +642,7 @@ export default function ProductDetail() {
                     <span className="text-[12px] font-medium text-white/85">
                       ({container.review_count || 42} reviews)
                     </span>
-                  </div>
+                  </div>}
                 </>
               )}
 
@@ -680,7 +692,7 @@ export default function ProductDetail() {
                     }`}
                   >
                     <img
-                      src={image.replace('/images/products/', '/images/product-thumbnails/')}
+                      src={isSpecialty ? image : image.replace('/images/products/', '/images/product-thumbnails/')}
                       alt={`${productTitle} preview ${index + 1}`}
                       loading="lazy"
                       decoding="async"
@@ -693,7 +705,7 @@ export default function ProductDetail() {
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
-                {showStartingFrom && (
+                {!isSpecialty && showStartingFrom && (
                   <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
                     <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
                       Starting From
@@ -701,12 +713,19 @@ export default function ProductDetail() {
                   </div>
                 )}
 
-                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
-                  ${Number(heroPrice).toLocaleString()}
-                </div>
+                {isSpecialty ? (
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">Specialty container</p>
+                    <p className="mt-1 text-xl font-black tracking-tight text-foreground">Quote required</p>
+                  </div>
+                ) : (
+                  <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
+                    ${Number(heroPrice).toLocaleString()}
+                  </div>
+                )}
               </div>
 
-              <button
+              {!isSpecialty && <button
                 ref={gradeCardRef}
                 type="button"
                 aria-expanded={gradeOpen}
@@ -754,7 +773,7 @@ export default function ProductDetail() {
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-background via-background/80 to-transparent" />
                   )}
                 </div>
-              </button>
+              </button>}
 
               {productDescription && (
                 <button
@@ -806,6 +825,9 @@ export default function ProductDetail() {
           </div>
 
           <div className="lg:sticky lg:top-24 self-start">
+            {isSpecialty ? (
+              <SpecialtyQuotePanel product={container} />
+            ) : (
             <ContainerConfigurator
   container={container}
   initialZip={zipCode}
@@ -820,7 +842,8 @@ export default function ProductDetail() {
     setActiveProduct(nextProduct);
     setActiveImageIndex(0);
   }}
-/>
+            />
+            )}
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ const CONDITION_COLORS = {
 };
 
 export default function ContainerCard({ container, zipCode, index = 0 }) {
+  const isSpecialty = Boolean(container.is_specialty);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
@@ -85,17 +86,26 @@ export default function ContainerCard({ container, zipCode, index = 0 }) {
             {/* Price + CTA */}
             <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
               <div>
-                <span className="text-xs text-muted-foreground">Starts at</span>
-                <p className="text-xl font-black text-primary font-mono">
-                  ${displayPrice.toLocaleString()}
-                </p>
+                {isSpecialty ? (
+                  <>
+                    <span className="text-xs text-muted-foreground">Specialty configuration</span>
+                    <p className="text-lg font-black text-foreground">Request a Quote</p>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-xs text-muted-foreground">Starts at</span>
+                    <p className="text-xl font-black text-primary font-mono">
+                      ${displayPrice.toLocaleString()}
+                    </p>
+                  </>
+                )}
               </div>
               <div className="flex items-center gap-2">
-                {container.is_available ? (
+                {!isSpecialty && (container.is_available ? (
                   <span className="text-xs font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">In Stock</span>
                 ) : (
                   <span className="text-xs font-semibold text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Limited</span>
-                )}
+                ))}
                 <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                   Get Quote
                 </span>

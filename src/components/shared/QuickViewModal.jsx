@@ -30,7 +30,8 @@ export default function QuickViewModal({ container, onClose }) {
   ];
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
-  const stars = Math.round(container.rating || 5);
+  const isSpecialty = Boolean(container.is_specialty);
+  const stars = Math.round(container.rating || 0);
   const displayPrice = getLocalizedPrice(
     container.base_price || container.price || 0,
     getSavedSelectedLocation(),
@@ -79,7 +80,7 @@ export default function QuickViewModal({ container, onClose }) {
                 <h2 className="text-lg font-black text-foreground leading-tight mb-1.5 pr-8">{container.name}</h2>
 
                 {/* Rating */}
-                <div className="flex items-center gap-1.5 mb-2">
+                {!isSpecialty && <div className="flex items-center gap-1.5 mb-2">
                   <span className="text-sm font-bold">{(container.rating || 5).toFixed(1)}</span>
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -87,12 +88,16 @@ export default function QuickViewModal({ container, onClose }) {
                     ))}
                   </div>
                   <span className="text-xs text-muted-foreground">({container.review_count || 0} reviews)</span>
-                </div>
+                </div>}
 
                 {/* Price */}
-                <p className="text-3xl font-black text-primary mb-3">
-                  ${displayPrice.toLocaleString() || '—'}
-                </p>
+                {isSpecialty ? (
+                  <p className="text-xl font-black text-foreground mb-3">Request a Quote</p>
+                ) : (
+                  <p className="text-3xl font-black text-primary mb-3">
+                    ${displayPrice.toLocaleString() || '—'}
+                  </p>
+                )}
               </div>
 
               {/* Specs */}

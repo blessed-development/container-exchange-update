@@ -67,7 +67,7 @@ export default function RelatedProducts() {
       </h2>
 
       <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {inventoryProducts.map((product) => (
+        {inventoryProducts.filter((product) => !product.is_specialty).map((product) => (
           <article
             key={product.id}
             className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
