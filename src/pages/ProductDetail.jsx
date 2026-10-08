@@ -163,6 +163,7 @@ export default function ProductDetail() {
 
   const selectedSize = SIZE_OPTIONS[selectedSizeIndex] || SIZE_OPTIONS[0];
   const productTitle = container?.name || '';
+  const isSpecialty = Boolean(container?.is_specialty);
   const productImage = container?.image_url || selectedSize.image;
 
   const baseDisplayPrice =
@@ -275,6 +276,14 @@ export default function ProductDetail() {
   }, [showHeroOverlay, activeImage]);
 
   useEffect(() => {
+    if (isSpecialty) {
+      document.title = `${productTitle} | Containers Exchange`;
+
+      return () => {
+        document.title = 'Containers Exchange';
+      };
+    }
+
     if (!seoHeroTitle || !seoLocation) return;
 
     document.title =
@@ -283,7 +292,7 @@ export default function ProductDetail() {
     return () => {
       document.title = 'Containers Exchange';
     };
-  }, [seoHeroTitle, seoLocation]);
+  }, [isSpecialty, productTitle, seoHeroTitle, seoLocation]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -451,7 +460,6 @@ export default function ProductDetail() {
   }
 
   const gradeInfo = GRADE_INFO[container.grade] || {};
-  const isSpecialty = Boolean(container.is_specialty);
 
   const productDescription =
     gradeInfo.description || container.short_description || '';
