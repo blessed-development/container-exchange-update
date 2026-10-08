@@ -3348,6 +3348,24 @@ margin-top:1px !important;
   letter-spacing:.06em !important;
 }
 
+.specialty-configurator .premium-buy-tab:disabled{
+  cursor:default !important;
+  opacity:.52;
+}
+
+.specialty-configurator .selection-btn{
+  cursor:default !important;
+}
+
+/* A specialty quote panel displays every fixed calculator step. It must not
+   use the standard calculator's sticky checkout treatment, which is intended
+   for the shorter, interactive purchase flow. */
+.specialty-configurator .checkout{
+  position:relative !important;
+  bottom:auto !important;
+  margin-top:4px !important;
+}
+
 .cond-card.active .cc-check{
   top:8px !important;
   right:8px !important;

@@ -22,6 +22,31 @@ export default function SpecialtyQuotePanel({ product }) {
 
   return (
     <aside className="widget specialty-configurator">
+      <div className="buy-header">
+        <div className="premium-buy-tabs" aria-label="Container condition">
+          <button
+            type="button"
+            disabled={!isNew}
+            className={`premium-buy-tab premium-buy-tab--new ${isNew ? 'active' : ''}`}
+          >
+            <strong>BUY</strong>
+            <span>NEW (One-Trip)</span>
+            <small>Shipping Containers</small>
+            {isNew && <span className="premium-buy-tab-check" aria-label="Selected"><Check size={12} strokeWidth={3} /></span>}
+          </button>
+          <button
+            type="button"
+            disabled={isNew}
+            className={`premium-buy-tab premium-buy-tab--used ${!isNew ? 'active' : ''}`}
+          >
+            <strong>BUY</strong>
+            <span>USED REEFER</span>
+            <small>Shipping Containers</small>
+            {!isNew && <span className="premium-buy-tab-check" aria-label="Selected"><Check size={12} strokeWidth={3} /></span>}
+          </button>
+        </div>
+      </div>
+
       <div className="step-label">ENTER ZIP / POSTAL CODE</div>
       <ZipCodeSearch
         variant="hero"
@@ -50,6 +75,14 @@ export default function SpecialtyQuotePanel({ product }) {
             <span className="grade-delta included">{gradeNote}</span>
             <span className="grade-active-check" aria-hidden="true"><Check size={11} /></span>
           </div>
+        </div>
+      </div>
+
+      <div className="section-header"><span>SELECTION TYPE</span></div>
+      <div className="selection-type standalone-selection-type">
+        <div className="selection-btn active" role="status">
+          <span className="selection-dot"><Check size={10} /></span>
+          <span>Quote confirmation required</span>
         </div>
       </div>
 
