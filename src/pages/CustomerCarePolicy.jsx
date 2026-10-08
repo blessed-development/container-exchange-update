@@ -5,6 +5,14 @@ import PageSeo from '@/components/seo/PageSeo';
 import { COMPANY_CONTACT } from '@/config/companyContact';
 import { getCustomerCarePolicy } from '@/data/customerCarePolicies';
 
+const CONDITION_VISUALS = [
+  { title: 'New / One-Trip', src: '/images/condition-standards/one-trip.webp', alt: 'Clean one-trip shipping container with light handling marks' },
+  { title: 'IICL', src: '/images/condition-standards/iicl.webp', alt: 'Well-maintained used blue shipping container with minor surface wear' },
+  { title: 'Cargo Worthy', src: '/images/condition-standards/cargo-worthy.webp', alt: 'Structurally sound used red shipping container with normal paint wear' },
+  { title: 'Wind & Water Tight', src: '/images/condition-standards/wwt.webp', alt: 'Used grey shipping container with intact doors and normal surface wear' },
+  { title: 'AS-IS', src: '/images/condition-standards/as-is.webp', alt: 'Older green shipping container with visible weathering and repair marks' },
+];
+
 export default function CustomerCarePolicy() {
   const { policySlug } = useParams();
   const policy = getCustomerCarePolicy(policySlug);
@@ -47,6 +55,16 @@ export default function CustomerCarePolicy() {
                     </li>
                   ))}
                 </ul>
+              )}
+              {policy.slug === 'container-standards' && section.heading === 'Common condition grades' && (
+                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                  {CONDITION_VISUALS.map((visual) => (
+                    <figure key={visual.title} className="overflow-hidden rounded-xl border border-border bg-muted/20">
+                      <img src={visual.src} alt={visual.alt} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                      <figcaption className="px-4 py-3 text-sm font-bold text-foreground">{visual.title}</figcaption>
+                    </figure>
+                  ))}
+                </div>
               )}
             </section>
           ))}

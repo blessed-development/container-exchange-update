@@ -46,7 +46,7 @@ export default function Footer() {
 
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-[1.25fr_.9fr_.9fr_1.1fr]">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.2fr_.8fr_.85fr_1.05fr_.95fr] xl:gap-8">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-5">
@@ -64,23 +64,6 @@ export default function Footer() {
             <div className="flex items-center gap-2 text-white/40 text-sm">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>Nationwide Coverage — USA</span>
-            </div>
-            <div className="mt-6 border-t border-white/[0.08] pt-5">
-              <p className="mb-3 text-xs font-mono font-semibold tracking-widest text-white/30">CONTACT</p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 text-white/50">
-                  <Phone className="w-4 h-4 flex-shrink-0" />
-                  <a href={`tel:${COMPANY_CONTACT.businessPhoneHref}`} className="text-sm hover:text-white transition-colors">
-                    {COMPANY_CONTACT.businessPhone}
-                  </a>
-                </div>
-                <div className="flex items-center gap-3 text-white/50">
-                  <Mail className="w-4 h-4 flex-shrink-0" />
-                  <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-sm hover:text-white transition-colors">
-                    {COMPANY_CONTACT.email}
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -140,6 +123,28 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold tracking-widest text-white/30 mb-6">CONTACT</h4>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 text-white/50">
+                <Phone className="mt-0.5 w-4 h-4 flex-shrink-0" />
+                <a href={`tel:${COMPANY_CONTACT.businessPhoneHref}`} className="text-sm hover:text-white transition-colors">
+                  {COMPANY_CONTACT.businessPhone}
+                </a>
+              </div>
+              <div className="flex items-start gap-3 text-white/50">
+                <Mail className="mt-0.5 w-4 h-4 flex-shrink-0" />
+                <a href={`mailto:${COMPANY_CONTACT.email}`} className="break-words text-sm hover:text-white transition-colors">
+                  {COMPANY_CONTACT.email}
+                </a>
+              </div>
+              <Link to="/contact" className="inline-flex items-center gap-2 pt-1 text-sm font-semibold text-primary transition-colors hover:text-white">
+                Get in touch <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
 
         </div>
