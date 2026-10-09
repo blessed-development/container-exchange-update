@@ -11,8 +11,18 @@ const dimensionsFor = (product) => {
   return `${product?.size || 20} × 8 × ${product?.height === 'high_cube' ? '9.6' : '8.6'}`;
 };
 
-const labelFor = (product) =>
-  `${product?.size || 20}ft ${product?.height === 'high_cube' ? 'High Cube' : 'Standard'}`;
+const labelFor = (product) => {
+  const fortyFiveLabels = {
+    'new-45hc': '45ft One End',
+    'new-45hc-dd': '45ft Double Door',
+    'new-45hc-fos': '45ft Open Side',
+  };
+
+  return (
+    fortyFiveLabels[product?.id] ||
+    `${product?.size || 20}ft ${product?.height === 'high_cube' ? 'High Cube' : 'Standard'}`
+  );
+};
 
 const fmt = (value) =>
   `$${Number(value || 0).toLocaleString(undefined, {
@@ -23,13 +33,14 @@ const fmt = (value) =>
 const EMPTY_LOCATION = { city: '', state: '', postalCode: '', country: '' };
 
 const productFamily = (product) => {
-  if (product?.id === 'new-45hc-dd') return '45-high-cube-double-door';
+  if (Number(product?.size) === 45 && product?.height === 'high_cube') {
+    return '45-high-cube';
+  }
   const doorType = String(product?.door_type || '').toLowerCase();
   if (doorType.includes('reefer')) return 'reefer';
   if (doorType.includes('both ends')) return 'double-door';
   if (doorType.includes('full side')) return 'full-side';
   if (doorType.includes('four')) return 'four-door-side';
-  if (Number(product?.size) === 45) return '45-high-cube';
   return product?.id || 'specialty';
 };
 
@@ -62,6 +73,11 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
   const conditionProducts = familyProducts.filter((item) => conditionKey(item) === activeCondition);
   const availableConditions = new Set(familyProducts.map(conditionKey));
   const sortedVariants = [...conditionProducts].sort((a, b) => {
+    const fortyFiveOrder = ['new-45hc', 'new-45hc-dd', 'new-45hc-fos'];
+    if (family === '45-high-cube') {
+      return fortyFiveOrder.indexOf(a.id) - fortyFiveOrder.indexOf(b.id);
+    }
+
     const aHeight = a.height === 'high_cube' ? 1 : 0;
     const bHeight = b.height === 'high_cube' ? 1 : 0;
     return Number(a.size) - Number(b.size) || aHeight - bHeight;
