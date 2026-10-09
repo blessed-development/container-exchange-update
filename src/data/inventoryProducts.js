@@ -15,9 +15,9 @@ const standardGallery = (folder, { interior = true, extras = 0 } = {}) =>
     ),
   ]);
 
-const specialtyGallery = (folder) =>
+const specialtyGallery = (folder, hero = 'hero.webp') =>
   gallery(folder, [
-    'hero.webp',
+    hero,
   ]);
 
 const galleries = {
@@ -74,6 +74,7 @@ const galleries = {
   'new-40hc-fos': specialtyGallery('new-40hc-fos'),
   'new-40hc-os4d': specialtyGallery('new-40hc-os4d'),
   'new-45hc': specialtyGallery('new-45hc'),
+  'new-45hc-dd': specialtyGallery('new-45hc-dd', 'hero.png'),
   'new-20-rf': specialtyGallery('new-20-rf'),
   'new-40-rf': specialtyGallery('new-40-rf'),
   'new-40hc-rf': specialtyGallery('new-40hc-rf'),
@@ -453,6 +454,18 @@ export const inventoryProducts = [
     previewRating: 4.8,
     reviewCount: 39,
     description: 'A one-trip 45ft high cube container for projects that require the longer high-cube format.',
+  }),
+  specialtyProduct({
+    id: 'new-45hc-dd',
+    name: 'New 45ft High Cube One-Trip Double Door Shipping Container',
+    condition: 'New',
+    size: 45,
+    height: 'high_cube',
+    doorType: 'Double Doors at Both Ends',
+    previewPrice: 8200,
+    previewRating: 4.8,
+    reviewCount: 31,
+    description: 'A one-trip 45ft high cube tunnel container with complete cargo doors at both ends for through-access loading.',
   }),
   specialtyProduct({
     id: 'new-20-rf',
