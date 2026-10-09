@@ -64,6 +64,12 @@ export default function InventoryListCard({ container, index }) {
   }, []);
 
   const isSpecialty = Boolean(container.is_specialty);
+  const hasCompactSpecialtyLayout = [
+    'new-40hc-fos',
+    'new-40hc-dd',
+    'new-40hc-os4d',
+    'used-40hc-rf-working',
+  ].includes(container.id);
   const displayRating = Number(container.rating || container.preview_rating || 0);
   const stars = Math.round(displayRating);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
@@ -125,9 +131,7 @@ export default function InventoryListCard({ container, index }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.04, duration: 0.35 }}
         onClick={openProduct}
-        className={`bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row ${
-          isSpecialty ? 'sm:min-h-[410px]' : 'sm:h-[344px]'
-        } cursor-pointer transition-all duration-300`}
+        className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
       >
         <div
           className={`relative h-[260px] sm:h-full ${hasWideCatalogImage ? 'sm:w-[38%]' : 'sm:w-[38%]'} overflow-hidden bg-muted`}
@@ -152,19 +156,29 @@ export default function InventoryListCard({ container, index }) {
           </picture>
         </div>
 
-        <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
+        <div className={`flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col ${
+          hasCompactSpecialtyLayout ? 'justify-start' : 'justify-between'
+        }`}>
           <div>
-            <h3 className="text-[18px] leading-[1.14] font-[820] tracking-[-0.03em] text-foreground mb-[8px]">
+            <h3 className={`font-[820] tracking-[-0.03em] text-foreground ${
+              hasCompactSpecialtyLayout
+                ? 'text-[17px] leading-[1.08] mb-[5px]'
+                : 'text-[18px] leading-[1.14] mb-[8px]'
+            }`}>
               {container.name}
             </h3>
 
             {container.short_description && (
-              <div className="text-[14px] font-[560] leading-[1.35] text-muted-foreground mb-[14px]">
+              <div className={`text-[14px] font-[560] leading-[1.35] text-muted-foreground ${
+                hasCompactSpecialtyLayout ? 'mb-[8px]' : 'mb-[14px]'
+              }`}>
                 {container.short_description}
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 mb-[14px]">
+            <div className={`flex items-center gap-1.5 ${
+              hasCompactSpecialtyLayout ? 'mb-[8px]' : 'mb-[14px]'
+            }`}>
               <span className="text-[14px] font-[850]">
                 {(displayRating || 5).toFixed(1)}
               </span>
@@ -185,7 +199,7 @@ export default function InventoryListCard({ container, index }) {
               <span className="text-[12px] text-muted-foreground">({container.review_count || 0})</span>
             </div>
 
-            <div className="mb-[16px]">
+            <div className={hasCompactSpecialtyLayout ? 'mb-[9px]' : 'mb-[16px]'}>
               {!hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
                   Starting From
@@ -217,7 +231,7 @@ export default function InventoryListCard({ container, index }) {
             </div>
           </div>
 
-          <div className="pt-5 flex flex-wrap gap-3">
+          <div className={hasCompactSpecialtyLayout ? 'pt-3 flex flex-wrap gap-3' : 'pt-5 flex flex-wrap gap-3'}>
             <Button
               variant="outline"
               onClick={(e) => {
