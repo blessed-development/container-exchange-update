@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { useCart } from '@/context/CartContext';
@@ -25,6 +26,7 @@ const fallbackImage =
 export default function RelatedProducts() {
   const { addToCart } = useCart();
   const [selectedLocation, setSelectedLocation] = useState(() => getSavedSelectedLocation());
+  const productRailRef = useRef(null);
 
   useEffect(() => {
     const syncLocation = (event) => {
@@ -39,8 +41,20 @@ export default function RelatedProducts() {
     };
   }, []);
 
-  const getDisplayPrice = (product) =>
-    getLocalizedPrice(product.base_price || product.price || 0, selectedLocation, product);
+  const getDisplayPrice = (product) => {
+    if (product.is_specialty) return product.preview_price || 0;
+    return getLocalizedPrice(product.base_price || product.price || 0, selectedLocation, product);
+  };
+
+  const moveProductRail = (direction) => {
+    const rail = productRailRef.current;
+    if (!rail) return;
+
+    rail.scrollBy({
+      left: direction * Math.max(rail.clientWidth * 0.82, 312),
+      behavior: 'smooth',
+    });
+  };
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
@@ -62,12 +76,36 @@ export default function RelatedProducts() {
 
   return (
     <section className="related-products-section max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-3 lg:pt-10 lg:pb-4">
-      <h2 className="text-2xl sm:text-3xl font-black text-foreground mb-5">
-        Related Products
-      </h2>
+      <div className="flex items-end justify-between gap-4 mb-5">
+        <h2 className="text-2xl sm:text-3xl font-black text-foreground">
+          Related Products
+        </h2>
 
-      <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {inventoryProducts.filter((product) => !product.is_specialty).map((product) => (
+        <div className="hidden sm:flex items-center gap-2" aria-label="Related product navigation">
+          <button
+            type="button"
+            onClick={() => moveProductRail(-1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-sky-400/45 bg-slate-950 text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-400 hover:text-orange-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Show previous related products"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => moveProductRail(1)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-sky-400/45 bg-slate-950 text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-orange-400 hover:text-orange-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Show next related products"
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={productRailRef}
+        className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {inventoryProducts.filter((product) => product.is_available !== false).map((product) => (
           <article
             key={product.id}
             className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"
