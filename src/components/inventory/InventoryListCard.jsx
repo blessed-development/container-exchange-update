@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Star, Eye, FileText } from 'lucide-react';
+import { Star, Eye, FileText, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import QuickViewModal from '@/components/shared/QuickViewModal';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
+import { COMPANY_CONTACT } from '@/config/companyContact';
 
 import {
   getSavedSelectedLocation,
@@ -245,6 +246,15 @@ export default function InventoryListCard({ container, index }) {
               <Eye className="w-4 h-4" />
               Quick View
             </Button>
+
+            <a
+              href={`tel:${COMPANY_CONTACT.businessPhoneHref}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex h-[42px] items-center justify-center gap-2 rounded-[14px] border border-primary/30 bg-primary/10 px-4 text-sm font-[760] text-primary transition-all hover:bg-primary hover:text-primary-foreground"
+            >
+              <Phone className="w-4 h-4" />
+              {COMPANY_CONTACT.businessPhone}
+            </a>
 
             <Button
               variant="outline"
