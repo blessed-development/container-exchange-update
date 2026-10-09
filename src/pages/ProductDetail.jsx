@@ -624,7 +624,7 @@ export default function ProductDetail() {
                     </h1>
 
                     <div className="text-[17px] md:text-[22px] font-bold leading-tight tracking-[-0.015em] text-white">
-                      {isSpecialty ? (
+                      {isSpecialty && !hasActiveZip ? (
                         <span className="text-primary">Specialty configuration</span>
                       ) : (
                         <>
@@ -843,7 +843,22 @@ export default function ProductDetail() {
 
           <div className="lg:sticky lg:top-24 self-start">
             {isSpecialty ? (
-              <SpecialtyQuotePanel product={container} />
+              <SpecialtyQuotePanel
+                product={container}
+                onProductSwap={(nextProduct) => {
+                  if (!nextProduct) return;
+                  setActiveProduct(nextProduct);
+                  setActiveImageIndex(0);
+                }}
+                onLocationChange={(nextLocation) => {
+                  setSavedLocation(nextLocation);
+                  setLocalizedPricing((previous) => ({
+                    ...previous,
+                    hasLocalPrice: Boolean(getLocationZip(nextLocation)),
+                    location: nextLocation,
+                  }));
+                }}
+              />
             ) : (
             <ContainerConfigurator
   container={container}

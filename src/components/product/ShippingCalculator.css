@@ -3329,9 +3329,17 @@ margin-top:1px !important;
   box-shadow:0 5px 14px rgba(22,163,74,.3) !important;
 }
 
-/* Specialty products use one fixed, non-switchable specification. */
+/* Specialty products use only real matching specialty variants. */
 .specialty-specification-tab{
   grid-template-columns:1fr !important;
+}
+
+.specialty-specification-tab--2{
+  grid-template-columns:repeat(2,1fr) !important;
+}
+
+.specialty-specification-tab--3{
+  grid-template-columns:repeat(3,1fr) !important;
 }
 
 .specialty-specification-tab .tab-title{
