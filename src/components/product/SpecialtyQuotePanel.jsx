@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Check, Lock, ShoppingCart } from 'lucide-react';
+import { Check, Lock, ShoppingCart, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 import { inventoryProducts } from '@/data/inventoryProducts';
@@ -37,7 +37,16 @@ const conditionKey = (product) =>
 
 export default function SpecialtyQuotePanel({ product, onProductSwap, onLocationChange }) {
   const navigate = useNavigate();
-  const { addToCart, setIsDrawerOpen } = useCart();
+  const {
+    cart,
+    addToCart,
+    updateQuantity,
+    removeItem,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    getSubtotal,
+    getGrandTotal,
+  } = useCart();
   const [location, setLocation] = useState(() => getSavedSelectedLocation() || EMPTY_LOCATION);
   const onLocationChangeRef = React.useRef(onLocationChange);
   const family = productFamily(product);
@@ -96,6 +105,9 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
   };
 
   const hasCheckoutLocation = Boolean(location?.postalCode);
+  const cartCount = cart.reduce((sum, item) => sum + Number(item.qty || 1), 0);
+  const subtotal = getSubtotal();
+  const grandTotal = getGrandTotal();
 
   const addCurrentProductToCart = () => {
     if (!hasCheckoutLocation) return;
@@ -112,8 +124,8 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
       image: product?.image_url,
       img: product?.image_url,
       url: `/product/${product?.id}`,
-      rating: product?.preview_rating,
-      reviewCount: product?.preview_rating_count,
+      rating: product?.rating,
+      reviewCount: product?.review_count,
       location,
     });
     setIsDrawerOpen(true);
@@ -124,6 +136,11 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
     navigate(`/contact?${params.toString()}`);
   };
 
+  const openCheckout = () => {
+    setIsDrawerOpen(false);
+    navigate('/checkout');
+  };
+
   const params = new URLSearchParams({
     container: product?.name || 'Specialty shipping container',
     ...(location?.postalCode ? { zip: location.postalCode } : {}),
@@ -132,7 +149,8 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
   });
 
   return (
-    <aside className="widget specialty-configurator">
+    <>
+      <aside className="widget specialty-configurator">
       <div className="buy-header">
         <div className="premium-buy-tabs" aria-label="Container condition">
           <button
@@ -235,6 +253,57 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+
+      <div
+        className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+        onClick={() => setIsDrawerOpen(false)}
+      />
+
+      <aside className={`cart-drawer ${isDrawerOpen ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <div className="drawer-title">
+            <ShoppingCart size={18} />
+            My Cart <span className="cart-count">{cartCount}</span>
+          </div>
+          <button type="button" className="drawer-close ce-utility-button" onClick={() => setIsDrawerOpen(false)}>
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="drawer-body">
+          {cart.length === 0 ? (
+            <div className="empty-cart">Your cart is empty.</div>
+          ) : (
+            cart.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <img src={item.image || item.img} className="ci-img" alt={item.title} />
+                <div className="ci-info">
+                  <button type="button" className="ci-remove ce-destructive-button" onClick={() => removeItem(item.id)}>×</button>
+                  <div className="ci-name">{item.title}</div>
+                  <div className="ci-meta">{item.sub}</div>
+                  <div className="ci-price">{fmt(item.unitPrice)}</div>
+                  <div className="ci-qty-row">
+                    <button type="button" className="ci-qty-btn ce-utility-button" onClick={() => updateQuantity(item.id, -1)}>−</button>
+                    <span className="ci-qty-val">{item.qty}</span>
+                    <button type="button" className="ci-qty-btn ce-utility-button" onClick={() => updateQuantity(item.id, 1)}>+</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="drawer-footer">
+          <div className="drawer-subtotal">
+            <span>Subtotal</span>
+            <span className="drawer-total-val">{fmt(grandTotal || subtotal)}</span>
+          </div>
+          <div className="drawer-tax-note" />
+          <button type="button" className="checkout-btn ce-signature-button" onClick={openCheckout}>Checkout</button>
+          <button type="button" className="continue-btn ce-secondary-button" onClick={() => setIsDrawerOpen(false)}>Continue Shopping</button>
+        </div>
+      </aside>
+    </>
   );
 }

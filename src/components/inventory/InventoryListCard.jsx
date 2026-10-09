@@ -64,9 +64,7 @@ export default function InventoryListCard({ container, index }) {
   }, []);
 
   const isSpecialty = Boolean(container.is_specialty);
-  const displayRating = isSpecialty
-    ? Number(container.preview_rating || 0)
-    : Number(container.rating || 0);
+  const displayRating = Number(container.rating || container.preview_rating || 0);
   const stars = Math.round(displayRating);
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const hasZip = Boolean(savedLocation?.postalCode);
@@ -80,11 +78,9 @@ export default function InventoryListCard({ container, index }) {
     container?.id
   );
 
-  const displayPrice = getLocalizedPrice(
-    container.base_price || container.price || 0,
-    savedLocation,
-    container
-  );
+  const displayPrice = isSpecialty
+    ? Number(container.preview_price || 0)
+    : getLocalizedPrice(container.base_price || container.price || 0, savedLocation, container);
   const imageScaleClass =
     container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
@@ -112,9 +108,7 @@ export default function InventoryListCard({ container, index }) {
       source: 'Inventory listing',
       notes: [
         `Container: ${container.name || 'Shipping Container'}`,
-        ...(!isSpecialty
-          ? [`Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`]
-          : []),
+        `Estimated unit price: $${Number(displayPrice || 0).toLocaleString()}`,
         ...(savedLocation?.marketDisplayName
           ? [`Supplying market: ${savedLocation.marketDisplayName}`]
           : []),
@@ -168,7 +162,7 @@ export default function InventoryListCard({ container, index }) {
               </div>
             )}
 
-            {(displayRating > 0 || !isSpecialty) && <div className="flex items-center gap-1.5 mb-[14px]">
+            <div className="flex items-center gap-1.5 mb-[14px]">
               <span className="text-[14px] font-[850]">
                 {(displayRating || 5).toFixed(1)}
               </span>
@@ -186,26 +180,11 @@ export default function InventoryListCard({ container, index }) {
                 ))}
               </div>
 
-              <span className="text-[12px] text-muted-foreground">
-                {isSpecialty ? '(Preview)' : `(${container.review_count || 0})`}
-              </span>
-            </div>}
+              <span className="text-[12px] text-muted-foreground">({container.review_count || 0})</span>
+            </div>
 
             <div className="mb-[16px]">
-              {isSpecialty ? (
-                <>
-                  <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-green-600 mb-1">
-                    {savedLocation?.marketDisplayName || (hasZip ? `${savedLocation?.city}, ${savedLocation?.state}` : 'Select location')}
-                  </div>
-                  <div className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
-                    Preview price
-                  </div>
-                  <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
-                    ${Number(container.preview_price || 0).toLocaleString()}
-                  </div>
-                  <p className="mt-2 text-xs font-medium text-muted-foreground">Final price confirmed by quote.</p>
-                </>
-              ) : !hasZip ? (
+              {!hasZip ? (
                 <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">
                   Starting From
                 </div>
@@ -214,11 +193,9 @@ export default function InventoryListCard({ container, index }) {
                   {savedLocation?.marketDisplayName || `${savedLocation?.city}, ${savedLocation?.state}`}
                 </div>
               )}
-              {!isSpecialty && (
-                <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
-                  ${Number(displayPrice || 0).toLocaleString()}
-                </div>
-              )}
+              <div className="text-[34px] leading-none font-black text-primary tracking-[-0.05em]">
+                ${Number(displayPrice || 0).toLocaleString()}
+              </div>
             </div>
 
             <div className="space-y-[7px] text-[13px]">

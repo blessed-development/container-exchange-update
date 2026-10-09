@@ -92,6 +92,7 @@ const specialtyProduct = ({
   description,
   previewPrice,
   previewRating,
+  reviewCount,
   grade = condition === 'New' ? 'IICL' : 'USED_REEFER',
 }) => ({
   id,
@@ -108,11 +109,12 @@ const specialtyProduct = ({
     : 'Standard Height • 8ft 6in High',
   description,
   is_specialty: true,
-  is_quote_only: true,
-  // Preview-only presentation values. These are never used for checkout or a binding quote.
+  is_available: true,
+  // Specialty products use the same card and cart presentation fields as the core catalog.
   preview_price: previewPrice,
   preview_rating: previewRating,
-  preview_rating_count: 'Preview',
+  rating: previewRating,
+  review_count: reviewCount,
 });
 
 export const inventoryProducts = [
@@ -365,6 +367,7 @@ export const inventoryProducts = [
     doorType: 'Double Doors at Both Ends',
     previewPrice: 3850,
     previewRating: 4.9,
+    reviewCount: 84,
     description: 'A one-trip 20ft specialty container with cargo doors at both ends for flexible access planning.',
   }),
   specialtyProduct({
@@ -376,6 +379,7 @@ export const inventoryProducts = [
     doorType: 'Double Doors at Both Ends',
     previewPrice: 6500,
     previewRating: 4.8,
+    reviewCount: 103,
     description: 'A one-trip 40ft specialty container with cargo doors at both ends for flexible access planning.',
   }),
   specialtyProduct({
@@ -387,6 +391,7 @@ export const inventoryProducts = [
     doorType: 'Double Doors at Both Ends',
     previewPrice: 7200,
     previewRating: 4.9,
+    reviewCount: 67,
     description: 'A one-trip 40ft high cube specialty container with cargo doors at both ends and added interior height.',
   }),
   specialtyProduct({
@@ -398,6 +403,7 @@ export const inventoryProducts = [
     doorType: 'Full Side Opening with End Doors',
     previewPrice: 4800,
     previewRating: 4.8,
+    reviewCount: 96,
     description: 'A one-trip 20ft specialty container with a fully opening long side and end cargo doors.',
   }),
   specialtyProduct({
@@ -409,6 +415,7 @@ export const inventoryProducts = [
     doorType: 'Full Side Opening with End Doors',
     previewPrice: 7800,
     previewRating: 4.8,
+    reviewCount: 111,
     description: 'A one-trip 40ft specialty container with a fully opening long side and end cargo doors.',
   }),
   specialtyProduct({
@@ -420,6 +427,7 @@ export const inventoryProducts = [
     doorType: 'Full Side Opening with End Doors',
     previewPrice: 8400,
     previewRating: 4.9,
+    reviewCount: 78,
     description: 'A one-trip 40ft high cube specialty container with a fully opening long side, end doors, and added interior height.',
   }),
   specialtyProduct({
@@ -431,6 +439,7 @@ export const inventoryProducts = [
     doorType: 'Four Separate Side Door Sets with End Doors',
     previewPrice: 9600,
     previewRating: 4.9,
+    reviewCount: 47,
     description: 'A one-trip 40ft high cube specialty container with four separately accessible side door sets and end cargo doors.',
   }),
   specialtyProduct({
@@ -442,6 +451,7 @@ export const inventoryProducts = [
     doorType: 'Double Doors at 1 End',
     previewPrice: 6200,
     previewRating: 4.8,
+    reviewCount: 39,
     description: 'A one-trip 45ft high cube container for projects that require the longer high-cube format.',
   }),
   specialtyProduct({
@@ -453,6 +463,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 14500,
     previewRating: 4.8,
+    reviewCount: 58,
     description: 'A new 20ft refrigerated container. Request a quote to discuss the configuration needed for your project.',
   }),
   specialtyProduct({
@@ -464,6 +475,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 21000,
     previewRating: 4.9,
+    reviewCount: 74,
     description: 'A new 40ft refrigerated container. Request a quote to discuss the configuration needed for your project.',
   }),
   specialtyProduct({
@@ -475,6 +487,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 23500,
     previewRating: 4.9,
+    reviewCount: 51,
     description: 'A new 40ft high cube refrigerated container. Request a quote to discuss the configuration needed for your project.',
   }),
   specialtyProduct({
@@ -486,6 +499,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 7500,
     previewRating: 4.6,
+    reviewCount: 42,
     description: 'A used 20ft refrigerated container. Request a quote to confirm the unit details required for your project.',
   }),
   specialtyProduct({
@@ -497,6 +511,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 11000,
     previewRating: 4.6,
+    reviewCount: 55,
     description: 'A used 40ft refrigerated container. Request a quote to confirm the unit details required for your project.',
   }),
   specialtyProduct({
@@ -508,6 +523,7 @@ export const inventoryProducts = [
     doorType: 'Reefer Machinery End with Cargo Doors',
     previewPrice: 12800,
     previewRating: 4.7,
+    reviewCount: 44,
     description: 'A used 40ft high cube refrigerated container. Request a quote to confirm the unit details required for your project.',
   }),
 ];

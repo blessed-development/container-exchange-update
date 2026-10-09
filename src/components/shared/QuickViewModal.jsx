@@ -32,15 +32,11 @@ export default function QuickViewModal({ container, onClose }) {
 
   const gradeLabel = GRADE_LABELS[container.grade] || container.grade;
   const isSpecialty = Boolean(container.is_specialty);
-  const displayRating = isSpecialty
-    ? Number(container.preview_rating || 0)
-    : Number(container.rating || 0);
+  const displayRating = Number(container.rating || container.preview_rating || 0);
   const stars = Math.round(displayRating);
-  const displayPrice = getLocalizedPrice(
-    container.base_price || container.price || 0,
-    getSavedSelectedLocation(),
-    container
-  );
+  const displayPrice = isSpecialty
+    ? Number(container.preview_price || 0)
+    : getLocalizedPrice(container.base_price || container.price || 0, getSavedSelectedLocation(), container);
 
   return (
     <AnimatePresence>
@@ -84,30 +80,20 @@ export default function QuickViewModal({ container, onClose }) {
                 <h2 className="text-lg font-black text-foreground leading-tight mb-1.5 pr-8">{container.name}</h2>
 
                 {/* Rating */}
-                {(displayRating > 0 || !isSpecialty) && <div className="flex items-center gap-1.5 mb-2">
+                <div className="flex items-center gap-1.5 mb-2">
                   <span className="text-sm font-bold">{(displayRating || 5).toFixed(1)}</span>
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className={`w-4 h-4 ${i < stars ? 'fill-yellow-400 text-yellow-400' : 'fill-muted text-muted-foreground'}`} />
                     ))}
                   </div>
-                  <span className="text-xs text-muted-foreground">
-                    {isSpecialty ? '(Preview)' : `(${container.review_count || 0} reviews)`}
-                  </span>
-                </div>}
+                  <span className="text-xs text-muted-foreground">({container.review_count || 0} reviews)</span>
+                </div>
 
                 {/* Price */}
-                {isSpecialty ? (
-                  <div className="mb-3">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground mb-1">Preview price</p>
-                    <p className="text-3xl font-black text-primary">${Number(container.preview_price || 0).toLocaleString()}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">Final price confirmed by quote.</p>
-                  </div>
-                ) : (
-                  <p className="text-3xl font-black text-primary mb-3">
-                    ${displayPrice.toLocaleString() || '—'}
-                  </p>
-                )}
+                <p className="text-3xl font-black text-primary mb-3">
+                  ${displayPrice.toLocaleString() || '—'}
+                </p>
               </div>
 
               {/* Specs */}

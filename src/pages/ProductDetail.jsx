@@ -637,7 +637,7 @@ export default function ProductDetail() {
                     </div>
                   </div>
 
-                  {!isSpecialty && <div className="product-hero-rating absolute bottom-6 right-6 z-10 flex items-center gap-2 md:bottom-7 md:right-8">
+                  <div className="product-hero-rating absolute bottom-6 right-6 z-10 flex items-center gap-2 md:bottom-7 md:right-8">
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
@@ -658,7 +658,7 @@ export default function ProductDetail() {
                     <span className="text-[12px] font-medium text-white/85">
                       ({container.review_count || 42} reviews)
                     </span>
-                  </div>}
+                  </div>
                 </>
               )}
 
@@ -721,7 +721,7 @@ export default function ProductDetail() {
 
             <div className="mt-6 pb-6">
               <div className="mb-8 flex items-center gap-4">
-                {!isSpecialty && showStartingFrom && (
+                {showStartingFrom && (
                   <div className="inline-flex items-center rounded-full bg-green-600/90 px-3 py-1">
                     <span className="text-[9px] font-mono uppercase tracking-[0.16em] text-white font-bold">
                       Starting From
