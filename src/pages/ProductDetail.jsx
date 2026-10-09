@@ -194,6 +194,10 @@ export default function ProductDetail() {
       ? calculatorPrice
       : getLocalizedPrice(baseDisplayPrice, activeLocation, container);
 
+  const displayedProductPrice = isSpecialty
+    ? Number(container?.preview_price || 0)
+    : heroPrice;
+
   const showStartingFrom =
     !hasActiveZip;
 
@@ -624,16 +628,12 @@ export default function ProductDetail() {
                     </h1>
 
                     <div className="text-[17px] md:text-[22px] font-bold leading-tight tracking-[-0.015em] text-white">
-                      {isSpecialty && !hasActiveZip ? (
-                        <span className="text-primary">Specialty configuration</span>
-                      ) : (
-                        <>
-                          For Sale in
-                          <span className="text-primary ml-2">
-                            {seoLocation}
-                          </span>
-                        </>
-                      )}
+                      <>
+                        For Sale in
+                        <span className="text-primary ml-2">
+                          {seoLocation}
+                        </span>
+                      </>
                     </div>
                   </div>
 
@@ -729,17 +729,9 @@ export default function ProductDetail() {
                   </div>
                 )}
 
-                {isSpecialty ? (
-                  <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-primary">Preview price</p>
-                    <p className="mt-1 text-4xl font-black tracking-tight leading-none text-orange-500">${Number(container.preview_price || 0).toLocaleString()}</p>
-                    <p className="mt-2 text-xs font-medium text-muted-foreground">Construction display only — final price confirmed by quote.</p>
-                  </div>
-                ) : (
-                  <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
-                    ${Number(heroPrice).toLocaleString()}
-                  </div>
-                )}
+                <div className="text-4xl font-black tracking-tight text-orange-500 leading-none">
+                  ${Number(displayedProductPrice).toLocaleString()}
+                </div>
               </div>
 
               <button

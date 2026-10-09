@@ -1,15 +1,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Check, FileText, Lock } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Check, Lock, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { getSavedSelectedLocation } from '@/lib/locationEngine';
+import { useCart } from '@/context/CartContext';
 import './ShippingCalculator.css';
 
 const dimensionsFor = (product) => {
-  const height = product?.height === 'high_cube' ? "9'6\" H" : "8'6\" H";
-  return `${product?.size || 20}' L × 8' W × ${height}`;
+  return `${product?.size || 20} × 8 × ${product?.height === 'high_cube' ? '9.6' : '8.6'}`;
 };
+
+const labelFor = (product) =>
+  `${product?.size || 20}ft ${product?.height === 'high_cube' ? 'High Cube' : 'Standard'}`;
+
+const fmt = (value) =>
+  `$${Number(value || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
 const EMPTY_LOCATION = { city: '', state: '', postalCode: '', country: '' };
 
@@ -28,15 +37,13 @@ const conditionKey = (product) =>
 
 export default function SpecialtyQuotePanel({ product, onProductSwap, onLocationChange }) {
   const navigate = useNavigate();
+  const { addToCart, setIsDrawerOpen } = useCart();
   const [location, setLocation] = useState(() => getSavedSelectedLocation() || EMPTY_LOCATION);
   const onLocationChangeRef = React.useRef(onLocationChange);
   const family = productFamily(product);
   const activeCondition = conditionKey(product);
   const isNew = activeCondition === 'new';
   const gradeLabel = isNew ? 'IICL Certified' : 'Used Reefer';
-  const gradeNote = isNew
-    ? 'New one-trip specialty configuration'
-    : 'Working-condition details confirmed by quote';
 
   const familyProducts = useMemo(
     () => inventoryProducts.filter((item) => item.is_specialty && productFamily(item) === family),
@@ -86,6 +93,35 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
 
   const selectCondition = (nextCondition) => {
     selectProduct(familyProducts.find((item) => conditionKey(item) === nextCondition));
+  };
+
+  const hasCheckoutLocation = Boolean(location?.postalCode);
+
+  const addCurrentProductToCart = () => {
+    if (!hasCheckoutLocation) return;
+
+    addToCart({
+      productId: product?.id,
+      title: product?.name,
+      sub: product?.short_description,
+      condition: activeCondition,
+      grade: isNew ? 'IICL' : 'Used Reefer',
+      size: labelFor(product),
+      unitPrice: Number(product?.preview_price || 0),
+      qty: 1,
+      image: product?.image_url,
+      img: product?.image_url,
+      url: `/product/${product?.id}`,
+      rating: product?.preview_rating,
+      reviewCount: product?.preview_rating_count,
+      location,
+    });
+    setIsDrawerOpen(true);
+  };
+
+  const requestQuote = () => {
+    if (!hasCheckoutLocation) return;
+    navigate(`/contact?${params.toString()}`);
   };
 
   const params = new URLSearchParams({
@@ -138,12 +174,11 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
       <div className={`main-tabs specialty-specification-tab specialty-specification-tab--${Math.min(sortedVariants.length, 3)}`} aria-label="Available specialty container specifications">
         {sortedVariants.map((variant) => {
           const active = variant.id === product?.id;
-          const label = `${variant.size}ft${variant.height === 'high_cube' ? ' High Cube' : ''}`;
           return (
             <button key={variant.id} type="button" className={`main-tab ${active ? 'active' : ''}`} onClick={() => selectProduct(variant)}>
-              <span className="tab-title">{label}</span>
+              <span className="tab-title">{labelFor(variant)}</span>
               <span className="tab-sub">{dimensionsFor(variant)}</span>
-              <span className="tab-price">${Number(variant.preview_price || 0).toLocaleString()}</span>
+              <span className="tab-price">{fmt(variant.preview_price)}</span>
               {active && <span className="main-tab-active-check" aria-hidden="true"><Check size={9} /></span>}
             </button>
           );
@@ -155,7 +190,6 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
         <div className="grade-upgrade-grid">
           <div className="grade-upgrade-btn active" role="status">
             <span className="grade-name">{gradeLabel}</span>
-            <span className="grade-delta included">{gradeNote}</span>
             <span className="grade-active-check" aria-hidden="true"><Check size={11} /></span>
           </div>
         </div>
@@ -165,28 +199,40 @@ export default function SpecialtyQuotePanel({ product, onProductSwap, onLocation
       <div className="selection-type standalone-selection-type">
         <div className="selection-btn active" role="status">
           <span className="selection-dot"><Check size={10} /></span>
-          <span>Quote confirmation required</span>
+          <span>First off the Stack</span>
         </div>
       </div>
 
       <div className="checkout">
         <div className="checkout-inner">
-          <div className="tax-note"><Lock size={13} /> Quote-only configuration</div>
+          <div className="tax-note"><Lock size={13} /> Sales tax calculated at checkout.</div>
           <hr className="divider" />
           <div className="total-row">
-            <span className="total-lbl">Preview Price</span>
+            <span className="total-lbl">Total</span>
             <div className="flex flex-col items-end">
-              <span className="total-price">${Number(product?.preview_price || 0).toLocaleString()}</span>
-              <span className="mt-1 text-right text-[10px] font-medium text-muted-foreground">Construction display only</span>
+              <span className="total-price">{fmt(product?.preview_price)}</span>
             </div>
           </div>
-          <Link to={`/contact?${params.toString()}`} className="ce-signature-link mt-4 block">
-            <span className="ce-signature-button flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold">
-              <FileText className="h-4 w-4" aria-hidden="true" />
-              Request a Quote
-            </span>
-          </Link>
-          <p className="mt-3 text-center text-xs leading-5 text-muted-foreground">No payment is collected from this page. Final price and configuration are confirmed by quote.</p>
+          <div className="relative mt-4 checkout-action-lock">
+            {!hasCheckoutLocation && (
+              <div className="absolute inset-0 z-20 rounded-[18px] bg-black/20 backdrop-blur-[9px] flex items-center justify-center border border-white/5">
+                <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 text-primary text-[12px] font-medium tracking-[0.01em] shadow-[0_10px_28px_rgba(0,0,0,0.18)]">
+                  Enter ZIP to unlock checkout
+                </div>
+              </div>
+            )}
+            <div className={`transition-all duration-300 ${!hasCheckoutLocation ? 'blur-[5px] pointer-events-none select-none' : ''}`}>
+              <div className="cart-row">
+                <button type="button" className="add-btn ce-signature-button" disabled={!hasCheckoutLocation} onClick={addCurrentProductToCart}>
+                  <ShoppingCart size={17} />
+                  Add to Cart
+                </button>
+              </div>
+              <button type="button" className="quote-btn ce-secondary-button" disabled={!hasCheckoutLocation} onClick={requestQuote}>
+                Request a Quote
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </aside>
