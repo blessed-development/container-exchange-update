@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import NavbarCartCTA from './NavbarCartCTA';
@@ -25,6 +25,15 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [careOpen, setCareOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    if (!careOpen) return undefined;
+
+    const closePolicies = () => setCareOpen(false);
+    window.addEventListener('scroll', closePolicies, { passive: true, capture: true });
+
+    return () => window.removeEventListener('scroll', closePolicies, true);
+  }, [careOpen]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-accent/80 backdrop-blur-xl border-b border-white/[0.06] shadow-2xl shadow-black/20">
