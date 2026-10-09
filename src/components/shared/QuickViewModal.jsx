@@ -70,7 +70,7 @@ export default function QuickViewModal({ container, onClose }) {
               <ImageSlider
                 images={displayImages}
                 className="h-full w-full"
-                imageClassName="scale-[1.06]"
+                imageClassName={isSpecialty ? 'scale-100' : 'scale-[1.06]'}
               />
             </div>
 

@@ -598,7 +598,7 @@ export default function ProductDetail() {
                 key={activeImage}
                 src={activeImage}
                 alt={productTitle}
-                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] object-cover brightness-[0.88] contrast-[1.06] transition-all duration-700 ease-out group-hover:scale-[1.025] animate-in fade-in`}
+                className={`product-hero-image ${container?.id === 'new-20-iicl' ? 'product-hero-image-new20' : ''} ${container?.id === 'used-20-wwt' ? 'product-hero-image-used20wwt' : ''} w-full h-[340px] sm:h-[390px] md:h-[430px] ${isSpecialty ? 'object-contain bg-[#f4f4f2] brightness-100 contrast-100' : 'object-cover brightness-[0.88] contrast-[1.06] group-hover:scale-[1.025]'} transition-all duration-700 ease-out animate-in fade-in`}
               />
 
               {showHeroOverlay && (

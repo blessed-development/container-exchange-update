@@ -75,7 +75,7 @@ const galleries = {
   'new-40hc-os4d': specialtyGallery('new-40hc-os4d'),
   'new-45hc': specialtyGallery('new-45hc'),
   'new-45hc-dd': specialtyGallery('new-45hc-dd', 'hero.png'),
-  'new-45hc-fos': specialtyGallery('new-45hc-fos', 'hero.png'),
+  'new-45hc-fos': specialtyGallery('new-45hc-fos', 'hero.jpg'),
   'new-20-rf': specialtyGallery('new-20-rf'),
   'new-40-rf': specialtyGallery('new-40-rf'),
   'new-40hc-rf': specialtyGallery('new-40hc-rf'),
