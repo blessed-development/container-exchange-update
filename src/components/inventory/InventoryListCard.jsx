@@ -125,7 +125,9 @@ export default function InventoryListCard({ container, index }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.04, duration: 0.35 }}
         onClick={openProduct}
-        className="bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row sm:h-[344px] cursor-pointer transition-all duration-300"
+        className={`bg-card border border-border hover:border-primary/25 hover:shadow-xl rounded-[26px] overflow-hidden flex flex-col sm:flex-row ${
+          isSpecialty ? 'sm:min-h-[410px]' : 'sm:h-[344px]'
+        } cursor-pointer transition-all duration-300`}
       >
         <div
           className={`relative h-[260px] sm:h-full ${hasWideCatalogImage ? 'sm:w-[38%]' : 'sm:w-[38%]'} overflow-hidden bg-muted`}
