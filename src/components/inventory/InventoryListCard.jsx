@@ -69,6 +69,7 @@ export default function InventoryListCard({ container, index }) {
     'new-40hc-dd',
     'new-40hc-os4d',
     'used-40hc-rf-working',
+    'new-45hc-dd',
   ].includes(container.id);
   const displayRating = Number(container.rating || container.preview_rating || 0);
   const stars = Math.round(displayRating);
@@ -88,9 +89,12 @@ export default function InventoryListCard({ container, index }) {
     ? Number(container.preview_price || 0)
     : getLocalizedPrice(container.base_price || container.price || 0, savedLocation, container);
   const imageScaleClass =
-    container?.size === 40
+    container?.id === 'new-45hc-dd'
+      ? 'scale-100'
+      : container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
       : 'scale-[1.025] sm:scale-[1.045]';
+  const imageFitClass = container?.id === 'new-45hc-dd' ? 'object-cover' : 'object-contain';
   const listingImage = getListingImage(container);
 
   const openProduct = (e) => {
@@ -151,14 +155,12 @@ export default function InventoryListCard({ container, index }) {
               alt={container.name}
               loading={index < 3 ? 'eager' : 'lazy'}
               decoding="async"
-              className={`w-full h-full object-contain object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
+              className={`w-full h-full ${imageFitClass} object-center origin-center ${imageScaleClass} hover:scale-[1.12] transition-transform duration-500`}
             />
           </picture>
         </div>
 
-        <div className={`flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col ${
-          hasCompactSpecialtyLayout ? 'justify-start' : 'justify-between'
-        }`}>
+        <div className="flex-1 min-w-0 px-6 pt-5 pb-5 flex flex-col justify-between">
           <div>
             <h3 className={`font-[820] tracking-[-0.03em] text-foreground ${
               hasCompactSpecialtyLayout

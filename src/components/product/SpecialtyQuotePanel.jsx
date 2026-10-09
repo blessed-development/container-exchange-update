@@ -23,6 +23,7 @@ const fmt = (value) =>
 const EMPTY_LOCATION = { city: '', state: '', postalCode: '', country: '' };
 
 const productFamily = (product) => {
+  if (product?.id === 'new-45hc-dd') return '45-high-cube-double-door';
   const doorType = String(product?.door_type || '').toLowerCase();
   if (doorType.includes('reefer')) return 'reefer';
   if (doorType.includes('both ends')) return 'double-door';
