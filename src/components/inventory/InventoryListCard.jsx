@@ -90,13 +90,14 @@ export default function InventoryListCard({ container, index }) {
   const displayPrice = isSpecialty
     ? Number(container.preview_price || 0)
     : getLocalizedPrice(container.base_price || container.price || 0, savedLocation, container);
+  const hasFullBleedSpecialtyImage = ['new-45hc-dd', 'new-45hc-fos'].includes(container?.id);
   const imageScaleClass =
-    isSpecialty
+    hasFullBleedSpecialtyImage
       ? 'scale-100'
       : container?.size === 40
       ? 'scale-[1.075] sm:scale-[1.10]'
       : 'scale-[1.025] sm:scale-[1.045]';
-  const imageFitClass = 'object-contain';
+  const imageFitClass = hasFullBleedSpecialtyImage ? 'object-cover' : 'object-contain';
   const listingImage = getListingImage(container);
 
   const openProduct = (e) => {
