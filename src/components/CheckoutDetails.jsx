@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, CreditCard, Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { isContactDeliveryEnabled, submitEnquiry } from '../lib/submitEnquiry';
-import { getSavedSelectedLocation } from '../lib/locationEngine';
+import { getSavedSelectedLocation, lookupPostalCode } from '../lib/locationEngine';
+import { formatDeliveryEstimate, getDeliveryEstimate } from '../lib/deliveryEstimate';
 import './CheckoutPage.css';
 
 const fallbackImage =
@@ -254,6 +255,7 @@ const CheckoutDetails = () => {
   const [showAllItems, setShowAllItems] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [deliveryLocation, setDeliveryLocation] = useState(() => getSavedSelectedLocation());
   const checkoutDeliveryAvailable = isContactDeliveryEnabled;
 
   useEffect(() => {
@@ -267,6 +269,24 @@ const CheckoutDetails = () => {
     country: formData.country,
     state: formData.state,
   });
+
+  useEffect(() => {
+    let active = true;
+
+    lookupPostalCode(formData.zip)
+      .then((location) => {
+        if (active) setDeliveryLocation(location);
+      })
+      .catch(() => {
+        if (active) setDeliveryLocation(null);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [formData.zip]);
+
+  const deliveryEstimate = getDeliveryEstimate(deliveryLocation);
 
   const total = taxableAmount + salesTax.amount;
   const visibleCartItems = showAllItems ? cart : cart.slice(0, 3);
@@ -338,6 +358,7 @@ const CheckoutDetails = () => {
           `Billing address: ${billingAddress}`,
           `Quoted subtotal: ${formatMoney(subtotal)}`,
           `Estimated sales tax: ${formatMoney(salesTax.amount)}`,
+          `Estimated delivery: ${formatDeliveryEstimate(deliveryEstimate)}`,
           `Estimated total: ${formatMoney(total)}`,
           formData.company ? `Company: ${formData.company}` : '',
           formData.notes ? `Customer notes: ${formData.notes}` : '',
@@ -760,10 +781,19 @@ const CheckoutDetails = () => {
                 <span>Sales Tax</span>
                 <strong>{formatMoney(salesTax.amount)}</strong>
               </div>
+
+              <div className="total-row delivery-estimate-row">
+                <span>Estimated Delivery</span>
+                <strong>{formatDeliveryEstimate(deliveryEstimate)}</strong>
+              </div>
             </div>
 
+            <p className="delivery-estimate-note">
+              Final delivery cost is confirmed after route and site-access review.
+            </p>
+
             <div className="total-row grand-total">
-              <span>Total</span>
+              <span>Total before delivery</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Lock } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { formatDeliveryEstimate, getDeliveryEstimate } from '../lib/deliveryEstimate';
+import { getSavedSelectedLocation } from '../lib/locationEngine';
 
 const formatMoney = (value) => {
   const amount = Number(value || 0);
@@ -16,6 +18,7 @@ const OrderSummary = ({ onCheckout }) => {
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
+  const deliveryEstimate = getDeliveryEstimate(getSavedSelectedLocation());
 
   return (
     <aside className="checkout-sidebar">
@@ -32,8 +35,17 @@ const OrderSummary = ({ onCheckout }) => {
           <em>Calculated at checkout</em>
         </div>
 
+        <div className="total-row delivery-estimate-row">
+          <span>Estimated delivery</span>
+          <strong>{formatDeliveryEstimate(deliveryEstimate)}</strong>
+        </div>
+
+        <p className="delivery-estimate-note">
+          Final delivery cost is confirmed after route and site-access review.
+        </p>
+
         <div className="total-row grand-total">
-          <span>Total</span>
+          <span>Total before delivery</span>
           <strong>{formatMoney(total)}</strong>
         </div>
 

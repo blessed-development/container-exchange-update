@@ -4,6 +4,8 @@ import { Lock, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
 import { COMPANY_CONTACT } from '@/config/companyContact';
+import { formatDeliveryEstimate, getDeliveryEstimate } from '@/lib/deliveryEstimate';
+import { getSavedSelectedLocation } from '@/lib/locationEngine';
 
 const fallbackImage =
   '/images/products/new-20-iicl/hero.webp';
@@ -34,6 +36,7 @@ const CheckoutPage = () => {
 
   const subtotal = getSubtotal();
   const total = getGrandTotal();
+  const deliveryEstimate = getDeliveryEstimate(getSavedSelectedLocation());
   const handleBackToStore = () => {
     navigate('/inventory');
   };
@@ -184,8 +187,17 @@ const CheckoutPage = () => {
               <em>Calculated at checkout</em>
             </div>
 
+            <div className="total-row delivery-estimate-row">
+              <span>Estimated delivery</span>
+              <strong>{formatDeliveryEstimate(deliveryEstimate)}</strong>
+            </div>
+
+            <p className="delivery-estimate-note">
+              Final delivery cost is confirmed after route and site-access review.
+            </p>
+
             <div className="total-row grand-total">
-              <span>Total</span>
+              <span>Total before delivery</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 
