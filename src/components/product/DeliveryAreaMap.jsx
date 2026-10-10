@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { MapPin } from 'lucide-react';
-import { CircleMarker, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
+import { Circle, CircleMarker, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import ZipCodeSearch from '@/components/shared/ZipCodeSearch';
 
 const DEFAULT_VIEW = {
   latitude: 39.8283,
@@ -40,6 +41,8 @@ const getAreaLabel = (location) => {
   return state ? `${city}, ${state}` : city;
 };
 
+const DELIVERY_AREA_RADIUS_METERS = 48280;
+
 function MapViewSync({ center, zoom }) {
   const map = useMap();
 
@@ -74,13 +77,32 @@ export default function DeliveryAreaMap({ location }) {
         </div>
       </div>
 
-      <div className="border-t border-border bg-muted/30 p-2 sm:p-3">
+      <div className="border-t border-border bg-muted/30 p-4 sm:p-5">
+        <ZipCodeSearch
+          variant="calculator"
+          appearance="calculator"
+          showAction={false}
+          showCurrentLocationControl
+          placeholder="Search ZIP / postal code"
+        />
+
+        <p className="mt-3 px-1 text-xs leading-relaxed text-muted-foreground">
+          Search for a ZIP or postal code, or use your current location to update pricing and delivery availability.
+        </p>
+
+        <div className="mt-4 overflow-hidden rounded-[20px] border border-border bg-muted">
         <MapContainer
           center={center}
           zoom={zoom}
-          scrollWheelZoom
+          dragging={false}
+          scrollWheelZoom={false}
+          touchZoom={false}
+          doubleClickZoom={false}
+          boxZoom={false}
+          keyboard={false}
+          zoomControl={false}
           className="h-[280px] w-full rounded-[20px] bg-muted sm:h-[340px]"
-          aria-label={hasSelectedArea ? `Interactive delivery area map near ${areaLabel}` : 'Interactive North American delivery area map'}
+          aria-label={hasSelectedArea ? `Delivery area map near ${areaLabel}` : 'Delivery area map'}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -88,15 +110,34 @@ export default function DeliveryAreaMap({ location }) {
           />
           <MapViewSync center={center} zoom={zoom} />
           {hasSelectedArea && (
-            <CircleMarker
-              center={center}
-              radius={9}
-              pathOptions={{ color: '#c44917', fillColor: '#f15a24', fillOpacity: 0.9, weight: 3 }}
-            >
-              <Popup>{areaLabel}</Popup>
-            </CircleMarker>
+            <>
+              <Circle
+                center={center}
+                radius={DELIVERY_AREA_RADIUS_METERS}
+                pathOptions={{
+                  color: '#51b7e6',
+                  fillColor: '#7ed3f7',
+                  fillOpacity: 0.35,
+                  weight: 0,
+                }}
+              />
+              <CircleMarker
+                center={center}
+                radius={9}
+                pathOptions={{ color: '#0b1c2d', fillColor: '#0b1c2d', fillOpacity: 1, weight: 3 }}
+              >
+                <Popup>{areaLabel}</Popup>
+              </CircleMarker>
+            </>
           )}
         </MapContainer>
+        </div>
+
+        {hasSelectedArea && (
+          <p className="mt-3 text-center text-xs font-medium text-muted-foreground">
+            Showing the delivery area around <span className="text-foreground">{areaLabel}</span>
+          </p>
+        )}
       </div>
     </section>
   );
