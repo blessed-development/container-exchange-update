@@ -7,6 +7,7 @@ import ContainerConfigurator from '@/components/product/ContainerConfigurator';
 import SpecialtyQuotePanel from '@/components/product/SpecialtyQuotePanel';
 import ProductFAQ from '@/components/product/ProductFAQ';
 import RelatedProducts from '@/components/product/RelatedProducts';
+import DeliveryAreaMap from '@/components/product/DeliveryAreaMap';
 import ZipRequiredModal from '@/components/shared/ZipRequiredModal';
 import { inventoryProducts } from '@/data/inventoryProducts';
 import { SIZE_OPTIONS } from '@/components/product/SizeSelector';
@@ -870,6 +871,10 @@ export default function ProductDetail() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+        <DeliveryAreaMap location={activeLocation} />
       </div>
 
       <div className="border-t border-border">

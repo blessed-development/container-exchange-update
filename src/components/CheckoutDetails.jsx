@@ -788,12 +788,8 @@ const CheckoutDetails = () => {
               </div>
             </div>
 
-            <p className="delivery-estimate-note">
-              Final delivery cost is confirmed after route and site-access review.
-            </p>
-
             <div className="total-row grand-total">
-              <span>Total before delivery</span>
+              <span>Total</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 
