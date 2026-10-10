@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import { MapPin } from 'lucide-react';
+import { CircleMarker, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const DEFAULT_VIEW = {
   latitude: 39.8283,
@@ -37,20 +40,22 @@ const getAreaLabel = (location) => {
   return state ? `${city}, ${state}` : city;
 };
 
+function MapViewSync({ center, zoom }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, zoom, { animate: true });
+  }, [center, map, zoom]);
+
+  return null;
+}
+
 export default function DeliveryAreaMap({ location }) {
   const view = getMapView(location);
-  const { latitude, longitude, deltaLatitude, deltaLongitude, zoom } = view;
-  const bbox = [
-    longitude - deltaLongitude,
-    latitude - deltaLatitude,
-    longitude + deltaLongitude,
-    latitude + deltaLatitude,
-  ].map((value) => value.toFixed(6)).join(',');
+  const { latitude, longitude, zoom } = view;
+  const center = [latitude, longitude];
   const hasSelectedArea = view !== DEFAULT_VIEW;
-  const marker = hasSelectedArea
-    ? `&marker=${encodeURIComponent(`${latitude},${longitude}`)}`
-    : '';
-  const src = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik${marker}&zoom=${zoom}`;
+  const areaLabel = getAreaLabel(location);
 
   return (
     <section className="overflow-hidden rounded-[28px] border border-border bg-card shadow-[0_14px_40px_rgba(15,23,42,0.08)]">
@@ -64,19 +69,34 @@ export default function DeliveryAreaMap({ location }) {
             Delivery Area
           </p>
           <h2 className="mt-0.5 text-lg font-bold tracking-tight text-foreground">
-            {getAreaLabel(location)}
+            {areaLabel}
           </h2>
         </div>
       </div>
 
       <div className="border-t border-border bg-muted/30 p-2 sm:p-3">
-        <iframe
-          title={hasSelectedArea ? `Map of delivery area near ${getAreaLabel(location)}` : 'North American delivery area map'}
-          src={src}
-          loading="lazy"
-          className="h-[280px] w-full rounded-[20px] border-0 bg-muted sm:h-[340px]"
-          referrerPolicy="no-referrer"
-        />
+        <MapContainer
+          center={center}
+          zoom={zoom}
+          scrollWheelZoom
+          className="h-[280px] w-full rounded-[20px] bg-muted sm:h-[340px]"
+          aria-label={hasSelectedArea ? `Interactive delivery area map near ${areaLabel}` : 'Interactive North American delivery area map'}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <MapViewSync center={center} zoom={zoom} />
+          {hasSelectedArea && (
+            <CircleMarker
+              center={center}
+              radius={9}
+              pathOptions={{ color: '#c44917', fillColor: '#f15a24', fillOpacity: 0.9, weight: 3 }}
+            >
+              <Popup>{areaLabel}</Popup>
+            </CircleMarker>
+          )}
+        </MapContainer>
       </div>
     </section>
   );
