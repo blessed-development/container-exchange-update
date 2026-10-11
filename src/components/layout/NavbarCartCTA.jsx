@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ShoppingBasket, Trash2, X } from 'lucide-react';
+import { ShoppingCart, Trash2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '@/context/CartContext';
@@ -14,9 +14,9 @@ function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
 
   return (
-    <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center" aria-hidden="true">
-      <ShoppingBasket className="h-[38px] w-[38px] stroke-[2.5]" />
-      <span className="absolute left-1/2 top-[55%] flex h-[17px] min-w-[17px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-1 text-[10px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.25)]">
+    <span className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center text-[#00a63e]" aria-hidden="true">
+      <ShoppingCart className="h-7 w-7 stroke-[2.5]" />
+      <span className="absolute left-1/2 top-[54%] flex h-[15px] min-w-[15px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[9px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.35)]">
         {label}
       </span>
     </span>
@@ -27,9 +27,9 @@ function MobileBasketIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
 
   return (
-    <span className="relative inline-flex h-7 w-7 items-center justify-center" aria-hidden="true">
-      <ShoppingBasket className="h-6 w-6 stroke-[2.25]" />
-      <span className="absolute left-1/2 top-[57%] flex h-3.5 min-w-3.5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[8px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.3)]">
+    <span className="relative inline-flex h-7 w-7 items-center justify-center text-[#00a63e]" aria-hidden="true">
+      <ShoppingCart className="h-6 w-6 stroke-[2.25]" />
+      <span className="absolute left-1/2 top-[54%] flex h-3.5 min-w-3.5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[8px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.3)]">
         {label}
       </span>
     </span>
