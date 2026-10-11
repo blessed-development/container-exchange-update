@@ -62,8 +62,7 @@ export default function CustomerCarePolicy() {
           <Link to="/customer-care" className="inline-flex items-center gap-2 text-sm font-semibold text-white/55 transition-colors hover:text-primary">
             <ArrowLeft className="h-4 w-4" /> Customer Care
           </Link>
-          <p className="mt-8 text-xs font-mono font-semibold tracking-[0.18em] text-primary">{policy.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
+          <h1 className="mt-8 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
             {titleLead}{titleLead ? ' ' : ''}<span className="text-primary">{accentWord}</span>
           </h1>
           {policy.updatedAt && (
