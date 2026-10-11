@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,10 +23,38 @@ const GRADE_LABELS = {
 const fallbackImage =
   '/images/products/used-20-cw/hero.webp';
 
-export default function RelatedProducts() {
+const getRelatedScore = (currentProduct, candidate) => {
+  if (!currentProduct) return 0;
+
+  let score = 0;
+
+  if (Boolean(candidate.is_specialty) === Boolean(currentProduct.is_specialty)) score += 8;
+  if (candidate.size === currentProduct.size) score += 6;
+  if (candidate.height === currentProduct.height) score += 4;
+  if (candidate.condition === currentProduct.condition) score += 4;
+  if (candidate.door_type && candidate.door_type === currentProduct.door_type) score += 5;
+  if (candidate.grade && candidate.grade === currentProduct.grade) score += 3;
+
+  return score;
+};
+
+export default function RelatedProducts({ currentProduct = null }) {
   const { addToCart } = useCart();
   const [selectedLocation, setSelectedLocation] = useState(() => getSavedSelectedLocation());
   const productRailRef = useRef(null);
+
+  const relatedProducts = useMemo(() => {
+    return inventoryProducts
+      .filter((product) => product.is_available !== false && product.id !== currentProduct?.id)
+      .map((product, index) => ({
+        product,
+        index,
+        score: getRelatedScore(currentProduct, product),
+      }))
+      .sort((left, right) => right.score - left.score || left.index - right.index)
+      .slice(0, 8)
+      .map(({ product }) => product);
+  }, [currentProduct]);
 
   useEffect(() => {
     const syncLocation = (event) => {
@@ -105,7 +133,7 @@ export default function RelatedProducts() {
         ref={productRailRef}
         className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {inventoryProducts.filter((product) => product.is_available !== false).map((product) => (
+        {relatedProducts.map((product) => (
           <article
             key={product.id}
             className="snap-start shrink-0 w-[292px] sm:w-[312px] lg:w-[330px] bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300"

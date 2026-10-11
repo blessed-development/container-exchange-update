@@ -873,7 +873,7 @@ export default function ProductDetail() {
       </div>
 
       <div className="border-t border-border">
-        <RelatedProducts zipCode={zipCode} />
+        <RelatedProducts currentProduct={container} />
       </div>
 
       <div className="mobile-product-faq-wrap lg:hidden max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-8">
