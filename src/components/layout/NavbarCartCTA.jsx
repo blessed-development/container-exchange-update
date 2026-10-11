@@ -14,9 +14,9 @@ function BasketCountIcon({ count }) {
   const label = count > 99 ? '99+' : String(count);
 
   return (
-    <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center text-[#00a63e]" aria-hidden="true">
-      <ShoppingCart className="h-10 w-10 stroke-[2.5]" />
-      <span className="absolute left-1/2 top-[56%] flex h-[13px] min-w-[13px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[8px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.4)]">
+    <span className="relative inline-flex h-14 w-14 shrink-0 items-center justify-center text-[#061226]" aria-hidden="true">
+      <ShoppingCart className="h-[52px] w-[52px] stroke-[2.5]" />
+      <span className="absolute left-1/2 top-[57%] flex h-3 min-w-3 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white px-0.5 text-[7px] font-black leading-none text-[#061226] shadow-[0_1px_2px_rgba(0,0,0,.35)]">
         {label}
       </span>
     </span>
@@ -49,7 +49,7 @@ export default function NavbarCartCTA({ mobile = false, compact = false, onNavig
     ? 'h-10 w-10 rounded-lg bg-white/[0.06] px-0 text-white hover:bg-white/[0.12]'
     : mobile
     ? 'h-12 w-full rounded-lg bg-primary text-primary-foreground hover:bg-primary/90'
-    : 'h-12 w-32 rounded-lg bg-primary px-0 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/40';
+    : 'h-14 w-36 rounded-lg bg-primary px-0 text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/40';
   const motionTransition = { duration: reducedMotion ? 0.01 : 0.24, ease: [0.22, 1, 0.36, 1] };
 
   useEffect(() => {
