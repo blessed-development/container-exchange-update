@@ -18,13 +18,9 @@ export default function CustomerCare() {
       <header className="relative overflow-hidden bg-[#061226] py-24 text-white sm:py-28">
         <div className="pointer-events-none absolute right-[-8rem] top-[-8rem] h-80 w-80 rounded-full bg-primary/15 blur-[100px]" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
-          <p className="text-xs font-mono font-semibold tracking-[0.18em] text-primary">CUSTOMER CARE</p>
-          <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
-            Clear information for a confident container purchase.
+          <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
+            Customer <span className="text-primary">Care</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
-            Review practical guidance before you request a quote, confirm an order, or prepare your site for delivery.
-          </p>
         </div>
       </header>
 
