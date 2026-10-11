@@ -153,7 +153,6 @@ export default function Footer() {
       {/* Payment methods */}
       <div className="border-t border-white/[0.06] bg-white/[0.02]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-4 py-6 sm:px-6 lg:flex-row">
-          <p className="text-center text-xs font-semibold tracking-wide text-white/45 lg:text-left">ACCEPTED PAYMENT METHODS</p>
           <div className="flex flex-wrap items-center justify-center gap-2.5" aria-label="Accepted payment methods">
             <span className="rounded-md bg-[#0070ba] px-3 py-1.5 text-sm font-black italic tracking-tight text-white">PayPal</span>
             <span className="rounded-md bg-white px-2.5 py-1.5 text-sm font-black tracking-tight text-[#1434cb]">VISA</span>
