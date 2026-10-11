@@ -111,7 +111,7 @@ export default function Footer() {
                 { label: 'Delivery & Site Preparation', path: '/delivery' },
                 { label: 'Condition Standards', path: '/customer-care/container-standards' },
                 { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
-                { label: 'Returns & Cancellations', path: '/customer-care/returns-cancellations' },
+                { label: 'Returns & Refunds', path: '/customer-care/returns-cancellations' },
                 { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
                 { label: 'Privacy Policy', path: '/customer-care/privacy' },
               ].map((link) => (
@@ -176,7 +176,7 @@ export default function Footer() {
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <Link to="/customer-care/privacy" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
             <Link to="/customer-care/terms-of-sale" className="text-white/25 hover:text-white/50 text-xs transition-colors">Terms of Sale</Link>
-            <Link to="/customer-care/returns-cancellations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Returns & Cancellations</Link>
+            <Link to="/customer-care/returns-cancellations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Returns & Refunds</Link>
             <Link to="/customer-care/payments-reservations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Payments & Reservations</Link>
           </div>
         </div>

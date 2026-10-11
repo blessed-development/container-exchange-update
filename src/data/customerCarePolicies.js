@@ -66,21 +66,39 @@ export const CUSTOMER_CARE_POLICIES = [
   },
   {
     slug: 'returns-cancellations',
-    title: 'Returns, Cancellations & Refunds',
-    summary: 'How to raise a cancellation request or report an order concern promptly.',
-    eyebrow: 'ORDER SUPPORT',
+    title: 'Returns & Refunds',
+    summary: 'Clear guidance for reservation withdrawals, eligible return requests, delivery concerns, and approved refunds.',
+    eyebrow: 'RETURNS & ORDER SUPPORT',
+    updatedAt: 'October 11, 2026',
     sections: [
       {
-        heading: 'Before payment',
+        heading: 'Reservation requests and delivery timing',
         paragraphs: [
-          'If you no longer wish to proceed with a reservation request, contact Containers Exchange before authorizing payment. We will confirm in writing that the request has been withdrawn.',
+          'A reservation request does not create a completed purchase or require payment. If you no longer wish to proceed, contact Containers Exchange before authorizing payment and we will confirm in writing that the request has been withdrawn.',
+          'Most confirmed orders are scheduled for delivery within 3–7 business days after payment confirmation. Timing depends on local availability, carrier routing, site access, weather, and scheduling. We will confirm the delivery plan with you before dispatch.',
         ],
       },
       {
-        heading: 'After order confirmation',
+        heading: 'Changing or cancelling a confirmed order',
         paragraphs: [
-          'Containers are large, condition-specific industrial products that may require allocation, handling, transport scheduling, and delivery coordination. If you need to change or cancel a confirmed order, contact us immediately with your order details. We will review the request against the written order confirmation and any work or transport already committed to the order.',
+          'Containers are large, condition-specific industrial products that may require allocation, handling, transport scheduling, and delivery coordination. If you need to change or cancel a confirmed order, contact us immediately with your order number. We will review the request against the written order confirmation and any handling, transport, or other work already committed to the order.',
           'Do not arrange a return, collection, chargeback, or third-party yard visit without written authorization from Containers Exchange.',
+        ],
+      },
+      {
+        heading: 'Eligible return requests',
+        paragraphs: [
+          'You may request a return within 30 calendar days of delivery when the container remains in the delivered condition and has not been moved, modified, altered, or damaged after delivery. Return approval is required before any collection is arranged.',
+          'Buyer-requested returns are subject to the return transportation, recovery, and any restocking costs disclosed in the written order confirmation. Because container transport is route- and site-specific, these costs can be significant. We will confirm any applicable deduction in writing before authorizing a return.',
+        ],
+      },
+      {
+        heading: 'Items not eligible for ordinary returns',
+        bullets: [
+          'Customised, modified, or made-to-order containers and services.',
+          'AS-IS containers, except where the delivered unit materially differs from the written order confirmation.',
+          'Refrigerated containers, except where the delivered unit is materially different from the written order confirmation or has a verified delivery issue.',
+          'Containers that have been moved, altered, used, or damaged after delivery.',
         ],
       },
       {
@@ -88,8 +106,15 @@ export const CUSTOMER_CARE_POLICIES = [
         bullets: [
           'Inspect the container and its visible condition before accepting delivery where safe and practical to do so.',
           'Photograph and note a material concern on delivery documentation before the driver leaves, when possible.',
-          'Contact Containers Exchange promptly with your order reference, delivery date, photographs, and a clear description of the concern.',
+          'Contact Containers Exchange within 48 hours of delivery with your order reference, delivery date, photographs, and a clear description of the concern.',
           'We will review reported concerns against the confirmed specification and applicable written order terms.',
+        ],
+      },
+      {
+        heading: 'Approved refunds and replacements',
+        paragraphs: [
+          'After we review an authorized cancellation or returned container, we will confirm the outcome in writing. Where a refund is approved, it will be issued to the original payment method within 7–10 business days after inspection or confirmation that a return is not required.',
+          'For a verified delivery issue or a container that materially differs from the written order confirmation, we may offer a replacement, repair, partial refund, or full refund as appropriate to the circumstances. Bank processing times are outside our control.',
         ],
       },
     ],

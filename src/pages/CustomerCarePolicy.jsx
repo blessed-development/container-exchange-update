@@ -60,6 +60,9 @@ export default function CustomerCarePolicy() {
           <p className="mt-8 text-xs font-mono font-semibold tracking-[0.18em] text-primary">{policy.eyebrow}</p>
           <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-foreground sm:text-5xl">{policy.title}</h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">{policy.summary}</p>
+          {policy.updatedAt && (
+            <p className="mt-5 text-sm font-medium text-muted-foreground">Last updated: {policy.updatedAt}</p>
+          )}
         </div>
       </header>
 

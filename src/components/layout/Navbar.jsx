@@ -16,7 +16,7 @@ const CUSTOMER_CARE_LINKS = [
   { label: 'Customer Care', path: '/customer-care' },
   { label: 'Condition Standards', path: '/customer-care/container-standards' },
   { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
-  { label: 'Returns & Cancellations', path: '/customer-care/returns-cancellations' },
+  { label: 'Returns & Refunds', path: '/customer-care/returns-cancellations' },
   { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
   { label: 'Privacy Policy', path: '/customer-care/privacy' },
 ];
