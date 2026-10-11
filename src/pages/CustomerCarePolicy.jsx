@@ -110,7 +110,6 @@ export default function CustomerCarePolicy() {
           <Mail className="h-5 w-5 text-primary" />
           <h2 className="mt-4 text-xl font-black">Questions before you proceed?</h2>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/65">Email the Containers Exchange team with the container, location, and order detail you would like us to review.</p>
-          <p className="mt-3 text-xs text-white/45">Legal business name: {COMPANY_CONTACT.legalBusinessName}</p>
           <a href={`mailto:${COMPANY_CONTACT.email}`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
             {COMPANY_CONTACT.email} <ArrowRight className="h-4 w-4" />
           </a>

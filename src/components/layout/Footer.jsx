@@ -61,9 +61,6 @@ export default function Footer() {
             <p className="text-white/45 text-sm leading-relaxed mb-6">
               Location-based container inventory and delivery coordination across the United States and Canada.
             </p>
-            <p className="mb-4 text-xs text-white/35">
-              Legal business name: {COMPANY_CONTACT.legalBusinessName}
-            </p>
             <div className="flex items-center gap-2 text-white/40 text-sm">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>United States & Canada Coverage</span>

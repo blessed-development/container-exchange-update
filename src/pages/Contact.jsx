@@ -93,9 +93,6 @@ export default function Contact() {
           <div className="space-y-6">
             <div>
               <h3 className="text-xs font-mono text-muted-foreground tracking-widest mb-6">CONTACT US</h3>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Legal business name: <span className="font-semibold text-foreground">{COMPANY_CONTACT.legalBusinessName}</span>
-              </p>
               <div className="space-y-4">
                 <div className="group flex items-center gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/15">
