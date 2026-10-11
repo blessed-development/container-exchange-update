@@ -6,16 +6,16 @@ import { Button } from '@/components/ui/button';
 import PageSeo from '@/components/seo/PageSeo';
 
 const STATS = [
-  { val: '48hr',  label: 'Avg. Turnaround' },
-  { val: '50+',   label: 'Cities Served' },
-  { val: '100%',  label: 'Level Placement' },
-  { val: 'F350',  label: 'Ford Tiltbed Fleet' },
+  { val: '3–7',   label: 'Business-Day Estimate' },
+  { val: 'ZIP',    label: 'Location-Based Pricing' },
+  { val: 'Site',   label: 'Access Review' },
+  { val: 'Route',  label: 'Carrier Coordinated' },
 ];
 
 const TIPS = [
   {
-    title: 'Must Be 100% Level',
-    desc: 'Ensures cargo doors operate properly and the container remains structurally sound long-term.',
+    title: 'Keep the Site Level',
+    desc: 'A level placement area supports normal cargo-door operation and helps reduce unnecessary strain over time.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-primary">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
@@ -62,14 +62,14 @@ const GALLERY_IMAGES = [
 ];
 
 const FAQS = [
-  { q: 'How long does delivery typically take after ordering?',      a: 'Most deliveries are completed within 24–48 hours of order confirmation, depending on your location and container availability. Our logistics team will contact you directly to confirm a delivery window.' },
-  { q: 'What type of truck do you use for delivery?',                a: 'We use 40ft tiltbed trailers towed by Ford F350 trucks as our primary delivery method. For tight or confined spaces, we partner with specialized 20ft wrecker companies to ensure precise placement.' },
+  { q: 'How long does delivery typically take after ordering?',      a: 'Most confirmed orders are scheduled for delivery within 3–7 business days after payment confirmation. Timing depends on local availability, carrier routing, site access, weather, and scheduling. We will confirm the delivery plan before dispatch.' },
+  { q: 'What type of truck is used for delivery?',                   a: 'Delivery equipment is selected for the container size, route, and site-access conditions. Tilt-bed equipment is commonly used for accessible sites; tight or confined locations may require a specialized carrier or different placement approach.' },
   { q: 'How much clearance does my property need?',                  a: 'For a 20ft unit: at least 70ft length × 12ft width × 13ft height. For a 40ft unit: 110ft length × 12ft width × 14ft height. These dimensions account for the full truck, trailer, and offloading process.' },
   { q: 'Does my container need a special foundation?',               a: 'No special foundation is required — containers can be placed directly on solid, level ground. If you want to prevent water pooling, we recommend elevating with cinder blocks, railroad ties, or concrete pillars available at your local hardware store.' },
-  { q: 'Will the driver place the container exactly where I want it?', a: 'Yes. Our drivers work with you to position the container at your preferred location and will assist placing it on any leveling materials you have on site. Please note that drivers do not supply leveling materials.' },
+  { q: 'Will the driver place the container exactly where I want it?', a: 'The carrier will review the requested placement with you and will make a reasonable effort to place the container safely. Final placement depends on access, ground conditions, overhead clearance, equipment, and the driver’s safety assessment. Drivers do not supply leveling materials.' },
   { q: 'Is wrecker / tight-space delivery more expensive?',          a: 'Yes. Wrecker and specialized 20ft delivery services typically cost more than standard tiltbed delivery due to the specialized equipment and precision required. A clear quote will always be provided before any delivery is confirmed.' },
   { q: "What if my container doors won't open after delivery?",      a: 'This is almost always caused by the container not being fully level. Re-leveling the container typically resolves the issue immediately. Contact our team and we\'ll guide you through the steps or arrange a service visit.' },
-  { q: 'Do you deliver to both residential and commercial locations?', a: 'Absolutely. We deliver to homes, farms, construction sites, warehouses, and businesses. As long as the clearance requirements are met, we can deliver virtually anywhere within our service area.' },
+  { q: 'Do you deliver to both residential and commercial locations?', a: 'We coordinate delivery to eligible residential and commercial locations, including farms, construction sites, warehouses, and businesses. Availability depends on the delivery market, access conditions, and carrier scheduling.' },
 ];
 
 function FaqItem({ faq }) {
@@ -119,7 +119,7 @@ export default function Delivery() {
             We Bring The<br /><span className="text-primary">Steel To You.</span>
           </h1>
           <p className="text-muted-foreground text-base font-light leading-relaxed max-w-lg mb-8">
-            Professional container delivery using tiltbed trailers and precision wrecker services — wherever you need it placed.
+            Delivery coordination for shipping containers, with equipment and placement planning matched to your location and site access.
           </p>
           <div className="flex gap-3 flex-wrap">
             <a href="#contact">
@@ -163,13 +163,13 @@ export default function Delivery() {
             <span className="w-4 h-px bg-primary inline-block" /> How We Deliver
           </p>
           <h2 className="text-3xl font-black tracking-tight mb-2">Two Delivery <span className="text-primary">Methods</span></h2>
-          <p className="text-muted-foreground text-sm leading-relaxed mb-7">We use specialized equipment matched to your site — whether it's an open lot or a tight residential location.</p>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-7">Delivery arrangements are matched to the container, route, and site conditions—whether the destination is an open lot or a tighter residential location.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               {
-                title: '40ft Tiltbed Trailer',
-                desc: "Our primary delivery method. We deploy 40ft tiltbed trailers towed by Ford F350 trucks — ideal for open, accessible spaces. Fast, reliable, and our most cost-effective delivery option.",
-                tag: 'Standard Delivery',
+                title: 'Tilt-Bed Delivery',
+                desc: 'Tilt-bed equipment is commonly used for open, accessible delivery sites. The carrier and equipment are confirmed after reviewing the container, route, and site access.',
+                tag: 'Accessible Sites',
                 icon: (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-primary">
                     <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/>
@@ -178,9 +178,9 @@ export default function Delivery() {
                 ),
               },
               {
-                title: '20ft Wrecker Service',
-                desc: "For tight, hard-to-reach spaces where a standard tiltbed can't maneuver. We partner with specialized 20ft wrecker companies to ensure precise placement in confined or residential locations.",
-                tag: 'Precision Placement',
+                title: 'Specialized Placement',
+                desc: "For tight or hard-to-reach sites where standard tilt-bed equipment cannot maneuver, we may coordinate a specialized carrier and confirm the available placement approach before dispatch.",
+                tag: 'Tight-Site Review',
                 icon: (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-primary">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
@@ -217,7 +217,7 @@ export default function Delivery() {
             <span className="w-4 h-px bg-primary inline-block" /> Space Requirements
           </p>
           <h2 className="text-3xl font-black tracking-tight mb-2">Required <span className="text-primary">Delivery Clearances</span></h2>
-          <p className="text-muted-foreground text-sm leading-relaxed mb-7">Before your delivery date, ensure your site meets the minimum clearance dimensions for offloading.</p>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-7">Use these planning dimensions when preparing your site. Final clearance needs depend on carrier equipment, route, slope, and the planned placement method.</p>
           <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
             <div className="px-6 py-4 border-b border-border text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
               Minimum Clearance by Container Size
@@ -254,9 +254,9 @@ export default function Delivery() {
           </p>
           <h2 className="text-3xl font-black tracking-tight mb-3">Getting the <span className="text-primary">Foundation Right</span></h2>
           <div className="space-y-3 text-sm text-muted-foreground leading-relaxed mb-8">
-            <p>Shipping containers can be placed directly on solid, level ground. Ensuring your container is 100% level is critical — it guarantees smooth operation of the heavy-duty cargo doors and the long-term structural integrity of the unit.</p>
+            <p>Shipping containers can be placed on solid, level ground. A level placement area supports normal door operation and helps reduce strain on the container structure over time.</p>
             <p>If positioned on a slight incline or decline, the cargo doors may become difficult to operate and re-leveling will be required. For customers who wish to elevate their container to prevent water pooling near the front cargo doors, leveling materials are available at any local hardware store.</p>
-            <p>Our drivers will assist in placing the container on the leveling materials you provide — please note they do not carry these materials on their trucks.</p>
+            <p>Ask us to include any leveling or placement concerns when your delivery is being planned. Drivers do not supply leveling materials, and final placement remains subject to the carrier’s safety assessment.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {TIPS.map((tip, i) => (

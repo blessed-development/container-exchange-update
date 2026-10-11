@@ -4,6 +4,7 @@ export const CUSTOMER_CARE_POLICIES = [
     title: 'Container Condition & Buyer Standards',
     summary: 'Understand container grades, normal used-container wear, and what to confirm before reserving a unit.',
     eyebrow: 'BUY WITH CLARITY',
+    updatedAt: 'October 11, 2026',
     sections: [
       {
         heading: 'Condition is part of the product',
@@ -31,13 +32,21 @@ export const CUSTOMER_CARE_POLICIES = [
           'Delivery address, access constraints, and the intended placement plan.',
         ],
       },
+      {
+        heading: 'Photos, availability, and final confirmation',
+        paragraphs: [
+          'Unless a specific serial-numbered unit is identified in writing, product images are representative of the listed container type and condition grade. Normal variations in paint, markings, repairs, surface wear, and appearance can occur between units.',
+          'The written order confirmation—not a representative photograph—sets out the size, configuration, condition grade, price, delivery details, and any order-specific terms that apply to your purchase.',
+        ],
+      },
     ],
   },
   {
     slug: 'payments-reservations',
-    title: 'Payments & Reservations',
-    summary: 'How a reservation request becomes a confirmed container order.',
+    title: 'Reservations & Payment',
+    summary: 'How a reservation request becomes a confirmed container order and when payment is requested.',
     eyebrow: 'A CLEAR ORDER PROCESS',
+    updatedAt: 'October 11, 2026',
     sections: [
       {
         heading: 'A reservation request is not a completed purchase',
@@ -47,7 +56,7 @@ export const CUSTOMER_CARE_POLICIES = [
         ],
       },
       {
-        heading: 'What we confirm with you',
+        heading: 'What we confirm before payment',
         bullets: [
           'The requested size, condition grade, and configuration.',
           'Current availability for the selected market.',
@@ -57,9 +66,10 @@ export const CUSTOMER_CARE_POLICIES = [
         ],
       },
       {
-        heading: 'Before you send payment',
+        heading: 'Payment instructions and account safety',
         paragraphs: [
-          'Please review the written confirmation carefully. Ask us to correct any difference in size, grade, location, delivery address, price, or fee before authorizing payment. A payment should be made only through instructions provided by Containers Exchange after the order details have been confirmed.',
+          'Please review the written confirmation carefully. Ask us to correct any difference in size, grade, location, delivery address, price, delivery estimate, tax, or fee before authorizing payment. Payment is requested only after the order details have been confirmed in writing.',
+          'Use only payment instructions sent by Containers Exchange through our published contact channels. If a payment request appears unusual, contact us using the phone number or email address displayed on this website before sending funds or sharing payment information.',
         ],
       },
     ],
@@ -124,6 +134,7 @@ export const CUSTOMER_CARE_POLICIES = [
     title: 'Terms of Sale',
     summary: 'The core terms that apply when a reservation becomes a confirmed order.',
     eyebrow: 'ORDER TERMS',
+    updatedAt: 'October 11, 2026',
     sections: [
       {
         heading: 'Quotes and confirmations',
@@ -140,6 +151,19 @@ export const CUSTOMER_CARE_POLICIES = [
         ],
       },
       {
+        heading: 'Condition, delivery, and risk',
+        paragraphs: [
+          'Container condition is described by the grade stated in the written order confirmation. Used containers can show the normal characteristics described in our Container Condition & Buyer Standards. The customer should inspect the delivered container where safe and practical and report a material concern in accordance with the Returns & Refunds policy.',
+          'Delivery timing is an estimate until a carrier and route are confirmed. The customer is responsible for a safe, suitable delivery approach and placement area. Delivery personnel may decline or adjust an unsafe placement plan.',
+        ],
+      },
+      {
+        heading: 'Returns and refunds',
+        paragraphs: [
+          'The Returns & Refunds policy explains eligibility, reporting requirements, return authorization, and approved refund timing. It is incorporated into these terms for confirmed orders.',
+        ],
+      },
+      {
         heading: 'Questions about an order',
         paragraphs: [
           'For a question about a reservation, written confirmation, delivery plan, or payment instruction, contact Containers Exchange using the email address shown below. We will respond using the order details available to our team.',
@@ -152,6 +176,7 @@ export const CUSTOMER_CARE_POLICIES = [
     title: 'Privacy Policy',
     summary: 'How we use the information customers provide when requesting a quote or reservation.',
     eyebrow: 'YOUR INFORMATION',
+    updatedAt: 'October 11, 2026',
     sections: [
       {
         heading: 'Information you provide',
@@ -169,9 +194,22 @@ export const CUSTOMER_CARE_POLICIES = [
         ],
       },
       {
-        heading: 'Contacting us about privacy',
+        heading: 'Service providers and retention',
         paragraphs: [
-          'For a privacy question or a request relating to information you have submitted, email Containers Exchange using the contact address below and include enough detail for us to identify your request.',
+          'We may share information with service providers that help us operate the website, deliver email communications, prevent fraud, or coordinate a confirmed order and delivery. We share information only as needed for those purposes or when required by law.',
+          'We keep customer information for as long as reasonably necessary to respond to an enquiry, support a reservation or confirmed order, meet recordkeeping obligations, resolve a dispute, or enforce our agreements.',
+        ],
+      },
+      {
+        heading: 'Cookies and browser storage',
+        paragraphs: [
+          'The website may use cookies or browser storage to support essential functions such as keeping items in your cart, remembering a selected location, and protecting forms from abuse. You can control cookies and stored data through your browser settings, although some website features may not work as intended if you disable them.',
+        ],
+      },
+      {
+        heading: 'Your privacy choices',
+        paragraphs: [
+          'For a privacy question or a request relating to information you have submitted, email Containers Exchange using the contact address below and include enough detail for us to identify your request. We may need to verify your identity before completing a request.',
         ],
       },
     ],

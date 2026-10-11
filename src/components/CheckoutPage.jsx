@@ -193,7 +193,7 @@ const CheckoutPage = () => {
             </div>
 
             <div className="total-row grand-total">
-              <span>Total</span>
+              <span>Container Total</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 
@@ -202,7 +202,7 @@ const CheckoutPage = () => {
             </button>
 
             <p className="shipping-note">
-              Shipping Internationally? <Link to="/delivery">Learn more</Link>
+              Delivery estimate shown separately. <Link to="/delivery">Learn more</Link>
             </p>
           </section>
 

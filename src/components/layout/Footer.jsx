@@ -59,11 +59,11 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-white/45 text-sm leading-relaxed mb-6">
-              Your trusted marketplace for buying shipping containers. Nationwide delivery from 60+ depot locations.
+              Location-based container inventory and delivery coordination across the United States and Canada.
             </p>
             <div className="flex items-center gap-2 text-white/40 text-sm">
               <MapPin className="w-4 h-4 flex-shrink-0" />
-              <span>Nationwide Coverage — USA</span>
+              <span>United States & Canada Coverage</span>
             </div>
           </div>
 
@@ -110,7 +110,7 @@ export default function Footer() {
               {[
                 { label: 'Delivery & Site Preparation', path: '/delivery' },
                 { label: 'Condition Standards', path: '/customer-care/container-standards' },
-                { label: 'Payments & Reservations', path: '/customer-care/payments-reservations' },
+                { label: 'Reservations & Payment', path: '/customer-care/payments-reservations' },
                 { label: 'Returns & Refunds', path: '/customer-care/returns-cancellations' },
                 { label: 'Terms of Sale', path: '/customer-care/terms-of-sale' },
                 { label: 'Privacy Policy', path: '/customer-care/privacy' },
@@ -177,7 +177,7 @@ export default function Footer() {
             <Link to="/customer-care/privacy" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
             <Link to="/customer-care/terms-of-sale" className="text-white/25 hover:text-white/50 text-xs transition-colors">Terms of Sale</Link>
             <Link to="/customer-care/returns-cancellations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Returns & Refunds</Link>
-            <Link to="/customer-care/payments-reservations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Payments & Reservations</Link>
+            <Link to="/customer-care/payments-reservations" className="text-white/25 hover:text-white/50 text-xs transition-colors">Reservations & Payment</Link>
           </div>
         </div>
       </div>

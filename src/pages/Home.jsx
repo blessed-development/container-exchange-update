@@ -13,7 +13,7 @@ import { SITE_URL, toAbsoluteUrl } from '@/lib/seo';
 
 export default function Home() {
   const title = 'Shipping Containers for Sale Nationwide | Containers Exchange';
-  const description = 'Buy new and used shipping containers nationwide. Find local inventory and pricing by ZIP code, with delivery from 60+ depot locations.';
+  const description = 'Explore new and used shipping containers with location-based inventory and pricing. Delivery timing and final order details are confirmed before payment.';
   const image = toAbsoluteUrl('/images/hero/depot-operations.png');
 
   return (

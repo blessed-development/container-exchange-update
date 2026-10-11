@@ -69,7 +69,7 @@ export default function HeroSection() {
             <div className="inline-flex items-center gap-2.5 bg-white/[0.06] border border-white/[0.1] backdrop-blur-sm px-4 py-2 rounded-full mb-8">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-xs font-mono text-white/60 tracking-widest">
-                60+ DEPOT LOCATIONS NATIONWIDE
+                LOCATION-BASED INVENTORY & PRICING
               </span>
             </div>
 
@@ -81,7 +81,7 @@ export default function HeroSection() {
             </h1>
 
             <p className="text-lg text-white/50 max-w-lg mb-10 leading-relaxed">
-              Locate available inventory near you. New and used containers delivered directly to your site in 3–7 business days.
+              Locate available inventory near you. Delivery timing is confirmed after availability, routing, and site access are reviewed.
             </p>
 
             {/* ZIP Search */}
@@ -95,9 +95,9 @@ export default function HeroSection() {
               className="flex flex-wrap gap-6 mt-10"
             >
               {[
-                { icon: Shield, label: 'Lowest Price Guarantee' },
-                { icon: Truck, label: 'Free Delivery Accessories' },
-                { icon: Clock, label: '3–7 Day Delivery' },
+                { icon: Shield, label: 'Clear Order Confirmation' },
+                { icon: Truck, label: 'Site Access Review' },
+                { icon: Clock, label: '3–7 Business-Day Estimate' },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-2.5 text-white/40">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -117,10 +117,10 @@ export default function HeroSection() {
             className="hidden lg:grid grid-cols-2 gap-3"
           >
             {[
-              { value: '20+', label: 'Years in Business', sub: 'Trusted nationwide' },
-              { value: '60+', label: 'Depot Locations', sub: 'Coast to coast' },
-              { value: '10K+', label: 'Containers Sold', sub: 'Happy customers' },
-              { value: '4.9★', label: 'Customer Rating', sub: 'Based on 200+ reviews' },
+              { value: 'ZIP', label: 'Local Market Search', sub: 'Price by location' },
+              { value: 'US / CA', label: 'Market Coverage', sub: 'Location dependent' },
+              { value: '3–7', label: 'Business-Day Estimate', sub: 'After confirmation' },
+              { value: 'Order', label: 'Written Confirmation', sub: 'Before payment' },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
