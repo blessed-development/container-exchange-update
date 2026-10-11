@@ -29,7 +29,7 @@ function MobileBasketIcon({ count }) {
   return (
     <span className="relative inline-flex h-7 w-7 items-center justify-center" aria-hidden="true">
       <ShoppingBasket className="h-6 w-6 stroke-[2.25]" />
-      <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border border-[#061226] bg-primary px-1 text-[9px] font-black leading-none text-white shadow-sm">
+      <span className="absolute left-1/2 top-[57%] flex h-3.5 min-w-3.5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[8px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.3)]">
         {label}
       </span>
     </span>
