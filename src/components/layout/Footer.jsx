@@ -61,6 +61,9 @@ export default function Footer() {
             <p className="text-white/45 text-sm leading-relaxed mb-6">
               Location-based container inventory and delivery coordination across the United States and Canada.
             </p>
+            <p className="mb-4 text-xs text-white/35">
+              Legal business name: {COMPANY_CONTACT.legalBusinessName}
+            </p>
             <div className="flex items-center gap-2 text-white/40 text-sm">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               <span>United States & Canada Coverage</span>
@@ -171,7 +174,7 @@ export default function Footer() {
       <div className="border-t border-white/[0.06] py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-white/25 text-xs font-mono">
-            © {new Date().getFullYear()} CONTAINERS EXCHANGE. ALL RIGHTS RESERVED.
+            © {new Date().getFullYear()} {COMPANY_CONTACT.legalBusinessName.toUpperCase()}. ALL RIGHTS RESERVED.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <Link to="/customer-care/privacy" className="text-white/25 hover:text-white/50 text-xs transition-colors">Privacy Policy</Link>
