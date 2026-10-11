@@ -52,16 +52,17 @@ export default function CustomerCarePolicy() {
         path={`/customer-care/${policy.slug}`}
       />
 
-      <header className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
-          <Link to="/customer-care" className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">
+      <header className="relative overflow-hidden bg-[#061226] text-white">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[500px] -translate-x-1/2 rounded-full bg-primary/[0.05] blur-[80px]" />
+        <div className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+          <Link to="/customer-care" className="inline-flex items-center gap-2 text-sm font-semibold text-white/55 transition-colors hover:text-primary">
             <ArrowLeft className="h-4 w-4" /> Customer Care
           </Link>
           <p className="mt-8 text-xs font-mono font-semibold tracking-[0.18em] text-primary">{policy.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-foreground sm:text-5xl">{policy.title}</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">{policy.summary}</p>
+          <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">{policy.title}</h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{policy.summary}</p>
           {policy.updatedAt && (
-            <p className="mt-5 text-sm font-medium text-muted-foreground">Last updated: {policy.updatedAt}</p>
+            <p className="mt-5 text-sm font-medium text-white/45">Last updated: {policy.updatedAt}</p>
           )}
         </div>
       </header>
