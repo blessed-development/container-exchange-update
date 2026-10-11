@@ -44,6 +44,10 @@ export default function CustomerCarePolicy() {
 
   if (!policy) return <Navigate to="/customer-care" replace />;
 
+  const titleWords = policy.title.split(' ');
+  const accentWord = titleWords.pop();
+  const titleLead = titleWords.join(' ');
+
   return (
     <div className="min-h-screen bg-background">
       <PageSeo
@@ -59,8 +63,9 @@ export default function CustomerCarePolicy() {
             <ArrowLeft className="h-4 w-4" /> Customer Care
           </Link>
           <p className="mt-8 text-xs font-mono font-semibold tracking-[0.18em] text-primary">{policy.eyebrow}</p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">{policy.title}</h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55 sm:text-lg">{policy.summary}</p>
+          <h1 className="mt-4 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
+            {titleLead}{titleLead ? ' ' : ''}<span className="text-primary">{accentWord}</span>
+          </h1>
           {policy.updatedAt && (
             <p className="mt-5 text-sm font-medium text-white/45">Last updated: {policy.updatedAt}</p>
           )}
