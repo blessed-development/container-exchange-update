@@ -4653,3 +4653,45 @@
   .checkout-container .cart-panel-actions .return-store-btn,
   .checkout-container .cart-clear-btn{ width:100% !important; }
 }
+
+/* Final desktop cart balance: reserve the left side for the full product name,
+   while keeping price, quantity, and subtotal as a compact right-aligned group. */
+@media(min-width:981px){
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head,
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-line{
+    grid-template-columns:minmax(0,1fr) 92px 58px 118px 30px !important;
+    gap:8px !important;
+  }
+
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head span:nth-child(2),
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-unit-price,
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head span:nth-child(3),
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty{
+    left:auto !important;
+    justify-self:end !important;
+    text-align:right !important;
+  }
+
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty{
+    width:48px !important;
+    min-width:48px !important;
+    height:26px !important;
+    gap:4px !important;
+  }
+
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty button.ce-utility-button{
+    width:20px !important;
+    height:20px !important;
+    min-width:20px !important;
+    padding:0 !important;
+    border-radius:7px !important;
+    font-size:12px !important;
+    line-height:1 !important;
+  }
+
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty strong{
+    font-size:12px !important;
+    min-width:8px !important;
+    text-align:center !important;
+  }
+}
