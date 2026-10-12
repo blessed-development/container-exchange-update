@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Lock, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import './CheckoutPage.css';
-import { COMPANY_CONTACT } from '@/config/companyContact';
 import { formatDeliveryEstimate, getDeliveryEstimate } from '@/lib/deliveryEstimate';
 import { getSavedSelectedLocation } from '@/lib/locationEngine';
 
@@ -193,7 +192,7 @@ const CheckoutPage = () => {
             </div>
 
             <div className="total-row grand-total">
-              <span>Container Total</span>
+              <span>Total</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 
@@ -219,13 +218,6 @@ const CheckoutPage = () => {
             <p>
               Delivery cost is additional. To save you money, we&apos;ll negotiate with local
               carriers for the lowest shipping rate.
-            </p>
-          </section>
-
-          <section className="checkout-help">
-            <p>
-              Questions about your request?{' '}
-              <a href={`mailto:${COMPANY_CONTACT.email}`}>{COMPANY_CONTACT.email}</a>
             </p>
           </section>
 

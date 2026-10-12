@@ -145,8 +145,8 @@ export default function NavbarCartCTA({ mobile = false, compact = false, onNavig
                 <h2 className="text-sm font-bold tracking-tight">Your Cart</h2>
                 <p className="mt-0.5 text-xs text-white/50">{itemCount} {itemCount === 1 ? 'item' : 'items'}</p>
               </div>
-              <button type="button" onClick={() => setIsOpen(false)} className="rounded-lg p-1.5 text-white/50 transition-colors hover:bg-white/[0.08] hover:text-white" aria-label="Close cart">
-                <X className="h-4 w-4" />
+              <button type="button" onClick={() => setIsOpen(false)} className="p-0 text-white/50 transition-colors hover:text-white" aria-label="Close cart">
+                <X className="h-5 w-5" />
               </button>
             </header>
 
@@ -156,7 +156,12 @@ export default function NavbarCartCTA({ mobile = false, compact = false, onNavig
                   {item.image || item.img ? <img src={item.image || item.img} alt="" className="h-14 w-[76px] rounded-xl bg-white/[0.06] object-cover" /> : <div className="h-14 w-[76px] rounded-xl bg-white/[0.06]" aria-hidden="true" />}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start gap-2">
-                      <h3 className="min-w-0 flex-1 truncate text-sm font-semibold text-white/90">{item.title}</h3>
+                      <h3 className="cart-drawer-title min-w-0 flex-1 text-sm font-semibold text-white/90" tabIndex={0} aria-label={item.title}>
+                        <span className="cart-drawer-title-track">
+                          <span>{item.title}</span>
+                          <span aria-hidden="true">{item.title}</span>
+                        </span>
+                      </h3>
                       <button type="button" onClick={() => removeItem(item.id)} className="rounded-md p-1 text-white/35 transition-colors hover:bg-white/[0.08] hover:text-primary" aria-label={`Remove ${item.title} from cart`}>
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>

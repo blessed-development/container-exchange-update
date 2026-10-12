@@ -789,12 +789,12 @@ const CheckoutDetails = () => {
             </div>
 
             <div className="total-row grand-total">
-              <span>Container & Tax Total</span>
+              <span>Total</span>
               <strong>{formatMoney(total)}</strong>
             </div>
 
             <div className="os-disclaimer">
-              <strong>Reservation estimate:</strong> Delivery is shown separately and is not included in the container & tax total. By reserving your container, you are not committing to a purchase. We will contact you to confirm the complete order details and final pricing.
+              <strong>Reservation estimate:</strong> Delivery is shown separately and is not included in the total. By reserving your container, you are not committing to a purchase. We will contact you to confirm the complete order details and final pricing.
             </div>
 
             <button

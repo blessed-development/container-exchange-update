@@ -268,3 +268,31 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+@keyframes cart-drawer-title-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 1rem)); }
+}
+
+.cart-drawer-title {
+  overflow: hidden;
+  white-space: nowrap;
+  outline: none;
+}
+
+.cart-drawer-title-track {
+  display: inline-flex;
+  width: max-content;
+  gap: 2rem;
+  will-change: transform;
+}
+
+.cart-drawer-title:hover .cart-drawer-title-track,
+.cart-drawer-title:focus-visible .cart-drawer-title-track {
+  animation: cart-drawer-title-scroll 9s linear infinite;
+}
+
+@media (hover: none) {
+  .cart-drawer-title-track {
+    animation: cart-drawer-title-scroll 9s linear infinite;
+  }
+}
