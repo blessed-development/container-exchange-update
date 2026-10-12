@@ -4695,6 +4695,13 @@
     text-align:center !important;
   }
 
+  /* Bring the quantity control into the subtotal group instead of leaving a
+     wide visual break after it. */
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head span:nth-child(3),
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-qty{
+    transform:translateX(56px) !important;
+  }
+
   .checkout-container .checkout-main:not(.checkout-details-layout) .cart-product-title{
     display:-webkit-box !important;
     overflow:visible !important;
