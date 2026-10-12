@@ -4704,7 +4704,7 @@
 
   .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head span:nth-child(2),
   .checkout-container .checkout-main:not(.checkout-details-layout) .cart-unit-price{
-    transform:translateX(38px) !important;
+    transform:translateX(52px) !important;
   }
 
   .checkout-container .checkout-main:not(.checkout-details-layout) .cart-product-title{
