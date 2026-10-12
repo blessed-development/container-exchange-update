@@ -16,7 +16,7 @@ function BasketCountIcon({ count }) {
   return (
     <span className="relative inline-flex h-12 w-16 shrink-0 items-center justify-center text-[#061226]" aria-hidden="true">
       <ShoppingCart className="!h-11 !w-11 stroke-[2]" />
-      <span className="absolute left-1/2 top-[44%] flex h-4 min-w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-0.5 text-[8px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.4)]">
+      <span className="absolute left-1/2 top-[44%] flex h-6 min-w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#061226] px-1 text-[10px] font-black leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,.4)]">
         {label}
       </span>
     </span>
