@@ -4702,6 +4702,11 @@
     transform:translateX(56px) !important;
   }
 
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-table-head span:nth-child(2),
+  .checkout-container .checkout-main:not(.checkout-details-layout) .cart-unit-price{
+    transform:translateX(70px) !important;
+  }
+
   .checkout-container .checkout-main:not(.checkout-details-layout) .cart-product-title{
     display:-webkit-box !important;
     overflow:visible !important;
