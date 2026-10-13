@@ -90,8 +90,16 @@ try {
   assert.equal(internal.reply_to, 'fictional@example.test');
   assert.match(internal.text, /Product configurator/);
   assert.equal(confirmation.to[0], 'fictional@example.test');
+  assert.match(confirmation.subject, /We received your Containers Exchange enquiry/);
 
-  for (let attempt = 2; attempt <= 5; attempt += 1) {
+  response = responseMock();
+  await handler(request({ ...valid, source_form: 'Checkout reservation request' }, { 'idempotency-key': 'checkout-reservation-1' }), response);
+  assert.equal(response.statusCode, 202);
+  assert.match(response.payload.reservationReference, /^RES-\d{6}-[A-Z0-9]{6}$/);
+  const reservationEmail = JSON.parse(calls.filter((call) => call.url === 'https://api.resend.com/emails').at(-1).options.body);
+  assert.match(reservationEmail.subject, /We received your reservation request/);
+
+  for (let attempt = 2; attempt <= 4; attempt += 1) {
     response = responseMock();
     await handler(request(valid, { 'idempotency-key': `test-request-${attempt}` }), response);
     assert.equal(response.statusCode, 202);

@@ -6,25 +6,25 @@ import { COMPANY_CONTACT } from '@/config/companyContact';
 
 const CheckoutSuccess = () => {
   const orderRef = useMemo(
-    () => `CE-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
+    () => window.sessionStorage.getItem('ce-last-reservation-reference') || `RES-${Math.random().toString(36).slice(2, 10).toUpperCase()}`,
     []
   );
 
   const nextSteps = [
     {
       icon: Clock3,
-      title: 'Fast confirmation',
+      title: 'Request received',
       copy: 'A container specialist reviews your request and availability shortly.',
     },
     {
       icon: Truck,
-      title: 'Delivery matched',
+      title: 'Availability & delivery review',
       copy: 'We confirm the best local delivery option before finalizing shipping.',
     },
     {
       icon: MessageCircle,
-      title: 'Clear follow-up',
-      copy: 'You receive pricing, timing, and any final details before dispatch.',
+      title: 'Confirmation email',
+      copy: 'We send your reservation receipt and follow up with the next steps.',
     },
   ];
 
@@ -41,7 +41,7 @@ const CheckoutSuccess = () => {
 
         <div className="secure-badge">
           <ShieldCheck size={14} />
-          Reservation Confirmed
+          Reservation Request Received
         </div>
       </header>
 
@@ -54,16 +54,16 @@ const CheckoutSuccess = () => {
 
             <div className="success-kicker">Request received</div>
 
-            <h1>Reservation Confirmed</h1>
+            <h1>Reservation Request Received</h1>
 
             <p>
-              Thank you. Your container request is in. Our team will confirm availability,
-              delivery details, and final shipping cost before anything moves forward.
+              Thank you. We have received your container reservation request. Our team will review
+              availability and delivery details, then contact you with the next steps.
             </p>
           </div>
 
           <div className="success-ref">
-            <span>Order Reference</span>
+            <span>Reservation Reference</span>
             <strong>{orderRef}</strong>
           </div>
 

@@ -343,7 +343,7 @@ const CheckoutDetails = () => {
         .join(', ');
 
     try {
-      await submitEnquiry({
+      const submission = await submitEnquiry({
         customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
         customer_email: formData.email,
         customer_phone: formData.phone,
@@ -364,6 +364,9 @@ const CheckoutDetails = () => {
           formData.notes ? `Customer notes: ${formData.notes}` : '',
         ].filter(Boolean).join('\n\n'),
       });
+      if (submission?.reservationReference) {
+        window.sessionStorage.setItem('ce-last-reservation-reference', submission.reservationReference);
+      }
       clearCart();
       navigate('/checkout/success');
     } catch (error) {

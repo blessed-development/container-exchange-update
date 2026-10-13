@@ -89,6 +89,7 @@ async function sendWithResend(enquiry, idempotencyKey) {
   if (!apiKey || !to || !from) throw new Error('Email delivery is not configured.');
 
   const subjectSuffix = enquiry.container_name || 'Shipping Container';
+  const isReservation = enquiry.source_form === 'Checkout reservation request';
   const isTestSubmission = /\btest\b/i.test(enquiry.source_form);
   const confirmationPrefix = isTestSubmission ? 'TEST — ' : '';
   const confirmationNotice = isTestSubmission
@@ -96,16 +97,24 @@ async function sendWithResend(enquiry, idempotencyKey) {
     : '';
   await resendEmail(apiKey, {
     from, to: [to], reply_to: enquiry.customer_email,
-    subject: `New ${enquiry.source_form}: ${subjectSuffix} — ${enquiry.zip_code}`,
+    subject: isReservation
+      ? `New reservation request ${enquiry.reservation_reference}: ${subjectSuffix} — ${enquiry.zip_code}`
+      : `New ${enquiry.source_form}: ${subjectSuffix} — ${enquiry.zip_code}`,
     text: textMessage(enquiry), html: htmlMessage(enquiry),
   }, `contact-internal-${idempotencyKey}`);
 
   await resendEmail(apiKey, {
     from, to: [enquiry.customer_email],
     reply_to: to,
-    subject: `${confirmationPrefix}We received your Containers Exchange enquiry`,
-    text: `${confirmationNotice}Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
-    html: `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
+    subject: isReservation
+      ? `${confirmationPrefix}We received your reservation request — ${enquiry.reservation_reference}`
+      : `${confirmationPrefix}We received your Containers Exchange enquiry`,
+    text: isReservation
+      ? `${confirmationNotice}Hi ${enquiry.customer_name},\n\nThank you for your reservation request with Containers Exchange. We received your request for ${subjectSuffix}. Our team will review availability and delivery details, then contact you with the next steps.\n\nReservation reference: ${enquiry.reservation_reference}\n\nThank you,\nContainers Exchange`
+      : `${confirmationNotice}Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
+    html: isReservation
+      ? `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>Thank you for your reservation request with Containers Exchange. We received your request for ${escapeHtml(subjectSuffix)}. Our team will review availability and delivery details, then contact you with the next steps.</p><p><strong>Reservation reference: ${escapeHtml(enquiry.reservation_reference)}</strong></p><p>Thank you,<br>Containers Exchange</p>`
+      : `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
   }, `contact-confirmation-${idempotencyKey}`);
 }
 
@@ -135,6 +144,17 @@ function parseEnquiry(body) {
   };
 }
 
+function reservationReference(idempotencyKey) {
+  const date = new Date();
+  const day = [
+    String(date.getUTCFullYear()).slice(-2),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
+    String(date.getUTCDate()).padStart(2, '0'),
+  ].join('');
+  const suffix = String(idempotencyKey || '').replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase() || 'REQUEST';
+  return `RES-${day}-${suffix}`;
+}
+
 export default async function handler(request, response) {
   response.setHeader('Cache-Control', 'no-store');
   if (request.method !== 'POST') return response.status(405).json({ error: 'Method not allowed.' });
@@ -156,10 +176,14 @@ export default async function handler(request, response) {
 
   try {
     if (!(await enforceDurableRateLimit(clientAddress(request)))) return response.status(429).json({ error: 'Too many submissions. Please wait a few minutes and try again.' });
-    await sendWithResend(enquiry, key);
+    const isReservation = enquiry.source_form === 'Checkout reservation request';
+    const enrichedEnquiry = isReservation
+      ? { ...enquiry, reservation_reference: reservationReference(key) }
+      : enquiry;
+    await sendWithResend(enrichedEnquiry, key);
     // Claim only after both provider calls succeed. A transient delivery failure must leave the customer's fields retryable.
     await claimIdempotencyKey(key);
-    return response.status(202).json({ accepted: true });
+    return response.status(202).json({ accepted: true, ...(isReservation ? { reservationReference: enrichedEnquiry.reservation_reference } : {}) });
   } catch (error) {
     console.error('Contact delivery failure', error?.message);
     return response.status(503).json({ error: 'We could not deliver your enquiry right now. Your details are still in the form, so please try again shortly.' });
