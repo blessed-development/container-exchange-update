@@ -90,7 +90,7 @@ async function sendWithResend(enquiry, idempotencyKey) {
 
   const subjectSuffix = enquiry.container_name || 'Shipping Container';
   const isReservation = enquiry.source_form === 'Checkout reservation request';
-  const isTestSubmission = /\btest\b/i.test(enquiry.source_form);
+  const isTestSubmission = /\btest\b/i.test(`${enquiry.source_form} ${enquiry.notes}`);
   const confirmationPrefix = isTestSubmission ? 'TEST — ' : '';
   const confirmationNotice = isTestSubmission
     ? 'This is a test of the Containers Exchange enquiry system. No action is needed.\n\n'
