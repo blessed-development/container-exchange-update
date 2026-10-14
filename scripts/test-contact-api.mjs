@@ -93,11 +93,28 @@ try {
   assert.match(confirmation.subject, /We received your Containers Exchange enquiry/);
 
   response = responseMock();
-  await handler(request({ ...valid, source_form: 'Checkout reservation request' }, { 'idempotency-key': 'checkout-reservation-1' }), response);
+  await handler(request({
+    ...valid,
+    source_form: 'Checkout reservation request',
+    reservation_items: [{
+      title: '20ft Standard Container',
+      subtitle: 'Standard Height • 8ft 6in High',
+      image: '/images/products/new-20-iicl/hero.webp',
+      quantity: 2,
+      unit_price: 3250,
+    }],
+    quoted_subtotal: 6500,
+    estimated_sales_tax: 471.25,
+    estimated_delivery: '$500–$650 USD',
+    estimated_total: 6971.25,
+  }, { 'idempotency-key': 'checkout-reservation-1' }), response);
   assert.equal(response.statusCode, 202);
   assert.match(response.payload.reservationReference, /^RES-\d{6}-[A-Z0-9]{6}$/);
   const reservationEmail = JSON.parse(calls.filter((call) => call.url === 'https://api.resend.com/emails').at(-1).options.body);
   assert.match(reservationEmail.subject, /We received your reservation request/);
+  assert.match(reservationEmail.html, /Reservation summary/);
+  assert.match(reservationEmail.html, /Qty 2/);
+  assert.match(reservationEmail.html, /Estimated delivery/);
 
   for (let attempt = 2; attempt <= 4; attempt += 1) {
     response = responseMock();

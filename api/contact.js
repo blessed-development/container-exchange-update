@@ -1,7 +1,7 @@
 const WINDOW_SECONDS = 10 * 60;
 const MAX_REQUESTS_PER_WINDOW = 5;
 const IDEMPOTENCY_TTL_SECONDS = 24 * 60 * 60;
-const MAX = { name: 100, email: 254, phone: 40, zip: 12, container: 140, notes: 3000, sourcePage: 500, sourceForm: 80, location: 160, idempotencyKey: 100 };
+const MAX = { name: 100, email: 254, phone: 40, zip: 12, container: 140, notes: 3000, sourcePage: 500, sourceForm: 80, location: 160, idempotencyKey: 100, itemTitle: 180, itemSubtitle: 100, itemImage: 700 };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const headerUnsafePattern = /[\r\n]/;
 
@@ -81,12 +81,67 @@ function emailBaseUrl(sourcePage) {
   }
 }
 
+function money(value) {
+  return `$${Number(value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function imageUrl(image, baseUrl) {
+  const value = cleanHeader(image, MAX.itemImage);
+  if (!value) return '';
+  try {
+    return new URL(value, baseUrl).toString();
+  } catch {
+    return '';
+  }
+}
+
+function reservationItems(value, baseUrl) {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, 12).map((item) => {
+    const quantity = Math.min(99, Math.max(1, Number.parseInt(item?.quantity, 10) || 1));
+    const unitPrice = Math.max(0, Number(item?.unit_price) || 0);
+    return {
+      title: cleanHeader(item?.title, MAX.itemTitle) || 'Shipping container',
+      subtitle: cleanHeader(item?.subtitle, MAX.itemSubtitle),
+      image: imageUrl(item?.image, baseUrl),
+      quantity,
+      unitPrice,
+      subtotal: quantity * unitPrice,
+    };
+  });
+}
+
 function actionLink(href, label, primary = false) {
   return `<a href="${escapeHtml(href)}" style="display:inline-block;margin:${primary ? '0 10px 12px 0' : '0 12px 12px 0'};padding:${primary ? '12px 18px' : '0'};border-radius:8px;background:${primary ? '#ff5a14' : 'transparent'};color:${primary ? '#ffffff' : '#0b6fca'};font-size:14px;font-weight:700;text-decoration:none;">${escapeHtml(label)}</a>`;
 }
 
 function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
   const baseUrl = emailBaseUrl(enquiry.source_page);
+  const items = enquiry.reservation_items || [];
+  const itemRows = items.map((item) => `<tr>
+    <td style="padding:16px 0;border-top:1px solid #e5eaf0;vertical-align:top;">
+      ${item.image ? `<img src="${escapeHtml(item.image)}" width="74" height="56" alt="${escapeHtml(item.title)}" style="display:block;width:74px;height:56px;object-fit:cover;border-radius:8px;border:1px solid #dce4eb;">` : ''}
+    </td>
+    <td style="padding:16px 14px;border-top:1px solid #e5eaf0;vertical-align:top;">
+      <div style="color:#10263e;font-size:14px;font-weight:700;line-height:1.4;">${escapeHtml(item.title)}</div>
+      ${item.subtitle ? `<div style="margin-top:3px;color:#64748b;font-size:13px;line-height:1.4;">${escapeHtml(item.subtitle)}</div>` : ''}
+      <div style="margin-top:7px;color:#64748b;font-size:13px;">Qty ${item.quantity} · ${money(item.unitPrice)} each</div>
+    </td>
+    <td align="right" style="padding:16px 0;border-top:1px solid #e5eaf0;vertical-align:top;color:#10263e;font-size:14px;font-weight:800;white-space:nowrap;">${money(item.subtotal)}</td>
+  </tr>`).join('');
+  const summary = items.length ? `<div style="margin:0 0 24px;padding:20px;border:1px solid #dce4eb;border-radius:10px;background:#ffffff;">
+          <div style="margin:0 0 12px;color:#10263e;font-size:17px;font-weight:800;">Reservation summary</div>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
+            <td style="padding:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Item</td>
+            <td align="right" style="padding:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Subtotal</td>
+          </tr>${itemRows}</table>
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:2px;border-top:1px solid #dce4eb;">
+            <tr><td style="padding:13px 0 0;color:#51606f;font-size:14px;">Container subtotal</td><td align="right" style="padding:13px 0 0;color:#10263e;font-size:14px;font-weight:700;">${money(enquiry.quoted_subtotal)}</td></tr>
+            <tr><td style="padding:9px 0 0;color:#51606f;font-size:14px;">Estimated sales tax</td><td align="right" style="padding:9px 0 0;color:#10263e;font-size:14px;font-weight:700;">${money(enquiry.estimated_sales_tax)}</td></tr>
+            ${enquiry.estimated_delivery ? `<tr><td style="padding:9px 0 0;color:#51606f;font-size:14px;">Estimated delivery</td><td align="right" style="padding:9px 0 0;color:#10263e;font-size:14px;font-weight:700;">${escapeHtml(enquiry.estimated_delivery)}</td></tr>` : ''}
+            <tr><td style="padding:15px 0 0;color:#10263e;font-size:16px;font-weight:800;">Total</td><td align="right" style="padding:15px 0 0;color:#10263e;font-size:16px;font-weight:800;">${money(enquiry.estimated_total)}</td></tr>
+          </table>
+        </div>` : '';
   const testNotice = isTestSubmission
     ? '<div style="margin:0 0 22px;padding:12px 14px;border-radius:8px;background:#fff5d9;color:#6b4800;font-size:14px;font-weight:700;">TEST ONLY — no action is needed.</div>'
     : '';
@@ -108,6 +163,7 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
           <div style="margin:0 0 5px;color:#64748b;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Reservation reference</div>
           <div style="color:#10263e;font-size:20px;font-weight:800;letter-spacing:.04em;">${escapeHtml(enquiry.reservation_reference)}</div>
         </div>
+        ${summary}
         <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
         <div style="padding-top:22px;border-top:1px solid #e5eaf0;">
           ${actionLink(`${baseUrl}/buy-containers`, 'Browse containers', true)}
@@ -183,6 +239,7 @@ function hasTrustedOrigin(request) {
 }
 
 function parseEnquiry(body) {
+  const sourcePage = cleanHeader(body.source_page, MAX.sourcePage);
   return {
     customer_name: cleanHeader(body.customer_name, MAX.name),
     customer_email: cleanHeader(body.customer_email, MAX.email).toLowerCase(),
@@ -190,9 +247,14 @@ function parseEnquiry(body) {
     zip_code: cleanHeader(body.zip_code, MAX.zip).toUpperCase(),
     container_name: cleanHeader(body.container_name, MAX.container),
     notes: clean(body.notes, MAX.notes),
-    source_page: cleanHeader(body.source_page, MAX.sourcePage),
+    source_page: sourcePage,
     source_form: cleanHeader(body.source_form, MAX.sourceForm) || 'Quote request',
     location: cleanHeader(body.location, MAX.location),
+    reservation_items: reservationItems(body.reservation_items, emailBaseUrl(sourcePage)),
+    quoted_subtotal: Math.max(0, Number(body.quoted_subtotal) || 0),
+    estimated_sales_tax: Math.max(0, Number(body.estimated_sales_tax) || 0),
+    estimated_delivery: cleanHeader(body.estimated_delivery, 120),
+    estimated_total: Math.max(0, Number(body.estimated_total) || 0),
     submitted_at: new Date().toISOString(),
   };
 }
