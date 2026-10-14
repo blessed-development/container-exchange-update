@@ -117,6 +117,8 @@ function reservationItems(value, baseUrl) {
       subtitle: cleanHeader(item?.subtitle, MAX.itemSubtitle),
       image: imageUrl(item?.image, baseUrl),
       productUrl: productUrl(item?.product_url, baseUrl),
+      rating: Math.min(5, Math.max(0, Number(item?.rating) || 0)),
+      reviewCount: Math.min(999999, Math.max(0, Number.parseInt(item?.review_count, 10) || 0)),
       quantity,
       unitPrice,
       subtotal: quantity * unitPrice,
@@ -136,8 +138,9 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
       ${item.image ? `<img src="${escapeHtml(item.image)}" width="74" height="56" alt="${escapeHtml(item.title)}" style="display:block;width:74px;height:56px;object-fit:cover;border-radius:8px;border:1px solid #dce4eb;">` : ''}
     </td>
     <td style="padding:16px 14px;border-top:1px solid #e5eaf0;vertical-align:top;">
-      <div style="color:#10263e;font-size:14px;font-weight:700;line-height:1.4;">${item.productUrl ? `<a href="${escapeHtml(item.productUrl)}" style="color:#10263e;text-decoration:underline;">${escapeHtml(item.title)}</a>` : escapeHtml(item.title)}</div>
+      <div style="max-width:315px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#10263e;font-size:14px;font-weight:700;line-height:1.4;">${item.productUrl ? `<a href="${escapeHtml(item.productUrl)}" style="display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:#10263e;text-decoration:underline;">${escapeHtml(item.title)}</a>` : escapeHtml(item.title)}</div>
       ${item.subtitle ? `<div style="margin-top:3px;color:#64748b;font-size:13px;line-height:1.4;">${escapeHtml(item.subtitle)}</div>` : ''}
+      ${item.rating ? `<div style="margin-top:7px;color:#e4a400;font-size:13px;line-height:1.3;letter-spacing:1px;">★★★★★ <span style="color:#51606f;letter-spacing:0;">${item.rating.toFixed(1)}${item.reviewCount ? ` (${item.reviewCount} reviews)` : ''}</span></div>` : ''}
     </td>
     <td align="right" style="padding:16px 0;border-top:1px solid #e5eaf0;vertical-align:top;color:#10263e;font-size:14px;font-weight:800;white-space:nowrap;">${money(item.subtotal)}</td>
   </tr>`).join('');
@@ -168,9 +171,8 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
       </td></tr>
       <tr><td style="padding:32px;">
         ${testNotice}
-        <h1 style="margin:0 0 14px;font-size:26px;line-height:1.2;color:#10263e;">We received your reservation request</h1>
         <p style="margin:0 0 18px;font-size:16px;line-height:1.6;">Hi ${escapeHtml(enquiry.customer_name)},</p>
-        <p style="margin:0 0 22px;font-size:16px;line-height:1.6;">Thank you for your request for <strong>${escapeHtml(subjectSuffix)}</strong>. Our team will review availability and delivery details, then contact you with the next steps.</p>
+        <p style="margin:0 0 22px;font-size:16px;line-height:1.6;">Thank you for your reservation request for <strong>${escapeHtml(subjectSuffix)}</strong>. Our team will review availability and delivery details, then contact you with the next steps.</p>
         <div style="margin:0 0 24px;padding:17px 18px;border:1px solid #dce4eb;border-radius:10px;background:#f8fafc;">
           <div style="margin:0 0 5px;color:#64748b;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Reservation reference</div>
           <div style="color:#10263e;font-size:20px;font-weight:800;letter-spacing:.04em;">${escapeHtml(enquiry.reservation_reference)}</div>
@@ -179,12 +181,15 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
         <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
         <div style="padding-top:22px;border-top:1px solid #e5eaf0;">
           ${actionLink(`${baseUrl}/inventory`, 'Browse containers', true)}
+          ${actionLink(`${baseUrl}/contact`, 'Contact us')}
+          ${actionLink(`${baseUrl}/customer-care`, 'Customer care')}
         </div>
       </td></tr>
-      <tr><td style="padding:22px 32px;background:#f8fafc;border-top:1px solid #e5eaf0;color:#6b7785;font-size:13px;line-height:1.6;">
-        <div style="margin:0 0 8px;font-weight:700;color:#43515f;">Thank you,</div>
-        <div style="margin:0 0 14px;">Containers Exchange</div>
-        <div style="padding-top:14px;border-top:1px solid #e1e7ed;">This is a transactional confirmation for your reservation request. Reply to this email if you need assistance.</div>
+      <tr><td style="padding:18px 32px 24px;background:#ffffff;border-top:1px solid #e5eaf0;color:#6b7785;font-size:13px;line-height:1.6;">
+        <div style="margin:0 0 2px;font-weight:700;color:#43515f;">Thank you,</div>
+        <div style="margin:0 0 15px;">Containers Exchange</div>
+        <div style="padding-top:12px;border-top:1px solid #e1e7ed;color:#8a96a3;font-size:11px;line-height:1.55;">This is an automated reservation confirmation, not a payment receipt or final delivery confirmation. Reply to this email if you need assistance.</div>
+        <div style="margin-top:5px;color:#8a96a3;font-size:11px;"><a href="${baseUrl}" style="color:#63778d;text-decoration:underline;">containersexchange.com</a></div>
       </td></tr>
     </table>
   </td></tr></table>

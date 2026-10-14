@@ -101,6 +101,8 @@ try {
       subtitle: 'Standard Height • 8ft 6in High',
       image: '/images/products/new-20-iicl/hero.webp',
       product_url: '/product/new-20-iicl',
+      rating: 4.9,
+      review_count: 217,
       quantity: 2,
       unit_price: 3250,
     }],
@@ -116,6 +118,7 @@ try {
   assert.match(reservationEmail.html, /Reservation summary/);
   assert.match(reservationEmail.html, /Estimated delivery/);
   assert.match(reservationEmail.html, /https:\/\/containersexchange\.com\/product\/new-20-iicl/);
+  assert.match(reservationEmail.html, /4\.9 \(217 reviews\)/);
   assert.doesNotMatch(reservationEmail.html, /each/);
 
   for (let attempt = 2; attempt <= 4; attempt += 1) {

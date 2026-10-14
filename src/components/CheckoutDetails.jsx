@@ -354,6 +354,8 @@ const CheckoutDetails = () => {
           subtitle: cleanSub(item),
           image: getItemImage(item),
           product_url: item.url || '',
+          rating: Number(item.rating || 0),
+          review_count: Number(item.reviewCount || 0),
           quantity: Number(item.qty || 1),
           unit_price: Number(item.unitPrice || 0),
         })),
