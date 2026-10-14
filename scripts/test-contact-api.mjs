@@ -100,6 +100,7 @@ try {
       title: '20ft Standard Container',
       subtitle: 'Standard Height • 8ft 6in High',
       image: '/images/products/new-20-iicl/hero.webp',
+      product_url: '/product/new-20-iicl',
       quantity: 2,
       unit_price: 3250,
     }],
@@ -113,8 +114,9 @@ try {
   const reservationEmail = JSON.parse(calls.filter((call) => call.url === 'https://api.resend.com/emails').at(-1).options.body);
   assert.match(reservationEmail.subject, /We received your reservation request/);
   assert.match(reservationEmail.html, /Reservation summary/);
-  assert.match(reservationEmail.html, /Qty 2/);
   assert.match(reservationEmail.html, /Estimated delivery/);
+  assert.match(reservationEmail.html, /https:\/\/containersexchange\.com\/product\/new-20-iicl/);
+  assert.doesNotMatch(reservationEmail.html, /each/);
 
   for (let attempt = 2; attempt <= 4; attempt += 1) {
     response = responseMock();

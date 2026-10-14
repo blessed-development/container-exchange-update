@@ -1,7 +1,7 @@
 const WINDOW_SECONDS = 10 * 60;
 const MAX_REQUESTS_PER_WINDOW = 5;
 const IDEMPOTENCY_TTL_SECONDS = 24 * 60 * 60;
-const MAX = { name: 100, email: 254, phone: 40, zip: 12, container: 140, notes: 3000, sourcePage: 500, sourceForm: 80, location: 160, idempotencyKey: 100, itemTitle: 180, itemSubtitle: 100, itemImage: 700 };
+const MAX = { name: 100, email: 254, phone: 40, zip: 12, container: 140, notes: 3000, sourcePage: 500, sourceForm: 80, location: 160, idempotencyKey: 100, itemTitle: 180, itemSubtitle: 100, itemImage: 700, itemUrl: 700 };
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const headerUnsafePattern = /[\r\n]/;
 
@@ -72,13 +72,13 @@ function htmlMessage(enquiry) {
   return textMessage(enquiry).split('\n').map((line) => `<p style="margin:0 0 10px">${escapeHtml(line || '\u00a0')}</p>`).join('');
 }
 
-function emailBaseUrl(sourcePage) {
-  try {
-    const url = new URL(sourcePage);
-    return `${url.protocol}//${url.host}`;
-  } catch {
-    return 'https://containersexchange.com';
+function emailBaseUrl() {
+  const configuredUrl = cleanHeader(process.env.PUBLIC_SITE_URL, 500);
+  if (configuredUrl) {
+    try { return new URL(configuredUrl).origin; } catch { /* Fall through to the canonical site. */ }
   }
+  // Email recipients cannot access protected Vercel Preview URLs. Use the public site for all email assets and links.
+  return 'https://containersexchange.com';
 }
 
 function money(value) {
@@ -95,6 +95,18 @@ function imageUrl(image, baseUrl) {
   }
 }
 
+function productUrl(productUrlValue, baseUrl) {
+  const value = cleanHeader(productUrlValue, MAX.itemUrl);
+  if (!value) return '';
+  try {
+    const base = new URL(baseUrl);
+    const url = new URL(value, base);
+    return url.origin === base.origin ? url.toString() : '';
+  } catch {
+    return '';
+  }
+}
+
 function reservationItems(value, baseUrl) {
   if (!Array.isArray(value)) return [];
   return value.slice(0, 12).map((item) => {
@@ -104,6 +116,7 @@ function reservationItems(value, baseUrl) {
       title: cleanHeader(item?.title, MAX.itemTitle) || 'Shipping container',
       subtitle: cleanHeader(item?.subtitle, MAX.itemSubtitle),
       image: imageUrl(item?.image, baseUrl),
+      productUrl: productUrl(item?.product_url, baseUrl),
       quantity,
       unitPrice,
       subtotal: quantity * unitPrice,
@@ -116,16 +129,15 @@ function actionLink(href, label, primary = false) {
 }
 
 function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
-  const baseUrl = emailBaseUrl(enquiry.source_page);
+  const baseUrl = emailBaseUrl();
   const items = enquiry.reservation_items || [];
   const itemRows = items.map((item) => `<tr>
     <td style="padding:16px 0;border-top:1px solid #e5eaf0;vertical-align:top;">
       ${item.image ? `<img src="${escapeHtml(item.image)}" width="74" height="56" alt="${escapeHtml(item.title)}" style="display:block;width:74px;height:56px;object-fit:cover;border-radius:8px;border:1px solid #dce4eb;">` : ''}
     </td>
     <td style="padding:16px 14px;border-top:1px solid #e5eaf0;vertical-align:top;">
-      <div style="color:#10263e;font-size:14px;font-weight:700;line-height:1.4;">${escapeHtml(item.title)}</div>
+      <div style="color:#10263e;font-size:14px;font-weight:700;line-height:1.4;">${item.productUrl ? `<a href="${escapeHtml(item.productUrl)}" style="color:#10263e;text-decoration:underline;">${escapeHtml(item.title)}</a>` : escapeHtml(item.title)}</div>
       ${item.subtitle ? `<div style="margin-top:3px;color:#64748b;font-size:13px;line-height:1.4;">${escapeHtml(item.subtitle)}</div>` : ''}
-      <div style="margin-top:7px;color:#64748b;font-size:13px;">Qty ${item.quantity} · ${money(item.unitPrice)} each</div>
     </td>
     <td align="right" style="padding:16px 0;border-top:1px solid #e5eaf0;vertical-align:top;color:#10263e;font-size:14px;font-weight:800;white-space:nowrap;">${money(item.subtotal)}</td>
   </tr>`).join('');
@@ -166,15 +178,13 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
         ${summary}
         <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
         <div style="padding-top:22px;border-top:1px solid #e5eaf0;">
-          ${actionLink(`${baseUrl}/buy-containers`, 'Browse containers', true)}
-          ${actionLink(`${baseUrl}/contact`, 'Contact us')}
-          ${actionLink(`${baseUrl}/policies`, 'Policies')}
+          ${actionLink(`${baseUrl}/inventory`, 'Browse containers', true)}
         </div>
       </td></tr>
       <tr><td style="padding:22px 32px;background:#f8fafc;border-top:1px solid #e5eaf0;color:#6b7785;font-size:13px;line-height:1.6;">
         <div style="margin:0 0 8px;font-weight:700;color:#43515f;">Thank you,</div>
         <div style="margin:0 0 14px;">Containers Exchange</div>
-        <div style="padding-top:14px;border-top:1px solid #e1e7ed;">This is a transactional confirmation for your reservation request. Please do not reply to this automated email; use the contact link above if you need assistance.</div>
+        <div style="padding-top:14px;border-top:1px solid #e1e7ed;">This is a transactional confirmation for your reservation request. Reply to this email if you need assistance.</div>
       </td></tr>
     </table>
   </td></tr></table>
@@ -250,7 +260,7 @@ function parseEnquiry(body) {
     source_page: sourcePage,
     source_form: cleanHeader(body.source_form, MAX.sourceForm) || 'Quote request',
     location: cleanHeader(body.location, MAX.location),
-    reservation_items: reservationItems(body.reservation_items, emailBaseUrl(sourcePage)),
+    reservation_items: reservationItems(body.reservation_items, emailBaseUrl()),
     quoted_subtotal: Math.max(0, Number(body.quoted_subtotal) || 0),
     estimated_sales_tax: Math.max(0, Number(body.estimated_sales_tax) || 0),
     estimated_delivery: cleanHeader(body.estimated_delivery, 120),

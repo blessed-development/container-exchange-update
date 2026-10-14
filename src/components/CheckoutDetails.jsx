@@ -353,6 +353,7 @@ const CheckoutDetails = () => {
           title: item.title || 'Shipping container',
           subtitle: cleanSub(item),
           image: getItemImage(item),
+          product_url: item.url || '',
           quantity: Number(item.qty || 1),
           unit_price: Number(item.unitPrice || 0),
         })),
