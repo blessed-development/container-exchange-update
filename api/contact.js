@@ -72,6 +72,59 @@ function htmlMessage(enquiry) {
   return textMessage(enquiry).split('\n').map((line) => `<p style="margin:0 0 10px">${escapeHtml(line || '\u00a0')}</p>`).join('');
 }
 
+function emailBaseUrl(sourcePage) {
+  try {
+    const url = new URL(sourcePage);
+    return `${url.protocol}//${url.host}`;
+  } catch {
+    return 'https://containersexchange.com';
+  }
+}
+
+function actionLink(href, label, primary = false) {
+  return `<a href="${escapeHtml(href)}" style="display:inline-block;margin:${primary ? '0 10px 12px 0' : '0 12px 12px 0'};padding:${primary ? '12px 18px' : '0'};border-radius:8px;background:${primary ? '#ff5a14' : 'transparent'};color:${primary ? '#ffffff' : '#0b6fca'};font-size:14px;font-weight:700;text-decoration:none;">${escapeHtml(label)}</a>`;
+}
+
+function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
+  const baseUrl = emailBaseUrl(enquiry.source_page);
+  const testNotice = isTestSubmission
+    ? '<div style="margin:0 0 22px;padding:12px 14px;border-radius:8px;background:#fff5d9;color:#6b4800;font-size:14px;font-weight:700;">TEST ONLY — no action is needed.</div>'
+    : '';
+  return `<!doctype html>
+<html lang="en"><head><meta char="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Reservation request received</title></head>
+<body style="margin:0;padding:0;background:#f3f5f7;color:#19212b;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:32px 12px;"><tr><td align="center">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:620px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 8px 28px rgba(18,30,44,.10);">
+      <tr><td style="padding:25px 32px;background:#071a2d;color:#ffffff;">
+        <div style="font-size:20px;font-weight:800;letter-spacing:.2px;">Containers <span style="color:#ff5a14;">Exchange</span></div>
+        <div style="margin-top:6px;color:#c9d5e2;font-size:14px;">Reservation request confirmation</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        ${testNotice}
+        <h1 style="margin:0 0 14px;font-size:26px;line-height:1.2;color:#10263e;">We received your reservation request</h1>
+        <p style="margin:0 0 18px;font-size:16px;line-height:1.6;">Hi ${escapeHtml(enquiry.customer_name)},</p>
+        <p style="margin:0 0 22px;font-size:16px;line-height:1.6;">Thank you for your request for <strong>${escapeHtml(subjectSuffix)}</strong>. Our team will review availability and delivery details, then contact you with the next steps.</p>
+        <div style="margin:0 0 24px;padding:17px 18px;border:1px solid #dce4eb;border-radius:10px;background:#f8fafc;">
+          <div style="margin:0 0 5px;color:#64748b;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Reservation reference</div>
+          <div style="color:#10263e;font-size:20px;font-weight:800;letter-spacing:.04em;">${escapeHtml(enquiry.reservation_reference)}</div>
+        </div>
+        <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
+        <div style="padding-top:22px;border-top:1px solid #e5eaf0;">
+          ${actionLink(`${baseUrl}/buy-containers`, 'Browse containers', true)}
+          ${actionLink(`${baseUrl}/contact`, 'Contact us')}
+          ${actionLink(`${baseUrl}/policies`, 'Policies')}
+        </div>
+      </td></tr>
+      <tr><td style="padding:22px 32px;background:#f8fafc;border-top:1px solid #e5eaf0;color:#6b7785;font-size:13px;line-height:1.6;">
+        <div style="margin:0 0 8px;font-weight:700;color:#43515f;">Thank you,</div>
+        <div style="margin:0 0 14px;">Containers Exchange</div>
+        <div style="padding-top:14px;border-top:1px solid #e1e7ed;">This is a transactional confirmation for your reservation request. Please do not reply to this automated email; use the contact link above if you need assistance.</div>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`;
+}
+
 async function resendEmail(apiKey, payload, idempotencyKey) {
   const result = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -113,7 +166,7 @@ async function sendWithResend(enquiry, idempotencyKey) {
       ? `${confirmationNotice}Hi ${enquiry.customer_name},\n\nThank you for your reservation request with Containers Exchange. We received your request for ${subjectSuffix}. Our team will review availability and delivery details, then contact you with the next steps.\n\nReservation reference: ${enquiry.reservation_reference}\n\nThank you,\nContainers Exchange`
       : `${confirmationNotice}Hi ${enquiry.customer_name},\n\nWe received your enquiry. A Containers Exchange team member will review the details and reply soon.\n\nThank you,\nContainers Exchange`,
     html: isReservation
-      ? `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>Thank you for your reservation request with Containers Exchange. We received your request for ${escapeHtml(subjectSuffix)}. Our team will review availability and delivery details, then contact you with the next steps.</p><p><strong>Reservation reference: ${escapeHtml(enquiry.reservation_reference)}</strong></p><p>Thank you,<br>Containers Exchange</p>`
+      ? reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix })
       : `${isTestSubmission ? '<p><strong>TEST ONLY — no action is needed.</strong></p>' : ''}<p>Hi ${escapeHtml(enquiry.customer_name)},</p><p>We received your enquiry. A Containers Exchange team member will review the details and reply soon.</p><p>Thank you,<br>Containers Exchange</p>`,
   }, `contact-confirmation-${idempotencyKey}`);
 }
