@@ -85,6 +85,10 @@ function money(value) {
   return `$${Number(value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+function deliveryAmount(value) {
+  return String(value || '').replace(/\s*USD\s*$/i, '').trim();
+}
+
 function imageUrl(image, baseUrl) {
   const value = cleanHeader(image, MAX.itemImage);
   if (!value) return '';
@@ -147,13 +151,14 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
   const summary = items.length ? `<div style="margin:0 0 24px;padding:20px;border:1px solid #dce4eb;border-radius:10px;background:#ffffff;">
           <div style="margin:0 0 12px;color:#10263e;font-size:17px;font-weight:800;">Reservation summary</div>
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
-            <td style="padding:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Item</td>
-            <td align="right" style="padding:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Subtotal</td>
+            <td width="74" style="padding:0 0 10px;"></td>
+            <td style="padding:0 14px 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Item</td>
+            <td width="130" align="right" style="padding:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;">Subtotal</td>
           </tr>${itemRows}</table>
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:2px;border-top:1px solid #dce4eb;">
             <tr><td style="padding:13px 0 0;color:#51606f;font-size:14px;">Container subtotal</td><td align="right" style="padding:13px 0 0;color:#10263e;font-size:14px;font-weight:700;">${money(enquiry.quoted_subtotal)}</td></tr>
             <tr><td style="padding:9px 0 0;color:#51606f;font-size:14px;">Estimated sales tax</td><td align="right" style="padding:9px 0 0;color:#10263e;font-size:14px;font-weight:700;">${money(enquiry.estimated_sales_tax)}</td></tr>
-            ${enquiry.estimated_delivery ? `<tr><td style="padding:9px 0 0;color:#51606f;font-size:14px;">Estimated delivery</td><td align="right" style="padding:9px 0 0;color:#10263e;font-size:14px;font-weight:700;">${escapeHtml(enquiry.estimated_delivery)}</td></tr>` : ''}
+            ${enquiry.estimated_delivery ? `<tr><td style="padding:9px 0 0;color:#51606f;font-size:14px;">Estimated delivery</td><td align="right" style="padding:9px 0 0;color:#10263e;font-size:14px;font-weight:700;">${escapeHtml(deliveryAmount(enquiry.estimated_delivery))}</td></tr>` : ''}
             <tr><td style="padding:15px 0 0;color:#10263e;font-size:16px;font-weight:800;">Total</td><td align="right" style="padding:15px 0 0;color:#10263e;font-size:16px;font-weight:800;">${money(enquiry.estimated_total)}</td></tr>
           </table>
         </div>` : '';
@@ -178,18 +183,14 @@ function reservationEmailHtml(enquiry, { isTestSubmission, subjectSuffix }) {
           <div style="color:#10263e;font-size:20px;font-weight:800;letter-spacing:.04em;">${escapeHtml(enquiry.reservation_reference)}</div>
         </div>
         ${summary}
-        <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
+        <p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#51606f;">Please keep this reference for your records. It does not represent a payment receipt or a final delivery confirmation.</p>
+        <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#51606f;">Thank you,<br>Containers Exchange</p>
         <div style="padding-top:22px;border-top:1px solid #e5eaf0;">
           ${actionLink(`${baseUrl}/inventory`, 'Browse containers', true)}
           ${actionLink(`${baseUrl}/contact`, 'Contact us')}
           ${actionLink(`${baseUrl}/customer-care`, 'Customer care')}
         </div>
-      </td></tr>
-      <tr><td style="padding:18px 32px 24px;background:#ffffff;border-top:1px solid #e5eaf0;color:#6b7785;font-size:13px;line-height:1.6;">
-        <div style="margin:0 0 2px;font-weight:700;color:#43515f;">Thank you,</div>
-        <div style="margin:0 0 15px;">Containers Exchange</div>
-        <div style="padding-top:12px;border-top:1px solid #e1e7ed;color:#8a96a3;font-size:11px;line-height:1.55;">This is an automated reservation confirmation, not a payment receipt or final delivery confirmation. Reply to this email if you need assistance.</div>
-        <div style="margin-top:5px;color:#8a96a3;font-size:11px;"><a href="${baseUrl}" style="color:#63778d;text-decoration:underline;">containersexchange.com</a></div>
+        <div style="margin-top:20px;color:#8a96a3;font-size:11px;line-height:1.55;">containersexchange.com</div>
       </td></tr>
     </table>
   </td></tr></table>
